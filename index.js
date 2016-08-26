@@ -2,14 +2,15 @@
  * Created by Will on 8/25/2016.
  */
 const Discord = require('discord.js');
+const config = require('./config');
 const raven = require('raven');
 
-var ravenClient = new raven.Client('https://f06514a422ff4798bf8167364727a92c:c7ec2b409ac6493187656b0817224a9f@app.getsentry.com/94472');
+var ravenClient = new raven.Client(config.raven);
 ravenClient.patchGlobal();
 
 var client = new Discord.Client();
 
-client.loginWithToken('MjE4MjI3NTg3MTY2NTAyOTIz.CqFX8Q.iQsAT2-barTstFjlFh7Hj1B5Dkk', function(err, token)   {
+client.loginWithToken(config.discord, function(err, token)   {
     if(err) {
         console.error('There was an error logging in: ' + err);
     }   else    {

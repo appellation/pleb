@@ -3,12 +3,13 @@
  */
 const ytStream = require('youtube-audio-stream');
 const ytNode = require('youtube-node');
+const config = require('../config');
 const validUrl = require('valid-url');
 const URL = require('url');
 const _ = require('underscore');
 
 const ytApi = new ytNode();
-ytApi.setKey('AIzaSyAVec5Cy-lhs07uAywh6bmo0_I9YeuvNVM');
+ytApi.setKey(config.youtube);
 
 /**
  * @param {Client} client
@@ -180,7 +181,7 @@ function Play (client, msg, args) {
 
             const vcStream = vc.playRawStream(stream);
             if(pos + 1 < list.length)   {
-                client.sendMessage(msg.channel, 'now playing ' + pos + 1 + ' of ' + list.length);
+                client.sendMessage(msg.channel, 'now playing ' + (pos + 1) + ' of ' + list.length);
             }
             return vcStream;
         }
