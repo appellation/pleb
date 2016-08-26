@@ -1,0 +1,20 @@
+{
+  "name": "pleb",
+  "version": "1.0.0",
+  "description": "A very low class Discord bot.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "appellation/pleb",
+  "author": "appellation <nelson.will@live.com>",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^8.1.0",
+    "raven": "^0.12.1",
+    "url": "^0.11.0",
+    "valid-url": "^1.0.9",
+    "youtube-audio-stream": "0.0.26",
+    "youtube-node": "^1.3.0"
+  }
+}
