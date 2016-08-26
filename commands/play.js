@@ -32,7 +32,9 @@ function Play (client, msg, args) {
                     reject(err);
                     console.error(err);
                 }   else    {
-                    resolve('https://www.youtube.com/watch?v=' + result.items[0].id.videoId);
+                    const ytUrl = 'https://www.youtube.com/watch?v=' + result.items[0].id.videoId;
+                    client.reply(msg, 'now playing: ' + ytUrl);
+                    resolve(ytUrl);
                 }
             });
         });
