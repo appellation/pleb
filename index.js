@@ -1,7 +1,9 @@
 /**
  * Created by Will on 8/25/2016.
  */
-require('dotenv').config();
+require('dotenv').config({
+    silent: true
+});
 const Discord = require('discord.js');
 const raven = require('raven');
 
