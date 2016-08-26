@@ -3,13 +3,12 @@
  */
 const ytStream = require('youtube-audio-stream');
 const ytNode = require('youtube-node');
-const config = require('../config');
 const validUrl = require('valid-url');
 const URL = require('url');
 const _ = require('underscore');
 
 const ytApi = new ytNode();
-ytApi.setKey(config.youtube);
+ytApi.setKey(process.env.youtube);
 
 /**
  * @param {Client} client

@@ -1,16 +1,16 @@
 /**
  * Created by Will on 8/25/2016.
  */
+require('dotenv').config();
 const Discord = require('discord.js');
-const config = require('./config');
 const raven = require('raven');
 
-var ravenClient = new raven.Client(config.raven);
+var ravenClient = new raven.Client(process.env.raven);
 ravenClient.patchGlobal();
 
 var client = new Discord.Client();
 
-client.loginWithToken(config.discord, function(err, token)   {
+client.loginWithToken(process.env.discord, function(err, token)   {
     if(err) {
         console.error('There was an error logging in: ' + err);
     }   else    {
