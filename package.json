@@ -12,6 +12,7 @@
   "dependencies": {
     "discord.js": "^8.1.0",
     "raven": "^0.12.1",
+    "underscore": "^1.8.3",
     "url": "^0.11.0",
     "valid-url": "^1.0.9",
     "youtube-audio-stream": "0.0.26",

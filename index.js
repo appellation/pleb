@@ -4,12 +4,12 @@
 const Discord = require('discord.js');
 const raven = require('raven');
 
-const ravenClient = new raven.Client('https://f06514a422ff4798bf8167364727a92c:c7ec2b409ac6493187656b0817224a9f@app.getsentry.com/94472');
+var ravenClient = new raven.Client('https://f06514a422ff4798bf8167364727a92c:c7ec2b409ac6493187656b0817224a9f@app.getsentry.com/94472');
 ravenClient.patchGlobal();
 
 var client = new Discord.Client();
 
-client.loginWithToken('MjE4MjI3NTg3MTY2NTAyOTIz.CqC-tg.nHqhy-EdKy9uHFMKRRjpGE7AnxM', function(err, token)   {
+client.loginWithToken('MjE4MjI3NTg3MTY2NTAyOTIz.CqFX8Q.iQsAT2-barTstFjlFh7Hj1B5Dkk', function(err, token)   {
     if(err) {
         console.error('There was an error logging in: ' + err);
     }   else    {
