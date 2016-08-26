@@ -31,9 +31,7 @@ client.on('ready', function()   {
 });
 
 client.on('serverCreated', function(server) {
-    const channel = server.channels.get('position', 0);
-    console.log(channel);
-    client.sendMessage(channel, 'Thanks for adding me!');
+    client.sendMessage(server.defaultChannel, 'Sup.');
 });
 
 client.on('message', function (message) {
@@ -44,9 +42,9 @@ client.on('message', function (message) {
         const args = parts.slice(1);
 
         try {
-            const inst = new commands[command](client, message, args);
+            new commands[command](client, message, args);
         }   catch(e)    {
-            client.reply(message, 'Hey, I can\'t do that.');
+            client.reply(message, 'when I said I was simple, I meant it...');
             console.error(e);
         }
     }
