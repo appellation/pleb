@@ -161,20 +161,22 @@ function Play (client, msg, args) {
                 return;
             }
 
-            stream.on('error', function(e)  {
-                console.error('stream error' + e);
-            }).on('close', function()  {
-                if(pos + 1 < list.length) {
-                    playList(list, pos + 1);
-                }
-                console.log('stream closed');
-            });
-
-            const vcStream = vc.playRawStream(stream);
             if(pos + 1 < list.length)   {
                 client.sendMessage(msg.channel, 'now playing ' + (pos + 1) + ' of ' + list.length);
             }
-            return vcStream;
+
+            stream.on('error', function(e)  {
+                console.error('stream error' + e);
+            }).on('end', function()  {
+                if(pos + 1 < list.length) {
+                    playList(list, pos + 1);
+                }
+                console.log('Song ended.');
+            }).on('close', function()   {
+                console.log('Stream closed.');
+            });
+
+            return vc.playRawStream(stream);
         }
 
         return playList(list, 0);
