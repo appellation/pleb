@@ -21,7 +21,6 @@ client.loginWithToken(config.discord, function(err, token)   {
 // Define commands
 const commands = {
     play: require('./commands/play'),
-    join: require('./commands/join'),
     stfu: require('./commands/stfu')
 };
 
