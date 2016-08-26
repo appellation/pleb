@@ -130,14 +130,6 @@ function Play (client, msg, args) {
         voice = botVoice;
     }
 
-    list.catch(function(err)    {
-        console.error('some kind of error getting the list');
-    });
-
-    voice.catch(function(err)   {
-        console.error('some kind of error getting the voice connection');
-    });
-
     // do things like play music
     Promise.all([list, voice]).then(function(resolutions)    {
 
