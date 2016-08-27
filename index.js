@@ -57,7 +57,7 @@ client.on('message', function (message) {
 function parseCommand(msg)  {
     const parts = msg.content.split(' ');
 
-    if(parts[0] !== '<@218227587166502923>')    {
+    if(parts[0] !== '<@' + process.env.discord_client_id + '>')    {
         return false;
     }
 
