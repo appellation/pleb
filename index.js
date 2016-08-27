@@ -42,7 +42,7 @@ client.on('message', function (message) {
         const args = parts.slice(1);
 
         try {
-            new commands[command](client, message, args);
+            commands[command](client, message, args);
         }   catch(e)    {
             client.reply(message, 'when I said I was simple, I meant it...');
             console.error(e);
