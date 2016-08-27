@@ -17,6 +17,7 @@
   "dependencies": {
     "discord.js": "^8.1.0",
     "dotenv": "^2.0.0",
+    "knuth-shuffle": "^1.0.1",
     "raven": "^0.12.1",
     "underscore": "^1.8.3",
     "url": "^0.11.0",
