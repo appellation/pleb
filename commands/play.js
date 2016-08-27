@@ -22,6 +22,12 @@ function Play (client, msg, args) {
      */
     var list;
 
+    /**
+     * String with message to send on play.
+     * @var {string} onPlay
+     */
+    var onPlay;
+
     // if no valid URL provided, search using other params
     if(!validUrl.is_web_uri(args[0]))   {
         const q = args.join(' ');
@@ -35,7 +41,7 @@ function Play (client, msg, args) {
                     console.error(err);
                 }   else    {
                     const ytUrl = 'https://www.youtube.com/watch?v=' + result.items[0].id.videoId;
-                    client.reply(msg, 'now playing: ' + ytUrl);
+                    onPlay = 'now playing: ' + ytUrl;
                     resolve([ytUrl]);
                 }
             });
@@ -156,6 +162,10 @@ function Play (client, msg, args) {
             var stream;
             try {
                 stream = ytStream(list[pos]);
+
+                if(onPlay)  {
+                    msg.reply(onPlay);
+                }
             }   catch(e)    {
                 console.error('Stream initialization error - ' + e);
                 return;
@@ -168,9 +178,16 @@ function Play (client, msg, args) {
             stream.on('error', function(e)  {
                 console.error('stream error' + e);
             }).on('end', function()  {
+
+                // test if there are still songs to play
                 if(pos + 1 < list.length) {
                     playList(list, pos + 1);
+
+                    // if there aren't more songs, disconnect
+                }   else    {
+                    client.voiceConnections.get('server', msg.server).destroy();
                 }
+
                 console.log('Song ended.');
             }).on('close', function()   {
                 console.log('Stream closed.');
