@@ -7,10 +7,13 @@ const shuffle = require('knuth-shuffle').knuthShuffle;
 
 /**
  * Structure a playlist of Streams.
+ * @constructor
  */
 function Playlist() {
 
     // VARIABLES
+
+    const that = this;
 
     /**
      * The playlist array.
@@ -36,11 +39,23 @@ function Playlist() {
     };
 
     /**
+     * Check if there is a current song.
+     * @returns {boolean}
+     */
+    this.hasCurrent = function() {
+        return typeof list[pos] === 'undefined';
+    };
+
+    /**
      * Get the current Stream.
-     * @returns {Stream}
+     * @returns {Stream|boolean}
      */
     this.getCurrent = function()    {
-        return list[pos];
+        if(that.hasCurrent())   {
+            return list[pos];
+        }   else    {
+            return false;
+        }
     };
 
     /**
@@ -56,7 +71,7 @@ function Playlist() {
      * Check if there is a next song.
      * @returns {boolean}
      */
-    this.isNext = function()    {
+    this.hasNext = function()    {
         return typeof list[pos + 1] !== 'undefined';
     };
 
@@ -65,7 +80,7 @@ function Playlist() {
      * @returns {Stream|boolean}
      */
     this.getNext = function()   {
-        if(this.isNext())   {
+        if(this.hasNext())   {
             return list[pos + 1];
         }   else    {
             return false;
