@@ -51,7 +51,7 @@ function Play (client, msg, args) {
             });
 
             ee.on('start', function(list)    {
-                if(list.hasNext())  {
+                if(list.length() > 1)  {
                     msg.channel.sendMessage('now playing ' + (list.pos() + 1) + ' of ' + list.length() + ': ' + list.getCurrent().get().name);
                 }
             })

@@ -14,6 +14,8 @@ const ytNode = require('youtube-node');
 const _ = require('underscore');
 const EventEmitter = require('events');
 
+const ee = new EventEmitter();
+
 const ytApi = new ytNode();
 ytApi.setKey(process.env.youtube);
 
@@ -123,6 +125,14 @@ function YTPlaylist(vc) {
      */
     this.getList = function()    {
         return list;
+    };
+
+    /**
+     * Get the EventEmitter: `start`, `next`, `end`.
+     * @returns {EventEmitter}
+     */
+    this.getEvents = function() {
+        return ee;
     };
 
     /**
@@ -352,7 +362,6 @@ function YTPlaylist(vc) {
      * @returns {EventEmitter}
      */
     function play()   {
-        const ee = new EventEmitter();
 
         if(!list.hasCurrent())  {
             ee.emit('error');
