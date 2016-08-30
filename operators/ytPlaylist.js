@@ -376,40 +376,37 @@ function YTPlaylist(vc) {
 
         const stream = vc.playRawStream(ytStream(list.getCurrent().get().url));
 
-        stream.then(function(intent, err)   {
-            if(!err)    {
-                ee.emit('start', list);
+        stream.then(function(intent)   {
+            ee.emit('start', list);
 
-                /**
-                 * Resolves on stream end, if not destroyed.
-                 */
-                new Promise(function(resolve, reject)   {
-                    var destroyed = false;
-                    ee.on('destroy', function() {
-                        destroyed = true;
-                        reject();
-                    });
-                    if(destroyed)   {
-                        return;
-                    }
-
-                    intent.once('end', function()   {
-                        resolve();
-                    })
-                }).then(function()  {
-                    if(list.hasNext())  {
-                        list.next();
-                        ee.emit('next', list);
-                        play();
-                    }   else    {
-                        ee.emit('end');
-                    }
-                }).catch(function() {
-                    ee.emit('end');
+            /**
+             * Resolves on stream end, if not destroyed.
+             */
+            return new Promise(function(resolve, reject)   {
+                var destroyed = false;
+                ee.on('destroy', function() {
+                    destroyed = true;
+                    reject();
                 });
+                if(destroyed)   {
+                    return;
+                }
+
+                intent.once('end', function()   {
+                    resolve();
+                })
+            });
+        }).then(function()   {
+            if(list.hasNext())  {
+                list.next();
+                ee.emit('next', list);
+                play();
             }   else    {
-                console.error(err);
+                ee.emit('end');
             }
+        }).catch(function (err) {
+            ee.emit('error', err);
+            console.error(err);
         });
 
         return ee;
