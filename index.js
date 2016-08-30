@@ -24,7 +24,9 @@ client.loginWithToken(process.env.discord, function(err, token)   {
 const commands = {
     play: require('./commands/play'),
     stfu: require('./commands/stfu'),
-    test: require('./commands/test')
+    test: require('./commands/test'),
+    pause: require('./commands/pause'),
+    resume: require('./commands/resume')
 };
 
 client.on('ready', function()   {

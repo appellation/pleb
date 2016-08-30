@@ -61,6 +61,10 @@ function Play (client, msg, args) {
             client.stopTyping(msg.channel);
         });
 
+        ee.on('end', function() {
+            yt.destroy();
+        });
+
     }).catch(function(err)  {
         console.error(err);
         msg.reply(err);
