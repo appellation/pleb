@@ -416,12 +416,16 @@ function YTPlaylist(conn, listIn) {
              * Resolves on stream end, if not destroyed.
              */
             return new Promise(function(resolve, reject)   {
-                var destroyed = false;
-                ee.once('destroy', function() {
-                    destroyed = true;
+                var cancel = false;
+                ee.once('destroyed', function() {
+                    cancel = true;
                     reject();
                 });
-                if(destroyed)   {
+                ee.once('stopped', function()   {
+                    cancel = true;
+                    reject();
+                });
+                if(cancel)   {
                     return;
                 }
 
