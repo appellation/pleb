@@ -90,6 +90,8 @@ function YTPlaylist(vc) {
      */
     this.destroy = function()   {
         vc.destroy();
+        ee.emit('destroyed');
+        vc = null;
     };
 
     /**
@@ -375,18 +377,38 @@ function YTPlaylist(vc) {
         const stream = vc.playRawStream(ytStream(list.getCurrent().get().url));
 
         stream.then(function(intent, err)   {
-            ee.emit('start', list);
-
             if(!err)    {
-                if(list.hasNext())  {
+                ee.emit('start', list);
+
+                /**
+                 * Resolves on stream end, if not destroyed.
+                 */
+                new Promise(function(resolve, reject)   {
+                    var destroyed = false;
+                    ee.on('destroy', function() {
+                        destroyed = true;
+                        reject();
+                    });
+                    if(destroyed)   {
+                        return;
+                    }
+
                     intent.once('end', function()   {
+                        resolve();
+                    })
+                }).then(function()  {
+                    if(list.hasNext())  {
                         list.next();
                         ee.emit('next', list);
                         play();
-                    });
-                }   else    {
+                    }   else    {
+                        ee.emit('end');
+                    }
+                }).catch(function() {
                     ee.emit('end');
-                }
+                });
+            }   else    {
+                console.error(err);
             }
         });
 
