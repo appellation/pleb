@@ -6,9 +6,9 @@
  * @param {[]} args
  */
 function Stfu(client, msg, args)    {
-    const vc = client.voiceConnections.get('server', msg.server);
-    if(vc)  {
-        vc.destroy();
+    const playlist = msg.server.ytPlaylist;
+    if(playlist)  {
+        playlist.destroy();
     }   else    {
         msg.reply('when someone asks you to do something and you\'ve already done it. :joy:');
     }
