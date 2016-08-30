@@ -2,6 +2,8 @@
  * Created by Will on 8/27/2016.
  */
 
+"use strict";
+
 const Playlist = require('../structures/playlist');
 const Stream = require('../structures/stream');
 
@@ -10,6 +12,7 @@ const validUrl = require('valid-url');
 const ytStream = require('youtube-audio-stream');
 const ytNode = require('youtube-node');
 const _ = require('underscore');
+const EventEmitter = require('events');
 
 const ytApi = new ytNode();
 ytApi.setKey(process.env.youtube);
@@ -52,41 +55,39 @@ function YTPlaylist(vc) {
 
     /**
      * Start the playlist.
-     * @returns {Promise}
+     * @returns {EventEmitter} Possible `start`, `next`, `end`.
      */
     this.start = function() {
         if(list.hasCurrent())    {
-            return play(list.getCurrent());
+            return play();
         }
     };
 
     /**
-     * Play next song.
-     * @returns {Promise}
+     * Advance the playlist.
+     * @returns {Stream} Next song.
      */
     this.next = function()  {
         if(list.hasNext())  {
             list.next();
-            return play(list.getCurrent());
+            return list.getCurrent();
         }
     };
 
     /**
      * Stop playback.
-     * @returns {Promise|boolean}
      */
     this.stop = function() {
-        if(vc.playing)  {
-            return vc.stopPlaying();
-        }   else    {
-            return true;
+        if(vc.playing) {
+            vc.stopPlaying();
         }
     };
 
+    /**
+     * Destroy the audio connection.
+     */
     this.destroy = function()   {
-        if(vc.playing)  {
-            return vc.destroy();
-        }
+        vc.destroy();
     };
 
     /**
@@ -107,6 +108,9 @@ function YTPlaylist(vc) {
         }
     };
 
+    /**
+     * Shuffle the playlist.
+     */
     this.shuffle = function()   {
         self.stop();
         list.shuffle();
@@ -114,17 +118,34 @@ function YTPlaylist(vc) {
     };
 
     /**
-     * Add a YouTube URL to the playlist.
-     * @param {string} dataIn - A YouTube URL.
-     * @returns {Promise} Resolved when the URL has been added.
+     * Get the current song.
+     * @returns {Playlist}
      */
-    this.add = function(dataIn)   {
-        const urlType = self.getURLType(dataIn);
+    this.getList = function()    {
+        return list;
+    };
 
-        if(urlType === 'playlist')  {
-            return self.addPlaylist(dataIn);
-        }   else if(urlType === 'long video' || urlType === 'short video')  {
-            return self.addVideo(dataIn);
+    /**
+     * Add command arguments to the playlist.
+     * @param {Array} dataIn - Command arguments
+     * @returns {Promise} Resolved when the arguments have been added.
+     */
+    this.addArgs = function(dataIn)   {
+        if(self.isYouTubeURL(dataIn[0]))   {
+            const url = dataIn[0];
+            const urlType = self.getURLType(url);
+
+            if(urlType === 'playlist')  {
+                return self.addPlaylist(url);
+            }   else if(urlType === 'long video' || urlType === 'short video')  {
+                return self.addVideo(url);
+            }   else    {
+                return new Promise(function(resolve, reject)    {
+                    reject();
+                });
+            }
+        }   else   {
+            return self.addQuery(dataIn.join(' '));
         }
     };
 
@@ -137,7 +158,7 @@ function YTPlaylist(vc) {
 
 
         ytApi.addParam('maxResults', '50');
-        ytApi.addParam('part', 'contentDetails');
+        ytApi.addParam('part', 'contentDetails,snippet');
 
         return new Promise(function(resolve, reject)    {
 
@@ -153,7 +174,7 @@ function YTPlaylist(vc) {
                 pageToken = pageToken || null;
 
                 if(pageToken)    {
-                    ytApi.addParam('pageToken', pageToken)
+                    ytApi.addParam('pageToken', pageToken);
                 }
 
                 ytApi.getPlayListsItemsById(url.parse(playlistUrl, true).query.list, function(err, result)  {
@@ -179,26 +200,53 @@ function YTPlaylist(vc) {
 
     /**
      * Add a YouTube video to the playlist.
-     * @param videoUrl
+     * @param {string} videoUrl
      * @returns {Promise}
      */
     this.addVideo = function(videoUrl)  {
         const videoType = self.getURLType(videoUrl);
 
         return new Promise(function(resolve, reject)    {
-            if(!self.isYouTubeURL(videoUrl) || videoType !== 'short video' || videoType !== 'long video')   {
+            if(!self.isYouTubeURL(videoUrl) || (videoType !== 'short video' && videoType !== 'long video'))   {
                 reject('Not a valid YouTube video URL.');
             }
 
+            ytApi.addParam('part', 'snippet,id');
             ytApi.getById(self.getURLID(videoUrl), function(err, result)    {
                 if(err) {
                     reject('Couldn\'t retrieve video information.');
                 }
 
-                list.add(new Stream('https://wwww.youtube.com/watch?v=' + result.id, result.snippet.title));
+                list.add(new Stream('https://wwww.youtube.com/watch?v=' + result.items[0].id, result.items[0].snippet.title));
                 resolve(list);
             });
         })
+    };
+
+    /**
+     * Add a YouTube search query to the playlist.
+     * @param {string} query
+     * @returns {Promise}
+     */
+    this.addQuery = function(query) {
+        ytApi.addParam('type', 'video');
+        ytApi.addParam('part', 'id,snippet');
+
+        return new Promise(function(resolve, reject)    {
+            if(!query)  {
+                reject();
+            }
+
+            ytApi.search(query, 1, function(err, result)   {
+                if(err)   {
+                    reject(err);
+                    console.error(err);
+                }   else    {
+                    list.add(new Stream('https://www.youtube.com/watch?v=' + result.items[0].id.videoId, result.items[0].snippet.title));
+                    resolve(list);
+                }
+            });
+        });
     };
 
     /**
@@ -300,16 +348,39 @@ function YTPlaylist(vc) {
     // PRIVATE FUNCTIONS
 
     /**
-     * Play a stream.
-     * @param {Stream} stream
-     * @returns {Promise}
+     * Play the playlist.
+     * @returns {EventEmitter}
      */
-    function play(stream)   {
+    function play()   {
+        const ee = new EventEmitter();
+
+        if(!list.hasCurrent())  {
+            ee.emit('error');
+        }
+
         if(vc.playing)  {
             self.stop();
         }
 
-        return vc.playRawStream(ytStream(stream.get().url));
+        const stream = vc.playRawStream(ytStream(list.getCurrent().get().url));
+
+        stream.then(function(intent, err)   {
+            ee.emit('start', list);
+
+            if(!err)    {
+                if(list.hasNext())  {
+                    intent.once('end', function()   {
+                        list.next();
+                        ee.emit('next', list);
+                        play();
+                    });
+                }   else    {
+                    ee.emit('end');
+                }
+            }
+        });
+
+        return ee;
     }
 }
 

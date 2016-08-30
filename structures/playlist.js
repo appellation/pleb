@@ -13,7 +13,7 @@ function Playlist() {
 
     // VARIABLES
 
-    const that = this;
+    const self = this;
 
     /**
      * The playlist array.
@@ -43,26 +43,22 @@ function Playlist() {
      * @returns {boolean}
      */
     this.hasCurrent = function() {
-        return typeof list[pos] === 'undefined';
+        return typeof list[pos] !== 'undefined';
     };
 
     /**
      * Get the current Stream.
-     * @returns {Stream|boolean}
+     * @returns {Stream}
      */
     this.getCurrent = function()    {
-        if(that.hasCurrent())   {
-            return list[pos];
-        }   else    {
-            return false;
-        }
+        return list[pos];
     };
 
     /**
      * Advance the playlist position counter.
      */
     this.next = function()  {
-        if(this.isNext()) {
+        if(self.hasNext()) {
             pos++;
         }
     };
@@ -77,14 +73,22 @@ function Playlist() {
 
     /**
      * Get the next Stream in the playlist;
-     * @returns {Stream|boolean}
+     * @returns {Stream}
      */
     this.getNext = function()   {
-        if(this.hasNext())   {
-            return list[pos + 1];
-        }   else    {
-            return false;
-        }
+        return list[pos + 1];
+    };
+
+    /**
+     * Get the length of the playlist.
+     * @returns {Number}
+     */
+    this.length = function()    {
+        return list.length;
+    };
+
+    this.pos = function()   {
+        return pos;
     };
 
     /**

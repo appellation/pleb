@@ -23,7 +23,8 @@ client.loginWithToken(process.env.discord, function(err, token)   {
 // Define commands
 const commands = {
     play: require('./commands/play'),
-    stfu: require('./commands/stfu')
+    stfu: require('./commands/stfu'),
+    test: require('./commands/test')
 };
 
 client.on('ready', function()   {

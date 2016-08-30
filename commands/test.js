@@ -1,22 +1,15 @@
 /**
- * Created by Will on 8/25/2016.
+ * Created by Will on 8/28/2016.
  */
-const ytStream = require('youtube-audio-stream');
-const ytNode = require('youtube-node');
-const validUrl = require('valid-url');
-const URL = require('url');
-const _ = require('underscore');
-
-const ytApi = new ytNode();
-ytApi.setKey(process.env.youtube);
 
 /**
+ * Test command.
  * @param {Client} client
  * @param {Message} msg
- * @param {[]} args
+ * @param {Array} args
  * @constructor
  */
-function Play (client, msg, args) {
+function Test(client, msg, args)    {
     const YTPlaylist = require('../operators/ytPlaylist');
 
     const vc = new Promise(function(resolve, reject)    {
@@ -43,19 +36,7 @@ function Play (client, msg, args) {
         msg.server.ytPlaylist = yt;
 
         yt.addArgs(args).then(function(list) {
-            const ee = yt.start();
-            ee.on('start', function(list)   {
-                if(!list.hasNext() && list.length() === 1)  {
-                    msg.reply('now playing ' + yt.getList().getCurrent().get().url);
-                }
-            });
-
-            ee.on('start', function(list)    {
-                if(list.hasNext())  {
-                    msg.channel.sendMessage('now playing ' + (list.pos() + 1) + ' of ' + list.length() + ': ' + list.getCurrent().get().name);
-                }
-            })
-
+            yt.start();
         }).catch(function(err)  {
             console.error(err);
         });
@@ -64,4 +45,4 @@ function Play (client, msg, args) {
     });
 }
 
-module.exports = Play;
+module.exports = Test;
