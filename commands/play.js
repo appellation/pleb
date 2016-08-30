@@ -10,6 +10,9 @@
  */
 function Play (client, msg, args) {
     const YTPlaylist = require('../operators/ytPlaylist');
+    const Playlist = require('../structures/playlist');
+
+    client.startTyping(msg.channel);
 
     const vc = new Promise(function(resolve, reject)    {
 
@@ -30,29 +33,38 @@ function Play (client, msg, args) {
         }
     });
 
+    var yt;
     vc.then(function(conn)  {
-        const yt = new YTPlaylist(conn);
-        msg.server.ytPlaylist = yt;
 
-        yt.addArgs(args).then(function(list) {
-            const ee = yt.start();
-            ee.on('start', function(list)   {
-                if(!list.hasNext() && list.length() === 1 && !yt.isYouTubeURL(args[0]))  {
-                    msg.reply('now playing ' + yt.getList().getCurrent().get().url);
-                }
-            });
+        if(msg.server.ytPlaylist)   {
+            yt = msg.server.ytPlaylist;
+            yt.setVC(conn);
+        }   else    {
+            yt = new YTPlaylist(conn);
+            msg.server.ytPlaylist = yt;
+        }
 
-            ee.on('start', function(list)    {
-                if(list.length() > 1)  {
-                    msg.channel.sendMessage('now playing ' + (list.pos() + 1) + ' of ' + list.length() + ': ' + list.getCurrent().get().name);
-                }
-            })
+        yt.setList(new Playlist());
 
-        }).catch(function(err)  {
-            console.error(err);
+        return yt.addArgs(args);
+    }).then(function(list)  {
+        const ee = yt.start();
+        ee.on('start', function(list)   {
+            if(!list.hasNext() && list.length() === 1 && !yt.isYouTubeURL(args[0]))  {
+                msg.reply('now playing ' + list.getCurrent().get().url);
+            }
+
+            if(list.length() > 1)  {
+                msg.channel.sendMessage('now playing ' + (list.pos() + 1) + ' of ' + list.length() + ': ' + list.getCurrent().get().name);
+            }
+
+            client.stopTyping(msg.channel);
         });
+
     }).catch(function(err)  {
         console.error(err);
+        msg.reply(err);
+        client.stopTyping(msg.channel);
     });
 }
 
