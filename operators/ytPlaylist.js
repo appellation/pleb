@@ -127,7 +127,7 @@ function YTPlaylist(conn, listIn) {
      * Pause playback.
      */
     this.pause = function()    {
-        if(vc.playing && !vc.paused)  {
+        if(!vc.paused)  {
             vc.pause();
             ee.emit('paused');
         }
@@ -137,7 +137,7 @@ function YTPlaylist(conn, listIn) {
      * Resume playback.
      */
     this.resume = function() {
-        if(vc.playing && vc.paused)  {
+        if(vc.paused)  {
             vc.resume();
             ee.emit('resumed');
         }

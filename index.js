@@ -24,7 +24,8 @@ client.loginWithToken(process.env.discord, function(err, token)   {
 const commands = {
     play: require('./commands/play'),
     stfu: require('./commands/stfu'),
-    test: require('./commands/test')
+    pause: require('./commands/pause'),
+    resume: require('./commands/resume')
 };
 
 client.on('ready', function()   {
@@ -33,6 +34,10 @@ client.on('ready', function()   {
 
 client.on('serverCreated', function(server) {
     client.sendMessage(server.defaultChannel, 'Sup.');
+});
+
+client.on('serverNewMember', function(server, user) {
+    client.sendMessage(server.defaultChannel, 'Welcome ' + user.mention() + '!')
 });
 
 client.on('message', function (message) {
