@@ -37,6 +37,10 @@ client.on('serverCreated', function(server) {
     client.sendMessage(server.defaultChannel, 'Sup.');
 });
 
+client.on('serverNewMember', function(server, user) {
+    client.sendMessage(server.defaultChannel, 'Welcome ' + user.mention() + '!')
+});
+
 client.on('message', function (message) {
     const parts = parseCommand(message);
 
