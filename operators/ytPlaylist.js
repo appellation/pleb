@@ -189,7 +189,8 @@ function YTPlaylist(vc) {
 
                 ytApi.getPlayListsItemsById(url.parse(playlistUrl, true).query.list, function(err, result)  {
                     if(err) {
-                        reject(new Error('Error retrieving playlist details.'));
+                        reject(new Error('Error retrieving playlist details.  ' + err));
+                        return;
                     }
 
                     _.each(result.items, function(elem) {

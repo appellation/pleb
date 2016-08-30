@@ -1,14 +1,6 @@
 /**
  * Created by Will on 8/25/2016.
  */
-const ytStream = require('youtube-audio-stream');
-const ytNode = require('youtube-node');
-const validUrl = require('valid-url');
-const URL = require('url');
-const _ = require('underscore');
-
-const ytApi = new ytNode();
-ytApi.setKey(process.env.youtube);
 
 /**
  * @param {Client} client
@@ -45,7 +37,7 @@ function Play (client, msg, args) {
         yt.addArgs(args).then(function(list) {
             const ee = yt.start();
             ee.on('start', function(list)   {
-                if(!list.hasNext() && list.length() === 1)  {
+                if(!list.hasNext() && list.length() === 1 && !yt.isYouTubeURL(args[0]))  {
                     msg.reply('now playing ' + yt.getList().getCurrent().get().url);
                 }
             });
