@@ -21,14 +21,15 @@ ytApi.setKey(process.env.youtube);
 
 /**
  * Operate a playlist with YouTube.
- * @param {VoiceConnection} vc
+ * @param {VoiceConnection} conn
+ * @param {Playlist} [listIn]
  * @constructor
  */
-function YTPlaylist(vc) {
+function YTPlaylist(conn, listIn) {
 
     // CONSTRUCTOR
 
-    if(!vc) {
+    if(!conn) {
         throw new Error('No voice connection.');
     }
 
@@ -41,6 +42,12 @@ function YTPlaylist(vc) {
     const self = this;
 
     /**
+     * Set VoiceConnection.
+     * @type {VoiceConnection}
+     */
+    var vc = conn;
+
+    /**
      * Regular expression for evaluating video and playlist IDs.
      * @type {RegExp}
      */
@@ -49,18 +56,41 @@ function YTPlaylist(vc) {
     /**
      * @type {Playlist}
      */
-    let list = new Playlist();
+    let list = listIn || new Playlist();
 
 
 
     // PUBLIC FUNCTIONS
 
     /**
+     * Set the voice connection.
+     * @param conn
+     * @returns {YTPlaylist}
+     */
+    this.setVC = function(conn)   {
+        vc = conn;
+        return self;
+    };
+
+    /**
+     * Set the playlist.
+     * @param {Playlist} listIn
+     */
+    this.setList = function(listIn)   {
+        list = listIn;
+    };
+
+    /**
      * Start the playlist.
-     * @returns {EventEmitter} Possible `start`, `next`, `end`.
+     * @returns {EventEmitter}
      */
     this.start = function() {
+        if(vc.playing)  {
+            self.stop();
+        }
+
         if(list.hasCurrent())    {
+            ee.removeAllListeners('start');
             return play();
         }
     };
@@ -80,9 +110,8 @@ function YTPlaylist(vc) {
      * Stop playback.
      */
     this.stop = function() {
-        if(vc.playing) {
-            vc.stopPlaying();
-        }
+        vc.stopPlaying();
+        ee.emit('stopped');
     };
 
     /**
@@ -100,6 +129,7 @@ function YTPlaylist(vc) {
     this.pause = function()    {
         if(vc.playing && !vc.paused)  {
             vc.pause();
+            ee.emit('paused');
         }
     };
 
@@ -109,6 +139,7 @@ function YTPlaylist(vc) {
     this.resume = function() {
         if(vc.playing && vc.paused)  {
             vc.resume();
+            ee.emit('resumed');
         }
     };
 
@@ -116,7 +147,9 @@ function YTPlaylist(vc) {
      * Shuffle the playlist.
      */
     this.shuffle = function()   {
-        self.stop();
+        if(vc.playing)  {
+            self.stop();
+        }
         list.shuffle();
         self.start();
     };
@@ -384,7 +417,7 @@ function YTPlaylist(vc) {
              */
             return new Promise(function(resolve, reject)   {
                 var destroyed = false;
-                ee.on('destroy', function() {
+                ee.once('destroy', function() {
                     destroyed = true;
                     reject();
                 });
