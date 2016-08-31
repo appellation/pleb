@@ -9,7 +9,7 @@ const shuffle = require('knuth-shuffle').knuthShuffle;
  * Structure a playlist of Streams.
  * @constructor
  */
-function Playlist() {
+function PlaylistStructure() {
 
     // VARIABLES
 
@@ -17,7 +17,7 @@ function Playlist() {
 
     /**
      * The playlist array.
-     * @type {Stream[]}
+     * @type {StreamStructure[]}
      */
     const list = [];
 
@@ -32,7 +32,7 @@ function Playlist() {
 
     /**
      * Get the playlist.
-     * @returns {Stream[]}
+     * @returns {StreamStructure[]}
      */
     this.get = function()   {
         return list;
@@ -47,8 +47,8 @@ function Playlist() {
     };
 
     /**
-     * Get the current Stream.
-     * @returns {Stream}
+     * Get the current StreamStructure.
+     * @returns {StreamStructure}
      */
     this.getCurrent = function()    {
         return list[pos];
@@ -72,8 +72,8 @@ function Playlist() {
     };
 
     /**
-     * Get the next Stream in the playlist;
-     * @returns {Stream}
+     * Get the next StreamStructure in the playlist;
+     * @returns {StreamStructure}
      */
     this.getNext = function()   {
         return list[pos + 1];
@@ -100,8 +100,8 @@ function Playlist() {
     };
 
     /**
-     * Push a Stream to the playlist.
-     * @param {Stream} stream
+     * Push a StreamStructure to the playlist.
+     * @param {StreamStructure} stream
      */
     this.add = function(stream)   {
         list.push(stream);

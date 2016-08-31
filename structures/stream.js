@@ -8,7 +8,7 @@
  * @param {string} name
  * @constructor
  */
-function Stream(url, name)   {
+function StreamStructure(url, name)   {
 
     /**
      * Stream data storage.

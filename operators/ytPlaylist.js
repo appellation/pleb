@@ -4,8 +4,8 @@
 
 "use strict";
 
-const Playlist = require('../structures/playlist');
-const Stream = require('../structures/stream');
+const PlaylistStructure = require('../structures/playlist');
+const StreamStructure = require('../structures/stream');
 
 const url = require('url');
 const validUrl = require('valid-url');
@@ -22,7 +22,7 @@ ytApi.setKey(process.env.youtube);
 /**
  * Operate a playlist with YouTube.
  * @param {VoiceConnection} conn
- * @param {Playlist} [listIn]
+ * @param {PlaylistStructure} [listIn]
  * @constructor
  */
 function YTPlaylist(conn, listIn) {
@@ -54,9 +54,9 @@ function YTPlaylist(conn, listIn) {
     const idRegex = /[a-zA-Z0-9-_]+$/;
 
     /**
-     * @type {Playlist}
+     * @type {PlaylistStructure}
      */
-    let list = listIn || new Playlist();
+    let list = listIn || new PlaylistStructure();
 
 
 
@@ -74,7 +74,7 @@ function YTPlaylist(conn, listIn) {
 
     /**
      * Set the playlist.
-     * @param {Playlist} listIn
+     * @param {PlaylistStructure} listIn
      */
     this.setList = function(listIn)   {
         list = listIn;
@@ -97,7 +97,7 @@ function YTPlaylist(conn, listIn) {
 
     /**
      * Advance the playlist.
-     * @returns {Stream} Next song.
+     * @returns {StreamStructure} Next song.
      */
     this.next = function()  {
         if(list.hasNext())  {
@@ -156,7 +156,7 @@ function YTPlaylist(conn, listIn) {
 
     /**
      * Get the current song.
-     * @returns {Playlist}
+     * @returns {PlaylistStructure}
      */
     this.getList = function()    {
         return list;
@@ -229,7 +229,7 @@ function YTPlaylist(conn, listIn) {
                     }
 
                     _.each(result.items, function(elem) {
-                        list.add(new Stream('https://www.youtube.com/watch?v=' + elem.contentDetails.videoId, elem.snippet.title));
+                        list.add(new StreamStructure('https://www.youtube.com/watch?v=' + elem.contentDetails.videoId, elem.snippet.title));
                     });
 
                     if(result.nextPageToken)    {
@@ -263,7 +263,7 @@ function YTPlaylist(conn, listIn) {
                     reject('Couldn\'t retrieve video information.');
                 }
 
-                list.add(new Stream('https://wwww.youtube.com/watch?v=' + result.items[0].id, result.items[0].snippet.title));
+                list.add(new StreamStructure('https://wwww.youtube.com/watch?v=' + result.items[0].id, result.items[0].snippet.title));
                 resolve(list);
             });
         })
@@ -288,7 +288,7 @@ function YTPlaylist(conn, listIn) {
                     reject(err);
                     console.error(err);
                 }   else    {
-                    list.add(new Stream('https://www.youtube.com/watch?v=' + result.items[0].id.videoId, result.items[0].snippet.title));
+                    list.add(new StreamStructure('https://www.youtube.com/watch?v=' + result.items[0].id.videoId, result.items[0].snippet.title));
                     resolve(list);
                 }
             });
