@@ -9,7 +9,7 @@
  * @constructor
  */
 function Play (client, msg, args) {
-    const YTPlaylist = require('../operators/ytPlaylist');
+    const YT = require('../operators/playlist/yt');
     const Playlist = require('../structures/playlist');
 
     client.startTyping(msg.channel);
@@ -40,16 +40,17 @@ function Play (client, msg, args) {
             yt = msg.server.ytPlaylist;
             yt.setVC(conn);
         }   else    {
-            yt = new YTPlaylist(conn);
+            yt = new YT(conn);
             msg.server.ytPlaylist = yt;
         }
 
-        yt.setList(new Playlist());
+        yt.list = new Playlist();
 
-        return yt.addArgs(args);
+        return yt.add(args);
     }).then(function(list)  {
-        const ee = yt.start();
-        ee.on('start', function(list)   {
+        yt.start();
+
+        yt.ee.on('start', function(list)   {
             if(!list.hasNext() && list.length() === 1 && !yt.isYouTubeURL(args[0]))  {
                 msg.reply('now playing ' + list.getCurrent().get().url);
             }
@@ -61,7 +62,7 @@ function Play (client, msg, args) {
             client.stopTyping(msg.channel);
         });
 
-        ee.on('end', function() {
+        yt.ee.on('end', function() {
             yt.destroy();
         });
 

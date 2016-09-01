@@ -28,4 +28,4 @@ function StreamStructure(url, name)   {
     }
 }
 
-module.exports = Stream;
+module.exports = StreamStructure;

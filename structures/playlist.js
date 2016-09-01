@@ -108,4 +108,4 @@ function PlaylistStructure() {
     }
 }
 
-module.exports = Playlist;
+module.exports = PlaylistStructure;
