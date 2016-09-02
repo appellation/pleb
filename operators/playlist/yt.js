@@ -28,7 +28,7 @@
         /**
          * Constructor.
          * @param {VoiceConnection} conn
-         * @param {VoiceConnection} [list]
+         * @param {PlaylistStructure} [list]
          * @constructor
          */
         constructor(conn, list) {
@@ -125,7 +125,7 @@
                 }
 
                 ytApi.addParam('part', 'snippet,id');
-                ytApi.getById(self.getURLID(videoUrl), function(err, result)    {
+                ytApi.getById(YT.getURLID(videoUrl), function(err, result)    {
                     if(err) {
                         reject('Couldn\'t retrieve video information.');
                     }
@@ -183,7 +183,7 @@
          * @static
          */
         static getStream(stream)    {
-            return ytStream(stream.get().url);
+            return ytStream(stream.url);
         }
 
         /**

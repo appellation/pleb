@@ -43,52 +43,62 @@
         /**
          * Start the playlist.
          * @param {GetStream} getStream - Function to get a stream from a StreamStructure
-         * @returns {EventEmitter}
          */
         start(getStream) {
+
+            var init = true;
             const self = this;
 
-            if (this.vc.playing) {
-                this.stop();
-            }
+            function recurse(getStream) {
 
-            if (this.list.hasCurrent()) {
-                this.ee.removeAllListeners('start');
-                this.play(getStream(this.list.getCurrent())).then(function (intent) {
+                if (self.vc.playing) {
+                    self.stop();
+                }
 
-                    /**
-                     * Resolves on stream end, if not destroyed.
-                     */
-                    return new Promise(function (resolve, reject) {
-                        var cancel = false;
-                        self.ee.once('destroyed', function () {
-                            cancel = true;
-                            reject();
-                        });
-                        self.ee.once('stopped', function () {
-                            cancel = true;
-                            reject();
-                        });
-                        if (cancel) {
-                            return;
+                if (self.list.hasCurrent()) {
+                    self.play(getStream(self.list.getCurrent())).then(function (intent) {
+
+                        if(init)    {
+                            self.ee.emit('init');
+                            init = false;
                         }
 
-                        intent.once('end', function () {
-                            resolve();
-                        })
+                        /**
+                         * Resolves on stream end, if not destroyed.
+                         */
+                        return new Promise(function (resolve, reject) {
+                            var cancel = false;
+                            self.ee.once('destroyed', function () {
+                                cancel = true;
+                                reject();
+                            });
+                            self.ee.once('stopped', function () {
+                                cancel = true;
+                                reject();
+                            });
+                            if (cancel) {
+                                return;
+                            }
+
+                            intent.once('end', function () {
+                                resolve();
+                            })
+                        });
+                    }).then(function () {
+                        if (self.list.hasNext()) {
+                            self.list.next();
+                            recurse(getStream);
+                        } else {
+                            self.ee.emit('end');
+                        }
+                    }).catch(function (err) {
+                        self.ee.emit('error', err);
+                        console.error(err);
                     });
-                }).then(function () {
-                    if (self.list.hasNext()) {
-                        self.list.next();
-                        self.start(getStream);
-                    } else {
-                        self.ee.emit('end');
-                    }
-                }).catch(function (err) {
-                    self.ee.emit('error', err);
-                    console.error(err);
-                });
+                }
             }
+
+            recurse(getStream);
         };
 
         /**

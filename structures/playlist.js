@@ -3,109 +3,94 @@
  *
  */
 
-const shuffle = require('knuth-shuffle').knuthShuffle;
+"use strict";
 
-/**
- * Structure a playlist of Streams.
- * @constructor
- */
-function PlaylistStructure() {
-
-    // VARIABLES
-
-    const self = this;
+(function() {
+    const shuffle = require('knuth-shuffle').knuthShuffle;
 
     /**
-     * The playlist array.
-     * @type {StreamStructure[]}
+     * Structure a playlist of Streams.
+     * @constructor
      */
-    const list = [];
+    class PlaylistStructure {
 
-    /**
-     * Current position in the playlist.
-     * @type {number}
-     */
-    var pos = 0;
+        /**
+         * Construct a PlaylistStructure.
+         * @constructor
+         */
+        constructor()   {
 
+            /**
+             * The playlist array.
+             * @type {StreamStructure[]}
+             */
+            this.list = [];
 
-    // FUNCTIONS
-
-    /**
-     * Get the playlist.
-     * @returns {StreamStructure[]}
-     */
-    this.get = function()   {
-        return list;
-    };
-
-    /**
-     * Check if there is a current song.
-     * @returns {boolean}
-     */
-    this.hasCurrent = function() {
-        return typeof list[pos] !== 'undefined';
-    };
-
-    /**
-     * Get the current StreamStructure.
-     * @returns {StreamStructure}
-     */
-    this.getCurrent = function()    {
-        return list[pos];
-    };
-
-    /**
-     * Advance the playlist position counter.
-     */
-    this.next = function()  {
-        if(self.hasNext()) {
-            pos++;
+            /**
+             * Current position in the playlist.
+             * @type {number}
+             */
+            this.pos = 0;
         }
-    };
 
-    /**
-     * Check if there is a next song.
-     * @returns {boolean}
-     */
-    this.hasNext = function()    {
-        return typeof list[pos + 1] !== 'undefined';
-    };
 
-    /**
-     * Get the next StreamStructure in the playlist;
-     * @returns {StreamStructure}
-     */
-    this.getNext = function()   {
-        return list[pos + 1];
-    };
+        /**
+         * Check if there is a current song.
+         * @returns {boolean}
+         */
+        hasCurrent() {
+            return typeof this.list[this.pos] !== 'undefined';
+        };
 
-    /**
-     * Get the length of the playlist.
-     * @returns {Number}
-     */
-    this.length = function()    {
-        return list.length;
-    };
+        /**
+         * Get the current StreamStructure.
+         * @returns {StreamStructure}
+         */
+        getCurrent()    {
+            return this.list[this.pos];
+        };
 
-    this.pos = function()   {
-        return pos;
-    };
+        /**
+         * Advance the playlist position counter.
+         */
+        next()  {
+            if(this.hasNext()) {
+                this.pos++;
+            }
+        };
 
-    /**
-     * Shuffles the playlist.
-     */
-    this.shuffle = function()   {
-        shuffle(list);
-        pos = 0;
-    };
+        /**
+         * Check if there is a next song.
+         * @returns {boolean}
+         */
+        hasNext()    {
+            return typeof this.list[this.pos + 1] !== 'undefined';
+        };
 
-    /**
-     * Push a StreamStructure to the playlist.
-     * @param {StreamStructure} stream
-     */
-    this.add = function(stream)   {
-        list.push(stream);
+        /**
+         * Get the next StreamStructure in the playlist;
+         * @returns {StreamStructure}
+         */
+        getNext()   {
+            return this.list[this.pos + 1];
+        };
+
+        /**
+         * Shuffles the playlist.
+         */
+        shuffle()   {
+            shuffle(this.list);
+            this.pos = 0;
+        };
+
+        /**
+         * Push a StreamStructure to the playlist.
+         * @param {StreamStructure} stream
+         */
+        add(stream)   {
+            this.list.push(stream);
+        }
     }
-}
 
-module.exports = PlaylistStructure;
+    module.exports = PlaylistStructure;
+})();

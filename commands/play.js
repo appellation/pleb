@@ -2,6 +2,8 @@
  * Created by Will on 8/25/2016.
  */
 
+"use strict";
+
 /**
  * @param {Client} client
  * @param {Message} msg
@@ -16,7 +18,9 @@ function Play (client, msg, args) {
 
     const vc = new Promise(function(resolve, reject)    {
 
-        if(!vc) {
+        const clientVC = client.voiceConnections.get('server', msg.server);
+
+        if(!clientVC) {
             if(msg.author.voiceChannel) {
                 client.joinVoiceChannel(msg.author.voiceChannel, function(err, conn)    {
                     if(err) {
@@ -29,36 +33,32 @@ function Play (client, msg, args) {
                 reject('No voice channel to join.');
             }
         }   else    {
-            resolve(client.voiceConnections.get('server', msg.server));
+            resolve(clientVC);
         }
     });
 
     var yt;
     vc.then(function(conn)  {
 
-        if(msg.server.ytPlaylist)   {
-            yt = msg.server.ytPlaylist;
-            yt.setVC(conn);
-        }   else    {
-            yt = new YT(conn);
-            msg.server.ytPlaylist = yt;
-        }
-
-        yt.list = new Playlist();
+        yt = new YT(conn, new Playlist());
+        msg.server.ytPlaylist = yt;
 
         return yt.add(args);
-    }).then(function(list)  {
+    }).then(function()  {
         yt.start();
 
-        yt.ee.on('start', function(list)   {
-            if(!list.hasNext() && list.length() === 1 && !yt.isYouTubeURL(args[0]))  {
-                msg.reply('now playing ' + list.getCurrent().get().url);
+        yt.ee.on('start', function(playlist)   {
+            if(playlist.list.length === 1)  {
+                msg.reply('now playing ' + playlist.getCurrent().url);
             }
 
-            if(list.length() > 1)  {
-                msg.channel.sendMessage('now playing ' + (list.pos() + 1) + ' of ' + list.length() + ': ' + list.getCurrent().get().name);
+            if(playlist.list.length > 1)  {
+                msg.channel.sendMessage('now playing ' + (playlist.pos + 1) + ' of ' + playlist.list.length + ': ' + playlist.getCurrent().name);
             }
 
+        });
+
+        yt.ee.on('init', function() {
             client.stopTyping(msg.channel);
         });
 
