@@ -167,9 +167,10 @@
         /**
          * Start the playlist.
          * @override
+         * @param msg {Message} - The message that started the playlist.
          */
-        start() {
-            super.start(YT.getStream);
+        start(msg) {
+            super.start(msg, YT.getStream);
         }
 
 

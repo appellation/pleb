@@ -12,7 +12,7 @@
  */
 function Play (client, msg, args) {
     const YT = require('../operators/playlist/yt');
-    const Playlist = require('../structures/playlist');
+    const PlaylistStructure = require('../structures/playlist');
 
     client.startTyping(msg.channel);
 
@@ -40,32 +40,19 @@ function Play (client, msg, args) {
     var yt;
     vc.then(function(conn)  {
 
-        yt = new YT(conn, new Playlist());
-        msg.server.ytPlaylist = yt;
+        if(msg.server.playlist) {
+            msg.server.playlist.stop();
+        }
+
+        yt = new YT(conn, new PlaylistStructure());
+        msg.server.playlist = yt;
 
         return yt.add(args);
     }).then(function()  {
-        yt.start();
-
-        yt.ee.on('start', function(playlist)   {
-            if(playlist.list.length === 1)  {
-                msg.reply('now playing ' + playlist.getCurrent().url);
-            }
-
-            if(playlist.list.length > 1)  {
-                msg.channel.sendMessage('now playing ' + (playlist.pos + 1) + ' of ' + playlist.list.length + ': ' + playlist.getCurrent().name);
-            }
-
-        });
-
-        yt.ee.on('init', function() {
+        yt.start(msg);
+        yt.ee.once('init', function()   {
             client.stopTyping(msg.channel);
-        });
-
-        yt.ee.on('end', function() {
-            yt.destroy();
-        });
-
+        })
     }).catch(function(err)  {
         console.error(err);
         msg.reply(err);

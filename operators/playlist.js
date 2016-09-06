@@ -42,9 +42,10 @@
 
         /**
          * Start the playlist.
-         * @param {GetStream} getStream - Function to get a stream from a StreamStructure
+         * @param {Message} msg - The message used to execute this method.
+         * @param {GetStream} getStream - Function to get a raw stream from a StreamStructure
          */
-        start(getStream) {
+        start(msg, getStream) {
 
             var init = true;
             const self = this;
@@ -59,7 +60,7 @@
                     self.play(getStream(self.list.getCurrent())).then(function (intent) {
 
                         if(init)    {
-                            self.ee.emit('init');
+                            self.ee.emit('init', self.list);
                             init = false;
                         }
 
@@ -95,8 +96,27 @@
                         self.ee.emit('error', err);
                         console.error(err);
                     });
+                }   else    {
+                    self.ee.emit('end');
                 }
             }
+
+            this.ee.on('start', function(playlist)   {
+                if(playlist.list.length > 1)  {
+                    msg.channel.sendMessage('now playing ' + (playlist.pos + 1) + ' of ' + playlist.list.length + ': ' + playlist.getCurrent().name);
+                }
+
+            });
+
+            this.ee.once('init', function(playlist) {
+                if(playlist.list.length === 1)  {
+                    msg.reply('now playing ' + playlist.getCurrent().url);
+                }
+            });
+
+            this.ee.once('end', function() {
+                this.destroy();
+            });
 
             recurse(getStream);
         };
