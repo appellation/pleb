@@ -6,8 +6,8 @@
 
 (function() {
 
-    const Playlist = require('../playlist');
-    const StreamStructure = require('../../structures/stream');
+    const Playlist = require('../operators/playlist');
+    const StreamStructure = require('../structures/stream');
 
     const URL = require('url');
     const validUrl = require('valid-url');

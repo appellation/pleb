@@ -10,7 +10,7 @@
  * @constructor
  */
 function Test(client, msg, args)    {
-    const YT = require('../operators/playlist/yt');
+    const YT = require('../interfaces/yt');
     const PlaylistStructure = require('../structures/playlist');
 
     const vc = new Promise(function(resolve, reject)    {

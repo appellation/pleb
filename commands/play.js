@@ -11,7 +11,7 @@
  * @constructor
  */
 function Play (client, msg, args) {
-    const YT = require('../operators/playlist/yt');
+    const YT = require('../interfaces/yt');
     const PlaylistStructure = require('../structures/playlist');
 
     client.startTyping(msg.channel);
