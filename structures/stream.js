@@ -2,30 +2,23 @@
  * Created by Will on 8/27/2016.
  */
 
-/**
- * Data about a stream.
- * @param {string} url
- * @param {string} name
- * @constructor
- */
-function Stream(url, name)   {
+"use strict";
 
-    /**
-     * Stream data storage.
-     * @type {{url: string, name: string}}
-     */
-    const data = {
-        url,
-        name
-    };
+(function() {
 
-    /**
-     * Get stream data.
-     * @returns {{url: string, name: string}}
-     */
-    this.get = function()   {
-        return data;
+    class StreamStructure   {
+
+        /**
+         * Data about a stream.
+         * @param {string} url
+         * @param {string} name
+         * @constructor
+         */
+        constructor(url, name)  {
+            this.url = url;
+            this.name = name;
+        }
     }
-}
 
-module.exports = Stream;
+    module.exports = StreamStructure;
+})();

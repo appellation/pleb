@@ -19,6 +19,7 @@
     "dotenv": "^2.0.0",
     "knuth-shuffle": "^1.0.1",
     "raven": "^0.12.1",
+    "soundcloud": "^3.1.2",
     "underscore": "^1.8.3",
     "url": "^0.11.0",
     "valid-url": "^1.0.9",

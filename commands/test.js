@@ -10,7 +10,8 @@
  * @constructor
  */
 function Test(client, msg, args)    {
-    const YTPlaylist = require('../operators/ytPlaylist');
+    const YT = require('../interfaces/yt');
+    const PlaylistStructure = require('../structures/playlist');
 
     const vc = new Promise(function(resolve, reject)    {
 
@@ -32,16 +33,26 @@ function Test(client, msg, args)    {
     });
 
     vc.then(function(conn)  {
-        const yt = new YTPlaylist(conn);
-        msg.server.ytPlaylist = yt;
+        var yt;
 
-        yt.addArgs(args).then(function(list) {
+        if(msg.server.ytPlaylist)   {
+            yt = msg.server.ytPlaylist;
+            yt.list = new PlaylistStructure();
+        }   else    {
+            yt = new YT(conn);
+            msg.server.ytPlaylist = yt;
+        }
+
+        yt.add(args).then(function(list) {
             yt.start();
+            yt.ee.on('end', function()  {
+                msg.reply('song ended');
+            })
         }).catch(function(err)  {
-            console.error(err);
+            console.error(new Error(err));
         });
     }).catch(function(err)  {
-        console.error(err);
+        console.error(new Error(err));
     });
 }
 

@@ -2,7 +2,7 @@
  * Created by Will on 8/30/2016.
  */
 function Pause(client, msg, args)   {
-    const playlist = msg.server.ytPlaylist;
+    const playlist = msg.server.playlist;
     if(playlist)    {
         playlist.pause();
     }   else    {

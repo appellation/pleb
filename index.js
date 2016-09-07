@@ -24,6 +24,7 @@ client.loginWithToken(process.env.discord, function(err, token)   {
 const commands = {
     play: require('./commands/play'),
     stfu: require('./commands/stfu'),
+    shuffle: require('./commands/shuffle'),
     pause: require('./commands/pause'),
     resume: require('./commands/resume')
 };
@@ -51,7 +52,7 @@ client.on('message', function (message) {
             commands[command](client, message, args);
         }   catch(e)    {
             client.reply(message, 'when I said I was simple, I meant it...');
-            console.error(e);
+            console.error(new Error(e));
         }
     }
 });

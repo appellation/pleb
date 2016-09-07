@@ -6,10 +6,10 @@
  * @param {[]} args
  */
 function Stfu(client, msg, args)    {
-    const playlist = msg.server.ytPlaylist;
+    const playlist = msg.server.playlist;
     if(playlist)  {
         playlist.destroy();
-        delete msg.server.ytPlaylist;
+        delete msg.server.playlist;
     }   else    {
         msg.reply('when someone asks you to do something and you\'ve already done it. :joy:');
     }
