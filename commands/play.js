@@ -12,32 +12,14 @@
  */
 function Play (client, msg, args) {
     const YT = require('../interfaces/yt');
+    const VC = require('../operators/voiceConnection');
     const PlaylistStructure = require('../structures/playlist');
 
     client.startTyping(msg.channel);
 
-    const vc = new Promise(function(resolve, reject)    {
+    const vc = VC.check(client, msg);
 
-        const clientVC = client.voiceConnections.get('server', msg.server);
-
-        if(!clientVC) {
-            if(msg.author.voiceChannel) {
-                client.joinVoiceChannel(msg.author.voiceChannel, function(err, conn)    {
-                    if(err) {
-                        reject(err);
-                    }   else    {
-                        resolve(conn);
-                    }
-                });
-            }   else    {
-                reject('No voice channel to join.');
-            }
-        }   else    {
-            resolve(clientVC);
-        }
-    });
-
-    var yt;
+    let yt;
     vc.then(function(conn)  {
 
         if(msg.server.playlist) {
@@ -50,8 +32,11 @@ function Play (client, msg, args) {
         return yt.add(args);
     }).then(function()  {
         yt.start(msg);
-        yt.ee.once('init', function()   {
+        yt.ee.once('init', function(playlist)   {
             client.stopTyping(msg.channel);
+            if(playlist.list.length === 1)  {
+                msg.reply('now playing ' + playlist.getCurrent().url);
+            }
         })
     }).catch(function(err)  {
         console.error(err);

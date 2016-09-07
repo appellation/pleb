@@ -101,18 +101,13 @@
                 }
             }
 
-            this.ee.on('start', function(playlist)   {
+            function updateList(playlist)   {
                 if(playlist.list.length > 1)  {
                     msg.channel.sendMessage('now playing ' + (playlist.pos + 1) + ' of ' + playlist.list.length + ': ' + playlist.getCurrent().name);
                 }
+            }
 
-            });
-
-            this.ee.once('init', function(playlist) {
-                if(playlist.list.length === 1)  {
-                    msg.reply('now playing ' + playlist.getCurrent().url);
-                }
-            });
+            this.ee.on('start', updateList);
 
             this.ee.once('end', function() {
                 this.destroy();
@@ -137,6 +132,7 @@
          * Stop playback.
          */
         stop() {
+            this.ee.removeAllListeners('start');
             this.vc.stopPlaying();
             this.ee.emit('stopped');
         };
@@ -145,6 +141,7 @@
          * Destroy the audio connection.
          */
         destroy() {
+            this.ee.removeAllListeners('start');
             this.vc.destroy();
             this.ee.emit('destroyed');
             this.vc = null;

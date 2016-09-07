@@ -156,9 +156,11 @@
                     if(err)   {
                         reject(err);
                         console.error(err);
-                    }   else    {
+                    }   else if(result.items[0])    {
                         self.list.add(new StreamStructure('https://www.youtube.com/watch?v=' + result.items[0].id.videoId, result.items[0].snippet.title));
                         resolve(self.list);
+                    }   else    {
+                        reject('No video found.')
                     }
                 });
             });

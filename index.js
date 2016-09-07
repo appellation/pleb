@@ -24,7 +24,7 @@ client.loginWithToken(process.env.discord, function(err, token)   {
 const commands = {
     play: require('./commands/play'),
     stfu: require('./commands/stfu'),
-    test: require('./commands/test'),
+    shuffle: require('./commands/shuffle'),
     pause: require('./commands/pause'),
     resume: require('./commands/resume')
 };
