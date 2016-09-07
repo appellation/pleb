@@ -6,12 +6,10 @@
 
 (function() {
 
-    const Playlist = require('../operators/playlist');
     const StreamStructure = require('../structures/stream');
 
     const URL = require('url');
     const validUrl = require('valid-url');
-    const ytStream = require('youtube-audio-stream');
     const ytNode = require('youtube-node');
     const _ = require('underscore');
 
@@ -21,18 +19,17 @@
     const idRegex = /[a-zA-Z0-9-_]+$/;
 
     /**
-     * Operate a YouTube playlist.
+     * Create a YouTube interface with a PlaylistStructure.
      */
-    class YT extends Playlist   {
+    class YTPlaylist   {
 
         /**
          * Constructor.
-         * @param {VoiceConnection} conn
-         * @param {PlaylistStructure} [list]
+         * @param {PlaylistStructure} list - A playlist structure to interact with.
          * @constructor
          */
-        constructor(conn, list) {
-            super(conn, list);
+        constructor(list) {
+            this.list = list;
         }
 
         /**
@@ -41,9 +38,9 @@
          * @returns {Promise}
          */
         add(dataIn)  {
-            if(YT.isYouTubeURL(dataIn[0]))   {
+            if(YTPlaylist.isYouTubeURL(dataIn[0]))   {
                 const url = dataIn[0];
-                const urlType = YT.getURLType(url);
+                const urlType = YTPlaylist.getURLType(url);
 
                 if(urlType === 'playlist')  {
                     return this.addPlaylist(url);
@@ -73,13 +70,12 @@
 
             return new Promise(function(resolve, reject)    {
 
-                if(!YT.isYouTubeURL(playlistUrl) || YT.getURLType(playlistUrl) !== 'playlist') {
+                if(!YTPlaylist.isYouTubeURL(playlistUrl) || YTPlaylist.getURLType(playlistUrl) !== 'playlist') {
                     reject('Not a YouTube playlist.');
                 }
 
-                /**
+                /*
                  * Recursively retrieve videos from a playlist.
-                 * @param {string} [pageToken]
                  */
                 function recurse(pageToken)  {
                     pageToken = pageToken || null;
@@ -116,16 +112,16 @@
          * @returns {Promise}
          */
         addVideo(videoUrl)  {
-            const videoType = YT.getURLType(videoUrl);
+            const videoType = YTPlaylist.getURLType(videoUrl);
             const self = this;
 
             return new Promise(function(resolve, reject)    {
-                if(!YT.isYouTubeURL(videoUrl) || (videoType !== 'short video' && videoType !== 'long video'))   {
+                if(!YTPlaylist.isYouTubeURL(videoUrl) || (videoType !== 'short video' && videoType !== 'long video'))   {
                     reject('Not a valid YouTube video URL.');
                 }
 
                 ytApi.addParam('part', 'snippet,id');
-                ytApi.getById(YT.getURLID(videoUrl), function(err, result)    {
+                ytApi.getById(YTPlaylist.getURLID(videoUrl), function(err, result)    {
                     if(err) {
                         reject('Couldn\'t retrieve video information.');
                     }
@@ -166,28 +162,8 @@
             });
         };
 
-        /**
-         * Start the playlist.
-         * @override
-         * @param msg {Message} - The message that started the playlist.
-         */
-        start(msg) {
-            super.start(msg, YT.getStream);
-        }
-
 
         // STATIC
-
-        /**
-         * Get the raw stream of the StreamStructure.
-         * @callback GetStream
-         * @param {StreamStructure} stream
-         * @returns {Stream}
-         * @static
-         */
-        static getStream(stream)    {
-            return ytStream(stream.url);
-        }
 
         /**
          * Get the ID of the supplied URL based on its type.
@@ -212,6 +188,15 @@
 
             return false;
         };
+
+        /**
+         * Returns whether a given URL is a video.
+         * @param {string} testURL
+         * @returns {boolean}
+         */
+        static isVideo(testURL) {
+            return YTPlaylist.getURLType(testURL) === 'long video' || YTPlaylist.getURLType(testURL) === 'short video';
+        }
 
         /**
          * Get the type of the link.
@@ -275,5 +260,5 @@
         };
     }
 
-    module.exports = YT;
+    module.exports = YTPlaylist;
 })();

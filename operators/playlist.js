@@ -5,12 +5,13 @@
 "use strict";
 
 (function() {
-    const PlaylistStructure = require('../structures/playlist');
+
+    const ytStream = require('youtube-audio-stream');
     const EventEmitter = require('events');
 
-    /**
-     * @abstract
-     */
+    const PlaylistStructure = require('../structures/playlist');
+    const YTPlaylist = require('../interfaces/yt');
+
     class Playlist {
 
         /**
@@ -43,21 +44,20 @@
         /**
          * Start the playlist.
          * @param {Message} msg - The message used to execute this method.
-         * @param {GetStream} getStream - Function to get a raw stream from a StreamStructure
          */
-        start(msg, getStream) {
+        start(msg) {
 
             var init = true;
             const self = this;
 
-            function recurse(getStream) {
+            function recurse() {
 
                 if (self.vc.playing) {
                     self.stop();
                 }
 
                 if (self.list.hasCurrent()) {
-                    self.play(getStream(self.list.getCurrent())).then(function (intent) {
+                    self.play(self.getStream()).then(function (intent) {
 
                         if(init)    {
                             self.ee.emit('init', self.list);
@@ -88,7 +88,7 @@
                     }).then(function () {
                         if (self.list.hasNext()) {
                             self.list.next();
-                            recurse(getStream);
+                            recurse();
                         } else {
                             self.ee.emit('end');
                         }
@@ -113,8 +113,19 @@
                 this.destroy();
             });
 
-            recurse(getStream);
+            recurse();
         };
+
+        /**
+         * Get the raw audio stream for the current playlist item.
+         * @returns {Stream}
+         */
+        getStream() {
+            const url = this.list.getCurrent().url;
+            if(YTPlaylist.isVideo(url))    {
+                return ytStream(url);
+            }
+        }
 
         /**
          * Advance the playlist.

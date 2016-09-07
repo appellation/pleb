@@ -4,6 +4,11 @@
 
 "use strict";
 
+const Playlist = require('../operators/playlist');
+const VC = require('../operators/voiceConnection');
+
+const YTPlaylist = require('../interfaces/yt');
+
 /**
  * @param {Client} client
  * @param {Message} msg
@@ -11,28 +16,25 @@
  * @constructor
  */
 function Play (client, msg, args) {
-    const YT = require('../interfaces/yt');
-    const VC = require('../operators/voiceConnection');
-    const PlaylistStructure = require('../structures/playlist');
 
     client.startTyping(msg.channel);
 
-    const vc = VC.check(client, msg);
-
-    let yt;
-    vc.then(function(conn)  {
+    let playlist;
+    VC.check(client, msg).then(function(conn)  {
 
         if(msg.server.playlist) {
             msg.server.playlist.stop();
         }
 
-        yt = new YT(conn, new PlaylistStructure());
-        msg.server.playlist = yt;
+        playlist = new Playlist(conn);
+        const yt = new YTPlaylist(playlist.list);
+
+        msg.server.playlist = playlist;
 
         return yt.add(args);
     }).then(function()  {
-        yt.start(msg);
-        yt.ee.once('init', function(playlist)   {
+        playlist.start(msg);
+        playlist.ee.once('init', function(playlist)   {
             client.stopTyping(msg.channel);
             if(playlist.list.length === 1)  {
                 msg.reply('now playing ' + playlist.getCurrent().url);
