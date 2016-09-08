@@ -7,10 +7,12 @@
 (function() {
 
     const ytStream = require('youtube-audio-stream');
+    const request = require('request');
     const EventEmitter = require('events');
 
     const PlaylistStructure = require('../structures/playlist');
     const YTPlaylist = require('../interfaces/yt');
+    const SCPlaylist = require('../interfaces/sc');
 
     class Playlist {
 
@@ -57,7 +59,14 @@
                 }
 
                 if (self.list.hasCurrent()) {
-                    self.play(self.getStream()).then(function (intent) {
+                    const stream = self.getStream();
+
+                    if(!stream)  {
+                        self.ee.emit('error', 'No stream.');
+                        return;
+                    }
+
+                    self.play(stream).then(function (intent) {
 
                         if(init)    {
                             self.ee.emit('init', self.list);
@@ -124,6 +133,15 @@
             const url = this.list.getCurrent().url;
             if(YTPlaylist.isVideo(url))    {
                 return ytStream(url);
+            }   else if(SCPlaylist.isSoundCloudStream(url))   {
+                return request({
+                    url: url,
+                    followAllRedirects: true,
+                    qs: {
+                        client_id: process.env.soundcloud
+                    },
+                    encoding: null
+                });
             }
         }
 

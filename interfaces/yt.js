@@ -34,7 +34,7 @@
 
         /**
          * Add command arguments to the playlist.
-         * @param {String[]} dataIn
+         * @param {String[]} dataIn - An array of command arguments
          * @returns {Promise}
          */
         add(dataIn)  {

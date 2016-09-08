@@ -8,6 +8,7 @@ const Playlist = require('../operators/playlist');
 const VC = require('../operators/voiceConnection');
 
 const YTPlaylist = require('../interfaces/yt');
+const SCPlaylist = require('../interfaces/sc');
 
 /**
  * @param {Client} client
@@ -28,16 +29,25 @@ function Play (client, msg, args) {
 
         playlist = new Playlist(conn);
         const yt = new YTPlaylist(playlist.list);
+        const sc = new SCPlaylist(playlist.list);
 
         msg.server.playlist = playlist;
 
-        return yt.add(args);
+        if(SCPlaylist.isSoundCloudURL(args[0]))   {
+            return sc.add(args[0]);
+        }   else    {
+            return yt.add(args);
+        }
     }).then(function()  {
         playlist.start(msg);
         playlist.ee.once('init', function(playlist)   {
             client.stopTyping(msg.channel);
             if(playlist.list.length === 1)  {
-                msg.reply('now playing ' + playlist.getCurrent().url);
+                if(SCPlaylist.isSoundCloudURL(args[0]) || YTPlaylist.isVideo(args[0])) {
+                    msg.reply('now playing');
+                }   else if(!SCPlaylist.isSoundCloudURL(args[0]) && !YTPlaylist.isYouTubeURL(args[0]))    {
+                    msg.reply('now playing ' + playlist.getCurrent().url);
+                }
             }
         })
     }).catch(function(err)  {
