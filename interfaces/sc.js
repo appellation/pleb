@@ -14,6 +14,10 @@
 
     class SCPlaylist    {
 
+        /**
+         * @constructor
+         * @param {PlaylistStructure} list
+         */
         constructor(list)   {
             this.list = list;
         }
@@ -44,6 +48,11 @@
             return false;
         }
 
+        /**
+         * Check whether a URL is a SoundCloud stream URL.
+         * @param {string} urlIn
+         * @returns {boolean}
+         */
         static isSoundCloudStream(urlIn)    {
             return urlIn.match(/https?:\/\/api\.soundcloud\.com\/tracks\/[0-9]+\/stream/) !== null;
         }
