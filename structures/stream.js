@@ -12,11 +12,13 @@
          * Data about a stream.
          * @param {string} url
          * @param {string} name
+         * @param {boolean} [file] - Whether the URL points to a file.
          * @constructor
          */
-        constructor(url, name)  {
+        constructor(url, name, file)  {
             this.url = url;
             this.name = name;
+            this.file = file || false;
         }
     }
 

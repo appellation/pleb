@@ -1,6 +1,6 @@
 {
   "name": "pleb",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "A very low class Discord bot.",
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,8 @@
     "dotenv": "^2.0.0",
     "knuth-shuffle": "^1.0.1",
     "raven": "^0.12.1",
-    "soundcloud": "^3.1.2",
+    "request": "^2.74.0",
+    "request-promise-native": "^1.0.3",
     "underscore": "^1.8.3",
     "url": "^0.11.0",
     "valid-url": "^1.0.9",
