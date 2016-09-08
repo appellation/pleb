@@ -52,7 +52,7 @@ function Play (client, msg, args) {
         })
     }).catch(function(err)  {
         console.error(err);
-        msg.reply(err);
+        msg.reply('`' + err + '`');
         client.stopTyping(msg.channel);
     });
 }

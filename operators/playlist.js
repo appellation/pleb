@@ -119,7 +119,7 @@
             this.ee.on('start', updateList);
 
             this.ee.once('end', function() {
-                this.destroy();
+                self.destroy();
             });
 
             recurse();

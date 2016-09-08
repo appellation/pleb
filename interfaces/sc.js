@@ -83,8 +83,12 @@
                                 self.list.add(new StreamStructure(elem.stream_url, elem.title, true));
                             }
                         });
-                    }   else if(resource.kind === 'track' && resource.streamable)  {
-                        self.list.add(new StreamStructure(resource.stream_url, resource.title, true));
+                    }   else if(resource.kind === 'track')  {
+                        if(resource.streamable) {
+                            self.list.add(new StreamStructure(resource.stream_url, resource.title, true));
+                        }   else    {
+                            reject('not streamable.')
+                        }
                     }   else    {
                         reject();
                         return;
@@ -92,8 +96,15 @@
 
                     resolve(self.list);
                 }).catch(function(err)  {
-                    console.error(err);
-                    reject();
+                    if(err.response.body)   {
+                        reject(err.response.body.errors[0].error_message);
+                    }   else    {
+                        if(err.statusCode === 403)  {
+                            reject('not authorized for some unknown reason.')
+                        }   else    {
+                            reject(err);
+                        }
+                    }
                 })
             });
 
