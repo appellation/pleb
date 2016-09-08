@@ -5,12 +5,15 @@
 "use strict";
 
 (function() {
-    const PlaylistStructure = require('../structures/playlist');
+
+    const ytStream = require('youtube-audio-stream');
+    const request = require('request');
     const EventEmitter = require('events');
 
-    /**
-     * @abstract
-     */
+    const PlaylistStructure = require('../structures/playlist');
+    const YTPlaylist = require('../interfaces/yt');
+    const SCPlaylist = require('../interfaces/sc');
+
     class Playlist {
 
         /**
@@ -43,28 +46,34 @@
         /**
          * Start the playlist.
          * @param {Message} msg - The message used to execute this method.
-         * @param {GetStream} getStream - Function to get a raw stream from a StreamStructure
          */
-        start(msg, getStream) {
+        start(msg) {
 
             var init = true;
             const self = this;
 
-            function recurse(getStream) {
+            function recurse() {
 
                 if (self.vc.playing) {
                     self.stop();
                 }
 
                 if (self.list.hasCurrent()) {
-                    self.play(getStream(self.list.getCurrent())).then(function (intent) {
+                    const stream = self.getStream();
+
+                    if(!stream)  {
+                        self.ee.emit('error', 'No stream.');
+                        return;
+                    }
+
+                    self.play(stream).then(function (intent) {
 
                         if(init)    {
                             self.ee.emit('init', self.list);
                             init = false;
                         }
 
-                        /**
+                        /*
                          * Resolves on stream end, if not destroyed.
                          */
                         return new Promise(function (resolve, reject) {
@@ -88,7 +97,7 @@
                     }).then(function () {
                         if (self.list.hasNext()) {
                             self.list.next();
-                            recurse(getStream);
+                            recurse();
                         } else {
                             self.ee.emit('end');
                         }
@@ -110,11 +119,55 @@
             this.ee.on('start', updateList);
 
             this.ee.once('end', function() {
-                this.destroy();
+                self.destroy();
             });
 
-            recurse(getStream);
+            recurse();
         };
+
+        /**
+         * Add an array of command arguments to the playlist.
+         * @param {[]} args
+         * @returns {Promise}
+         */
+        add(args)   {
+            const query = args.length > 1;
+
+            const YT = new YTPlaylist(this.list);
+            const SC = new SCPlaylist(this.list);
+
+            if(query || YTPlaylist.isYouTubeURL(args[0]))   {
+                return YT.add(args);
+
+            }   else if(SCPlaylist.isSoundCloudURL(args[0]))    {
+                return SC.add(args[0]);
+
+            }   else    {
+                return new Promise(function(resolve, reject)    {
+                    reject();
+                });
+            }
+        }
+
+        /**
+         * Get the raw audio stream for the current playlist item.
+         * @returns {Stream}
+         */
+        getStream() {
+            const url = this.list.getCurrent().url;
+            if(YTPlaylist.isVideo(url))    {
+                return ytStream(url);
+            }   else if(SCPlaylist.isSoundCloudStream(url))   {
+                return request({
+                    url: url,
+                    followAllRedirects: true,
+                    qs: {
+                        client_id: process.env.soundcloud
+                    },
+                    encoding: null
+                });
+            }
+        }
 
         /**
          * Advance the playlist.

@@ -13,5 +13,12 @@ Available commands:
 
 - `play [YouTube video URL]` - plays a YouTube video (accepts both youtube.com and youtu.be URLs)
 - `play [YouTube playlist URL]` - plays a YouTube playlist in sequential order
-- `play [search]` - plays the first video from a search query
+- `play [SoundCloud sound URL]` - plays a SoundCloud track
+- `play [SoundCloud set URL]` - plays a SoundCloud set in sequential order
+- `play [search]` - plays the first YouTube video from a search query
+- `shuffle` - shuffles a playlist, then restarts
+- `shuffle [YouTube playlist URL]` - shuffles a YouTube playlist, then plays
+- `shuffle [SoundCloud set URL]` - shuffles a SoundCloud set, then plays
+- `pause` - pauses playback
+- `resume` - resumes playback
 - `stfu` - stops playback and disconnects Pleb from the voice channel
