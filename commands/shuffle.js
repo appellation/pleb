@@ -2,14 +2,24 @@
  * Created by Will on 9/7/2016.
  */
 
-function Shuffle(client, msg, args) {
-    const playlist = msg.server.playlist;
-    if(playlist)    {
-        playlist.ee.once('shuffled', function() {
-            playlist.start(msg);
-        });
+const Play = require('../commands/play');
 
-        playlist.shuffle();
+function Shuffle(client, msg, args) {
+
+    if(args.length > 0) {
+        Play(client, msg, args, true);
+    }   else    {
+        const playlist = msg.server.playlist;
+
+        if(playlist && playlist.list.length > 1)    {
+            playlist.ee.on('shuffled', function()   {
+                playlist.start(msg);
+            });
+
+            msg.server.playlist.shuffle();
+        }   else    {
+            msg.reply('takes two to tango.');
+        }
     }
 }
 

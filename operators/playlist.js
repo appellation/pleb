@@ -73,7 +73,7 @@
                             init = false;
                         }
 
-                        /**
+                        /*
                          * Resolves on stream end, if not destroyed.
                          */
                         return new Promise(function (resolve, reject) {
@@ -124,6 +124,30 @@
 
             recurse();
         };
+
+        /**
+         * Add an array of command arguments to the playlist.
+         * @param {[]} args
+         * @returns {Promise}
+         */
+        add(args)   {
+            const query = args.length > 1;
+
+            const YT = new YTPlaylist(this.list);
+            const SC = new SCPlaylist(this.list);
+
+            if(query || YTPlaylist.isYouTubeURL(args[0]))   {
+                return YT.add(args);
+
+            }   else if(SCPlaylist.isSoundCloudURL(args[0]))    {
+                return SC.add(args[0]);
+
+            }   else    {
+                return new Promise(function(resolve, reject)    {
+                    reject();
+                });
+            }
+        }
 
         /**
          * Get the raw audio stream for the current playlist item.

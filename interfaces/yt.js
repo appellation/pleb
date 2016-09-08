@@ -80,13 +80,14 @@
                 function recurse(pageToken)  {
                     pageToken = pageToken || null;
 
+                    delete ytApi.params.pageToken;
                     if(pageToken)    {
                         ytApi.addParam('pageToken', pageToken);
                     }
 
                     ytApi.getPlayListsItemsById(URL.parse(playlistUrl, true).query.list, function(err, result)  {
                         if(err) {
-                            reject(new Error('Error retrieving playlist details.  ' + err));
+                            reject(err);
                             return;
                         }
 
@@ -126,7 +127,7 @@
                         reject('Couldn\'t retrieve video information.');
                     }
 
-                    self.list.add(new StreamStructure('https://wwww.youtube.com/watch?v=' + result.items[0].id, result.items[0].snippet.title));
+                    self.list.add(new StreamStructure('https://www.youtube.com/watch?v=' + result.items[0].id, result.items[0].snippet.title));
                     resolve(self.list);
                 });
             })
@@ -205,7 +206,7 @@
          * @static
          */
         static getURLType(testUrl) {
-            if(!this.isYouTubeURL(testUrl)) {
+            if(!YTPlaylist.isYouTubeURL(testUrl)) {
                 return false;
             }
 

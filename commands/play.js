@@ -14,9 +14,10 @@ const SCPlaylist = require('../interfaces/sc');
  * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
+ * @param {boolean} [shuffle] - Whether to shuffle on play.
  * @constructor
  */
-function Play (client, msg, args) {
+function Play (client, msg, args, shuffle) {
 
     client.startTyping(msg.channel);
 
@@ -28,17 +29,14 @@ function Play (client, msg, args) {
         }
 
         playlist = new Playlist(conn);
-        const yt = new YTPlaylist(playlist.list);
-        const sc = new SCPlaylist(playlist.list);
-
         msg.server.playlist = playlist;
 
-        if(SCPlaylist.isSoundCloudURL(args[0]))   {
-            return sc.add(args[0]);
-        }   else    {
-            return yt.add(args);
-        }
+        return playlist.add(args);
     }).then(function()  {
+        if(shuffle) {
+            playlist.shuffle();
+        }
+
         playlist.start(msg);
         playlist.ee.once('init', function(playlist)   {
             client.stopTyping(msg.channel);
