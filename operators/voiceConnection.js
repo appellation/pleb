@@ -22,22 +22,26 @@
         static check(client, msg) {
             return new Promise(function(resolve, reject)    {
 
-                const clientVC = client.voiceConnections.get('server', msg.server);
+                const clientChannel = msg.guild.channels.filter(function (elem) {
+                    return elem.type === 'voice' && elem.members.find('id', client.user.id);
+                }).first();
 
-                if(!clientVC) {
-                    if(msg.author.voiceChannel) {
-                        client.joinVoiceChannel(msg.author.voiceChannel, function(err, conn)    {
-                            if(err) {
-                                reject(err);
-                            }   else    {
-                                resolve(conn);
-                            }
+                const authorChannel = msg.guild.channels.filter(function (elem)  {
+                    return elem.type === 'voice' && elem.members.find('id', msg.author.id);
+                }).first();
+
+                if(!clientChannel) {
+                    if(authorChannel) {
+                        authorChannel.join().then(function(conn) {
+                            resolve(conn);
                         });
                     }   else    {
                         reject('No voice channel to join.');
                     }
                 }   else    {
-                    resolve(clientVC);
+                    clientChannel.join().then(function(conn)    {
+                        resolve(conn);
+                    });
                 }
             });
 

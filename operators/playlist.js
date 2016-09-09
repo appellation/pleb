@@ -33,6 +33,11 @@
             this.vc = conn;
 
             /**
+             * @type {StreamDispatcher|null}
+             */
+            this.dispatcher = null;
+
+            /**
              * @type {PlaylistStructure}
              */
             this.list = listIn || new PlaylistStructure();
@@ -54,7 +59,7 @@
 
             function recurse() {
 
-                if (self.vc.playing) {
+                if (self.dispatcher) {
                     self.stop();
                 }
 
@@ -66,34 +71,41 @@
                         return;
                     }
 
-                    self.play(stream).then(function (intent) {
+                    self.dispatcher = self.play(stream);
 
-                        if(init)    {
-                            self.ee.emit('init', self.list);
-                            init = false;
+                    if(init)    {
+                        self.ee.emit('init', self.list);
+                        init = false;
+                    }
+
+                    if(self.list.list.length > 1)  {
+                        const message = 'now playing ' + (self.list.pos + 1) + ' of ' + self.list.list.length + ': ' + self.list.getCurrent().name;
+                        msg.channel.sendMessage(message);
+                    }
+
+                    console.log(self.dispatcher);
+
+                    /*
+                     * Resolves on stream end, if not destroyed.
+                     */
+                    new Promise(function (resolve, reject) {
+                        var cancel = false;
+                        self.ee.once('destroyed', function () {
+                            cancel = true;
+                            reject();
+                        });
+                        self.ee.once('stopped', function () {
+                            cancel = true;
+                            reject();
+                        });
+                        if (cancel) {
+                            return;
                         }
 
-                        /*
-                         * Resolves on stream end, if not destroyed.
-                         */
-                        return new Promise(function (resolve, reject) {
-                            var cancel = false;
-                            self.ee.once('destroyed', function () {
-                                cancel = true;
-                                reject();
-                            });
-                            self.ee.once('stopped', function () {
-                                cancel = true;
-                                reject();
-                            });
-                            if (cancel) {
-                                return;
-                            }
-
-                            intent.once('end', function () {
-                                resolve();
-                            })
-                        });
+                        self.dispatcher.once('end', function () {
+                            self.dispatcher = null;
+                            resolve();
+                        })
                     }).then(function () {
                         if (self.list.hasNext()) {
                             self.list.next();
@@ -109,13 +121,6 @@
                     self.ee.emit('end');
                 }
             }
-
-            this.ee.on('start', function(playlist)   {
-                if(playlist.list.length > 1)  {
-                    const message = 'now playing ' + (playlist.pos + 1) + ' of ' + playlist.list.length + ': ' + playlist.getCurrent().name;
-                    msg.channel.sendMessage(message);
-                }
-            });
 
             this.ee.once('end', function() {
                 self.destroy();
@@ -185,7 +190,8 @@
          */
         stop() {
             this.ee.removeAllListeners('start');
-            this.vc.stopPlaying();
+            this.dispatcher.end();
+            this.dispatcher = null;
             this.ee.emit('stopped');
         };
 
@@ -193,8 +199,8 @@
          * Destroy the audio connection.
          */
         destroy() {
-            this.ee.removeAllListeners('start');
-            this.vc.destroy();
+            this.stop();
+            this.vc.disconnect();
             this.ee.emit('destroyed');
             this.vc = null;
         };
@@ -204,7 +210,7 @@
          */
         pause() {
             if (!this.vc.paused) {
-                this.vc.pause();
+                this.dispatcher.pause();
                 this.ee.emit('paused');
             }
         };
@@ -214,7 +220,7 @@
          */
         resume() {
             if (this.vc.paused) {
-                this.vc.resume();
+                this.dispatcher.resume();
                 this.ee.emit('resumed');
             }
         };
@@ -223,7 +229,7 @@
          * Shuffle the playlist.
          */
         shuffle() {
-            if (this.vc.playing) {
+            if (this.dispatcher) {
                 this.stop();
             }
             this.list.shuffle();
@@ -232,23 +238,21 @@
 
         /**
          * Play a stream.
-         * @param {Stream} stream
+         * @param stream
          * @returns {EventEmitter}
          */
         play(stream) {
 
-            if (this.vc.playing) {
+            if (this.dispatcher) {
                 this.stop();
             }
 
             const self = this;
-            const rawStream = this.vc.playRawStream(stream);
+            const dispatcher = this.vc.playStream(stream);
 
-            rawStream.then(function()  {
-                self.ee.emit('start', self.list);
-            });
+            self.ee.emit('start', self.list);
 
-            return rawStream;
+            return dispatcher;
         };
     }
 

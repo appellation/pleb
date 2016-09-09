@@ -19,17 +19,17 @@ const SCPlaylist = require('../interfaces/sc');
  */
 function Play (client, msg, args, shuffle) {
 
-    client.startTyping(msg.channel);
+    msg.channel.startTyping();
 
     let playlist;
     VC.check(client, msg).then(function(conn)  {
 
-        if(msg.server.playlist) {
-            msg.server.playlist.stop();
+        if(msg.guild.playlist) {
+            msg.guild.playlist.stop();
         }
 
         playlist = new Playlist(conn);
-        msg.server.playlist = playlist;
+        msg.guild.playlist = playlist;
 
         return playlist.add(args);
     }).then(function()  {
@@ -38,7 +38,7 @@ function Play (client, msg, args, shuffle) {
         }
 
         playlist.ee.once('init', function(playlist)   {
-            client.stopTyping(msg.channel);
+            msg.channel.stopTyping();
             if(playlist.list.length === 1)  {
                 if(!SCPlaylist.isSoundCloudURL(args[0]) && !YTPlaylist.isYouTubeURL(args[0]))    {
                     msg.reply('now playing ' + playlist.getCurrent().url);
@@ -52,7 +52,7 @@ function Play (client, msg, args, shuffle) {
     }).catch(function(err)  {
         console.error(err);
         msg.reply('`' + err + '`');
-        client.stopTyping(msg.channel);
+        msg.channel.stopTyping();
     });
 }
 

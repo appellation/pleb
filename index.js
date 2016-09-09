@@ -12,14 +12,6 @@ ravenClient.patchGlobal();
 
 var client = new Discord.Client();
 
-client.loginWithToken(process.env.discord, function(err, token)   {
-    if(err) {
-        console.error('There was an error logging in: ' + err);
-    }   else    {
-        console.log('Logged in.  Token: ' + token);
-    }
-});
-
 // Define commands
 const commands = {
     play: require('./commands/play'),
@@ -33,12 +25,12 @@ client.on('ready', function()   {
     console.log('Bot is ready.');
 });
 
-client.on('serverCreated', function(server) {
-    client.sendMessage(server.defaultChannel, 'Sup.');
+client.on('guildCreate', function(guild) {
+    client.sendMessage(guild.channels.get(guild.id), 'Sup.');
 });
 
-client.on('serverNewMember', function(server, user) {
-    client.sendMessage(server.defaultChannel, 'Welcome ' + user.mention() + '!')
+client.on('guildMemberAdd', function(guild, user) {
+    client.sendMessage(guild.channels.get(guild.id), 'Welcome <@' + user.id + '>!')
 });
 
 client.on('message', function (message) {
@@ -51,10 +43,16 @@ client.on('message', function (message) {
         try {
             commands[command](client, message, args);
         }   catch(e)    {
-            client.reply(message, 'when I said I was simple, I meant it...');
+            message.reply('when I said I was simple, I meant it...');
             console.error(e);
         }
     }
+});
+
+client.login(process.env.discord).then(function(token)   {
+    console.log('Logged in.  Token: ' + token);
+}).catch(function(err)   {
+    console.error(err);
 });
 
 /**
