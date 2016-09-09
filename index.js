@@ -52,7 +52,7 @@ client.on('message', function (message) {
             commands[command](client, message, args);
         }   catch(e)    {
             client.reply(message, 'when I said I was simple, I meant it...');
-            console.error(new Error(e));
+            console.error(e);
         }
     }
 });

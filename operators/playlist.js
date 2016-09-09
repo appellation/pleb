@@ -110,13 +110,12 @@
                 }
             }
 
-            function updateList(playlist)   {
+            this.ee.on('start', function(playlist)   {
                 if(playlist.list.length > 1)  {
-                    msg.channel.sendMessage('now playing ' + (playlist.pos + 1) + ' of ' + playlist.list.length + ': ' + playlist.getCurrent().name);
+                    const message = 'now playing ' + (playlist.pos + 1) + ' of ' + playlist.list.length + ': ' + playlist.getCurrent().name;
+                    msg.channel.sendMessage(message);
                 }
-            }
-
-            this.ee.on('start', updateList);
+            });
 
             this.ee.once('end', function() {
                 self.destroy();

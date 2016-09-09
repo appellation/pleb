@@ -37,17 +37,18 @@ function Play (client, msg, args, shuffle) {
             playlist.shuffle();
         }
 
-        playlist.start(msg);
         playlist.ee.once('init', function(playlist)   {
             client.stopTyping(msg.channel);
             if(playlist.list.length === 1)  {
-                if(SCPlaylist.isSoundCloudURL(args[0]) || YTPlaylist.isVideo(args[0])) {
-                    msg.reply('now playing');
-                }   else if(!SCPlaylist.isSoundCloudURL(args[0]) && !YTPlaylist.isYouTubeURL(args[0]))    {
+                if(!SCPlaylist.isSoundCloudURL(args[0]) && !YTPlaylist.isYouTubeURL(args[0]))    {
                     msg.reply('now playing ' + playlist.getCurrent().url);
+                }   else    {
+                    msg.reply('now playing');
                 }
             }
-        })
+        });
+
+        playlist.start(msg);
     }).catch(function(err)  {
         console.error(err);
         msg.reply('`' + err + '`');
