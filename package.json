@@ -8,8 +8,8 @@
     "start": "node index.js"
   },
   "engines": {
-    "node": "^6.0.0",
-    "npm": "^3.10.0"
+    "node": "^6.5.0",
+    "npm": "^3.10.7"
   },
   "repository": "appellation/pleb",
   "author": "appellation <nelson.will@live.com>",

@@ -83,6 +83,7 @@
 
                     self.ee.once('stopping', function() {
                         self.dispatcher.removeListener('end', end);
+                        console.log('removed end listener');
                     });
 
                     self.dispatcher.once('end', end);
@@ -91,6 +92,7 @@
                         self.dispatcher = null;
 
                         if (self.list.hasNext()) {
+                            console.log('playing next');
                             self.list.next();
                             recurse();
                         } else {
