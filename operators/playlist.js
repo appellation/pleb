@@ -83,39 +83,15 @@
                         msg.channel.sendMessage(message);
                     }
 
-                    console.log(self.dispatcher);
+                    self.dispatcher.once('end', function () {
+                        self.dispatcher = null;
 
-                    /*
-                     * Resolves on stream end, if not destroyed.
-                     */
-                    new Promise(function (resolve, reject) {
-                        var cancel = false;
-                        self.ee.once('destroyed', function () {
-                            cancel = true;
-                            reject();
-                        });
-                        self.ee.once('stopped', function () {
-                            cancel = true;
-                            reject();
-                        });
-                        if (cancel) {
-                            return;
-                        }
-
-                        self.dispatcher.once('end', function () {
-                            self.dispatcher = null;
-                            resolve();
-                        })
-                    }).then(function () {
                         if (self.list.hasNext()) {
                             self.list.next();
                             recurse();
                         } else {
                             self.ee.emit('end');
                         }
-                    }).catch(function (err) {
-                        self.ee.emit('error', err);
-                        console.error(err);
                     });
                 }   else    {
                     self.ee.emit('end');
@@ -123,7 +99,7 @@
             }
 
             this.ee.once('end', function() {
-                self.destroy();
+                self._destroy();
             });
 
             recurse();
@@ -198,31 +174,26 @@
         /**
          * Destroy the audio connection.
          */
-        destroy() {
-            this.stop();
+        _destroy() {
             this.vc.disconnect();
-            this.ee.emit('destroyed');
             this.vc = null;
+            this.ee.emit('destroyed');
         };
 
         /**
          * Pause playback.
          */
         pause() {
-            if (!this.vc.paused) {
-                this.dispatcher.pause();
-                this.ee.emit('paused');
-            }
+            this.dispatcher.pause();
+            this.ee.emit('paused');
         };
 
         /**
          * Resume playback.
          */
         resume() {
-            if (this.vc.paused) {
-                this.dispatcher.resume();
-                this.ee.emit('resumed');
-            }
+            this.dispatcher.resume();
+            this.ee.emit('resumed');
         };
 
         /**

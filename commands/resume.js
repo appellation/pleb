@@ -2,7 +2,7 @@
  * Created by Will on 8/30/2016.
  */
 function Resume(client, msg, args)  {
-    const playlist = msg.server.playlist;
+    const playlist = msg.guild.playlist;
     if(playlist)    {
         playlist.resume();
     }   else    {

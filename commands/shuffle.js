@@ -9,14 +9,14 @@ function Shuffle(client, msg, args) {
     if(args.length > 0) {
         Play(client, msg, args, true);
     }   else    {
-        const playlist = msg.server.playlist;
+        const playlist = msg.guild.playlist;
 
         if(playlist && playlist.list.length > 1)    {
             playlist.ee.on('shuffled', function()   {
                 playlist.start(msg);
             });
 
-            msg.server.playlist.shuffle();
+            msg.guild.playlist.shuffle();
         }   else    {
             msg.reply('takes two to tango.');
         }
