@@ -175,11 +175,13 @@
          * IMPORTANT: `stopping` event MUST get emitted first in order to not trigger `recurse()`
          */
         stop() {
-            this.ee.emit('stopping');
-            this.ee.removeAllListeners('start');
-            this.dispatcher.end();
-            this.dispatcher = null;
-            this.ee.emit('stopped');
+            if(this.dispatcher) {
+                this.ee.emit('stopping');
+                this.ee.removeAllListeners('start');
+                this.dispatcher.end();
+                this.dispatcher = null;
+                this.ee.emit('stopped');
+            }
         };
 
         /**
@@ -187,31 +189,38 @@
          */
         destroy() {
             this.stop();
-            this.vc.disconnect();
-            this.vc = null;
-            this.ee.emit('destroyed');
+            if(this.vc) {
+                this.vc.disconnect();
+                this.vc = null;
+                this.ee.emit('destroyed');
+            }
         };
 
         /**
          * Pause playback.
          */
         pause() {
-            this.dispatcher.pause();
-            this.ee.emit('paused');
+            if(this.dispatcher) {
+                this.dispatcher.pause();
+                this.ee.emit('paused');
+            }
         };
 
         /**
          * Resume playback.
          */
         resume() {
-            this.dispatcher.resume();
-            this.ee.emit('resumed');
+            if(this.dispatcher) {
+                this.dispatcher.resume();
+                this.ee.emit('resumed');
+            }
         };
 
         /**
          * Shuffle the playlist.
          */
         shuffle() {
+            this.stop();
             this.list.shuffle();
             this.ee.emit('shuffled');
         };
