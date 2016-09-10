@@ -44,12 +44,6 @@
              * @type {EventEmitter}
              */
             this.ee = new EventEmitter();
-
-            /**
-             * Save the current status of the playlist.
-             * @type {string}
-             */
-            this.status = "initialized";
         }
 
         /**
@@ -69,8 +63,6 @@
 
                 if (self.list.hasCurrent()) {
                     const stream = self.getStream();
-
-                    self.status = "started";
 
                     if(!stream)  {
                         self.ee.emit('error', 'No stream.');
