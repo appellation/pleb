@@ -11,6 +11,7 @@
     const URL = require('url');
     const validUrl = require('valid-url');
     const ytNode = require('youtube-node');
+    const rp = require('request-promise-native');
     const _ = require('underscore');
 
     const ytApi = new ytNode();
@@ -85,11 +86,22 @@
                         ytApi.addParam('pageToken', pageToken);
                     }
 
-                    ytApi.getPlayListsItemsById(URL.parse(playlistUrl, true).query.list, function(err, result)  {
-                        if(err) {
-                            reject(err);
-                            return;
-                        }
+                    const options = {
+                        uri: 'https://www.googleapis.com/youtube/v3/playlistItems',
+                        qs: {
+                            part: 'contentDetails,snippet',
+                            playlistId: URL.parse(playlistUrl, true).query.list,
+                            maxResults: 50,
+                            key: process.env.youtube
+                        },
+                        json: true
+                    };
+
+                    if(pageToken)   {
+                        options.qs.pageToken = pageToken;
+                    }
+
+                    rp(options).then(function(result)  {
 
                         _.each(result.items, function(elem) {
                             self.list.add(new StreamStructure('https://www.youtube.com/watch?v=' + elem.contentDetails.videoId, elem.snippet.title));
@@ -100,6 +112,8 @@
                         }   else    {
                             resolve(self.list);
                         }
+                    }).catch(function(err)  {
+                        reject(err);
                     });
                 }
 
