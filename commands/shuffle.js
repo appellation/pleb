@@ -7,18 +7,14 @@ const Play = require('../commands/play');
 function Shuffle(client, msg, args) {
 
     if(args.length > 0) {
-        Play(client, msg, args, true);
+        Play(client, msg, args, null, true);
     }   else    {
         const playlist = msg.guild.playlist;
 
-        if(playlist && playlist.list.length > 1)    {
-            playlist.ee.on('shuffled', function()   {
-                playlist.start(msg);
-            });
-
-            msg.guild.playlist.shuffle();
+        if(playlist && playlist.list.list.length > 0)    {
+            Play(client, msg, args, playlist, true);
         }   else    {
-            msg.reply('takes two to tango.');
+            msg.reply('takes two (or more :thinking:) to tango.');
         }
     }
 }

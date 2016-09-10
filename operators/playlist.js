@@ -2,8 +2,6 @@
  * Created by Will on 8/31/2016.
  */
 
-"use strict";
-
 (function() {
 
     const ytStream = require('youtube-audio-stream');
@@ -46,6 +44,12 @@
              * @type {EventEmitter}
              */
             this.ee = new EventEmitter();
+
+            /**
+             * Save the current status of the playlist.
+             * @type {string}
+             */
+            this.status = "initialized";
         }
 
         /**
@@ -66,6 +70,8 @@
                 if (self.list.hasCurrent()) {
                     const stream = self.getStream();
 
+                    self.status = "started";
+
                     if(!stream)  {
                         self.ee.emit('error', 'No stream.');
                         return;
@@ -83,7 +89,13 @@
                         msg.channel.sendMessage(message);
                     }
 
-                    self.dispatcher.once('end', function () {
+                    self.ee.once('stopping', function() {
+                        self.dispatcher.removeListener('end', end);
+                    });
+
+                    self.dispatcher.once('end', end);
+
+                    function end()  {
                         self.dispatcher = null;
 
                         if (self.list.hasNext()) {
@@ -92,7 +104,7 @@
                         } else {
                             self.ee.emit('end');
                         }
-                    });
+                    }
                 }   else    {
                     self.ee.emit('end');
                 }
@@ -107,6 +119,15 @@
          * @returns {Promise}
          */
         add(args)   {
+
+            const self = this;
+
+            if(args.length === 0)   {
+                return new Promise(function(resolve)    {
+                    resolve(self.list);
+                });
+            }
+
             const query = args.length > 1;
 
             const YT = new YTPlaylist(this.list);
@@ -159,11 +180,11 @@
 
         /**
          * Stop playback.
-         * IMPORTANT: `this.list` MUST get reset before ending the dispatcher in order to not trigger `recurse()`
+         * IMPORTANT: `stopping` event MUST get emitted first in order to not trigger `recurse()`
          */
         stop() {
+            this.ee.emit('stopping');
             this.ee.removeAllListeners('start');
-            this.list = new PlaylistStructure();
             this.dispatcher.end();
             this.dispatcher = null;
             this.ee.emit('stopped');
@@ -199,9 +220,6 @@
          * Shuffle the playlist.
          */
         shuffle() {
-            if (this.dispatcher) {
-                this.stop();
-            }
             this.list.shuffle();
             this.ee.emit('shuffled');
         };

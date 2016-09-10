@@ -14,21 +14,24 @@ const SCPlaylist = require('../interfaces/sc');
  * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
+ * @param {Playlist|null} [playlistIn] - A pre-existing playlist to play.
  * @param {boolean} [shuffle] - Whether to shuffle on play.
  * @constructor
  */
-function Play (client, msg, args, shuffle) {
+function Play (client, msg, args, playlistIn, shuffle) {
 
     msg.channel.startTyping();
 
     let playlist;
     VC.check(client, msg).then(function(conn)  {
 
+        playlist = playlistIn ? playlistIn : new Playlist(conn);
+
+        // NOTE: if playlistIn is passed from msg.guild.playlist, they will be the exact same object at this point.
         if(msg.guild.playlist) {
             msg.guild.playlist.stop();
         }
 
-        playlist = new Playlist(conn);
         msg.guild.playlist = playlist;
 
         return playlist.add(args);
