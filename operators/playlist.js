@@ -98,10 +98,6 @@
                 }
             }
 
-            this.ee.once('end', function() {
-                self._destroy();
-            });
-
             recurse();
         };
 
@@ -163,9 +159,11 @@
 
         /**
          * Stop playback.
+         * IMPORTANT: `this.list` MUST get reset before ending the dispatcher in order to not trigger `recurse()`
          */
         stop() {
             this.ee.removeAllListeners('start');
+            this.list = new PlaylistStructure();
             this.dispatcher.end();
             this.dispatcher = null;
             this.ee.emit('stopped');
@@ -174,7 +172,8 @@
         /**
          * Destroy the audio connection.
          */
-        _destroy() {
+        destroy() {
+            this.stop();
             this.vc.disconnect();
             this.vc = null;
             this.ee.emit('destroyed');
