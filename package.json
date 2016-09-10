@@ -15,7 +15,7 @@
   "author": "appellation <nelson.will@live.com>",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "hydrabolt/discord.js#f192d16b5bf1da0303e5cca367fe6c961dcd51c9",
+    "discord.js": "^9.1.0",
     "dotenv": "^2.0.0",
     "knuth-shuffle": "^1.0.1",
     "raven": "^0.12.1",
