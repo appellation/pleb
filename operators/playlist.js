@@ -85,7 +85,7 @@
 
                     self.ee.once('stopping', function() {
                         self.dispatcher.removeListener('end', end);
-                        console.log('removed end listener');
+                        console.log('removed end listener', self.dispatcher);
                     });
 
                     function end()  {
