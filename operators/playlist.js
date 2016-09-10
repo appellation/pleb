@@ -1,3 +1,4 @@
+var _ = require("underscore");
 /**
  * Created by Will on 8/31/2016.
  */
@@ -81,19 +82,22 @@
                         msg.channel.sendMessage(message);
                     }
 
+                    self.ee.once('stopping', stopping);
                     self.dispatcher.once('end', end);
 
-                    self.ee.once('stopping', function() {
-                        self.dispatcher.removeAllListeners('end');
-                        console.log('removed end listener', self.dispatcher);
-                    });
+                    function stopping() {
+                        self.dispatcher.removeListener('end', end);     // prevent end song code from triggering
+                        console.log('removed end listener');
+                    }
 
                     function end()  {
+                        console.log('end song');
                         self.dispatcher = null;
 
                         if (self.list.hasNext()) {
                             console.log('playing next');
                             self.list.next();
+                            self.ee.removeListener('stopping', stopping);       // clean-up the stopping listener since it wasn't used
                             recurse();
                         } else {
                             self.ee.emit('end');
