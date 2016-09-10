@@ -81,11 +81,6 @@
                 function recurse(pageToken)  {
                     pageToken = pageToken || null;
 
-                    delete ytApi.params.pageToken;
-                    if(pageToken)    {
-                        ytApi.addParam('pageToken', pageToken);
-                    }
-
                     const options = {
                         uri: 'https://www.googleapis.com/youtube/v3/playlistItems',
                         qs: {
