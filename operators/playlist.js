@@ -87,7 +87,7 @@ var _ = require("underscore");
 
                     function stopping() {
                         self.dispatcher.removeListener('end', end);     // prevent end song code from triggering
-                        console.log('removed end listener. count: ' + self.dispatcher.listenerCount());
+                        console.log('removed end listener. count: ' + self.dispatcher.listenerCount('end'));
                     }
 
                     function end()  {
