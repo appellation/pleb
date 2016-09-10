@@ -81,12 +81,12 @@
                         msg.channel.sendMessage(message);
                     }
 
+                    self.dispatcher.once('end', end);
+
                     self.ee.once('stopping', function() {
                         self.dispatcher.removeListener('end', end);
                         console.log('removed end listener');
                     });
-
-                    self.dispatcher.once('end', end);
 
                     function end()  {
                         self.dispatcher = null;
