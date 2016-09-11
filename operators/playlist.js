@@ -45,6 +45,12 @@ var _ = require("underscore");
              * @type {EventEmitter}
              */
             this.ee = new EventEmitter();
+
+            /**
+             * Continue playlist.
+             * @type {boolean}
+             */
+            this.continue = true;
         }
 
         /**
@@ -82,24 +88,16 @@ var _ = require("underscore");
                         msg.channel.sendMessage(message);
                     }
 
-                    self.ee.once('stopping', stopping);
-
                     self.dispatcher.removeListener('end', end); // clear any previous listeners
                     self.dispatcher.once('end', end);
-
-                    function stopping() {
-                        self.dispatcher.removeAllListeners('end');     // prevent end song code from triggering
-                        console.log('removed end listener. count: ' + self.dispatcher.listenerCount('end'));
-                    }
 
                     function end()  {
                         console.log('end song');
                         self.dispatcher = null;
 
-                        if (self.list.hasNext()) {
+                        if (self.list.hasNext() && self.continue) {
                             console.log('playing next');
                             self.list.next();
-                            self.ee.removeListener('stopping', stopping);       // clean-up the stopping listener since it wasn't used
                             recurse();
                         } else {
                             self.ee.emit('end');
@@ -180,11 +178,11 @@ var _ = require("underscore");
 
         /**
          * Stop playback.
-         * IMPORTANT: `stopping` event MUST get emitted first in order to not trigger `recurse()`
+         * IMPORTANT: `this.continue` must be `false` before ending.
          */
         stop() {
             if(this.dispatcher) {
-                this.ee.emit('stopping');
+                this.continue = false;
                 this.ee.removeAllListeners('start');
                 this.dispatcher.end();
                 this.dispatcher = null;
