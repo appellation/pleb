@@ -101,12 +101,8 @@ var _ = require("underscore");
                             console.log('playing next');
                             self.list.next();
                             recurse();
-                        } else {
-                            self.ee.emit('end');
                         }
                     }
-                }   else    {
-                    self.ee.emit('end');
                 }
             }
 
