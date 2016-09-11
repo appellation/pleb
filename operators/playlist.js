@@ -83,10 +83,12 @@ var _ = require("underscore");
                     }
 
                     self.ee.once('stopping', stopping);
+
+                    self.dispatcher.removeListener('end', end); // clear any previous listeners
                     self.dispatcher.once('end', end);
 
                     function stopping() {
-                        self.dispatcher.removeListener('end', end);     // prevent end song code from triggering
+                        self.dispatcher.removeAllListeners('end');     // prevent end song code from triggering
                         console.log('removed end listener. count: ' + self.dispatcher.listenerCount('end'));
                     }
 
