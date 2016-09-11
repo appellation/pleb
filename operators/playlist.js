@@ -58,7 +58,6 @@ var _ = require("underscore");
          * @param {Message} msg - The message used to execute this method.
          */
         start(msg) {
-            console.log('starting');
             var init = true;
             const self = this;
 
@@ -89,11 +88,9 @@ var _ = require("underscore");
                         msg.channel.sendMessage(message);
                     }
 
-//                    self.dispatcher.removeAllListeners('end');
                     self.dispatcher.once('end', end);
 
                     function end()  {
-                        console.log('end.  continue? ' + self.continue);
                         self.dispatcher = null;
 
                         if (self.list.hasNext() && self.continue) {
@@ -136,7 +133,7 @@ var _ = require("underscore");
 
             }   else    {
                 return new Promise(function(resolve, reject)    {
-                    reject();
+                    reject('Can\'t add that for some reason.');
                 });
             }
         }

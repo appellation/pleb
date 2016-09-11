@@ -14,6 +14,7 @@ var client = new Discord.Client();
 
 // Define commands
 const commands = {
+    add: require('./commands/add'),
     play: require('./commands/play'),
     stfu: require('./commands/stfu'),
     shuffle: require('./commands/shuffle'),
