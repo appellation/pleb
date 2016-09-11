@@ -36,6 +36,9 @@ function Play (client, msg, args, playlistIn, shuffle) {
 
         return playlist.add(args);
     }).then(function()  {
+        console.log('beginning playlist');
+        playlist.stop();
+
         if(shuffle) {
             playlist.shuffle();
         }
@@ -50,8 +53,9 @@ function Play (client, msg, args, playlistIn, shuffle) {
                 }
             }
         });
-
+setTimeout(function() {
         playlist.start(msg);
+}, 3000);
     }).catch(function(err)  {
         console.error(err);
         msg.reply('`' + err + '`');

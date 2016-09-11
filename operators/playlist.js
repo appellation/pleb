@@ -58,14 +58,13 @@ var _ = require("underscore");
          * @param {Message} msg - The message used to execute this method.
          */
         start(msg) {
-
+            console.log('starting');
             var init = true;
             const self = this;
 
             self.continue = true;
 
             function recurse() {
-
                 if (self.dispatcher) {
                     self.stop();
                 }
@@ -90,7 +89,7 @@ var _ = require("underscore");
                         msg.channel.sendMessage(message);
                     }
 
-                    self.dispatcher.removeAllListeners('end');
+//                    self.dispatcher.removeAllListeners('end');
                     self.dispatcher.once('end', end);
 
                     function end()  {
