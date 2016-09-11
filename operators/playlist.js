@@ -62,6 +62,8 @@ var _ = require("underscore");
             var init = true;
             const self = this;
 
+            self.continue = true;
+
             function recurse() {
 
                 if (self.dispatcher) {
@@ -92,7 +94,7 @@ var _ = require("underscore");
                     self.dispatcher.once('end', end);
 
                     function end()  {
-                        console.log('end song');
+                        console.log('end.  continue? ' + self.continue);
                         self.dispatcher = null;
 
                         if (self.list.hasNext() && self.continue) {
