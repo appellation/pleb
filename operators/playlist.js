@@ -90,7 +90,7 @@ var _ = require("underscore");
                         msg.channel.sendMessage(message);
                     }
 
-                    self.dispatcher.removeListener('end', end); // clear any previous listeners
+                    self.dispatcher.removeAllListeners('end');
                     self.dispatcher.once('end', end);
 
                     function end()  {
