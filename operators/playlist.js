@@ -5,9 +5,9 @@ var _ = require("underscore");
 
 (function() {
 
-    const ytStream = require('youtube-audio-stream');
     const request = require('request');
     const EventEmitter = require('events');
+    const ytdl = require('ytdl-core');
 
     const PlaylistStructure = require('../structures/playlist');
     const YTPlaylist = require('../interfaces/yt');
@@ -145,7 +145,10 @@ var _ = require("underscore");
         getStream() {
             const url = this.list.getCurrent().url;
             if(YTPlaylist.isVideo(url))    {
-                return ytStream(url);
+                return ytdl(url, {
+                    filter: 'audioonly',
+                    quality: 'lowest'
+                });
             }   else if(SCPlaylist.isSoundCloudStream(url))   {
                 return request({
                     url: url,
