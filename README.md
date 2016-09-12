@@ -18,6 +18,8 @@ Available commands:
 - `shuffle [SoundCloud set URL]` - shuffles a SoundCloud set, then plays
 - `add [query|URL]` -  add any of the above options to the end of the playlist
 - `add shuffle [query|URL]` - add any of the above options to the playlist and then shuffle it
+- `next` - skips to next song
+- `next [num]` - skips to next `num` song
 - `pause` - pauses playback
 - `resume` - resumes playback
 - `stfu` - stops playback and disconnects Pleb from the voice channel

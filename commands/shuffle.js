@@ -2,7 +2,7 @@
  * Created by Will on 9/7/2016.
  */
 
-const Play = require('../commands/play');
+const Play = require('./play');
 
 function Shuffle(client, msg, args) {
 

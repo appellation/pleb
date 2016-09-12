@@ -19,7 +19,8 @@ const commands = {
     stfu: require('./commands/stfu'),
     shuffle: require('./commands/shuffle'),
     pause: require('./commands/pause'),
-    resume: require('./commands/resume')
+    resume: require('./commands/resume'),
+    next: require('./commands/next')
 };
 
 client.on('ready', function()   {
@@ -27,11 +28,11 @@ client.on('ready', function()   {
 });
 
 client.on('guildCreate', function(guild) {
-    client.sendMessage(guild.channels.get(guild.id), 'Sup.');
+    client.sendMessage(guild.channels.find('id', guild.id), 'Sup.');
 });
 
 client.on('guildMemberAdd', function(guild, user) {
-    client.sendMessage(guild.channels.get(guild.id), 'Welcome <@' + user.id + '>!')
+    client.sendMessage(guild.channels.find('id', guild.id), 'Welcome <@' + user.id + '>!')
 });
 
 client.on('message', function (message) {
