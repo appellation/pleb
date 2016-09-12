@@ -31,10 +31,6 @@ client.on('guildCreate', function(guild) {
     guild.channels.find('id', guild.id).sendMessage('Sup.');
 });
 
-client.on('guildMemberAdd', function(guild, user) {
-    guild.channels.find('id', guild.id).sendMessage('Welcome <@' + user.id + '>!');
-});
-
 client.on('message', function (message) {
     const parts = parseCommand(message);
 
