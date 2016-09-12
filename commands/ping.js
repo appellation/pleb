@@ -8,7 +8,7 @@ const dns = require('dns');
 function Ping(client, msg, args)    {
     if(!args[0])    {
         msg.channel.sendMessage('pinging....').then(function(newMessage) {
-            newMessage.edit('it took ' + (newMessage.timestamp.getTime() - msg.timestamp.getTime()) + 'ms :stopwatch: to process what you said and send it back.');
+            newMessage.edit((newMessage.timestamp.getTime() - msg.timestamp.getTime()) + 'ms :stopwatch:');
         });
     }   else    {
         dns.lookup(args[0], function(err, address)  {
