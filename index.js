@@ -28,11 +28,11 @@ client.on('ready', function()   {
 });
 
 client.on('guildCreate', function(guild) {
-    client.sendMessage(guild.channels.find('id', guild.id), 'Sup.');
+    guild.channels.find('id', guild.id).sendMessage('Sup.');
 });
 
 client.on('guildMemberAdd', function(guild, user) {
-    client.sendMessage(guild.channels.find('id', guild.id), 'Welcome <@' + user.id + '>!')
+    guild.channels.find('id', guild.id).sendMessage('Welcome <@' + user.id + '>!');
 });
 
 client.on('message', function (message) {

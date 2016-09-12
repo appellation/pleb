@@ -1,6 +1,4 @@
 # Pleb
-![pleb](http://i.imgur.com/dYcWGTC.png)
-
 A really simple Discord bot available for free.  Add me: <https://discordapp.com/oauth2/authorize?client_id=218227587166502923&scope=bot&permissions=3165184>.
 
 ## Usage
