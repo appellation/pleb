@@ -4,7 +4,7 @@
 
 function Ping(client, msg, args)    {
     if(!args[0])    {
-        msg.reply('pinging....').then(function(newMessage) {
+        msg.channel.sendMessage('pinging....').then(function(newMessage) {
             newMessage.edit('it took ' + (newMessage.timestamp.getTime() - msg.timestamp.getTime()) + 'ms to send this message.');
         });
     }
