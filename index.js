@@ -20,7 +20,8 @@ const commands = {
     shuffle: require('./commands/shuffle'),
     pause: require('./commands/pause'),
     resume: require('./commands/resume'),
-    next: require('./commands/next')
+    next: require('./commands/next'),
+    ping: require('./commands/ping')
 };
 
 client.on('ready', function()   {
