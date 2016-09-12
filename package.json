@@ -18,7 +18,7 @@
     "discord.js": "^9.2.0",
     "dotenv": "^2.0.0",
     "knuth-shuffle": "^1.0.1",
-    "net-ping": "^1.2.0",
+    "node-http-ping": "^0.2.2",
     "raven": "^0.12.1",
     "request": "^2.74.0",
     "request-promise-native": "^1.0.3",
