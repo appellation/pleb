@@ -17,21 +17,22 @@ function Imgur(client, msg, args)   {
             },
             json: true
         };
-        if(args[0]) {
-            defaults.body = {
-                title: args.join(' ')
-            };
-        }
         rp = rp.defaults(defaults);
 
         const ul = [];
         for(let i = 0; i < arr.length; i++) {
-            ul.push(rp.post({
+            const q = {
                 uri: '/3/image',
                 body: {
                     image: arr[i].url
                 }
-            }));
+            };
+
+            if(arr.length === 1 && args.length > 0)    {
+                q.body.title = args.join(' ');
+            }
+
+            ul.push(rp.post(q));
         }
 
         if(ul.length > 1)  {
@@ -40,12 +41,18 @@ function Imgur(client, msg, args)   {
                     return elem.id;
                 }).join(',');
 
-                return rp.post({
+                const q = {
                     uri: '/3/album',
                     body: {
                         ids: string
                     }
-                });
+                };
+
+                if(arr.length > 0 && args.length > 0) {
+                    q.body.title = args.join(' ');
+                }
+
+                return rp.post(q);
             }).then(function(album) {
                 msg.channel.stopTyping();
                 msg.reply('https://imgur.com/a/' + album.data.id);
