@@ -1,5 +1,5 @@
 # Pleb
-A really simple Discord bot available for free.  Add me: <https://discordapp.com/oauth2/authorize?client_id=218227587166502923&scope=bot&permissions=3165184>.
+A really simple Discord bot available for free.  Add me: <https://discordapp.com/oauth2/authorize?client_id=218227587166502923&scope=bot&permissions=3173376>.
 
 ## Usage
 `@mention` the bot and give a command.

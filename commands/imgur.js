@@ -55,7 +55,9 @@ function Imgur(client, msg, args)   {
                 return rp.post(q);
             }).then(function(album) {
                 msg.channel.stopTyping();
-                msg.reply('https://imgur.com/a/' + album.data.id);
+                return msg.reply('https://imgur.com/a/' + album.data.id);
+            }).then(function()   {
+                return msg.delete();
             }).catch(function(e)    {
                 msg.channel.stopTyping();
                 msg.reply(e);
@@ -63,7 +65,9 @@ function Imgur(client, msg, args)   {
         }   else    {
             ul[0].then(function(img)    {
                 msg.channel.stopTyping();
-                msg.reply('https://imgur.com/' + img.data.id);
+                return msg.reply('https://imgur.com/' + img.data.id);
+            }).then(function()   {
+                return msg.delete();
             }).catch(function(e)    {
                 msg.channel.stopTyping();
                 msg.reply(e);
