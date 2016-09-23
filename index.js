@@ -22,7 +22,8 @@ const commands = {
     resume: require('./commands/resume'),
     next: require('./commands/next'),
     ping: require('./commands/ping'),
-    imgur: require('./commands/imgur')
+    imgur: require('./commands/imgur'),
+    help: require('./commands/help')
 };
 
 client.on('ready', function()   {
