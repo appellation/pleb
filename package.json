@@ -15,6 +15,7 @@
   "author": "Will Nelson <nelson.will@live.com>",
   "license": "ISC",
   "dependencies": {
+    "dateformat": "^1.0.12",
     "discord.js": "^9.2.0",
     "dotenv": "^2.0.0",
     "knuth-shuffle": "^1.0.1",
