@@ -53,8 +53,8 @@ client.on('message', function (message) {
     }
 });
 
-client.login(process.env.discord).then(function(token)   {
-    console.log('Logged in.  Token: ' + token);
+client.login(process.env.discord).then(function()   {
+    console.log('Logged in.');
 }).catch(function(err)   {
     console.error(err);
 });
