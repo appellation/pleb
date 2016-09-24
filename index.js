@@ -23,7 +23,8 @@ const commands = {
     next: require('./commands/next'),
     ping: require('./commands/ping'),
     imgur: require('./commands/imgur'),
-    help: require('./commands/help')
+    help: require('./commands/help'),
+    boobs: require('./commands/boobs')
 };
 
 client.on('ready', function()   {
