@@ -84,7 +84,7 @@
                     const options = {
                         uri: 'https://www.googleapis.com/youtube/v3/playlistItems',
                         qs: {
-                            part: 'contentDetails,snippet',
+                            part: 'contentDetails,snippet,status',
                             playlistId: URL.parse(playlistUrl, true).query.list,
                             maxResults: 50,
                             key: process.env.youtube
@@ -99,7 +99,9 @@
                     rp(options).then(function(result)  {
 
                         _.each(result.items, function(elem) {
-                            self.list.add(new StreamStructure('https://www.youtube.com/watch?v=' + elem.contentDetails.videoId, elem.snippet.title));
+                            if(elem.status.privacyStatus == 'public' || elem.status.privacyStatus == 'unlisted')    {
+                                self.list.add(new StreamStructure('https://www.youtube.com/watch?v=' + elem.contentDetails.videoId, elem.snippet.title));
+                            }
                         });
 
                         if(result.nextPageToken)    {
