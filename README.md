@@ -31,6 +31,7 @@ Available commands:
 ### Random
 - `imgur [title?]` - upload an image to Imgur with an optional title; use this in the comment of a file upload
 - `boobs` - get a random photo of boobs
+- `memes` -  get a random meme from `/r/memes`
 
 ## Development
 All commands are prefixed with an @mention of the bot.  The first word after gets interpolated and calls a function as defined in `const commands` in `index.js`, passing in the Discord.js client, the message, and any arguments of the command (defined as text after the command word).  Some commands (e.g. `shuffle` and `add`) rely on other commands.

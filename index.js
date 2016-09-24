@@ -26,7 +26,8 @@ const commands = {
     ping: require('./commands/ping'),
     imgur: require('./commands/imgur'),
     help: require('./commands/help'),
-    boobs: require('./commands/boobs')
+    boobs: require('./commands/boobs'),
+    memes: require('./commands/memes')
 };
 
 client.on('ready', function()   {

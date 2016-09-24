@@ -32,9 +32,10 @@ function Memes(client, msg, args)   {
             url: 'https://oauth.reddit.com/r/memes'
         });
     }).then(function(res)   {
-        const list = res.data.children;/*
+        res = JSON.parse(res);
+        const list = res.data.children;
         var item = list[Math.floor(Math.random()*list.length)];
-        msg.channel.sendMessage(item.url);*/
+        msg.channel.sendMessage("https://www.reddit.com" + item.data.permalink);
     }).catch(function(err)  {
         console.error(err);
     });
