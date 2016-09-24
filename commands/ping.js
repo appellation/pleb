@@ -11,7 +11,7 @@ function Ping(client, msg, args)    {
         });
     }   else    {
         httpPing(args[0]).then(function(time)    {
-            msg.reply(args[0] + ': ' + time + 'ms :stopwatch:');
+            msg.channel.sendMessage(args[0] + ': ' + time + 'ms :stopwatch:');
         }).catch(function(err)  {
             msg.reply('error pinging ' + args[0] + ': ' + err);
         });

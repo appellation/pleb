@@ -27,6 +27,7 @@ Available commands:
 ### Functionality
 - `ping` - calculates time between command message and response message
 - `ping [URL]` - simple HTTP ping to a website
+- `stats` - get some bot stats
 
 ### Random
 - `imgur [title?]` - upload an image to Imgur with an optional title; use this in the comment of a file upload
