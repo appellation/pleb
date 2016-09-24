@@ -35,7 +35,7 @@ client.on('ready', function()   {
 });
 
 client.on('guildCreate', function(guild) {
-    guild.channels.find('id', guild.id).sendMessage('Sup.  Try `@Pleb help`.');
+    guild.defaultChannel.sendMessage('Sup.  Try `@Pleb help`.');
 });
 
 client.on('message', function (message) {
