@@ -13,7 +13,8 @@ function Help(client, msg, args)    {
         "- `stfu` - stops and disconnects\n" +
         "- `ping [url]?` - pings the bot or an optional website\n" +
         "- `imgur [title]?` - used with file uploads; uploads a file to Imgur with an optional `title`\n" +
-        "- `memes` - get a random meme from /r/memes"
+        "- `memes` - get a random meme from /r/memes" +
+        "- `stats` - get some bot stats"
     );
 }
 

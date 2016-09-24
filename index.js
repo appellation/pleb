@@ -27,7 +27,8 @@ const commands = {
     imgur: require('./commands/imgur'),
     help: require('./commands/help'),
     boobs: require('./commands/boobs'),
-    memes: require('./commands/memes')
+    memes: require('./commands/memes'),
+    stats: require('./commands/stats')
 };
 
 client.on('ready', function()   {

@@ -6,11 +6,10 @@ const dateFormat = require('dateformat');
 
 function Status(client, msg, args)  {
     msg.channel.sendMessage(
-        "**Guilds:** " + client.guilds.length + "\n" +
-        "**Channels:** " + client.channels.length + "\n" +
+        "**Guilds:** " + client.guilds.array().length + "\n" +
+        "**Channels:** " + client.channels.array().length + "\n" +
         "**Start time:** " + dateFormat(client.readyTime, "mmmm dS, yyyy, h:MM:ss TT") + "\n" +
-        "**Uptime:** " + client.uptime + "ms\n" +
-        "**Users:** " + client.users
+        "**Users:** " + client.users.array().length
     );
 }
 
