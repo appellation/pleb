@@ -31,8 +31,7 @@ function Memes(client, msg, args)   {
             },
             url: 'https://oauth.reddit.com/r/memes'
         });
-    }).then(function(res)   {
-        res = JSON.parse(res);
+    }).then(JSON.parse).then(function(res)   {
         const list = res.data.children;
         var item = list[Math.floor(Math.random()*list.length)];
         msg.channel.sendMessage("https://www.reddit.com" + item.data.permalink);
