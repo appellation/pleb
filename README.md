@@ -34,3 +34,12 @@ Available commands:
 
 ## Development
 All commands are prefixed with an @mention of the bot.  The first word after gets interpolated and calls a function as defined in `const commands` in `index.js`, passing in the Discord.js client, the message, and any arguments of the command (defined as text after the command word).  Some commands (e.g. `shuffle` and `add`) rely on other commands.
+
+### `.env` parameters
+- `discord` - your Discord app secret
+- `discord_client_it` - your Discord app client ID
+- `youtube` - a Google API browser key authorized for YouTube Data
+- `raven` - a Sentry.IO project URL, optional
+- `soundcloud` - a SoundCloud client ID
+- `soundcloud_secret` - a SoundCloud secret
+- `imgur` - a Imgur client ID
