@@ -26,7 +26,7 @@ Available commands:
 
 ### Functionality
 - `ping` - calculates time between command message and response message
-- `ping [URL|IP]` - simple HTTP ping to a website
+- `ping [URL]` - simple HTTP ping to a website
 
 ### Random
 - `imgur [title?]` - upload an image to Imgur with an optional title; use this in the comment of a file upload
@@ -34,13 +34,20 @@ Available commands:
 - `memes` -  get a random meme from `/r/memes`
 
 ## Development
-All commands are prefixed with an @mention of the bot.  The first word after gets interpolated and calls a function as defined in `const commands` in `index.js`, passing in the Discord.js client, the message, and any arguments of the command (defined as text after the command word).  Some commands (e.g. `shuffle` and `add`) rely on other commands.
+`npm install`
 
-### `.env` parameters
+Create a bot on <https://discordapp.com/developers/applications/me>.
+
+You'll need to make a `.env` file (or have some other way to access environment variables) with the below data:
+
 - `discord` - your Discord app secret
-- `discord_client_it` - your Discord app client ID
+- `discord_client_id` - your Discord app client ID
 - `youtube` - a Google API browser key authorized for YouTube Data
-- `raven` - a Sentry.IO project URL, optional
+- `raven` - a Sentry.io logging URL; optional
 - `soundcloud` - a SoundCloud client ID
 - `soundcloud_secret` - a SoundCloud secret
 - `imgur` - a Imgur client ID
+
+Add your bot to a server using `https://discordapp.com/oauth2/authorize?client_id=<YOUR_CLIENT_ID>&scope=bot&permissions=3173376`.
+
+All commands are prefixed with an @mention of the bot.  The first word after gets interpolated and calls a function as defined in `const commands` in `index.js`, passing in the Discord.js client, the message, and any arguments of the command (defined as text after the command word).  Some commands (e.g. `shuffle` and `add`) rely on other commands.
