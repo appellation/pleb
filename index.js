@@ -66,11 +66,24 @@ client.login(process.env.discord).then(function()   {
  * @param {Message} msg
  */
 function parseCommand(msg)  {
-    const parts = msg.content.split(' ');
-
-    if(parts[0] !== '<@' + process.env.discord_client_id + '>')    {
+    if(msg.author.id === client.user.id)    {
         return false;
     }
 
-    return parts.slice(1);
+    const parts = msg.content.split(' ');
+    const mentionedFirst = parts[0] === '<@' + process.env.discord_client_id + '>';
+
+    if(msg.channel.name === 'pleb' || msg.channel.guild == null) {
+        if(mentionedFirst)    {
+            return parts.slice(1);
+        }   else    {
+            return parts;
+        }
+    }   else    {
+        if(!mentionedFirst)    {
+            return false;
+        }
+
+        return parts.slice(1);
+    }
 }
