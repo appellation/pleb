@@ -28,11 +28,13 @@ Available commands:
 - `ping` - calculates time between command message and response message
 - `ping [URL]` - simple HTTP ping to a website
 - `stats` - get some bot stats
+- `id [mention]?` - get a user ID
 
 ### Random
 - `imgur [title?]` - upload an image to Imgur with an optional title; use this in the comment of a file upload
 - `boobs` - get a random photo of boobs
 - `memes` -  get a random meme from `/r/memes`
+- `dick [mention]?` - get a dick size
 
 ## Development
 `npm install`

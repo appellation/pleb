@@ -15,7 +15,9 @@ function Help(client, msg, args)    {
         "- `ping [url]?` - pings the bot or an optional website\n" +
         "- `imgur [title]?` - used with file uploads; uploads a file to Imgur with an optional `title`\n" +
         "- `memes` - get a random meme from /r/memes" +
-        "- `stats` - get some bot stats"
+        "- `stats` - get some bot stats\n" +
+        "- `dick [mention]?` - get a dick size\n" +
+        "- `id [mention]?` - get a Discord ID"
     );
 }
 
