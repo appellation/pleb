@@ -28,7 +28,8 @@ const commands = {
     help: require('./commands/help'),
     boobs: require('./commands/boobs'),
     memes: require('./commands/memes'),
-    stats: require('./commands/stats')
+    stats: require('./commands/stats'),
+    dick: require('./commands/dick')
 };
 
 client.on('ready', function()   {

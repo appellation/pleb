@@ -20,6 +20,7 @@
     "dotenv": "^2.0.0",
     "knuth-shuffle": "^1.0.1",
     "node-http-ping": "^0.2.2",
+    "random-js": "^1.0.8",
     "raven": "^0.12.1",
     "request": "^2.74.0",
     "request-promise-native": "^1.0.3",
