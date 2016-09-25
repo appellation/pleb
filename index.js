@@ -51,7 +51,9 @@ client.on('message', function (message) {
         if(typeof commands[command] === 'function') {
             commands[command](client, message, args);
         }   else    {
-            message.reply('you didn\'t want to do that anyway. :stuck_out_tongue_closed_eyes:')
+            if(message.channel.name !== 'pleb') {
+                message.reply('you didn\'t want to do that anyway. :stuck_out_tongue_closed_eyes:');
+            }
         }
     }
 });
