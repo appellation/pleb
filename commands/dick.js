@@ -31,7 +31,6 @@ function Dick(client, msg, args)    {
     }   else    {
         // count = random.integer(1,25)(engine);
         count = shuffle.knuthShuffle(arr)[0];
-        console.log(count);
         user.dick = count;
     }
 
