@@ -11,7 +11,7 @@ function Dick(client, msg, args)    {
     let user;
 
     if(args[0]) {
-        const match = args[0].match(/<@([0-9]+)>/);
+        const match = args[0].match(/<@!?([0-9]+)>/);
         if(match === null)  {
             msg.reply('hey, that\'s not a user');
             return;
