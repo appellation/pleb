@@ -119,7 +119,7 @@
                 });
             }
 
-            const query = args.length > 1;
+            const query = args.length > 0;
 
             const YT = new YTPlaylist(this.list);
             const SC = new SCPlaylist(this.list);
@@ -131,9 +131,7 @@
                 return SC.add(args[0]);
 
             }   else    {
-                return new Promise(function(resolve, reject)    {
-                    reject('Can\'t add that for some reason.');
-                });
+                Promise.reject('Can\'t add that for some reason.');
             }
         }
 
