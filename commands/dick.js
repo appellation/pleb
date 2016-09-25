@@ -2,8 +2,7 @@
  * Created by Will on 9/24/2016.
  */
 
-const random = require('random-js');
-const engine = random.engines.mt19937().autoSeed();
+const shuffle = require('knuth-shuffle');
 
 function Dick(client, msg, args)    {
     let dick = "8";
@@ -22,10 +21,17 @@ function Dick(client, msg, args)    {
         user = msg.author;
     }
 
+    const arr = [];
+    for(let i = 1; i < 26; i++) {
+        arr.push(i);
+    }
+
     if(user.dick) {
         count = user.dick;
     }   else    {
-        count = random.integer(1,25)(engine);
+        // count = random.integer(1,25)(engine);
+        count = shuffle.knuthShuffle(arr)[0];
+        console.log(count);
         user.dick = count;
     }
 
