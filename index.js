@@ -30,7 +30,8 @@ const commands = {
     memes: require('./commands/memes'),
     stats: require('./commands/stats'),
     dick: require('./commands/dick'),
-    id: require('./commands/id')
+    id: require('./commands/id'),
+    born: require('./commands/born')
 };
 
 client.on('ready', function()   {

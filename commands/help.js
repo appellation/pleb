@@ -17,7 +17,8 @@ function Help(client, msg, args)    {
         "- `memes` - get a random meme from /r/memes" +
         "- `stats` - get some bot stats\n" +
         "- `dick [mention]?` - get a dick size\n" +
-        "- `id [mention]?` - get a Discord ID"
+        "- `id [mention]?` - get a Discord ID\n" +
+        "- `born` - get your birthday"
     );
 }
 

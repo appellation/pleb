@@ -7,6 +7,7 @@
     const request = require('request');
     const EventEmitter = require('events');
     const ytdl = require('ytdl-core');
+    const validUrl = require('valid-url');
 
     const PlaylistStructure = require('../structures/playlist');
     const YTPlaylist = require('../interfaces/yt');
@@ -119,7 +120,7 @@
                 });
             }
 
-            const query = args.length > 0;
+            const query = !validUrl.is_web_uri(args[0]);
 
             const YT = new YTPlaylist(this.list);
             const SC = new SCPlaylist(this.list);

@@ -29,6 +29,7 @@ Available commands:
 - `ping [URL]` - simple HTTP ping to a website
 - `stats` - get some bot stats
 - `id [mention]?` - get a user ID
+- `born` - get your birthday
 
 ### Random
 - `imgur [title?]` - upload an image to Imgur with an optional title; use this in the comment of a file upload
