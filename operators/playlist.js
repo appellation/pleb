@@ -232,16 +232,8 @@
          * @returns {EventEmitter}
          */
         play(stream) {
-
-            if (this.dispatcher) {
-                this.stop();
-            }
-
-            const self = this;
             const dispatcher = this.vc.playStream(stream);
-
-            self.ee.emit('start', self.list);
-
+            this.ee.emit('start', this.list);
             return dispatcher;
         };
     }
