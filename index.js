@@ -39,10 +39,13 @@ client.on('ready', function()   {
 });
 
 client.on('guildCreate', function(guild) {
+    console.log("count#event.guildCreate=1");
     guild.defaultChannel.sendMessage('Sup.  Try `@Pleb help`.');
 });
 
 client.on('message', function (message) {
+    console.log("count#event.message=1");
+
     const parts = parseCommand(message);
 
     if(parts)   {
@@ -50,6 +53,7 @@ client.on('message', function (message) {
         const args = parts.slice(1);
 
         if(typeof commands[command] === 'function') {
+            console.log("count#command." + command + "=1");
             commands[command](client, message, args);
         }   else    {
             if(message.channel.name !== 'pleb') {
