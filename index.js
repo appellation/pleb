@@ -31,7 +31,8 @@ const commands = {
     stats: require('./commands/stats'),
     dick: require('./commands/dick'),
     id: require('./commands/id'),
-    born: require('./commands/born')
+    born: require('./commands/born'),
+    search: require('./commands/search')
 };
 
 client.on('ready', function()   {

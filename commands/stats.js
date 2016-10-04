@@ -2,7 +2,7 @@
  * Created by Will on 9/24/2016.
  */
 
-const dateFormat = require('dateformat');
+const moment = require('moment');
 
 function Status(client, msg, args)  {
     let reply;
@@ -13,7 +13,7 @@ function Status(client, msg, args)  {
     }   else    {
         reply = "**Guilds:** " + client.guilds.array().length + "\n" +
             "**Channels:** " + client.channels.array().length + "\n" +
-            "**Start time:** " + dateFormat(client.readyTime, "mmmm dS, yyyy, h:MM:ss TT") + "\n" +
+            "**Start time:** " + moment(client.readyTime).format("MMMM D, YYYY, h:mm:ss a") + "\n" +
             "**Users:** " + client.users.array().length;
     }
 
