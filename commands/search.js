@@ -10,18 +10,6 @@ function Search(client, msg, args)  {
     let cc;
 
     switch (msg.guild.region) {
-        case 'us-west':
-            cc = 'US';
-            break;
-        case 'us-east':
-            cc = 'US';
-            break;
-        case 'us-central':
-            cc = 'US';
-            break;
-        case 'us-south':
-            cc = 'US';
-            break;
         case 'brazil':
             cc = 'BR';
             break;
@@ -32,7 +20,7 @@ function Search(client, msg, args)  {
             cc = 'AU';
             break;
         default:
-            cc = null;
+            cc = 'US';
             break;
     }
 
