@@ -120,19 +120,14 @@
                 });
             }
 
-            const query = !validUrl.is_web_uri(args[0]);
-
             const YT = new YTPlaylist(this.list);
             const SC = new SCPlaylist(this.list);
 
-            if(query || YTPlaylist.isYouTubeURL(args[0]))   {
-                return YT.add(args);
-
-            }   else if(SCPlaylist.isSoundCloudURL(args[0]))    {
+            if(SCPlaylist.isSoundCloudURL(args[0]))    {
                 return SC.add(args[0]);
 
             }   else    {
-                Promise.reject('Can\'t add that for some reason.');
+                return YT.add(args);
             }
         }
 
