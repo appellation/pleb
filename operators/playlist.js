@@ -84,7 +84,7 @@
                     }
 
                     if(self.list.list.length > 1)  {
-                        const message = 'now playing ' + (self.list.pos + 1) + ' of ' + self.list.list.length + ': ' + self.list.getCurrent().name;
+                        const message = 'now playing **' + (self.list.pos + 1) + '** of **' + self.list.list.length + '**: `' + self.list.getCurrent().name + "`";
                         msg.channel.sendMessage(message);
                     }
 
