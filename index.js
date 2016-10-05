@@ -32,7 +32,8 @@ const commands = {
     dick: require('./commands/dick'),
     id: require('./commands/id'),
     born: require('./commands/born'),
-    search: require('./commands/search')
+    search: require('./commands/search'),
+    insult: require('./commands/insult')
 };
 
 client.on('ready', function()   {
