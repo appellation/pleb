@@ -84,21 +84,21 @@
                     }
 
                     if(self.list.list.length > 1)  {
-                        const message = 'now playing **' + (self.list.pos + 1) + '** of **' + self.list.list.length + '**: `' + self.list.getCurrent().name + "`";
+                        const message = '**' + (self.list.pos + 1) + '** of ' + self.list.list.length + ': `' + self.list.getCurrent().name + "`";
                         msg.channel.sendMessage(message);
                     }
 
-                    self.dispatcher.once('end', end);
-
-                    function end()  {
+                    self.dispatcher.once('end', function() {
                         self.dispatcher = null;
 
                         if (self.list.hasNext() && self.continue) {
                             console.log('playing next');
                             self.list.next();
                             recurse();
+                        }   else {
+                            self.stop();
                         }
-                    }
+                    });
                 }
             }
 

@@ -33,8 +33,8 @@ const commands = {
     id: require('./commands/id'),
     born: require('./commands/born'),
     search: require('./commands/search'),
-    insult: require('./commands/insult'),
-    airhorn: require('./commands/airhorn')
+    insult: require('./commands/insult')//,
+    // airhorn: require('./commands/airhorn')
 };
 
 client.on('ready', function()   {
