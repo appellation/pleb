@@ -30,6 +30,7 @@ Available commands:
 - `stats` - get some bot stats
 - `id [mention]?` - get a user ID
 - `born` - get your birthday
+- `search [query]` - query the internet and post the first result
 
 ### Random
 - `imgur [title?]` - upload an image to Imgur with an optional title; use this in the comment of a file upload
@@ -51,6 +52,7 @@ You'll need to make a `.env` file (or have some other way to access environment 
 - `soundcloud` - a SoundCloud client ID
 - `soundcloud_secret` - a SoundCloud secret
 - `imgur` - a Imgur client ID
+- `bing` - a Bing API access key
 
 Add your bot to a server using `https://discordapp.com/oauth2/authorize?client_id=<YOUR_CLIENT_ID>&scope=bot&permissions=3173376`.
 

@@ -18,7 +18,8 @@ function Help(client, msg, args)    {
         "- `stats` - get some bot stats\n" +
         "- `dick [mention]?` - get a dick size\n" +
         "- `id [mention]?` - get a Discord ID\n" +
-        "- `born` - get your birthday"
+        "- `born` - get your birthday\n" +
+        "- `search` - query the internet and get the first result"
     );
 }
 
