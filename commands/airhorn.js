@@ -6,7 +6,7 @@ const fs = require('fs');
 const shuffle = require('knuth-shuffle').knuthShuffle;
 
 function Airhorn(client, msg, args) {
-    const vc = client.guilds.find('id', msg.guild.id).members.find('id', msg.author.id).voiceChannel;
+    const vc = msg.member.voiceChannel;
     if(vc) {
         Promise.all([
             vc.join(),
