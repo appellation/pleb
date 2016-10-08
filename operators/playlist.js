@@ -92,11 +92,10 @@
                         self.dispatcher = null;
 
                         if (self.list.hasNext() && self.continue) {
-                            console.log('playing next');
                             self.list.next();
                             recurse();
                         }   else {
-                            self.stop();
+                            self.destroy();
                         }
                     });
                 }
