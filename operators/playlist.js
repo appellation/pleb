@@ -94,8 +94,6 @@
                         if (self.list.hasNext() && self.continue) {
                             self.list.next();
                             recurse();
-                        }   else {
-                            self.destroy();
                         }
                     });
                 }
