@@ -23,7 +23,7 @@ function Play (client, msg, args, playlistIn, shuffle) {
     msg.channel.startTyping();
 
     let playlist;
-    return VC.check(client, msg).then(function(conn)  {
+    return VC.checkCurrent(client, msg).then(function(conn)  {
 
         playlist = playlistIn ? playlistIn : new Playlist(conn);
 
