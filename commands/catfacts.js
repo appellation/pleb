@@ -7,15 +7,17 @@ const shuffle = require('knuth-shuffle').knuthShuffle,
     readline = require('readline');
 
 function Catfacts(client, msg, args)    {
-    let arr = [];
-    readline.createInterface({
-        input: fs.createReadStream('assets/data/catfacts.txt')
-    }).on('line', line => {
-        arr.push(line);
-    }).on('close', () => {
-        arr = shuffle(arr);
-        return Promise.resolve(arr[0]);
-    });
+    return new Promise(resolve => {
+        let arr = [];
+        readline.createInterface({
+            input: fs.createReadStream('assets/data/catfacts.txt')
+        }).on('line', line => {
+            arr.push(line);
+        }).on('close', () => {
+            arr = shuffle(arr);
+            resolve(arr[0]);
+        });
+    })
 }
 
 module.exports = Catfacts;
