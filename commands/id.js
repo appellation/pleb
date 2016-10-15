@@ -3,11 +3,7 @@
  */
 
 function Id(client, msg, args)  {
-    if(args[0]) {
-        msg.channel.sendMessage("`" + args[0] + "`");
-    }   else    {
-        msg.channel.sendMessage(msg.author.id);
-    }
+    msg.author.sendMessage('`' + msg.author.id + '`');
 }
 
 module.exports = Id;
