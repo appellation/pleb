@@ -20,8 +20,6 @@ const SCPlaylist = require('../interfaces/sc');
  */
 function Play (client, msg, args, playlistIn, shuffle) {
 
-    msg.channel.startTyping();
-
     let playlist;
     return VC.checkCurrent(client, msg).then(function(conn)  {
 
