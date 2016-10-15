@@ -82,7 +82,7 @@ function parseCommand(msg)  {
     }
 
     const parts = msg.content.split(' ');
-    const mentionedFirst = parts[0] === '<@' + process.env.discord_client_id + '>';
+    const mentionedFirst = (parts[0] === '<@' + process.env.discord_client_id + '>') || (parts[0] === '<@!' + process.env.discord_client_id + '>');
 
     if(msg.channel.name === 'pleb' || msg.channel.guild == null) {
         if(mentionedFirst)    {
