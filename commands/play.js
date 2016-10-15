@@ -23,7 +23,7 @@ function Play (client, msg, args, playlistIn, shuffle) {
     msg.channel.startTyping();
 
     let playlist;
-    VC.check(client, msg).then(function(conn)  {
+    return VC.check(client, msg).then(function(conn)  {
 
         playlist = playlistIn ? playlistIn : new Playlist(conn);
 
@@ -56,11 +56,6 @@ function Play (client, msg, args, playlistIn, shuffle) {
         setTimeout(function() {
             playlist.start(msg);
         }, 3000);
-
-    }).catch(function(err)  {
-        console.error(err);
-        msg.reply('`' + err + '`');
-        msg.channel.stopTyping();
     });
 }
 

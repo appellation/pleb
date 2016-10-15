@@ -8,13 +8,14 @@ function Add(client, msg, args) {
     if(args[0])     {
 
         if(args[0] === 'shuffle') {
-            Play(client, msg, args.slice(1), msg.guild.playlist, true);
+            return Play(client, msg, args.slice(1), msg.guild.playlist, true);
         }   else    {
             msg.guild.playlist.add(args);
+            return Promise.resolve('added');
         }
 
     }   else    {
-        msg.reply('gimme something to work with here.');
+        return Promise.resolve('gimme something to work with here.');
     }
 }
 

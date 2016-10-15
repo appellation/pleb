@@ -15,7 +15,9 @@ function Next(client, msg, args)    {
             playlist.next();
         }
 
-        Play(client, msg, [], playlist);
+        return Play(client, msg, [], playlist);
+    }   else {
+        return Promise.resolve();
     }
 }
 

@@ -9,6 +9,7 @@ function Pause(client, msg, args)   {
     }   else    {
         msg.reply('LUL');
     }
+    Promise.resolve();
 }
 
 module.exports = Pause;

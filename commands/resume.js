@@ -8,6 +8,7 @@ function Resume(client, msg, args)  {
     }   else    {
         msg.reply('nothing to resume, you idiot. :unamused:');
     }
+    return Promise.resolve();
 }
 
 module.exports = Resume;

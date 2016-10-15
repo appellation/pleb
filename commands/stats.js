@@ -17,7 +17,7 @@ function Status(client, msg, args)  {
             "**Users:** " + client.users.size;
     }
 
-    msg.channel.sendMessage(reply);
+    return Promise.resolve(reply);
 }
 
 module.exports = Status;

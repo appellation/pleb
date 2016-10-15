@@ -56,8 +56,19 @@ client.on('message', function (message) {
         const args = parts.slice(1);
 
         if(typeof commands[command] === 'function') {
+            message.channel.startTyping();
             console.log("count#command." + command + "=1");
-            commands[command](client, message, args);
+
+            commands[command](client, message, args).then(res => {
+                message.channel.stopTyping();
+                if(res && typeof res == 'string')   {
+                    message.channel.sendMessage(res);
+                }
+            }).catch(err => {
+                message.channel.stopTyping();
+                console.error(err);
+                message.reply(err);
+            });
         }   else    {
             if(message.channel.name !== 'pleb') {
                 message.reply('you didn\'t want to do that anyway. :stuck_out_tongue_closed_eyes:');

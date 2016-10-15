@@ -24,7 +24,7 @@ function Search(client, msg, args)  {
             break;
     }
 
-    rp.get({
+    return rp.get({
         uri: 'https://api.cognitive.microsoft.com/bing/v5.0/search',
         qs: {
             q: args.join(' '),
@@ -87,9 +87,7 @@ function Search(client, msg, args)  {
                     "**" + item.name + "** - `" + item.displayUrl + "`\n" + (data.shortUrl ? data.shortUrl.id : item.url);
         }
 
-        msg.channel.sendMessage(reply);
-    }).catch(function(err)  {
-        console.error(err);
+        return reply;
     });
 }
 

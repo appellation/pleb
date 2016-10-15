@@ -40,7 +40,7 @@ function Dick(client, msg, args)    {
 
     dick += "D";
 
-    msg.channel.sendMessage(dick);
+    return Promise.resolve(dick);
 }
 
 module.exports = Dick;

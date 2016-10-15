@@ -8,8 +8,6 @@ function Imgur(client, msg, args)   {
 
     const arr = msg.attachments.array();
     if(arr.length > 0) {
-        msg.channel.startTyping();
-
         const defaults = {
             baseUrl: 'https://api.imgur.com/',
             headers:    {
@@ -36,7 +34,7 @@ function Imgur(client, msg, args)   {
         }
 
         if(ul.length > 1)  {
-            Promise.all(ul).then(function(imgs)  {
+            return Promise.all(ul).then(function(imgs)  {
                 const string = imgs.map(function(elem)  {
                     return elem.id;
                 }).join(',');
@@ -58,23 +56,17 @@ function Imgur(client, msg, args)   {
                 return msg.reply('https://imgur.com/a/' + album.data.id);
             }).then(function()   {
                 return msg.delete();
-            }).catch(function(e)    {
-                msg.channel.stopTyping();
-                msg.reply(e);
             });
         }   else    {
-            ul[0].then(function(img)    {
+            return ul[0].then(function(img)    {
                 msg.channel.stopTyping();
                 return msg.reply('https://imgur.com/' + img.data.id);
             }).then(function()   {
                 return msg.delete();
-            }).catch(function(e)    {
-                msg.channel.stopTyping();
-                msg.reply(e);
             });
         }
     }   else    {
-        msg.reply('i\'m not a miracle worker :wink:');
+        Promise.resolve('i\'m not a miracle worker :wink:');
     }
 }
 

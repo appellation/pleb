@@ -4,7 +4,7 @@
 
 const rp = require('request-promise-native');
 function Memes(client, msg, args)   {
-    new Promise(function(resolve, reject)   {
+    return new Promise(function(resolve, reject)   {
         if (msg.guild.reddit && msg.guild.reddit.expires_in > Date.now()) {
             resolve(msg.guild.reddit);
         } else {
@@ -34,9 +34,7 @@ function Memes(client, msg, args)   {
     }).then(JSON.parse).then(function(res)   {
         const list = res.data.children;
         var item = list[Math.floor(Math.random()*list.length)];
-        msg.channel.sendMessage("https://www.reddit.com" + item.data.permalink);
-    }).catch(function(err)  {
-        console.error(err);
+        return "https://www.reddit.com" + item.data.permalink;
     });
 }
 

@@ -9,9 +9,9 @@ function Insult(client, msg, args)  {
     const ins = shuffle(insults)[0];
 
     if(args[0] && args[0].match(regex))    {
-        msg.channel.sendMessage(args[0] + ", " + ins);
+        return Promise.resolve(args[0] + ", " + ins);
     }   else {
-        msg.channel.sendMessage(msg.author.toString() + ", " + ins);
+        return Promise.resolve(msg.author.toString() + ", " + ins);
     }
 }
 

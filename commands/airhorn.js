@@ -8,7 +8,7 @@ const shuffle = require('knuth-shuffle').knuthShuffle;
 function Airhorn(client, msg, args) {
     const vc = msg.member.voiceChannel;
     if(vc) {
-        Promise.all([
+        return Promise.all([
             vc.join(),
             new Promise((resolve, reject) => {
                 fs.readdir('assets/audio', function(err, files) {
@@ -25,11 +25,9 @@ function Airhorn(client, msg, args) {
             dispatcher.once('end', () => {
                 vc.leave();
             });
-        }).catch(function(err)  {
-            console.error(err);
         });
     }   else {
-        console.error(vc);
+        return Promise.resolve();
     }
 }
 

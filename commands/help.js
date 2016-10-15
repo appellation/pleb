@@ -21,6 +21,7 @@ function Help(client, msg, args)    {
         "- `born` - get your birthday\n" +
         "- `search` - query the internet and get the first result"
     );
+    return Promise.resolve();
 }
 
 module.exports = Help;

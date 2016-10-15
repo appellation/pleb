@@ -14,7 +14,7 @@ function Catfacts(client, msg, args)    {
         arr.push(line);
     }).on('close', () => {
         arr = shuffle(arr);
-        msg.channel.sendMessage(arr[0]);
+        return Promise.resolve(arr[0]);
     });
 }
 

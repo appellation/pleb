@@ -7,14 +7,14 @@ const Play = require('./play');
 function Shuffle(client, msg, args) {
 
     if(args.length > 0) {
-        Play(client, msg, args, null, true);
+        return Play(client, msg, args, null, true);
     }   else    {
         const playlist = msg.guild.playlist;
 
         if(playlist && playlist.list.list.length > 0)    {
-            Play(client, msg, args, playlist, true);
+            return Play(client, msg, args, playlist, true);
         }   else    {
-            msg.reply('takes two (or more :thinking:) to tango.');
+            return msg.reply('takes two (or more :thinking:) to tango.');
         }
     }
 }

@@ -13,6 +13,7 @@ function Stfu(client, msg, args)    {
     }   else    {
         msg.reply('when someone asks you to do something and you\'ve already done it. :joy:');
     }
+    return Promise.resolve();
 }
 
 module.exports = Stfu;
