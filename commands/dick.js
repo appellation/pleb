@@ -16,19 +16,20 @@ function Dick(client, msg, args)    {
             return;
         }
 
-        user = client.users.find('id', match[1]);
+        user = client.users.get(match[1]);
     }   else    {
         user = msg.author;
     }
 
-    const arr = [];
-    for(let i = 1; i < 26; i++) {
-        arr.push(i);
-    }
 
     if(user.dick) {
         count = user.dick;
     }   else    {
+        const arr = [];
+        for(let i = 1; i < 26; i++) {
+            arr.push(i);
+        }
+
         // count = random.integer(1,25)(engine);
         count = shuffle.knuthShuffle(arr)[0];
         user.dick = count;
