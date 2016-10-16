@@ -60,14 +60,14 @@ client.on('message', function (message) {
             console.log("count#command." + command + "=1");
 
             commands[command](client, message, args).then(res => {
-                message.channel.stopTyping();
                 if(res && typeof res == 'string')   {
                     message.channel.sendMessage(res);
                 }
-            }).catch(err => {
                 message.channel.stopTyping();
+            }).catch(err => {
                 console.error(err);
                 message.reply(err);
+                message.channel.stopTyping();
             });
         }   else    {
             if(message.channel.name !== 'pleb') {

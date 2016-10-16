@@ -7,7 +7,6 @@
     const request = require('request');
     const EventEmitter = require('events');
     const ytdl = require('ytdl-core');
-    const validUrl = require('valid-url');
 
     const PlaylistStructure = require('../structures/playlist');
     const YTPlaylist = require('../interfaces/yt');

@@ -10,7 +10,7 @@ function Stfu(client, msg, args)    {
     if(playlist)  {
         playlist.destroy();
         delete msg.guild.playlist;
-        return Promise.resolve();
+        return Promise.resolve('k :cry:');
     }   else    {
         return msg.reply('when someone asks you to do something and you\'ve already done it. :joy:');
     }

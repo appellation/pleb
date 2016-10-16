@@ -75,8 +75,7 @@ function Search(client, msg, args)  {
             case 'Images':
                 item = data.res.images.value[0];
                 reply = "**" + item.name + "**\n" + item.hostPageDisplayUrl;
-                msg.channel.sendFile(item.contentUrl, null, reply);
-                return;
+                return msg.channel.sendFile(item.contentUrl, null, reply);
             case 'TimeZone':
                 item = data.res.timeZone.primaryCityTime;
                 reply = "**" + moment(item.time).format("MMM D, YYYY HH:mm:ss A") + "** - `" + item.location + "`";

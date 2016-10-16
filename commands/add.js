@@ -9,9 +9,11 @@ function Add(client, msg, args) {
 
         if(args[0] === 'shuffle') {
             return Play(client, msg, args.slice(1), msg.guild.playlist, true);
-        }   else    {
+        }   else if(msg.guild.playlist)   {
             msg.guild.playlist.add(args);
             return Promise.resolve('added');
+        }   else {
+            return Promise.resolve('no playlist.');
         }
 
     }   else    {
