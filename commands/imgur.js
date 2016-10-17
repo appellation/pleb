@@ -66,7 +66,7 @@ function Imgur(client, msg, args)   {
             });
         }
     }   else    {
-        Promise.resolve('i\'m not a miracle worker :wink:');
+        return Promise.resolve('i\'m not a miracle worker :wink:');
     }
 }
 
