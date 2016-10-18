@@ -8,7 +8,7 @@ function Status(client, msg, args)  {
     return new Promise(resolve => {
         if(args[0] === 'guilds' && msg.author.id == '116690352584392704')    {
             resolve(client.guilds.map(function(guild)    {
-                return (guild.available ? ":white_check_mark:" : ":x:") + " **" + guild.name + "** - `" + guild.members.size + "` members - `" + guild.owner.user.username + "#" + guild.owner.user.discriminator + "`";
+                return (guild.available ? ":white_check_mark:" : ":x:") + " **" + guild.name + "** - `" + guild.memberCount + "` members - `" + guild.owner.user.username + "#" + guild.owner.user.discriminator + "`";
             }).join("\n"));
         }   else    {
             resolve("**Guilds:** " + client.guilds.size + "\n" +
