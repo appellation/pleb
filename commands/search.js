@@ -36,57 +36,55 @@ function Search(client, msg, args)  {
             'X-MSEdge-ClientID': msg.author.id
         },
         json: true
-    }).then(function(res)   {
-        // test for short URL needed
-
-        const first = res.rankingResponse.mainline.items[0];
-
-        if(first.answerType !== 'Images' && first.answerType !== 'TimeZone')    {
-            return rp.post({
-                uri: 'https://www.googleapis.com/urlshortener/v1/url',
-                qs: {
-                    key: process.env.youtube
-                },
-                json: true,
-                body: {
-                    longUrl: res[first.answerType.substring(0, 1).toLowerCase() + first.answerType.substring(1)].value[0].url
-                }
-            }).then(function(shortUrl) {
-                return {
-                    res,
-                    shortUrl
-                }
-            });
-        }   else {
-            return Promise.resolve({res, shortUrl: null});
-        }
-    }).then(function(data)  {
+    }).then(function(res)  {
         // format response
 
-        const first = data.res.rankingResponse.mainline.items[0];
+        const first = res.rankingResponse.mainline.items[0];
         let reply;
         let item;
 
         switch (first.answerType)   {
             case 'News':
-                item = data.res.news.value[0];
-                reply = "**" + item.name + "**\n" + item.description + "\n\n" + (data.shortUrl ? data.shortUrl.id : item.url);
+                item = res.news.value[0];
+                reply = shortenURL(item.url).then(url => {
+                    return "**" + item.name + "**\n" + item.description + "\n\n" + url
+                });
+                break;
+            case 'Computation':
+                reply = Promise.resolve("`" + res.computation.expression + "` = `" + res.computation.value + "`");
                 break;
             case 'Images':
-                item = data.res.images.value[0];
-                reply = "**" + item.name + "**\n" + item.hostPageDisplayUrl;
+                item = res.images.value[0];
+                reply = Promise.resolve("**" + item.name + "**\n" + item.hostPageDisplayUrl);
                 return msg.channel.sendFile(item.contentUrl, null, reply);
             case 'TimeZone':
-                item = data.res.timeZone.primaryCityTime;
-                reply = "**" + moment(item.time).format("MMM D, YYYY HH:mm:ss A") + "** - `" + item.location + "`";
+                item = res.timeZone.primaryCityTime;
+                reply = Promise.resolve("**" + moment(item.time).format("MMM D, YYYY HH:mm:ss A") + "** - `" + item.location + "`");
                 break;
             default:
-                item = data.res.webPages.value[0];
-                reply = "I found **" + numeral(data.res.webPages.totalEstimatedMatches).format('0,0') + "** pages.  Here's the first:\n\n" +
-                    "**" + item.name + "** - `" + item.displayUrl + "`\n" + (data.shortUrl ? data.shortUrl.id : item.url);
+                item = res.webPages.value[0];
+                reply = shortenURL(item.url).then(url => {
+                    return "I found **" + numeral(res.webPages.totalEstimatedMatches).format('0,0') + "** pages.  Here's the first:\n\n" +
+                    "**" + item.name + "** - `" + item.displayUrl + "`\n" + url
+                });
         }
 
         return reply;
+    });
+}
+
+function shortenURL(url)    {
+    return rp.post({
+        uri: 'https://www.googleapis.com/urlshortener/v1/url',
+        qs: {
+            key: process.env.youtube
+        },
+        json: true,
+        body: {
+            longUrl: url
+        }
+    }).then(res => {
+        return res.id;
     });
 }
 
