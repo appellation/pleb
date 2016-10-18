@@ -2,8 +2,6 @@
  * Created by Will on 8/31/2016.
  */
 
-'use strict';
-
 (function() {
 
     const request = require('request');
@@ -43,25 +41,18 @@
              * @type {PlaylistStructure}
              */
             this.list = listIn || new PlaylistStructure();
-
-            /**
-             * Continue playlist.
-             * @type {boolean}
-             */
-            this.continue = true;
         }
 
         /**
          * Start the playlist.
          * @param {Message} msg - The message used to execute this method.
+         * @param {[]} args
          */
-        start(msg) {
+        start(msg, args) {
             var init = true;
             const self = this;
 
-            self.continue = true;
-
-            function recurse() {
+            function playQueue() {
                 if (self.dispatcher) {
                     self.stop();
                 }
@@ -86,18 +77,35 @@
                         msg.channel.sendMessage(message);
                     }
 
-                    self.dispatcher.once('end', function() {
+                    self.once('stop', () => {
+                        self.dispatcher.removeListener('end', end);
+                        self.destroy();
+                    });
+
+                    self.dispatcher.once('end', end);
+
+                    function end() {
                         self.dispatcher = null;
 
-                        if (self.list.hasNext() && self.continue) {
+                        if (self.list.hasNext()) {
                             self.list.next();
-                            recurse();
+                            playQueue();
                         }
-                    });
+                    }
                 }
             }
 
-            recurse();
+            self.once('init', function(playlist)   {
+                if(playlist.list.length === 1)  {
+                    if(!SCPlaylist.isSoundCloudURL(args[0]) && !YTPlaylist.isYouTubeURL(args[0]))    {
+                        msg.reply('now playing ' + playlist.getCurrent().url);
+                    }   else    {
+                        msg.reply('now playing');
+                    }
+                }
+            });
+
+            playQueue();
         };
 
         /**
@@ -154,21 +162,20 @@
          * @returns {StreamStructure} Next song.
          */
         next() {
+            this.emit('next');
             if (this.list.hasNext()) {
                 this.list.next();
-                this.emit('next', this.list);
+                this.emit('nexted', this.list);
                 return this.list.getCurrent();
             }
         };
 
         /**
          * Stop playback.
-         * IMPORTANT: `this.continue` must be `false` before ending.
          */
         stop() {
+            this.emit('stop');
             if(this.dispatcher) {
-                this.continue = false;
-                this.removeAllListeners('start');
                 this.dispatcher.end();
                 this.dispatcher = null;
                 this.emit('stopped');
@@ -191,6 +198,7 @@
          * Pause playback.
          */
         pause() {
+            this.emit('pause');
             if(this.dispatcher) {
                 this.dispatcher.pause();
                 this.emit('paused');
@@ -201,6 +209,7 @@
          * Resume playback.
          */
         resume() {
+            this.emit('resume');
             if(this.dispatcher) {
                 this.dispatcher.resume();
                 this.emit('resumed');
@@ -211,6 +220,7 @@
          * Shuffle the playlist.
          */
         shuffle() {
+            this.emit('shuffle');
             this.stop();
             this.list.shuffle();
             this.emit('shuffled');
@@ -222,8 +232,9 @@
          * @returns {EventEmitter}
          */
         play(stream) {
+            this.emit('start');
             const dispatcher = this.vc.playStream(stream);
-            this.emit('start', this.list);
+            this.emit('started', this.list);
             return dispatcher;
         };
     }

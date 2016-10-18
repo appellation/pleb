@@ -40,20 +40,10 @@ function Play (client, msg, args, playlistIn, shuffle) {
             playlist.shuffle();
         }
 
-        playlist.once('init', function(playlist)   {
-            msg.channel.stopTyping();
-            if(playlist.list.length === 1)  {
-                if(!SCPlaylist.isSoundCloudURL(args[0]) && !YTPlaylist.isYouTubeURL(args[0]))    {
-                    msg.reply('now playing ' + playlist.getCurrent().url);
-                }   else    {
-                    msg.reply('now playing');
-                }
-            }
-        });
-
+        // see issue #37, but a delay seems to be needed to properly end the stream dispatcher
         setTimeout(function() {
-            playlist.start(msg);
-        }, 3000);
+            playlist.start(msg, args);
+        }, 300);
     });
 }
 
