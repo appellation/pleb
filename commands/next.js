@@ -6,9 +6,9 @@ const Play = require('./play');
 
 function Next(client, msg, args)    {
     const playlist = msg.guild.playlist;
-    const num = args[0] || 1;
+    const num = Number.parseInt(args[0]) || 1;
 
-    if(playlist && typeof num == 'number' && num > 0)    {
+    if(playlist && !isNaN(num) && num > 0)    {
         playlist.stop();
 
         for(let i = 0; i < num; i++)    {
