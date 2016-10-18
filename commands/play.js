@@ -40,7 +40,7 @@ function Play (client, msg, args, playlistIn, shuffle) {
             playlist.shuffle();
         }
 
-        playlist.ee.once('init', function(playlist)   {
+        playlist.once('init', function(playlist)   {
             msg.channel.stopTyping();
             if(playlist.list.length === 1)  {
                 if(!SCPlaylist.isSoundCloudURL(args[0]) && !YTPlaylist.isYouTubeURL(args[0]))    {

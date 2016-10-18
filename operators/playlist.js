@@ -2,6 +2,8 @@
  * Created by Will on 8/31/2016.
  */
 
+'use strict';
+
 (function() {
 
     const request = require('request');
@@ -12,7 +14,7 @@
     const YTPlaylist = require('../interfaces/yt');
     const SCPlaylist = require('../interfaces/sc');
 
-    class Playlist {
+    class Playlist extends EventEmitter {
 
         /**
          * Operate a generic playlist.
@@ -21,6 +23,8 @@
          * @constructor
          */
         constructor(conn, listIn) {
+            super();
+
             if (!conn) {
                 throw new Error('No voice connection.');
             }
@@ -39,11 +43,6 @@
              * @type {PlaylistStructure}
              */
             this.list = listIn || new PlaylistStructure();
-
-            /**
-             * @type {EventEmitter}
-             */
-            this.ee = new EventEmitter();
 
             /**
              * Continue playlist.
@@ -71,14 +70,14 @@
                     const stream = self.getStream();
 
                     if(!stream)  {
-                        self.ee.emit('error', 'No stream.');
+                        self.emit('error', 'No stream.');
                         return;
                     }
 
                     self.dispatcher = self.play(stream);
 
                     if(init)    {
-                        self.ee.emit('init', self.list);
+                        self.emit('init', self.list);
                         init = false;
                     }
 
@@ -157,7 +156,7 @@
         next() {
             if (this.list.hasNext()) {
                 this.list.next();
-                this.ee.emit('next', this.list);
+                this.emit('next', this.list);
                 return this.list.getCurrent();
             }
         };
@@ -169,10 +168,10 @@
         stop() {
             if(this.dispatcher) {
                 this.continue = false;
-                this.ee.removeAllListeners('start');
+                this.removeAllListeners('start');
                 this.dispatcher.end();
                 this.dispatcher = null;
-                this.ee.emit('stopped');
+                this.emit('stopped');
             }
         };
 
@@ -194,7 +193,7 @@
         pause() {
             if(this.dispatcher) {
                 this.dispatcher.pause();
-                this.ee.emit('paused');
+                this.emit('paused');
             }
         };
 
@@ -204,7 +203,7 @@
         resume() {
             if(this.dispatcher) {
                 this.dispatcher.resume();
-                this.ee.emit('resumed');
+                this.emit('resumed');
             }
         };
 
@@ -214,7 +213,7 @@
         shuffle() {
             this.stop();
             this.list.shuffle();
-            this.ee.emit('shuffled');
+            this.emit('shuffled');
         };
 
         /**
@@ -224,7 +223,7 @@
          */
         play(stream) {
             const dispatcher = this.vc.playStream(stream);
-            this.ee.emit('start', this.list);
+            this.emit('start', this.list);
             return dispatcher;
         };
     }
