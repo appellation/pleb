@@ -77,13 +77,10 @@
                         msg.channel.sendMessage(message);
                     }
 
-                    self.once('stop', () => {
-                        self.dispatcher.removeListener('end', end);
-                        self.destroy();
-                    });
+                    self.once('stop', noContinue);
+                    self.once('destroy', noContinue);
 
                     self.dispatcher.once('end', end);
-
                     function end() {
                         self.dispatcher = null;
 
@@ -91,6 +88,10 @@
                             self.list.next();
                             playQueue();
                         }
+                    }
+
+                    function noContinue()   {
+                        self.dispatcher.removeListener('end', end);
                     }
                 }
             }
@@ -186,6 +187,7 @@
          * Destroy the audio connection.
          */
         destroy() {
+            this.emit('destroy');
             this.stop();
             if(this.vc) {
                 this.vc.disconnect();
