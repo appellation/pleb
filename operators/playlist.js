@@ -87,11 +87,15 @@
                         if (self.list.hasNext()) {
                             self.list.next();
                             playQueue();
+                        }   else    {
+                            self.destroy();
                         }
                     }
 
                     function noContinue()   {
-                        self.dispatcher.removeListener('end', end);
+                        if(self.dispatcher && typeof self.dispatcher.removeListener == 'function') {
+                            self.dispatcher.removeListener('end', end);
+                        }
                     }
                 }
             }
