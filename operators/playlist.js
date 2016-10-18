@@ -183,7 +183,7 @@
             if(this.vc) {
                 this.vc.disconnect();
                 this.vc = null;
-                this.ee.emit('destroyed');
+                this.emit('destroyed');
             }
         };
 
