@@ -8,7 +8,7 @@ function Next(client, msg, args)    {
     const playlist = msg.guild.playlist;
     const num = args[0] || 1;
 
-    if(playlist && num > 0)    {
+    if(playlist && typeof num == 'number' && num > 0)    {
         playlist.stop();
 
         for(let i = 0; i < num; i++)    {
