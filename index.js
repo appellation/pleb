@@ -66,37 +66,9 @@ client.on('guildMemberSpeaking', function(member, speaking) {
 client.on('message', function (message) {
     console.log("count#event.message=1");
 
-    const parts = parseCommand(message);
-
-    if(parts)   {
-        const command = parts[0];
-        const args = parts.slice(1);
-
-        if(typeof commands[command] === 'function') {
-            message.channel.startTyping();
-            console.log("count#command." + command + "=1");
-
-            const exec = commands[command](client, message, args);
-
-            if(typeof exec !== 'undefined' && typeof exec.then === 'function') {
-                exec.then(res => {
-                    if (res && typeof res == 'string') {
-                        message.channel.sendMessage(res);
-                    }
-                    message.channel.stopTyping();
-                }).catch(err => {
-                    console.error(err);
-                    message.reply(err);
-                    message.channel.stopTyping();
-                });
-            }   else {
-                message.channel.stopTyping();
-            }
-        }   else    {
-            if(message.channel.name !== 'pleb') {
-                message.reply('you didn\'t want to do that anyway. :stuck_out_tongue_closed_eyes:');
-            }
-        }
+    const cmd = require('./operators/command')(client, message);
+    if(cmd) {
+        cmd.call().then(cmd.respond);
     }
 });
 
@@ -105,30 +77,3 @@ client.login(process.env.discord).then(function()   {
 }).catch(function(err)   {
     console.error(err);
 });
-
-/**
- * Parse an incoming message as a command.
- * @param {Message} msg
- */
-function parseCommand(msg)  {
-    if(msg.author.id === client.user.id)    {
-        return false;
-    }
-
-    const parts = msg.content.split(' ');
-    const mentionedFirst = (parts[0] === '<@' + process.env.discord_client_id + '>') || (parts[0] === '<@!' + process.env.discord_client_id + '>');
-
-    if(msg.channel.name === 'pleb' || msg.channel.guild == null) {
-        if(mentionedFirst)    {
-            return parts.slice(1);
-        }   else    {
-            return parts;
-        }
-    }   else    {
-        if(!mentionedFirst)    {
-            return false;
-        }
-
-        return parts.slice(1);
-    }
-}
