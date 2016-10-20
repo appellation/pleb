@@ -81,10 +81,11 @@ class CommandOperator   {
             if(typeof exec !== 'undefined' && typeof exec.then === 'function') {
                 resolve(exec);
             }   else {
-                reject();
+                resolve();
             }
-        }).then(() => {
+        }).then(res => {
             self.msg.channel.stopTyping();
+            return res;
         }).catch(err => {
             console.error(err);
             self.msg.reply(err);
