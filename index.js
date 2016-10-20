@@ -47,6 +47,22 @@ client.on('guildCreate', function(guild) {
     guild.defaultChannel.sendMessage('Sup.  Try `@Pleb help`.');
 });
 
+client.on('guildMemberSpeaking', function(member, speaking) {
+    if(member.listen && speaking)   {
+
+        const msg = member.listen;
+        member.listen = false;
+
+        member.voiceChannel.join().then(conn => {
+            return require('./operators/voiceConnection').speechToText(conn.createReceiver().createPCMStream(member))
+        }).then(text => {
+            if(msg.constructor.name == 'Message')    {
+                msg.channel.sendMessage('`' + text + '`');
+            }
+        }).catch(console.error);
+    }
+});
+
 client.on('message', function (message) {
     console.log("count#event.message=1");
 
