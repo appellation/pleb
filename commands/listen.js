@@ -34,7 +34,7 @@ function Listen(client, msg, args)  {
                         sampleRate: 16000
                     },
                     singleUtterance: true,
-                    interimResults: true
+                    interimResults: false
                 });
 
                 ffmpeg(stream)
@@ -49,7 +49,7 @@ function Listen(client, msg, args)  {
                     .on('data', res => {
                         console.log(res);
                         if(res.endpointerType == speech.endpointerTypes.ENDPOINTER_EVENT_UNSPECIFIED) {
-                            msg.channel.sendMessage(res.results);
+                            msg.channel.sendMessage('`' + res.results + '`');
                         }
                     });
             }
