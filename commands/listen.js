@@ -5,9 +5,9 @@
 const VC = require('../operators/voiceConnection');
 
 function Listen(client, msg, args)  {
-    VC.checkCurrent(client, msg);
-    msg.member.listen = msg;
-    return Promise.resolve();
+    return VC.checkUser(msg).then(() => {
+        msg.member.listen = msg;
+    });
 }
 
 module.exports = Listen;

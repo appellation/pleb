@@ -56,23 +56,35 @@ const ffmpeg = require('fluent-ffmpeg');
         }
 
         /**
+         * Check if author is in a voice channel and connect if so.
+         * @param {Message} msg
+         * @returns {Promise}
+         */
+        static checkUser(msg)   {
+            return new Promise((resolve, reject) => {
+                const authorChannel = msg.member.voiceChannel;
+
+                if(authorChannel) {
+                    authorChannel.join().then(resolve);
+                }   else    {
+                    reject('No voice channel to join.');
+                }
+            });
+        }
+
+        /**
          * Check voice connections in a given guild.  Prioritizes existing connections over the author connection.
          * @param {Client} client
          * @param {Message} msg
          * @returns {Promise} - Resolves with the preferred voice connection.
          */
         static checkCurrent(client, msg) {
-            return new Promise(function(resolve, reject)    {
+            return new Promise(resolve => {
 
                 const clientVC = client.voiceConnections.get(msg.guild.id);
-                const authorChannel = msg.member.voiceChannel;
 
                 if(!clientVC) {
-                    if(authorChannel) {
-                        authorChannel.join().then(resolve);
-                    }   else    {
-                        reject('No voice channel to join.');
-                    }
+                    resolve(VC.checkUser(msg));
                 }   else    {
                     resolve(clientVC);
                 }
