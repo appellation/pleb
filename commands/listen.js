@@ -18,7 +18,13 @@ function Listen(client, msg, args)  {
     return VC.checkCurrent(client, msg).then(conn => {
         return Promise.resolve(conn.createReceiver());
     }).then(receiver => {
-        client.on('guildMemberSpeaking', (member, speaking) => {
+        client.on('guildMemberSpeaking', listen);
+        setTimeout(() => {
+            client.removeListener('guildMemberSpeaking', listen);
+            msg.reply('not listening anymore');
+        }, 30000);
+
+        function listen(member, speaking) {
             console.log(speaking);
             if(member.guild.id == msg.guild.id && speaking)   {
                 const stream = receiver.createPCMStream(member);
@@ -47,7 +53,7 @@ function Listen(client, msg, args)  {
                         }
                     });
             }
-        });
+        }
     });
 }
 
