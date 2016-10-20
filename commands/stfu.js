@@ -11,7 +11,10 @@ function Stfu(client, msg, args)    {
         playlist.destroy();
         delete msg.guild.playlist;
         return Promise.resolve('k :cry:');
-    }   else    {
+    }   else if(msg.guild.voiceConnection)  {
+        msg.guild.voiceConnection.disconnect();
+        return Promise.resolve('k :cry:');
+    }   else  {
         return msg.reply('when someone asks you to do something and you\'ve already done it. :joy:');
     }
 }
