@@ -34,7 +34,8 @@ const commands = {
     born: require('./commands/born'),
     search: require('./commands/search'),
     insult: require('./commands/insult'),
-    catfacts: require('./commands/catfacts')
+    catfacts: require('./commands/catfacts'),
+    listen: require('./commands/listen')
 };
 
 client.on('ready', function()   {
