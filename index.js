@@ -59,6 +59,11 @@ client.on('guildMemberSpeaking', function(member, speaking) {
             if(msg.constructor.name == 'Message')    {
                 msg.channel.sendMessage('`' + text + '`');
             }
+
+            const cmd = require('./operators/command')(client, msg, text.toLowerCase());
+            if(cmd) {
+                cmd.call().then(cmd.respond);
+            }
         }).catch(console.error);
     }
 });

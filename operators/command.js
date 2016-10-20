@@ -2,9 +2,16 @@
  * Created by Will on 10/20/2016.
  */
 
-function cmd(client, msg)   {
-    if(CommandOperator.valid(client, msg))  {
-        return new CommandOperator(client, msg);
+/**
+ * Initialize the CommandOperator factory.
+ * @param client
+ * @param msg
+ * @param body
+ * @returns {CommandOperator|boolean}
+ */
+function cmd(client, msg, body)   {
+    if(CommandOperator.valid(client, msg, body))  {
+        return new CommandOperator(client, msg, body);
     }   else {
         return false;
     }
@@ -12,38 +19,46 @@ function cmd(client, msg)   {
 
 module.exports = cmd;
 
+const commands = {
+    add: require('../commands/add'),
+    play: require('../commands/play'),
+    stfu: require('../commands/stfu'),
+    shuffle: require('../commands/shuffle'),
+    pause: require('../commands/pause'),
+    resume: require('../commands/resume'),
+    next: require('../commands/next'),
+    ping: require('../commands/ping'),
+    imgur: require('../commands/imgur'),
+    help: require('../commands/help'),
+    boobs: require('../commands/boobs'),
+    memes: require('../commands/memes'),
+    stats: require('../commands/stats'),
+    dick: require('../commands/dick'),
+    id: require('../commands/id'),
+    born: require('../commands/born'),
+    search: require('../commands/search'),
+    insult: require('../commands/insult'),
+    catfacts: require('../commands/catfacts'),
+    listen: require('../commands/listen')
+};
+
 class CommandOperator   {
 
-    constructor(client, msg)  {
-        this.parsed = CommandOperator.parse(msg);
+    /**
+     * @constructor
+     * @param {Client} client - The Discord.js client
+     * @param {Message} msg - The message that initiated the command.
+     * @param {string} [body] - An optional command body; if this is not provided, the command will default to the message content.
+     */
+    constructor(client, msg, body)  {
+        this.parsed = CommandOperator.parse(body ? body : msg.content);
         this.client = client;
         this.msg = msg;
 
         console.log("count#command." + this.parsed[0] + "=1");
 
         // Define commands
-        this.commands = {
-            add: require('../commands/add'),
-            play: require('../commands/play'),
-            stfu: require('../commands/stfu'),
-            shuffle: require('../commands/shuffle'),
-            pause: require('../commands/pause'),
-            resume: require('../commands/resume'),
-            next: require('../commands/next'),
-            ping: require('../commands/ping'),
-            imgur: require('../commands/imgur'),
-            help: require('../commands/help'),
-            boobs: require('../commands/boobs'),
-            memes: require('../commands/memes'),
-            stats: require('../commands/stats'),
-            dick: require('../commands/dick'),
-            id: require('../commands/id'),
-            born: require('../commands/born'),
-            search: require('../commands/search'),
-            insult: require('../commands/insult'),
-            catfacts: require('../commands/catfacts'),
-            listen: require('../commands/listen')
-        };
+        this.commands = commands;
     }
 
     /**
@@ -52,22 +67,29 @@ class CommandOperator   {
      */
     call()  {
         this.msg.channel.startTyping();
-        const exec = this.commands[this.parsed[0]](this.client, this.msg, this.parsed.slice(1));
 
-        if(typeof exec !== 'undefined' && typeof exec.then === 'function') {
-            const self = this;
+        const self = this;
+        return new Promise((resolve, reject) => {
+            const func = this.commands[this.parsed[0]];
 
-            return exec.then(res => {
-                self.msg.channel.stopTyping();
-                return res;
-            }).catch(err => {
-                console.error(err);
-                self.msg.reply(err);
-                self.msg.channel.stopTyping();
-            });
-        }   else {
-            this.msg.channel.stopTyping();
-        }
+            if(typeof func !== 'function')  {
+                reject('not a function.');
+            }
+
+            const exec = func(this.client, this.msg, this.parsed.slice(1));
+
+            if(typeof exec !== 'undefined' && typeof exec.then === 'function') {
+                resolve(exec);
+            }   else {
+                reject();
+            }
+        }).then(() => {
+            self.msg.channel.stopTyping();
+        }).catch(err => {
+            console.error(err);
+            self.msg.reply(err);
+            self.msg.channel.stopTyping();
+        });
     }
 
     /**
@@ -82,25 +104,39 @@ class CommandOperator   {
     }
 
     /**
-     * Check if the command is valid.  This should be called before constructing.
+     * Check if the a message is a command.  This should be called before constructing.
      * @param {Client} client
      * @param {Message} msg
+     * @param {string} [body]
      * @returns {boolean}
      */
-    static valid(client, msg)   {
-        if(msg.author.id === client.user.id || CommandOperator.parse(msg).length == 0)    {
-            return false;
-        }
+    static valid(client, msg, body)   {
+        const parsed = CommandOperator.parse(body ? body : msg.content);
 
-        if(msg.channel.name == 'pleb' || msg.channel.guild == null) {
-            return true;
-        }
+        /*
+        These are valid command forms:
+        - channel name is 'pleb' OR
+        - message is a direct message OR
+        - the bot is mentioned first
 
-        if(CommandOperator.mentionedFirst(msg.content)) {
-            return true;
+        These are exclusion parameters:
+        - author is not the bot
+        - the length of the command is > 0
+         */
+        if((msg.channel.name == 'pleb' || msg.channel.guild == null || CommandOperator.mentionedFirst(msg.content)) && msg.author.id != client.user.id && parsed.length > 0)    {
+            return CommandOperator.validFunction(parsed[0]);
         }
 
         return false;
+    }
+
+    /**
+     * Check if a given string is a command function.
+     * @param {string} str
+     * @returns {boolean}
+     */
+    static validFunction(str) {
+        return typeof commands[str] === 'function';
     }
 
     /**
@@ -115,20 +151,16 @@ class CommandOperator   {
 
     /**
      * Parse an incoming command.
-     * @param {Message} msg
+     * @param {string} msg
      * @returns {[]}
      */
     static parse(msg)    {
-        const parts = msg.content.split(' ');
+        const parts = msg.split(' ');
 
-        if(msg.channel.name === 'pleb' || msg.channel.guild == null) {
-            if(CommandOperator.mentionedFirst(msg.content))    {
-                return parts.slice(1);
-            }   else    {
-                return parts;
-            }
-        }   else {
+        if(CommandOperator.mentionedFirst(msg))    {
             return parts.slice(1);
+        }   else    {
+            return parts;
         }
     }
 }
