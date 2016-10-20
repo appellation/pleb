@@ -26,7 +26,7 @@ function Listen(client, msg, args)  {
 
         function listen(member, speaking) {
             console.log(speaking);
-            if(member.guild.id == msg.guild.id && speaking)   {
+            if(member.id == msg.author.id && speaking)   {
                 const stream = receiver.createPCMStream(member);
                 const out = speech.createRecognizeStream({
                     config: {
