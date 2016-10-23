@@ -78,7 +78,7 @@ class CommandOperator   {
 
             const exec = func(this.client, this.msg, this.parsed.slice(1));
 
-            if(typeof exec !== 'undefined' && typeof exec.then === 'function') {
+            if(typeof exec !== 'undefined') {
                 resolve(exec);
             }   else {
                 resolve();

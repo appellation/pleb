@@ -55,7 +55,7 @@ function Search(client, msg, args)  {
                 break;
             case 'Images':
                 item = res.images.value[0];
-                reply = Promise.resolve("**" + item.name + "**\n" + item.hostPageDisplayUrl);
+                reply = "**" + item.name + "**\n" + item.hostPageDisplayUrl;
                 return msg.channel.sendFile(item.contentUrl, null, reply);
             case 'TimeZone':
                 item = res.timeZone.primaryCityTime;
