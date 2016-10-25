@@ -17,9 +17,14 @@ function Help(client, msg, args)    {
         "- `memes` - get a random meme from /r/memes" +
         "- `stats` - get some bot stats\n" +
         "- `dick [mention]?` - get a dick size\n" +
-        "- `id [mention]?` - get a Discord ID\n" +
+        "- `id` - get your Discord ID (in PM)\n" +
         "- `born` - get your birthday\n" +
-        "- `search` - query the internet and get the first result"
+        "- `search` - query the internet and get the first result\n" +
+        "- `boobs` - get a random photo of boobs [NSFW]\n" +
+        "- `catfacts` - get a random fact about cats\n" +
+        "- `listen` - interpret the next speech by the message author\n" +
+        "- `insult [mention]?` - insult a user (defaults to yourself)\n\n" +
+        "For human help, check out my GitHub repo at https://github.com/appellation/pleb"
     );
     return Promise.resolve();
 }
