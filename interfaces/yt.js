@@ -132,14 +132,26 @@
                     reject('Not a valid YouTube video URL.');
                 }
 
-                ytApi.addParam('part', 'snippet,id');
-                ytApi.getById(YTPlaylist.getURLID(videoUrl), function(err, result)    {
-                    if(err) {
-                        reject('Couldn\'t retrieve video information.');
-                    }
+                rp({
+                    uri: 'https://www.googleapis.com/youtube/v3/videos',
+                    qs: {
+                        part: 'snippet,id,liveStreamingDetails',
+                        id: YTPlaylist.getURLID(videoUrl),
+                        maxResults: 1,
+                        key: process.env.youtube
+                    },
+                    json: true
+                }).then(res => {
+                    const item = res.items[0];
 
-                    self.list.add(new StreamStructure('https://www.youtube.com/watch?v=' + result.items[0].id, result.items[0].snippet.title));
-                    resolve(self.list);
+                    if(typeof item.liveStreamingDetails == 'undefined') {
+                        self.list.add(new StreamStructure('https://www.youtube.com/watch?v=' + item.id, item.snippet.title));
+                        resolve(self.list);
+                    }   else {
+                        reject('can\'t play live streams :cry:');
+                    }
+                }).catch(err => {
+                    reject('Couldn\'t retrieve video information.');
                 });
             })
         };
@@ -150,9 +162,6 @@
          * @returns {Promise}
          */
         addQuery(query) {
-            ytApi.addParam('type', 'video');
-            ytApi.addParam('part', 'id,snippet');
-
             const self = this;
 
             return new Promise(function(resolve, reject)    {
@@ -160,16 +169,25 @@
                     reject();
                 }
 
-                ytApi.search(query, 1, function(err, result)   {
-                    if(err)   {
-                        reject(err);
-                        console.error(err);
-                    }   else if(result.items[0])    {
-                        self.list.add(new StreamStructure('https://www.youtube.com/watch?v=' + result.items[0].id.videoId, result.items[0].snippet.title));
-                        resolve(self.list);
-                    }   else    {
-                        reject('No video found.')
+                rp({
+                    uri: 'https://www.googleapis.com/youtube/v3/search',
+                    qs: {
+                        q: query,
+                        type: 'video',
+                        part: 'id,snippet',
+                        key: process.env.youtube
+                    },
+                    json: true
+                }).then(res => {
+                    for(const item of res.items)    {
+                        if(item.snippet.liveBroadcastContent == 'none') {
+                            self.list.add(new StreamStructure('https://www.youtube.com/watch?v=' + item.id.videoId, item.snippet.title));
+                            resolve(self.list);
+                            return;
+                        }
                     }
+
+                    reject('Couldn\'t find a video for that query.');
                 });
             });
         };
