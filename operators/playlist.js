@@ -87,8 +87,6 @@
                         if (self.list.hasNext()) {
                             self.list.next();
                             playQueue();
-                        }   else    {
-                            self.destroy();
                         }
                     }
 
