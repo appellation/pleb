@@ -7,7 +7,7 @@ const httpPing = require('node-http-ping');
 function Ping(client, msg, args)    {
     if(!args[0])    {
         return msg.channel.sendMessage('pinging....').then(function(newMessage) {
-            newMessage.edit((newMessage.timestamp.getTime() - msg.timestamp.getTime()) + 'ms :stopwatch:');
+            newMessage.edit((newMessage.createdTimestamp - msg.createdTimestamp) + 'ms :stopwatch:');
         });
     }   else    {
         return httpPing(args[0]).then(function(time)    {
