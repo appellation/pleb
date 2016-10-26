@@ -10,7 +10,7 @@
  * @returns {Command|boolean}
  */
 function cmd(client, msg, body)   {
-    if(Command.valid(client, msg, body))  {
+    if(Command.isValid(client, msg, body))  {
         return new Command(client, msg, body);
     }   else {
         return false;
@@ -21,7 +21,7 @@ module.exports = cmd;
 
 class Command   {
 
-    static list() {
+    static _list() {
         return {
             add: require('../commands/add'),
             play: require('../commands/play'),
@@ -47,6 +47,13 @@ class Command   {
         }
     };
 
+    static _nsfwList()   {
+        return [
+            'boobs',
+            'ass'
+        ]
+    }
+
     /**
      * @constructor
      * @param {Client} client - The Discord.js client
@@ -70,7 +77,7 @@ class Command   {
 
         const self = this;
         return new Promise((resolve, reject) => {
-            const func = Command.list()[this.parsed[0]];
+            const func = Command._list()[this.parsed[0]];
 
             if(typeof func !== 'function')  {
                 reject('not a function.');
@@ -108,27 +115,52 @@ class Command   {
      * Check if the a message is a command.  This should be called before constructing.
      * @param {Client} client
      * @param {Message} msg
-     * @param {string} [body]
+     * @param {string} [body] - optional raw text to be evaluated as a command
      * @returns {boolean}
      */
-    static valid(client, msg, body)   {
-        const parsed = Command.parse(body ? body : msg.content);
+    static isValid(client, msg, body)   {
+        const text = body ? body : msg.content;
+        const parsed = Command.parse(text);
+        const cmd = parsed[0];
 
         /*
-        These are valid command forms:
-        - channel name is 'pleb' OR
-        - message is a direct message OR
-        - the bot is mentioned first
+        If the command is NSFW:
+        - The author does NOT have the 'nsfw' role AND
+        - The channel is NOT named 'nsfw' AND
+        - The message is NOT a direct message
 
-        These are exclusion parameters:
-        - author is not the bot
-        - the length of the command is > 0
+        ~ The command is invalid.
          */
-        if((msg.channel.name == 'pleb' || msg.channel.guild == null || Command.mentionedFirst(msg.content)) && msg.author.id != client.user.id && parsed.length > 0)    {
-            return Command.validFunction(parsed[0]);
+        if(Command.isNSFW(cmd))   {
+            if(!msg.member.roles.find('name', 'nsfw') && msg.channel.name != 'nsfw' && msg.channel.guild != null)   {
+                return false;
+            }
+        }
+
+        /*
+         These are valid command forms:
+         - channel name is 'pleb' OR
+         - message is a direct message OR
+         - the bot is mentioned first
+
+         These are exclusion parameters:
+         - author is not the bot
+         - the length of the command is > 0
+         */
+        if((msg.channel.name == 'pleb' || msg.channel.guild == null || Command.mentionedFirst(text)) && msg.author.id != client.user.id && parsed.length > 0)    {
+            return Command.isValidFunction(cmd);
         }
 
         return false;
+    }
+
+    /**
+     * Check if a command is NSFW.
+     * @param {String} str
+     * @returns {boolean}
+     */
+    static isNSFW(str)  {
+        return Command._nsfwList().indexOf(str) !== -1;
     }
 
     /**
@@ -136,8 +168,8 @@ class Command   {
      * @param {string} str
      * @returns {boolean}
      */
-    static validFunction(str) {
-        return typeof Command.list()[str] === 'function';
+    static isValidFunction(str) {
+        return typeof Command._list()[str] === 'function';
     }
 
     /**
