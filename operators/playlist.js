@@ -238,6 +238,7 @@
         play(stream) {
             this.emit('start');
             const dispatcher = this.vc.playStream(stream);
+            dispatcher.setVolumeDecibels(-20);
             this.emit('started', this.list);
             return dispatcher;
         };
