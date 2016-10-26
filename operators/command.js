@@ -3,15 +3,15 @@
  */
 
 /**
- * Initialize the CommandOperator factory.
+ * Initialize the Command factory.
  * @param client
  * @param msg
  * @param body
- * @returns {CommandOperator|boolean}
+ * @returns {Command|boolean}
  */
 function cmd(client, msg, body)   {
-    if(CommandOperator.valid(client, msg, body))  {
-        return new CommandOperator(client, msg, body);
+    if(Command.valid(client, msg, body))  {
+        return new Command(client, msg, body);
     }   else {
         return false;
     }
@@ -19,31 +19,33 @@ function cmd(client, msg, body)   {
 
 module.exports = cmd;
 
-const commands = {
-    add: require('../commands/add'),
-    play: require('../commands/play'),
-    stfu: require('../commands/stfu'),
-    shuffle: require('../commands/shuffle'),
-    pause: require('../commands/pause'),
-    resume: require('../commands/resume'),
-    next: require('../commands/next'),
-    ping: require('../commands/ping'),
-    imgur: require('../commands/imgur'),
-    help: require('../commands/help'),
-    boobs: require('../commands/boobs'),
-    memes: require('../commands/memes'),
-    stats: require('../commands/stats'),
-    dick: require('../commands/dick'),
-    id: require('../commands/id'),
-    born: require('../commands/born'),
-    search: require('../commands/search'),
-    insult: require('../commands/insult'),
-    catfacts: require('../commands/catfacts'),
-    listen: require('../commands/listen'),
-    ass: require('../commands/ass')
-};
+class Command   {
 
-class CommandOperator   {
+    static list() {
+        return {
+            add: require('../commands/add'),
+            play: require('../commands/play'),
+            stfu: require('../commands/stfu'),
+            shuffle: require('../commands/shuffle'),
+            pause: require('../commands/pause'),
+            resume: require('../commands/resume'),
+            next: require('../commands/next'),
+            ping: require('../commands/ping'),
+            imgur: require('../commands/imgur'),
+            help: require('../commands/help'),
+            boobs: require('../commands/boobs'),
+            memes: require('../commands/memes'),
+            stats: require('../commands/stats'),
+            dick: require('../commands/dick'),
+            id: require('../commands/id'),
+            born: require('../commands/born'),
+            search: require('../commands/search'),
+            insult: require('../commands/insult'),
+            catfacts: require('../commands/catfacts'),
+            listen: require('../commands/listen'),
+            ass: require('../commands/ass')
+        }
+    };
 
     /**
      * @constructor
@@ -52,14 +54,11 @@ class CommandOperator   {
      * @param {string} [body] - An optional command body; if this is not provided, the command will default to the message content.
      */
     constructor(client, msg, body)  {
-        this.parsed = CommandOperator.parse(body ? body : msg.content);
+        this.parsed = Command.parse(body ? body : msg.content);
         this.client = client;
         this.msg = msg;
 
         console.log("count#command." + this.parsed[0] + "=1");
-
-        // Define commands
-        this.commands = commands;
     }
 
     /**
@@ -71,7 +70,7 @@ class CommandOperator   {
 
         const self = this;
         return new Promise((resolve, reject) => {
-            const func = this.commands[this.parsed[0]];
+            const func = Command.list()[this.parsed[0]];
 
             if(typeof func !== 'function')  {
                 reject('not a function.');
@@ -113,7 +112,7 @@ class CommandOperator   {
      * @returns {boolean}
      */
     static valid(client, msg, body)   {
-        const parsed = CommandOperator.parse(body ? body : msg.content);
+        const parsed = Command.parse(body ? body : msg.content);
 
         /*
         These are valid command forms:
@@ -125,8 +124,8 @@ class CommandOperator   {
         - author is not the bot
         - the length of the command is > 0
          */
-        if((msg.channel.name == 'pleb' || msg.channel.guild == null || CommandOperator.mentionedFirst(msg.content)) && msg.author.id != client.user.id && parsed.length > 0)    {
-            return CommandOperator.validFunction(parsed[0]);
+        if((msg.channel.name == 'pleb' || msg.channel.guild == null || Command.mentionedFirst(msg.content)) && msg.author.id != client.user.id && parsed.length > 0)    {
+            return Command.validFunction(parsed[0]);
         }
 
         return false;
@@ -138,7 +137,7 @@ class CommandOperator   {
      * @returns {boolean}
      */
     static validFunction(str) {
-        return typeof commands[str] === 'function';
+        return typeof Command.list()[str] === 'function';
     }
 
     /**
@@ -159,7 +158,7 @@ class CommandOperator   {
     static parse(msg)    {
         const parts = msg.split(' ');
 
-        if(CommandOperator.mentionedFirst(msg))    {
+        if(Command.mentionedFirst(msg))    {
             return parts.slice(1);
         }   else    {
             return parts;
