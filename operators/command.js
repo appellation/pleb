@@ -39,7 +39,8 @@ const commands = {
     search: require('../commands/search'),
     insult: require('../commands/insult'),
     catfacts: require('../commands/catfacts'),
-    listen: require('../commands/listen')
+    listen: require('../commands/listen'),
+    ass: require('../commands/ass')
 };
 
 class CommandOperator   {
