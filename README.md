@@ -23,20 +23,23 @@ Available commands:
 - `pause` - pauses playback
 - `resume` - resumes playback
 - `stfu` - stops playback and disconnects Pleb from the voice channel
+- `listen` - converts speech to text when message author speaks the next time
 
 ### Functionality
 - `ping` - calculates time between command message and response message
 - `ping [URL]` - simple HTTP ping to a website
 - `stats` - get some bot stats
-- `id [mention]?` - get a user ID
+- `id` - PM user ID
 - `born` - get your birthday
 - `search [query]` - query the internet and post the first result
+- `help` - PM some help
 
 ### Random
 - `imgur [title?]` - upload an image to Imgur with an optional title; use this in the comment of a file upload
 - `boobs` - get a random photo of boobs
 - `memes` -  get a random meme from `/r/memes`
 - `dick [mention]?` - get a dick size
+- `catfacts` - send a random cat fact
 
 ## Development
 `npm install`
@@ -53,7 +56,10 @@ You'll need to make a `.env` file (or have some other way to access environment 
 - `soundcloud_secret` - a SoundCloud secret
 - `imgur` - a Imgur client ID
 - `bing` - a Bing API access key
+- `google_cloud_email` - a Google Cloud service account email
+- `google_cloud_project_id` - a Google Cloud project ID
+- `google_cloud_private_key` - a Google Cloud service account private key (make sure to double-quote this)
 
 Add your bot to a server using `https://discordapp.com/oauth2/authorize?client_id=<YOUR_CLIENT_ID>&scope=bot&permissions=3173376`.
 
-All commands are prefixed with an @mention of the bot.  The first word after gets interpolated and calls a function as defined in `const commands` in `index.js`, passing in the Discord.js client, the message, and any arguments of the command (defined as text after the command word).  Some commands (e.g. `shuffle` and `add`) rely on other commands.
+The first word of a command gets interpolated and calls a function as defined in `const commands` in `operators/command.js`, passing in the Discord.js client, the message, and any arguments of the command (defined as text after the command word).  Some commands (e.g. `shuffle` and `add`) rely on other commands.
