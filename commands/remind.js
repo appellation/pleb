@@ -17,6 +17,8 @@ function Remind(client, msg, args)  {
 
     const atIndex = args.lastIndexOf('at');
     const inIndex = args.lastIndexOf('in');
+console.log(args);
+
 
     const timeIndex = atIndex > inIndex ? args.lastIndexOf('at') : args.lastIndexOf('in');
 
@@ -30,7 +32,14 @@ function Remind(client, msg, args)  {
     }
 
         schedule.scheduleJob(newdate, () => {
-        msg.reply(args.slice(remIndex + 1, timeIndex).join(' '));
+        if (args[0].indexOf('@') == 1)
+        {
+            msg.reply(/*username+*/args.slice(remIndex + 1, timeIndex).join(' '))
+        }
+        else
+        {
+            msg.reply(args.slice(remIndex + 1, timeIndex).join(' '))
+        }
     });
 
     return Promise.resolve('reminder set for ' + moment(newdate).format('dddd, MMMM Do YYYY, h:mm:ss a'));
