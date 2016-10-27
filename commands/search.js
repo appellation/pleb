@@ -9,19 +9,23 @@ const moment = require('moment');
 function Search(client, msg, args)  {
     let cc;
 
-    switch (msg.guild.region) {
-        case 'brazil':
-            cc = 'BR';
-            break;
-        case 'singapore':
-            cc = 'MY';
-            break;
-        case 'sydney':
-            cc = 'AU';
-            break;
-        default:
-            cc = 'US';
-            break;
+    if(msg.guild)   {
+        switch (msg.guild.region) {
+            case 'brazil':
+                cc = 'BR';
+                break;
+            case 'singapore':
+                cc = 'MY';
+                break;
+            case 'sydney':
+                cc = 'AU';
+                break;
+            default:
+                cc = 'US';
+                break;
+        }
+    }   else    {
+        cc = 'US';
     }
 
     return rp.get({
