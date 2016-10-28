@@ -5,7 +5,7 @@
 const shuffle = require('knuth-shuffle').knuthShuffle;
 
 function Insult(client, msg, args)  {
-    const regex = /<@!?([0-9]+)>/;
+    const regex = /<@!?[0-9]+>/;
     const ins = shuffle(insults)[0];
 
     if(args[0] && args[0].match(regex))    {
