@@ -17,8 +17,13 @@ function Remind(client, msg, args)  {
 
     const atIndex = args.lastIndexOf('at');
     const inIndex = args.lastIndexOf('in');
-console.log(args);
+    const mentionTest = /<@!?([0-9]+)>/;
 
+console.log(msg);
+console.log(client);
+console.log(args);
+console.log(mentionTest);
+mentionTest
 
     const timeIndex = atIndex > inIndex ? args.lastIndexOf('at') : args.lastIndexOf('in');
 
@@ -32,9 +37,9 @@ console.log(args);
     }
 
         schedule.scheduleJob(newdate, () => {
-        if (args[0].indexOf('@') == 1)
+        if (args[0].match(mentionTest))
         {
-            msg.reply(/*username+*/args.slice(remIndex + 1, timeIndex).join(' '))
+            msg.channel.sendMessage(args[0] + ", " + args.slice(remIndex + 1, timeIndex).join(' '))
         }
         else
         {
