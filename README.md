@@ -33,6 +33,7 @@ Available commands:
 - `born` - get your birthday
 - `search [query]` - query the internet and post the first result
 - `help` - PM some help
+- `remind (me|@user) to [action] (in|at) [time]` - set a reminder
 
 ### Random
 - `imgur [title?]` - upload an image to Imgur with an optional title; use this in the comment of a file upload

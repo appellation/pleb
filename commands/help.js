@@ -23,7 +23,8 @@ function Help(client, msg, args)    {
         "- `boobs` - get a random photo of boobs [NSFW]\n" +
         "- `catfacts` - get a random fact about cats\n" +
         "- `listen` - interpret the next speech by the message author\n" +
-        "- `insult [mention]?` - insult a user (defaults to yourself)\n\n" +
+        "- `insult [mention]?` - insult a user (defaults to yourself)" +
+        "- `remind (me|@user) to [action] (in|at) [time]` - set a reminder\n\n" +
         "For human help, check out my GitHub repo at https://github.com/appellation/pleb"
     );
     return Promise.resolve();
