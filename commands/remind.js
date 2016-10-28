@@ -10,7 +10,7 @@ const date = require('date.js');
  * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
- * @constructor
+ * @return {string}
  */
 function Remind(client, msg, args)  {
     const remIndex = args.indexOf('to');
@@ -23,12 +23,12 @@ function Remind(client, msg, args)  {
     const timeIndex = atIndex > inIndex ? args.lastIndexOf('at') : args.lastIndexOf('in');
 
     if(!remIndex || !timeIndex || timeIndex == -1 || remIndex == -1 || timeIndex < remIndex)    {
-        return Promise.resolve('can\'t parse that :cry:');
+        return "can\'t parse that :cry:";
     }
 
     const newdate = date(args.slice(timeIndex + 1).join(' '));
     if(newdate < new Date()) {
-        return Promise.resolve('that date doesn\'t seem to be valid.');
+        return 'that date doesn\'t seem to be valid.';
     }
 
     schedule.scheduleJob(newdate, () => {
@@ -42,7 +42,7 @@ function Remind(client, msg, args)  {
         }
     });
 
-    return Promise.resolve('reminder set for ' + moment(newdate).format('dddd, MMMM Do YYYY, h:mm:ss a'));
+    return 'reminder set for ' + moment(newdate).format('dddd, MMMM Do YYYY, h:mm:ss a');
     
 }
 
