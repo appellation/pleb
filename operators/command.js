@@ -136,7 +136,7 @@ class Command   {
         ~ The command is invalid.
          */
         if(Command.isNSFW(cmd))   {
-            if(!msg.member.roles.find('name', 'nsfw') && msg.channel.name != 'nsfw' && msg.channel.guild != null)   {
+            if(msg.member && (!msg.member.roles.find('name', 'nsfw') && msg.channel.name != 'nsfw' && msg.channel.guild != null))   {
                 return false;
             }
         }
