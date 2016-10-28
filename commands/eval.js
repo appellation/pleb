@@ -8,7 +8,10 @@ function Eval(client, msg, args)    {
             const matches = msg.content.match(/`(.*)`/);
             const res = eval(matches ? matches[1] : args.join(' '));
             if(typeof res != 'string')  {
-                msg.channel.sendCode('x1', require('util').inspect(res));
+                const inspect = require('util').inspect(res);
+                for(let i = 0; i < inspect.length; i+= 1950)    {
+                    msg.channel.sendCode(inspect.slice(i, i + 1950))
+                }
             }   else {
                 msg.channel.sendCode("x1", res);
             }
