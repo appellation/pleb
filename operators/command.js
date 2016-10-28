@@ -43,7 +43,8 @@ class Command   {
             insult: require('../commands/insult'),
             catfacts: require('../commands/catfacts'),
             listen: require('../commands/listen'),
-            ass: require('../commands/ass')
+            ass: require('../commands/ass'),
+            remind: require('../commands/remind')
         }
     };
 
