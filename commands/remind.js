@@ -1,5 +1,5 @@
-1/**
- * Created by nelso on 10/25/2016.
+/**
+ * Created by nelso + lantern<3 on 10/25/2016.
  */
 
 const schedule = require('node-schedule');
@@ -19,11 +19,6 @@ function Remind(client, msg, args)  {
     const inIndex = args.lastIndexOf('in');
     const mentionTest = /<@!?([0-9]+)>/;
 
-console.log(msg);
-console.log(client);
-console.log(args);
-console.log(mentionTest);
-mentionTest
 
     const timeIndex = atIndex > inIndex ? args.lastIndexOf('at') : args.lastIndexOf('in');
 
@@ -36,7 +31,7 @@ mentionTest
         return Promise.resolve('that date doesn\'t seem to be valid.');
     }
 
-        schedule.scheduleJob(newdate, () => {
+    schedule.scheduleJob(newdate, () => {
         if (args[0].match(mentionTest))
         {
             msg.channel.sendMessage(args[0] + ", " + args.slice(remIndex + 1, timeIndex).join(' '))
