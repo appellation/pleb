@@ -8,8 +8,8 @@
     "start": "node index.js"
   },
   "engines": {
-    "node": "^6.5.0",
-    "npm": "^3.10.7"
+    "node": "6.5.0",
+    "npm": "3.10.7"
   },
   "repository": "appellation/pleb",
   "author": "Will Nelson <nelson.will@live.com>",
