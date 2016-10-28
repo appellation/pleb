@@ -11,7 +11,7 @@ function Eval(client, msg, args)    {
                 const res = eval(matches ? matches[1] : args.join(' '));
                 resolve(res);
             }   catch (e)   {
-                resolve(e.name);
+                resolve(e.message);
             }
         }).then(require('util').inspect).then(res => {
             msg.channel.sendCode("x1", res, {split: true});
