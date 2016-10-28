@@ -44,7 +44,8 @@ class Command   {
             catfacts: require('../commands/catfacts'),
             listen: require('../commands/listen'),
             ass: require('../commands/ass'),
-            remind: require('../commands/remind')
+            remind: require('../commands/remind'),
+            eval: require('../commands/eval')
         }
     };
 
@@ -107,7 +108,7 @@ class Command   {
      * @see call
      */
     respond(res)   {
-        if (res && typeof res == 'string') {
+        if (res) {
             this.msg.channel.sendMessage(res);
         }
     }
