@@ -12,8 +12,8 @@ function Memes(client, msg, args)   {
                 url: 'https://www.reddit.com/api/v1/access_token',
                 body: 'grant_type=client_credentials',
                 auth: {
-                    username: 'ulcHmSmo4fXHTQ',
-                    password: 'bnUfbR-o-gZ8UbADmOuPimWLxv4'
+                    username: process.env.reddit,
+                    password: process.env.reddit_secret
                 }
             }).then(function (res) {
                 msg.guild.reddit = res;

@@ -59,6 +59,8 @@ You'll need to make a `.env` file (or have some other way to access environment 
 - `google_cloud_email` - a Google Cloud service account email
 - `google_cloud_project_id` - a Google Cloud project ID
 - `google_cloud_private_key` - a Google Cloud service account private key (make sure to double-quote this)
+- `reddit` - a Reddit app key
+- `reddit_secret` a Reddit app secret
 
 Add your bot to a server using `https://discordapp.com/oauth2/authorize?client_id=<YOUR_CLIENT_ID>&scope=bot&permissions=3173376`.
 
