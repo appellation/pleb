@@ -15,7 +15,7 @@ function Stfu(client, msg, args)    {
         msg.guild.voiceConnection.disconnect();
         return Promise.resolve('k :cry:');
     }   else  {
-        return msg.reply('when someone asks you to do something and you\'ve already done it. :joy:');
+        return Promise.resolve('when someone asks you to do something and you\'ve already done it. :joy:');
     }
 }
 
