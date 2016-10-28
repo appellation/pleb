@@ -1,6 +1,6 @@
-/**
- * Created by Will on 10/18/2016.
- */
+
+ /* Created by Will on 10/18/2016. **/
+ 
 
 const VC = require('../operators/voiceConnection');
 

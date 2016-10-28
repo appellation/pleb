@@ -19,6 +19,7 @@ function cmd(client, msg, body)   {
 
 module.exports = cmd;
 
+<<<<<<< HEAD
 class Command   {
 
     static _list() {
@@ -53,6 +54,34 @@ class Command   {
             'ass'
         ]
     }
+=======
+const commands = {
+    add: require('../commands/add'),
+    play: require('../commands/play'),
+    stfu: require('../commands/stfu'),
+    shuffle: require('../commands/shuffle'),
+    pause: require('../commands/pause'),
+    resume: require('../commands/resume'),
+    next: require('../commands/next'),
+    ping: require('../commands/ping'),
+    imgur: require('../commands/imgur'),
+    help: require('../commands/help'),
+    boobs: require('../commands/boobs'),
+    memes: require('../commands/memes'),
+    stats: require('../commands/stats'),
+    dick: require('../commands/dick'),
+    id: require('../commands/id'),
+    born: require('../commands/born'),
+    search: require('../commands/search'),
+    insult: require('../commands/insult'),
+    catfacts: require('../commands/catfacts'),
+    listen: require('../commands/listen'),
+    ass: require('../commands/ass'),
+    remind: require('../commands/remind')
+};
+
+class CommandOperator   {
+>>>>>>> refs/remotes/origin/master
 
     /**
      * @constructor

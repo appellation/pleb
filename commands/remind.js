@@ -1,10 +1,10 @@
 /**
- * Created by nelso on 10/25/2016.
+ * Created by nelso + lantern<3 on 10/25/2016.
  */
 
 const schedule = require('node-schedule');
 const moment = require('moment');
-
+const date = require('date.js');
 /**
  *
  * @param {Client} client
@@ -17,6 +17,8 @@ function Remind(client, msg, args)  {
 
     const atIndex = args.lastIndexOf('at');
     const inIndex = args.lastIndexOf('in');
+    const mentionTest = /<@!?([0-9]+)>/;
+
 
     const timeIndex = atIndex > inIndex ? args.lastIndexOf('at') : args.lastIndexOf('in');
 
@@ -24,16 +26,24 @@ function Remind(client, msg, args)  {
         return Promise.resolve('can\'t parse that :cry:');
     }
 
-    const date = moment(args.slice(timeIndex + 1));
-    if(!date.isValid() || date < moment()) {
+    const newdate = date(args.slice(timeIndex + 1).join(' '));
+    if(newdate < new Date()) {
         return Promise.resolve('that date doesn\'t seem to be valid.');
     }
 
-    schedule.scheduleJob(date, () => {
-        msg.reply(args.slice(remIndex + 1, timeIndex));
+    schedule.scheduleJob(newdate, () => {
+        if (args[0].match(mentionTest))
+        {
+            msg.channel.sendMessage(args[0] + ", " + args.slice(remIndex + 1, timeIndex).join(' '))
+        }
+        else
+        {
+            msg.reply(args.slice(remIndex + 1, timeIndex).join(' '))
+        }
     });
 
-    Promise.resolve('reminder set for ' + date.format('MMMM Do, YYYY HH:mm:ssZ a'));
+    return Promise.resolve('reminder set for ' + moment(newdate).format('dddd, MMMM Do YYYY, h:mm:ss a'));
+    
 }
 
 module.exports = Remind;

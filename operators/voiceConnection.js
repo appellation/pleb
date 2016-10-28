@@ -2,13 +2,14 @@
  * Created by Will on 9/7/2016.
  */
 
-const speech = require('@google-cloud/speech')({
+ const speech = require('@google-cloud/speech')({
     projectId: process.env.google_cloud_project_id,
     credentials: {
         client_email: process.env.google_cloud_email,
         private_key: process.env.google_cloud_private_key
     }
 });
+
 const ffmpeg = require('fluent-ffmpeg');
 
 (function() {
