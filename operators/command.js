@@ -45,7 +45,9 @@ class Command   {
             listen: require('../commands/listen'),
             ass: require('../commands/ass'),
             remind: require('../commands/remind'),
-            eval: require('../commands/eval')
+            eval: require('../commands/eval'),
+            hi: require('../commands/hello'),
+            hello: require('../commands/hello')
         }
     };
 
