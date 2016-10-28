@@ -11,10 +11,10 @@ function Eval(client, msg, args)    {
                 const inspect = require('util').inspect(res);
                 msg.channel.sendCode("x1", inspect, {split: true});
             }   else {
-                msg.channel.sendCode("x1", res);
+                msg.channel.sendCode("x1", res, {split: true});
             }
         }   catch (e)   {
-            msg.channel.sendCode("x1", e);
+            msg.channel.sendCode("x1", e, {split: true});
         }
     }
 }
