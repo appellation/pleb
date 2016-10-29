@@ -47,7 +47,7 @@ class Filter    {
     static list() {
         const arr = [
             [
-                /ay+/i,
+                /( |^)ay+( |$)/i,
                 require('../filters/ay.js')
             ]
         ];
