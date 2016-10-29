@@ -56,7 +56,7 @@ client.on('message', function (message) {
         });
     }
 
-    const filters = require('./operators/filter')(client, message);
+    const filters = require('./operators/filter')(message);
     if(filters) {
         filters.call();
     }

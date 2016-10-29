@@ -3,12 +3,11 @@
  */
 
 /**
- * @param {Client} client
  * @param msg
  * @returns {boolean|Filter}
  */
-function filter(client, msg)    {
-    const func = Filter.fetch(client, msg);
+function filter(msg)    {
+    const func = Filter.fetch(msg);
     if(func) {
         return new Filter(msg, func);
     }   else {
@@ -65,12 +64,11 @@ class Filter    {
 
     /**
      * Fetch a filter function
-     * @param {Client} client
      * @param {Message} msg
      * @returns {boolean|Function}
      */
-    static fetch(client, msg)    {
-        if(client.user.id == msg.author.id) {
+    static fetch(msg)    {
+        if(msg.author.bot) {
             return false;
         }
 
