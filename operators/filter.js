@@ -49,6 +49,14 @@ class Filter    {
             [
                 /^ay+$/i,
                 require('../filters/ay.js')
+            ],
+            [
+                /(\s|^)(x(d|D)|XD)(\s|$)/,
+                require('../filters/xd')
+            ],
+            [
+                /(\s|^)ecks dee(\s|$)/i,
+                require('../filters/xd')
             ]
         ];
 
