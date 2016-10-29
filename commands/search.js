@@ -60,7 +60,8 @@ function Search(client, msg, args)  {
             case 'Images':
                 item = res.images.value[0];
                 reply = "**" + item.name + "**\n" + item.hostPageDisplayUrl;
-                return msg.channel.sendFile(item.contentUrl, null, reply);
+                msg.channel.sendFile(item.contentUrl, null, reply);
+                return;
             case 'TimeZone':
                 item = res.timeZone.primaryCityTime;
                 reply = Promise.resolve("**" + moment(item.time.substring(0, item.time.length - 1), moment.ISO_8601).format("MMM D, YYYY HH:mm:ss A") + "** - `" + item.location + "`");
