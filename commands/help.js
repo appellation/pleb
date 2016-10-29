@@ -4,6 +4,7 @@
 
 function Help(client, msg, args)    {
     msg.author.sendMessage(
+        "** --------------Commands-------------- **\n" +
         "**`@mention` in any channel or just type in `#pleb`.**\n\n" +
         "- `play [query, YT URL, SoundCloud URL]` - plays makes a playlist from the link\n" +
         "- `shuffle [Play params]?` - shuffles existing playlist (if exists) or shuffles new playlist\n" +
@@ -21,12 +22,16 @@ function Help(client, msg, args)    {
         "- `born` - get your birthday\n" +
         "- `search` - query the internet and get the first result\n" +
         "- `boobs` - get a random photo of boobs [NSFW]\n" +
+        "- `ass` - a random photo of ass [NSFW]\n" +
         "- `catfacts` - get a random fact about cats\n" +
         "- `listen` - interpret the next speech by the message author\n" +
-        "- `insult [mention]?` - insult a user (defaults to yourself)" +
+        "- `insult [mention]?` - insult a user (defaults to yourself)\n" +
         "- `remind (me|@user) to [action] (in|at) [time]` - set a reminder\n\n" +
-        "For human help, check out my GitHub repo at https://github.com/appellation/pleb"
-    );
+        "NSFW commands (noted by an [NSFW] tag above) can only be given in the `#nsfw` channel or by people with the `nsfw` role.\n\n" +
+        "** --------------Filters-------------- **\n" +
+        "- `/^ay+$/i` - lmao (<https://regex101.com/r/M0ka8U/1>)\n\n" +
+        "For human help, check out my GitHub repo at <https://github.com/appellation/pleb>"
+    , {split: true});
     return Promise.resolve();
 }
 
