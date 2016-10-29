@@ -17,8 +17,6 @@ function Remind(client, msg, args)  {
 
     const atIndex = args.lastIndexOf('at');
     const inIndex = args.lastIndexOf('in');
-    const mentionTest = /<@!?([0-9]+)>/;
-
 
     const timeIndex = atIndex > inIndex ? args.lastIndexOf('at') : args.lastIndexOf('in');
 
@@ -26,23 +24,23 @@ function Remind(client, msg, args)  {
         return "can\'t parse that :cry:";
     }
 
-    const newdate = date(args.slice(timeIndex + 1).join(' '));
-    if(newdate < new Date()) {
+    const newDate = date(args.slice(timeIndex + 1).join(' '));
+    if(newDate < new Date()) {
         return 'that date doesn\'t seem to be valid.';
     }
 
-    schedule.scheduleJob(newdate, () => {
-        if (args[0].match(mentionTest))
+    schedule.scheduleJob(newDate, () => {
+        if (args[0] == 'me')
         {
-            msg.channel.sendMessage(args[0] + ", " + args.slice(remIndex + 1, timeIndex).join(' '))
+            msg.reply(args.slice(remIndex + 1, timeIndex).join(' '));
         }
         else
         {
-            msg.reply(args.slice(remIndex + 1, timeIndex).join(' '))
+            msg.channel.sendMessage(args[0] + ", " + args.slice(remIndex + 1, timeIndex).join(' '));
         }
     });
 
-    return 'reminder set for ' + moment(newdate).format('dddd, MMMM Do YYYY, h:mm:ss a');
+    return 'reminder set for ' + moment(newDate).format('dddd, MMMM Do YYYY, h:mm:ss a');
     
 }
 
