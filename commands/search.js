@@ -63,7 +63,7 @@ function Search(client, msg, args)  {
                 return msg.channel.sendFile(item.contentUrl, null, reply);
             case 'TimeZone':
                 item = res.timeZone.primaryCityTime;
-                reply = Promise.resolve("**" + moment(item.time).format("MMM D, YYYY HH:mm:ss A") + "** - `" + item.location + "`");
+                reply = Promise.resolve("**" + moment(item.time.substring(0, item.time.length - 1), moment.ISO_8601).format("MMM D, YYYY HH:mm:ss A") + "** - `" + item.location + "`");
                 break;
             default:
                 item = res.webPages.value[0];
