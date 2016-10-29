@@ -5,7 +5,7 @@
 function Info(client, msg, args)    {
     const packageJSON = require('../package.json');
 
-    msg.reply("**Bot Info:**\n" +
+    msg.author.sendMessage("**Bot Info:**\n" +
         "Version: `" + packageJSON.version + "`\n" +
         "Author: `" + packageJSON.author + "`\n" +
         "Contributors: <https://github.com/appellation/pleb/graphs/contributors>\n" +
