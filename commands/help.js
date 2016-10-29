@@ -30,8 +30,8 @@ function Help(client, msg, args)    {
         "NSFW commands (noted by an [NSFW] tag above) can only be given in the `#nsfw` channel or by people with the `nsfw` role.\n\n" +
         "** --------------Filters-------------- **\n" +
         "- `/^ay+$/i` - lmao (<https://regex101.com/r/M0ka8U/1>)\n" +
-        "- `/(\\s|^)(x(d|D)|XD)(\\s|$)/` - xD\n" +
-        "- `/(\\s|^)ecks dee(\\s|$)/i` - xD\n\n" +
+        "- `/(\\s|^)(x(d|D)|XD)(\\s|$)/` - xD (<https://regex101.com/r/9cKZCK/1>)\n" +
+        "- `/(\\s|^)ecks dee(\\s|$)/i` - xD (<https://regex101.com/r/TRcqlp/1>)\n\n" +
         "For human help, check out my GitHub repo at <https://github.com/appellation/pleb>"
     , {split: true});
     return Promise.resolve();
