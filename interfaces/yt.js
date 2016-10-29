@@ -66,15 +66,13 @@
 
             const self = this;
 
-            ytApi.addParam('maxResults', '50');
-            ytApi.addParam('part', 'contentDetails,snippet');
-
             return new Promise(function(resolve, reject)    {
 
                 if(!YTPlaylist.isYouTubeURL(playlistUrl) || YTPlaylist.getURLType(playlistUrl) !== 'playlist') {
                     reject('Not a YouTube playlist.');
                 }
 
+                let first = true;
                 /*
                  * Recursively retrieve videos from a playlist.
                  */
@@ -101,13 +99,16 @@
                         _.each(result.items, function(elem) {
                             if(elem.status.privacyStatus == 'public' || elem.status.privacyStatus == 'unlisted')    {
                                 self.list.add(new StreamStructure('https://www.youtube.com/watch?v=' + elem.contentDetails.videoId, elem.snippet.title));
+
+                                if(first)   {
+                                    resolve(self.list);
+                                    first = false;
+                                }
                             }
                         });
 
                         if(result.nextPageToken)    {
                             recurse(result.nextPageToken);
-                        }   else    {
-                            resolve(self.list);
                         }
                     }).catch(function(err)  {
                         reject(err);
