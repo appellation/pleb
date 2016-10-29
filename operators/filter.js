@@ -34,7 +34,9 @@ class Filter    {
 
     call()  {
         Promise.resolve(this.func(this.msg)).then(res => {
-            this.msg.channel.sendMessage(res);
+            if(res) {
+                this.msg.channel.sendMessage(res);
+            }
         }).catch(console.error);
     }
 
