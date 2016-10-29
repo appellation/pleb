@@ -124,6 +124,10 @@ class Command   {
      * @returns {boolean}
      */
     static isValid(client, msg, body)   {
+        if(msg.author.bot)  {
+            return false;
+        }
+
         const text = body ? body : msg.content;
         const parsed = Command.parse(text);
         const cmd = parsed[0];
@@ -149,10 +153,9 @@ class Command   {
          - the bot is mentioned first
 
          These are exclusion parameters:
-         - author is not the bot
          - the length of the command is > 0
          */
-        if((msg.channel.name == 'pleb' || msg.channel.guild == null || Command.mentionedFirst(text)) && msg.author.id != client.user.id && parsed.length > 0)    {
+        if((msg.channel.name == 'pleb' || msg.channel.guild == null || Command.mentionedFirst(text)) && parsed.length > 0)    {
             return Command.isValidFunction(cmd);
         }
 
