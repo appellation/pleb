@@ -45,6 +45,8 @@ A really simple Discord bot available for free.  Add me: <https://discordapp.com
 ### Filters
 
 - `/^ay+$/i` - lmao
+- `/(\s|^)(x(d|D)|XD)(\s|$)/` - xD
+- `/(\s|^)ecks dee(\s|$)/i` - xD
 
 ## Development
 `npm install`
