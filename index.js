@@ -55,6 +55,11 @@ client.on('message', function (message) {
             cmd.respond(res);
         });
     }
+
+    const filters = require('./operators/filter')(client, message);
+    if(filters) {
+        filters.call();
+    }
 });
 
 client.login(process.env.discord).then(function()   {
