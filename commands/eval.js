@@ -14,7 +14,11 @@ function Eval(client, msg, args)    {
                 resolve(e.message);
             }
         }).then(require('util').inspect).then(res => {
-            msg.channel.sendCode("x1", res, {split: true});
+            if(res.length <= 10000)  {
+                msg.channel.sendCode("x1", res, {split: true});
+            }   else {
+                return 'that response would be too big';
+            }
         })
     }
 }
