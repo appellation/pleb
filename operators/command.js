@@ -47,7 +47,8 @@ class Command   {
             remind: require('../commands/remind'),
             eval: require('../commands/eval'),
             hi: require('../commands/hello'),
-            hello: require('../commands/hello')
+            hello: require('../commands/hello'),
+            info: require('../commands/info')
         }
     };
 
