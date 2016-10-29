@@ -4,9 +4,9 @@ A really simple Discord bot available for free.  Add me: <https://discordapp.com
 ## Usage
 `@mention` the bot in any channel or just type in `#pleb` to give a command.  **Warning:** there aren't any checks on command authorization, so don't use this bot if you're worried about trolls.
 
-Available commands:
+### Commands:
 
-### Music/Audio
+#### Music/Audio
 - `play [YouTube video URL]` - plays a YouTube video (accepts both youtube.com and youtu.be URLs)
 - `play [YouTube playlist URL]` - plays a YouTube playlist in sequential order
 - `play [SoundCloud sound URL]` - plays a SoundCloud track
@@ -25,7 +25,7 @@ Available commands:
 - `stfu` - stops playback and disconnects Pleb from the voice channel
 - `listen` - converts speech to text when message author speaks the next time
 
-### Functionality
+#### Functionality
 - `ping` - calculates time between command message and response message
 - `ping [URL]` - simple HTTP ping to a website
 - `stats` - get some bot stats
@@ -35,12 +35,16 @@ Available commands:
 - `help` - PM some help
 - `remind (me|@user) to [action] (in|at) [time]` - set a reminder
 
-### Random
+#### Random
 - `imgur [title?]` - upload an image to Imgur with an optional title; use this in the comment of a file upload
 - `boobs` - get a random photo of boobs
 - `memes` -  get a random meme from `/r/memes`
 - `dick [mention]?` - get a dick size
 - `catfacts` - send a random cat fact
+
+### Filters
+
+- `/^ay+$/i` - lmao
 
 ## Development
 `npm install`
@@ -65,4 +69,6 @@ You'll need to make a `.env` file (or have some other way to access environment 
 
 Add your bot to a server using `https://discordapp.com/oauth2/authorize?client_id=<YOUR_CLIENT_ID>&scope=bot&permissions=3173376`.
 
-The first word of a command gets interpolated and calls a function as defined in `const commands` in `operators/command.js`, passing in the Discord.js client, the message, and any arguments of the command (defined as text after the command word).  Some commands (e.g. `shuffle` and `add`) rely on other commands.
+The first word of a command gets interpolated and calls a function as defined in `static list()` in `operators/command.js`, passing in the Discord.js client, the message, and any arguments of the command (defined as text after the command word).  Some commands (e.g. `shuffle` and `add`) rely on other commands.
+
+Filters operate much like commands but use a Map of regular expressions to determine what to execute.  Be careful with these; regexes have the potential to spam every server the bot is on since they aren't restricted by prefix or channel.
