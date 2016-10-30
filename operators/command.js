@@ -134,14 +134,14 @@ class Command   {
 
         /*
         If the command is NSFW:
+         - The message is NOT a direct message AND
         - The author does NOT have the 'nsfw' role AND
-        - The channel is NOT named 'nsfw' AND
-        - The message is NOT a direct message
+        - The channel is NOT named 'nsfw'
 
         ~ The command is invalid.
          */
         if(Command.isNSFW(cmd))   {
-            if(msg.member && (!msg.member.roles.find('name', 'nsfw') && msg.channel.name != 'nsfw' && msg.channel.guild != null))   {
+            if(msg.member && !msg.member.roles.find('name', 'nsfw') && msg.channel.name != 'nsfw')   {
                 return false;
             }
         }
