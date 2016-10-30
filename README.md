@@ -42,12 +42,6 @@ A really simple Discord bot available for free.  Add me: <https://discordapp.com
 - `dick [mention]?` - get a dick size
 - `catfacts` - send a random cat fact
 
-### Filters
-
-- `/^ay+$/i` - lmao
-- `/(\s|^)(x(d|D)|XD)(\s|$)/` - xD
-- `/(\s|^)ecks dee(\s|$)/i` - xD
-
 ## Development
 `npm install`
 
@@ -72,5 +66,3 @@ You'll need to make a `.env` file (or have some other way to access environment 
 Add your bot to a server using `https://discordapp.com/oauth2/authorize?client_id=<YOUR_CLIENT_ID>&scope=bot&permissions=3173376`.
 
 The first word of a command gets interpolated and calls a function as defined in `static list()` in `operators/command.js`, passing in the Discord.js client, the message, and any arguments of the command (defined as text after the command word).  Some commands (e.g. `shuffle` and `add`) rely on other commands.
-
-Filters operate much like commands but use a Map of regular expressions to determine what to execute.  Be careful with these; regexes have the potential to spam every server the bot is on since they aren't restricted by prefix or channel.
