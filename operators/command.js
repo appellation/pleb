@@ -98,10 +98,12 @@ class Command   {
                 resolve();
             }
         }).then(res => {
-            self.msg.channel.stopTyping();
             if(options.respond && typeof res == 'string') {
-                self.msg.channel.sendMessage(res);
+                return self.msg.channel.sendMessage(res);
             }
+            return Promise.resolve(res);
+        }).then(res => {
+            self.msg.channel.stopTyping();
             return res;
         }).catch(err => {
             console.error(err);
@@ -127,7 +129,7 @@ class Command   {
 
         /*
         If the command is NSFW:
-         - The message is NOT a direct message AND
+        - The message is NOT a direct message AND
         - The author does NOT have the 'nsfw' role AND
         - The channel is NOT named 'nsfw'
 
@@ -148,7 +150,7 @@ class Command   {
          These are exclusion parameters:
          - the length of the command is > 0
          */
-        if((msg.channel.name == 'pleb' || msg.channel.guild == null || Command.mentionedFirst(parsed)) && parsed.length > 0)    {
+        if((msg.channel.name == 'pleb' || msg.channel.guild == null || Command.mentionedFirst(text)) && parsed.length > 0)    {
             return Command.isValidFunction(cmd);
         }
 
@@ -175,10 +177,11 @@ class Command   {
 
     /**
      * Check if the bot was mentioned first.
-     * @param {[]} content
+     * @param {string} msg
      * @returns {boolean}
      */
-    static mentionedFirst(content)  {
+    static mentionedFirst(msg)  {
+        const content = msg.split(' ');
         return (content[0] === '<@' + process.env.discord_client_id + '>') || (content[0] === '<@!' + process.env.discord_client_id + '>');
     }
 
@@ -190,7 +193,7 @@ class Command   {
     static parse(msg)    {
         const parts = msg.split(' ');
 
-        if(Command.mentionedFirst(parts))    {
+        if(Command.mentionedFirst(msg))    {
             return parts.slice(1);
         }   else    {
             return parts;
