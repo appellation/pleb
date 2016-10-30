@@ -34,6 +34,9 @@ A really simple Discord bot available for free.  Add me: <https://discordapp.com
 - `search [query]` - query the internet and post the first result
 - `help` - PM some help
 - `remind (me|@user) to [action] (in|at) [time]` - set a reminder
+- `sanitize` - delete last 10 messages from bot
+- `sanitize [num]` - deleted last `num` messages from bot
+- `info` - get bot info
 
 #### Random
 - `imgur [title?]` - upload an image to Imgur with an optional title; use this in the comment of a file upload

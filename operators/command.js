@@ -48,7 +48,8 @@ class Command   {
             eval: require('../commands/eval'),
             hi: require('../commands/hello'),
             hello: require('../commands/hello'),
-            info: require('../commands/info')
+            info: require('../commands/info'),
+            sanitize: require('../commands/sanitize')
         }
     };
 
@@ -98,7 +99,7 @@ class Command   {
             }
         }).then(res => {
             self.msg.channel.stopTyping();
-            if(options.respond) {
+            if(options.respond && typeof res == 'string') {
                 self.msg.channel.sendMessage(res);
             }
             return res;

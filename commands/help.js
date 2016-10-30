@@ -25,7 +25,9 @@ function Help(client, msg, args)    {
         "- `catfacts` - get a random fact about cats\n" +
         "- `listen` - interpret the next speech by the message author\n" +
         "- `insult [mention]?` - insult a user (defaults to yourself)\n" +
-        "- `remind (me|@user) to [action] (in|at) [time]` - set a reminder\n\n" +
+        "- `remind (me|@user) to [action] (in|at) [time]` - set a reminder\n" +
+        "- `sanitize [num]?` - delete last `num` messages from the bot (defaults to 10)\n" +
+        "- `info` - get info about the bot\n" +
         "NSFW commands (noted by an [NSFW] tag above) can only be given in the `#nsfw` channel or by people with the `nsfw` role.\n\n" +
         "For human help, check out my GitHub repo at <https://github.com/appellation/pleb>"
     , {split: true});
