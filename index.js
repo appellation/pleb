@@ -38,9 +38,7 @@ client.on('guildMemberSpeaking', function(member, speaking) {
 
             const cmd = require('./operators/command')(client, msg, text.toLowerCase());
             if(cmd) {
-                cmd.call().then(res => {
-                    cmd.respond(res)
-                });
+                cmd.call();
             }
         }).catch(console.error);
     }
@@ -51,9 +49,7 @@ client.on('message', function (message) {
 
     const cmd = require('./operators/command')(client, message);
     if(cmd) {
-        cmd.call().then(res => {
-            cmd.respond(res);
-        });
+        cmd.call();
     }
 });
 

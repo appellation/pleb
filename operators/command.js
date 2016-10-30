@@ -6,11 +6,11 @@
  * Initialize the Command factory.
  * @param client
  * @param msg
- * @param body
+ * @param [body]
  * @returns {Command|boolean}
  */
 function cmd(client, msg, body)   {
-    if(Command.isValid(client, msg, body))  {
+    if(Command.isValid(msg, body))  {
         return new Command(client, msg, body);
     }   else {
         return false;
@@ -75,20 +75,21 @@ class Command   {
 
     /**
      * Execute the command.
+     * @param {{}} [options]
      * @returns {Promise}
      */
-    call()  {
+    call(options = {respond: true})  {
         this.msg.channel.startTyping();
 
         const self = this;
         return new Promise((resolve, reject) => {
-            const func = Command._list()[this.parsed[0]];
+            const func = Command._list()[self.parsed[0]];
 
             if(typeof func !== 'function')  {
                 reject('not a function.');
             }
 
-            const exec = func(this.client, this.msg, this.parsed.slice(1));
+            const exec = func(self.client, self.msg, self.parsed.slice(1));
 
             if(typeof exec !== 'undefined') {
                 resolve(exec);
@@ -97,6 +98,9 @@ class Command   {
             }
         }).then(res => {
             self.msg.channel.stopTyping();
+            if(options.respond) {
+                self.msg.channel.sendMessage(res);
+            }
             return res;
         }).catch(err => {
             console.error(err);
@@ -106,24 +110,12 @@ class Command   {
     }
 
     /**
-     * Send a response to a command.
-     * @param {string} res - The result of a command call.
-     * @see call
-     */
-    respond(res)   {
-        if (res) {
-            this.msg.channel.sendMessage(res);
-        }
-    }
-
-    /**
      * Check if the a message is a command.  This should be called before constructing.
-     * @param {Client} client
      * @param {Message} msg
      * @param {string} [body] - optional raw text to be evaluated as a command
      * @returns {boolean}
      */
-    static isValid(client, msg, body)   {
+    static isValid(msg, body)   {
         if(msg.author.bot)  {
             return false;
         }
@@ -155,7 +147,7 @@ class Command   {
          These are exclusion parameters:
          - the length of the command is > 0
          */
-        if((msg.channel.name == 'pleb' || msg.channel.guild == null || Command.mentionedFirst(text)) && parsed.length > 0)    {
+        if((msg.channel.name == 'pleb' || msg.channel.guild == null || Command.mentionedFirst(parsed)) && parsed.length > 0)    {
             return Command.isValidFunction(cmd);
         }
 
@@ -182,12 +174,11 @@ class Command   {
 
     /**
      * Check if the bot was mentioned first.
-     * @param {string} content
+     * @param {[]} content
      * @returns {boolean}
      */
     static mentionedFirst(content)  {
-        const parts = content.split(' ');
-        return (parts[0] === '<@' + process.env.discord_client_id + '>') || (parts[0] === '<@!' + process.env.discord_client_id + '>');
+        return (content[0] === '<@' + process.env.discord_client_id + '>') || (content[0] === '<@!' + process.env.discord_client_id + '>');
     }
 
     /**
@@ -198,7 +189,7 @@ class Command   {
     static parse(msg)    {
         const parts = msg.split(' ');
 
-        if(Command.mentionedFirst(msg))    {
+        if(Command.mentionedFirst(parts))    {
             return parts.slice(1);
         }   else    {
             return parts;
