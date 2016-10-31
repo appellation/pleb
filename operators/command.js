@@ -49,7 +49,8 @@ class Command   {
             hi: require('../commands/hello'),
             hello: require('../commands/hello'),
             info: require('../commands/info'),
-            sanitize: require('../commands/sanitize')
+            sanitize: require('../commands/sanitize')/*,
+            ban: require('../commands/ban')*/
         }
     };
 
