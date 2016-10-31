@@ -3,3 +3,4 @@
 /.env
 /data
 /secure
+npm-debug.log
