@@ -70,8 +70,6 @@ class Command   {
         this.parsed = Command.parse(body ? body : msg.content);
         this.client = client;
         this.msg = msg;
-
-        console.log("count#command." + this.parsed[0] + "=1");
     }
 
     /**
@@ -80,6 +78,7 @@ class Command   {
      * @returns {Promise}
      */
     call(options = {respond: true})  {
+        console.log("count#command." + this.parsed[0] + "=1");
         this.msg.channel.startTyping();
 
         const self = this;
