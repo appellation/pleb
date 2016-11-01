@@ -9,7 +9,6 @@ const Play = require('../commands/play');
  * @param {Message} msg
  * @param {[]} args
  * @return {string}
- * @constructor
  */
 function Add(client, msg, args) {
     if(args[0])     {

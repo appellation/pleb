@@ -4,12 +4,13 @@
 
 const date = require('date.js');
 const schedule = require('node-schedule');
+const moment = require('moment');
 
 /**
  * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
- * @return {string|undefined}
+ * @return {string|Promise|undefined}
  */
 function Ban(client, msg, args) {
 
@@ -19,6 +20,10 @@ function Ban(client, msg, args) {
 
     if(!msg.member.hasPermission('BAN_MEMBERS')) {
         return 'if you can\'t do it, I sure as hell won\'t';
+    }
+
+    if(!msg.guild.members.get(client.user.id).hasPermission('BAN_MEMBERS'))  {
+        return 'you might be able to do it, but I sure as hell can\'t';
     }
 
     let lastMention;
@@ -61,15 +66,17 @@ function Ban(client, msg, args) {
         });
     });
 
-    Promise.all(out).then(banned => {
-        return 'banned until ' + until + ':\n\n' + banned.reduce(obj => {
-                return obj.user.username + '#' + obj.user.discriminator + '\n';
+    return Promise.all(out).then(banned => {
+        return 'banned for ' + moment(until).fromNow(true) + ':\n\n' + banned.reduce(obj => {
+                return "`" + obj.user.username + '#' + obj.user.discriminator + '`\n';
             });
-    }).catch(failed => {
-        return 'failed to ban:\n\n' + failed.reduce(obj => {
-                return obj.user.username + '#' + obj.user.discriminator + '\n';
-            });
-    })
+    }).catch(e => {
+        if(e.response.status == 403)    {
+            return 'no perms :frowning:';
+        }   else {
+            return e.message;
+        }
+    });
 }
 
 module.exports = Ban;
