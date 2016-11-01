@@ -33,6 +33,11 @@ function Help(client, msg, args)    {
         "- `remind (me|@user) to [action] (in|at) [time]` - set a reminder\n" +
         "- `sanitize [num]?` - delete last `num` messages from the bot (defaults to 10)\n" +
         "- `info` - get info about the bot\n" +
+        "- `/ay+/i` - lmao\n" +
+        "- `hello|hi` - :wave:\n" +
+        "- `roll|dice ([count] [size])?` - roll `count` dice with `size` sides (defaults to 2 6-sided dice)\n" +
+        "- `conflip` - flip a coin\n" +
+        "- `ban [mention]+ [time]` - bans mentioned users for `time`, at which re-invites them\n\n" +
         "NSFW commands (noted by an [NSFW] tag above) can only be given in the `#nsfw` channel or by people with the `nsfw` role.\n\n" +
         "For human help, check out my GitHub repo at <https://github.com/appellation/pleb>"
     , {split: true});

@@ -137,8 +137,16 @@ class Command   {
                 require('../commands/ayy')
             ],
             [
-                /(xD|XD)/,
+                '(xD|XD)',
                 require('../commands/xd')
+            ],
+            [
+                '(roll|dice)',
+                require('../commands/dice')
+            ],
+            [
+                'coinflip',
+                require('../commands/coinflip')
             ]
         ];
 
