@@ -135,6 +135,10 @@ class Command   {
             [
                 /ay+/i,
                 require('../commands/ayy')
+            ],
+            [
+                /(xD|XD)/,
+                require('../commands/xd')
             ]
         ];
 
