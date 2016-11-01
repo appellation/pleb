@@ -10,8 +10,9 @@
  * @returns {Command|boolean}
  */
 function cmd(client, msg, body)   {
-    if(Command.isValid(msg, body))  {
-        return new Command(client, msg, body);
+    const validated = Command.validate(msg, body);
+    if(validated)  {
+        return new Command(validated, client, msg, body);
     }   else {
         return false;
     }
@@ -22,36 +23,118 @@ module.exports = cmd;
 class Command   {
 
     static _list() {
-        return {
-            add: require('../commands/add'),
-            play: require('../commands/play'),
-            stfu: require('../commands/stfu'),
-            shuffle: require('../commands/shuffle'),
-            pause: require('../commands/pause'),
-            resume: require('../commands/resume'),
-            next: require('../commands/next'),
-            ping: require('../commands/ping'),
-            imgur: require('../commands/imgur'),
-            help: require('../commands/help'),
-            boobs: require('../commands/boobs'),
-            memes: require('../commands/memes'),
-            stats: require('../commands/stats'),
-            dick: require('../commands/dick'),
-            id: require('../commands/id'),
-            born: require('../commands/born'),
-            search: require('../commands/search'),
-            insult: require('../commands/insult'),
-            catfacts: require('../commands/catfacts'),
-            listen: require('../commands/listen'),
-            ass: require('../commands/ass'),
-            remind: require('../commands/remind'),
-            eval: require('../commands/eval'),
-            hi: require('../commands/hello'),
-            hello: require('../commands/hello'),
-            info: require('../commands/info'),
-            sanitize: require('../commands/sanitize')/*,
-            ban: require('../commands/ban')*/
-        }
+        const arr = [
+            [
+                'add',
+                require('../commands/add')
+            ],
+            [
+                'play',
+                require('../commands/play')
+            ],
+            [
+                'stfu',
+                require('../commands/stfu')
+            ],
+            [
+                'shuffle',
+                require('../commands/shuffle')
+            ],
+            [
+                'pause',
+                require('../commands/pause')
+            ],
+            [
+                'resume',
+                require('../commands/resume')
+            ],
+            [
+                'next',
+                require('../commands/next')
+            ],
+            [
+                'ping',
+                require('../commands/ping')
+            ],
+            [
+                'imgur',
+                require('../commands/imgur')
+            ],
+            [
+                'help',
+                require('../commands/help')
+            ],
+            [
+                'boobs',
+                require('../commands/boobs')
+            ],
+            [
+                'memes',
+                require('../commands/memes')
+            ],
+            [
+                'stats',
+                require('../commands/stats')
+            ],
+            [
+                'dick',
+                require('../commands/dick')
+            ],
+            [
+                'id',
+                require('../commands/id')
+            ],
+            [
+                'born',
+                require('../commands/id')
+            ],
+            [
+                'search',
+                require('../commands/search')
+            ],
+            [
+                'insult',
+                require('../commands/insult')
+            ],
+            [
+                'catfacts',
+                require('../commands/catfacts')
+            ],
+            [
+                'listen',
+                require('../commands/listen')
+            ],
+            [
+                'ass',
+                require('../commands/ass')
+            ],
+            [
+                'remind',
+                require('../commands/remind')
+            ],
+            [
+                'eval',
+                require('../commands/eval')
+            ],
+            [
+                /(hi|hello)/,
+                require('../commands/hello')
+            ],
+            [
+                'info',
+                require('../commands/info')
+            ],
+            [
+                'sanitize',
+                require('../commands/sanitize')
+            ],
+            [
+                'ban',
+                require('../commands/ban')
+            ]
+        ];
+
+        return new Map(arr);
     };
 
     static _nsfwList()   {
@@ -63,11 +146,13 @@ class Command   {
 
     /**
      * @constructor
+     * @param {Function} func - The function to call with the command.
      * @param {Client} client - The Discord.js client
      * @param {Message} msg - The message that initiated the command.
      * @param {string} [body] - An optional command body; if this is not provided, the command will default to the message content.
      */
-    constructor(client, msg, body)  {
+    constructor(func, client, msg, body)  {
+        this.func = func;
         this.parsed = Command.parse(body ? body : msg.content);
         this.client = client;
         this.msg = msg;
@@ -84,13 +169,11 @@ class Command   {
 
         const self = this;
         return new Promise((resolve, reject) => {
-            const func = Command._list()[self.parsed[0]];
-
-            if(typeof func !== 'function')  {
+            if(typeof self.func !== 'function')  {
                 reject('not a function.');
             }
 
-            const exec = func(self.client, self.msg, self.parsed.slice(1));
+            const exec = self.func(self.client, self.msg, self.parsed.slice(1));
 
             if(typeof exec !== 'undefined') {
                 resolve(exec);
@@ -116,11 +199,11 @@ class Command   {
      * Check if the a message is a command.  This should be called before constructing.
      * @param {Message} msg
      * @param {string} [body] - optional raw text to be evaluated as a command
-     * @returns {boolean}
+     * @returns {Function}
      */
-    static isValid(msg, body)   {
+    static validate(msg, body)   {
         if(msg.author.bot)  {
-            return false;
+            return null;
         }
 
         const text = body ? body : msg.content;
@@ -137,7 +220,7 @@ class Command   {
          */
         if(Command.isNSFW(cmd))   {
             if(msg.member && !msg.member.roles.find('name', 'nsfw') && msg.channel.name != 'nsfw')   {
-                return false;
+                return null;
             }
         }
 
@@ -151,10 +234,10 @@ class Command   {
          - the length of the command is > 0
          */
         if((msg.channel.name == 'pleb' || msg.channel.guild == null || Command.mentionedFirst(text)) && parsed.length > 0)    {
-            return Command.isValidFunction(cmd);
+            return Command.fetch(cmd);
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -169,10 +252,16 @@ class Command   {
     /**
      * Check if a given string is a command function.
      * @param {string} str
-     * @returns {boolean}
+     * @returns {Function}
      */
-    static isValidFunction(str) {
-        return typeof Command._list()[str] === 'function';
+    static fetch(str) {
+        for(const [key, val] of Command._list())    {
+            if(str.match(key))  {
+                return val;
+            }
+        }
+
+        return null;
     }
 
     /**
