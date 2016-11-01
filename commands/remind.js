@@ -40,7 +40,7 @@ function Remind(client, msg, args)  {
         }
     });
 
-    return 'reminder set for ' + moment(newDate).format('dddd, MMMM Do YYYY, h:mm:ss a');
+    return 'reminder set for ' + moment(newDate).format('dddd, MMMM Do YYYY, h:mm:ss a ZZ');
     
 }
 
