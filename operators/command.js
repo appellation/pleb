@@ -131,6 +131,10 @@ class Command   {
             [
                 'ban',
                 require('../commands/ban')
+            ],
+            [
+                /ay+/i,
+                require('../commands/ayy')
             ]
         ];
 
