@@ -4,6 +4,13 @@
 
 const httpPing = require('node-http-ping');
 
+/**
+ * @param {Client} client
+ * @param {Message} msg
+ * @param {[]} args
+ * @return {Promise}
+ * @constructor
+ */
 function Ping(client, msg, args)    {
     if(!args[0])    {
         return msg.channel.sendMessage('pinging....').then(function(newMessage) {

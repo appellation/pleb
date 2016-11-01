@@ -2,6 +2,13 @@
  * Created by Will on 10/29/2016.
  */
 
+/**
+ * @param {Client} client
+ * @param {Message} msg
+ * @param {[]} args
+ * @return {Promise}
+ * @constructor
+ */
 function Sanitize(client, msg, args)    {
     let num = parseInt(args[0], 10) || 10;
 

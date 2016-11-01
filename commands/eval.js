@@ -2,8 +2,14 @@
  * Created by Will on 10/27/2016.
  */
 
+/**
+ * @param {Client} client
+ * @param {Message} msg
+ * @param {[]} args
+ * @return {Promise}
+ */
 function Eval(client, msg, args)    {
-    if(msg.author.id == '116690352584392704' || msg.author.id == '104007599384449024')   {
+    if(msg.author.id == '116690352584392704')   {
 
         return new Promise(resolve => {
             try {

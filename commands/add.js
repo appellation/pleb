@@ -4,6 +4,13 @@
 
 const Play = require('../commands/play');
 
+/**
+ * @param {Client} client
+ * @param {Message} msg
+ * @param {[]} args
+ * @return {string}
+ * @constructor
+ */
 function Add(client, msg, args) {
     if(args[0])     {
 
@@ -11,13 +18,13 @@ function Add(client, msg, args) {
             return Play(client, msg, args.slice(1), msg.guild.playlist, true);
         }   else if(msg.guild.playlist)   {
             msg.guild.playlist.add(args);
-            return Promise.resolve('added');
+            return 'added';
         }   else {
-            return Promise.resolve('no playlist.');
+            return 'no playlist.';
         }
 
     }   else    {
-        return Promise.resolve('gimme something to work with here.');
+        return 'gimme something to work with here.';
     }
 }
 

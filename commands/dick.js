@@ -4,6 +4,12 @@
 
 const shuffle = require('knuth-shuffle');
 
+/**
+ * @param {Client} client
+ * @param {Message} msg
+ * @param {[]} args
+ * @return {string}
+ */
 function Dick(client, msg, args)    {
     let dick = "8";
     let count;
@@ -12,8 +18,7 @@ function Dick(client, msg, args)    {
     if(args[0]) {
         const match = args[0].match(/<@!?([0-9]+)>/);
         if(match === null)  {
-            msg.reply('hey, that\'s not a user');
-            return Promise.resolve();
+            return 'hey, that\'s not a user';
         }
 
         user = client.users.get(match[1]);
@@ -41,7 +46,7 @@ function Dick(client, msg, args)    {
 
     dick += "D";
 
-    return Promise.resolve(dick);
+    return dick;
 }
 
 module.exports = Dick;

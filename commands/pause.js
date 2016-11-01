@@ -2,6 +2,11 @@
  * Created by Will on 8/30/2016.
  */
 
+/**
+ * @param {Client} client
+ * @param {Message} msg
+ * @param {[]} args
+ */
 function Pause(client, msg, args)   {
     const playlist = msg.guild.playlist;
     if(playlist)    {
@@ -9,7 +14,6 @@ function Pause(client, msg, args)   {
     }   else    {
         msg.reply('LUL');
     }
-    Promise.resolve();
 }
 
 module.exports = Pause;

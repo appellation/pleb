@@ -2,6 +2,11 @@
  * Created by Will on 10/29/2016.
  */
 
+/**
+ * @param {Client} client
+ * @param {Message} msg
+ * @param {[]} args
+ */
 function Info(client, msg, args)    {
     const packageJSON = require('../package.json');
 

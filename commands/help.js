@@ -2,6 +2,11 @@
  * Created by Will on 9/22/2016.
  */
 
+/**
+ * @param {Client} client
+ * @param {Message} msg
+ * @param {[]} args
+ */
 function Help(client, msg, args)    {
     msg.author.sendMessage(
         "**`@mention` in any channel or just type in `#pleb`.**\n\n" +
@@ -31,7 +36,6 @@ function Help(client, msg, args)    {
         "NSFW commands (noted by an [NSFW] tag above) can only be given in the `#nsfw` channel or by people with the `nsfw` role.\n\n" +
         "For human help, check out my GitHub repo at <https://github.com/appellation/pleb>"
     , {split: true});
-    return Promise.resolve();
 }
 
 module.exports = Help;

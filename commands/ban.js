@@ -6,9 +6,9 @@ const date = require('date.js');
 const schedule = require('node-schedule');
 
 /**
- * @param client
- * @param msg
- * @param args
+ * @param {Client} client
+ * @param {Message} msg
+ * @param {[]} args
  * @return {string|undefined}
  */
 function Ban(client, msg, args) {

@@ -3,6 +3,13 @@
  */
 
 const rp = require('request-promise-native');
+
+/**
+ * @param {Client} client
+ * @param {Message} msg
+ * @param {[]} args
+ * @return {Promise}
+ */
 function Boobs(client, msg, args)   {
     return rp.get('http://api.oboobs.ru/boobs/0/1/random').then(JSON.parse).then(function(res)  {
         return rp.get({

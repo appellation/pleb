@@ -4,6 +4,12 @@
 
 let rp = require('request-promise-native');
 
+/**
+ * @param {Client} client
+ * @param {Message} msg
+ * @param {[]} args
+ * @return {Promise|string}
+ */
 function Imgur(client, msg, args)   {
 
     const arr = msg.attachments.array();
@@ -66,7 +72,7 @@ function Imgur(client, msg, args)   {
             });
         }
     }   else    {
-        return Promise.resolve('i\'m not a miracle worker :wink:');
+        return 'i\'m not a miracle worker :wink:';
     }
 }
 

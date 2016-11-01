@@ -6,6 +6,12 @@ const shuffle = require('knuth-shuffle').knuthShuffle,
     fs = require('fs');
     readline = require('readline');
 
+/**
+ * @param {Client} client
+ * @param {Message} msg
+ * @param {[]} args
+ * @return {Promise}
+ */
 function Catfacts(client, msg, args)    {
     return new Promise(resolve => {
         let arr = [];

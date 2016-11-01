@@ -7,16 +7,12 @@
 const Playlist = require('../operators/playlist');
 const VC = require('../operators/voiceConnection');
 
-const YTPlaylist = require('../interfaces/yt');
-const SCPlaylist = require('../interfaces/sc');
-
 /**
  * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
  * @param {Playlist|null} [playlistIn] - A pre-existing playlist to play.
  * @param {boolean} [shuffle] - Whether to shuffle on play.
- * @constructor
  */
 function Play (client, msg, args, playlistIn, shuffle) {
 

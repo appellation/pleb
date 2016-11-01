@@ -4,6 +4,12 @@
 
 const Play = require('./play');
 
+/**
+ * @param {Client} client
+ * @param {Message} msg
+ * @param {[]} args
+ * @return {Promise|undefined}
+ */
 function Next(client, msg, args)    {
     const playlist = msg.guild.playlist;
     const num = Number.parseInt(args[0]) || 1;
@@ -16,8 +22,6 @@ function Next(client, msg, args)    {
         }
 
         return Play(client, msg, [], playlist);
-    }   else {
-        return Promise.resolve();
     }
 }
 

@@ -3,10 +3,18 @@
  */
 
 const rp = require('request-promise-native');
+
+/**
+ * @param {Client} client
+ * @param {Message} msg
+ * @param {[]} args
+ * @return {Promise|undefined}
+ */
 function Memes(client, msg, args)   {
+
     return new Promise(function(resolve, reject)   {
-        if (msg.guild.reddit && msg.guild.reddit.expires_in > Date.now()) {
-            resolve(msg.guild.reddit);
+        if (client.reddit && client.reddit.expires_in > Date.now()) {
+            resolve(client.reddit);
         } else {
             rp.post({
                 url: 'https://www.reddit.com/api/v1/access_token',
@@ -16,7 +24,7 @@ function Memes(client, msg, args)   {
                     password: process.env.reddit_secret
                 }
             }).then(function (res) {
-                msg.guild.reddit = res;
+                client.reddit = res;
                 resolve(JSON.parse(res));
             }).catch(function (err) {
                 console.error(err);

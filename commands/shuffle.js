@@ -4,6 +4,12 @@
 
 const Play = require('./play');
 
+/**
+ * @param {Client} client
+ * @param {Message} msg
+ * @param {[]} args
+ * @return {Promise}
+ */
 function Shuffle(client, msg, args) {
 
     if(args.length > 0) {

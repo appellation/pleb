@@ -6,6 +6,13 @@ const rp = require('request-promise-native');
 const numeral = require('numeral');
 const moment = require('moment');
 
+/**
+ * @param {Client} client
+ * @param {Message} msg
+ * @param {[]} args
+ * @return {Promise}
+ * @constructor
+ */
 function Search(client, msg, args)  {
     let cc;
 

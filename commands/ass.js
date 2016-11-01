@@ -4,6 +4,13 @@
 
 const rp = require('request-promise-native');
 
+/**
+ * @param {Client} client
+ * @param {Message} msg
+ * @param {[]} args
+ * @return {Promise}
+ * @constructor
+ */
 function Ass(client, msg, args) {
     return rp.get('http://api.obutts.ru/butts/0/1/random').then(JSON.parse).then(function(res)  {
         return rp.get({
