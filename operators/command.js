@@ -117,7 +117,7 @@ class Command   {
                 require('../commands/eval')
             ],
             [
-                /(hi|hello)/,
+                /^(hi|hello)$/,
                 require('../commands/hello')
             ],
             [
@@ -133,15 +133,15 @@ class Command   {
                 require('../commands/ban')
             ],
             [
-                /ay+/i,
+                /^ay+$/i,
                 require('../commands/ayy')
             ],
             [
-                '(xD|XD)',
+                /^(xD|XD)$/,
                 require('../commands/xd')
             ],
             [
-                '(roll|dice)',
+                /^(roll|dice)$/,
                 require('../commands/dice')
             ],
             [
@@ -272,7 +272,11 @@ class Command   {
      */
     static fetch(str) {
         for(const [key, val] of Command._list())    {
-            if(str.match(key))  {
+            if(typeof key == 'string')  {
+                if(key === str) {
+                    return val;
+                }
+            }   else if(str.match(key))  {
                 return val;
             }
         }
