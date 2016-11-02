@@ -86,7 +86,7 @@ class Command   {
             ],
             [
                 'born',
-                require('../commands/id')
+                require('../commands/born')
             ],
             [
                 'search',
