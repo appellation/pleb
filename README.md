@@ -37,6 +37,7 @@ A really simple Discord bot available for free.  Add me: <https://discordapp.com
 - `sanitize` - delete last 10 messages from bot
 - `sanitize [num]` - deleted last `num` messages from bot
 - `info` - get bot info
+- `ban [mention]+ [time]` - bans mentioned users for `time`, at which re-invites them
 
 #### Random
 - `imgur [title?]` - upload an image to Imgur with an optional title; use this in the comment of a file upload
@@ -44,6 +45,9 @@ A really simple Discord bot available for free.  Add me: <https://discordapp.com
 - `memes` -  get a random meme from `/r/memes`
 - `dick [mention]?` - get a dick size
 - `catfacts` - send a random cat fact
+- `dice|roll ([count] [size])` - roll `count` dice with `size` sides (defaults to 2 6-sided dice)
+- `coinflip` - flip a coin
+- `/ay+/i` - lmao
 
 ## Development
 `npm install`
