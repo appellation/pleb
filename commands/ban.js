@@ -2,8 +2,7 @@
  * Created by Will on 10/31/2016.
  */
 
-const date = require('date.js');
-const schedule = require('node-schedule');
+const dateJS = require('date.js');
 const moment = require('moment');
 
 /**
@@ -18,64 +17,46 @@ function Ban(client, msg, args) {
         return;
     }
 
-    if(!msg.member.hasPermission('BAN_MEMBERS')) {
-        return 'if you can\'t do it, I sure as hell won\'t';
-    }
-
-    if(!msg.guild.members.get(client.user.id).hasPermission('BAN_MEMBERS'))  {
-        return 'you might be able to do it, but I sure as hell can\'t';
-    }
-
-    let lastMention;
-    for(lastMention = 0; lastMention < args.length; lastMention++)   {
-        if(!/<!?[0-9]+>/.test(args[lastMention]))  {
-            break;
-        }
-    }
-
-    if(args.length == lastMention + 1)  {
-        return;
-    }
-
-    const out = [];
-    msg.mentions.users.forEach(user => {
-        if(!user.equals(client.user)) {
-            out.push(msg.guild.members.get(user.id).ban());
+    let authorTopRole = msg.member.roles.first();
+    msg.member.roles.forEach(role => {
+        if(role.comparePositionTo(authorTopRole) > 0)   {
+            authorTopRole = role;
         }
     });
+    
+    if(!msg.mentions.users) {
+        return 'gotta mention someone';
+    }
 
-    msg.mentions.roles.forEach(role => {
-        role.forEach(member => {
-            out.push(member.ban());
-        });
-    });
+    let i = 0;
+    while(args[i].match(/<!?[0-9]/))    {
+        i++;
+    }
 
-    const until = date(args.slice(lastMention + 1).join(' '));
-    schedule.scheduleJob(until, () => {
-        Promise.all([
-            Promise.all(out),
-            msg.channel.createInvite({
-                maxAge: 86400,
-                maxUses: out.length
+    const banned = [];
+    for(const user of msg.mentions.users)   {
+        banned.push(
+            client.fetchUser(user[0]).then(resolved => {
+                return msg.guild.fetchMember(resolved);
+            }).then(member => {
+                for(const role of member.roles) {
+                    if(role[1].comparePositionTo(authorTopRole) >= 0)   {
+                        member.restrictedUse = dateJS(args.slice(i));
+                        return member;
+                    }
+                }
+
+                if(member.roles.size == 0) {
+                    return member;
+                }
             })
-        ]).then(resolutions => {
-            for(const member of resolutions[0])    {
-                msg.guild.unban(member);
-                member.sendMessage(resolutions[1].url);
-            }
-        });
-    });
+        )
+    }
 
-    return Promise.all(out).then(banned => {
-        return 'banned for ' + moment(until).fromNow(true) + ':\n\n' + banned.reduce(obj => {
-                return "`" + obj.user.username + '#' + obj.user.discriminator + '`\n';
-            });
-    }).catch(e => {
-        if(e.response.status == 403)    {
-            return 'no perms :frowning:';
-        }   else {
-            return e.message;
-        }
+    return Promise.all(banned).then(members => {
+        return members.map(member => {
+            return member.toString();
+        }).join('\n');
     });
 }
 
