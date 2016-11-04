@@ -30,7 +30,7 @@ function Restrict(client, msg, args) {
     }
 
     let i = 0;
-    while(args[i].match(/<@!?[0-9]+>/))    {
+    while(args[i] && args[i].match(/<@!?[0-9]+>/))    {
         i++;
     }
 
@@ -53,8 +53,7 @@ function Restrict(client, msg, args) {
                 }
 
                 if(perms || member.roles.size == 0) {
-                    const date = dateJS(args.slice(i).join(' '));
-                    member.restrictedUse = _.isEqual(date, new Date()) ? true : date;
+                    member.restrictedUse = i == args.length ? true : new Date();
                     return member;
                 }
             })
