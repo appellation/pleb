@@ -127,11 +127,11 @@ class Command   {
             [
                 'sanitize',
                 require('../commands/sanitize')
-            ],/*
+            ],
             [
-                'ban',
-                require('../commands/ban')
-            ],*/
+                'restrict',
+                require('../commands/restrict')
+            ],
             [
                 /^ay+$/i,
                 require('../commands/ayy')
