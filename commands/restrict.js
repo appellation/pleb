@@ -34,6 +34,10 @@ function Restrict(client, msg, args) {
         i++;
     }
 
+    if(i == 0)  {
+        return 'doesn\'t begin with a mention';
+    }
+
     const banned = [];
     for(const user of msg.mentions.users)   {
         if(user[1].equals(client.user) || user[1].equals(msg.author))   {
