@@ -53,7 +53,7 @@ function Restrict(client, msg, args) {
                 }
 
                 if(perms || member.roles.size == 0) {
-                    member.restrictedUse = i == args.length ? true : new Date();
+                    member.restrictedUse = i == args.length ? true : dateJS(args.slice(i).join(' '));
                     return member;
                 }
             })
@@ -63,14 +63,7 @@ function Restrict(client, msg, args) {
     return Promise.all(banned).then(members => {
         return '**Restricted:**\n\n' + members.map(member => {
                 const date = member.restrictedUse;
-                let out;
-                if(date === true)   {
-                    out = 'forever';
-                }   else {
-                    out = moment(member.restrictedUse).format('MMM DD YYYY HH:mm:ssZZ')
-                }
-
-                return member.toString() + ' | ' + out;
+                return member.toString() + ' | ' + ((date === true) ? 'forever' : moment(date).format('MMM DD YYYY HH:mm:ssZZ'));
             }).join('\n');
     });
 }

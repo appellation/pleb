@@ -247,9 +247,15 @@ class Command   {
          - the bot is mentioned first
 
          These are exclusion parameters:
-         - the length of the command is > 0
+         - the length of the command is > 0 AND
+         - the author is not restricted
          */
         if((msg.channel.name == 'pleb' || msg.channel.guild == null || Command.mentionedFirst(text)) && parsed.length > 0)    {
+            if(msg.member.restrictedUse)    {
+                if(msg.member.restrictedUse == true || msg.member.restrictedUse < new Date())   {
+                    return null;
+                }
+            }
             return Command.fetch(cmd);
         }
 
@@ -271,6 +277,10 @@ class Command   {
      * @returns {Function}
      */
     static fetch(str) {
+        if(typeof Command._list().get(str) == 'function')    {
+            return Command._list().get(str);
+        }
+
         for(const [key, val] of Command._list())    {
             if(typeof key == 'string')  {
                 if(key === str) {
