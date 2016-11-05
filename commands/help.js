@@ -36,8 +36,7 @@ function Help(client, msg, args)    {
         "- `/ay+/i` - lmao\n" +
         "- `hello|hi` - :wave:\n" +
         "- `roll|dice ([count] [size])?` - roll `count` dice with `size` sides (defaults to 2 6-sided dice)\n" +
-        "- `conflip` - flip a coin\n" +
-        "- `ban [mention]+ [time]` - bans mentioned users for `time`, at which re-invites them\n\n" +
+        "- `conflip` - flip a coin\n\n" +
         "NSFW commands (noted by an [NSFW] tag above) can only be given in the `#nsfw` channel or by people with the `nsfw` role.\n\n" +
         "For human help, check out my GitHub repo at <https://github.com/appellation/pleb>"
     , {split: true});
