@@ -5,6 +5,11 @@
 const shuffle = require('knuth-shuffle').knuthShuffle;
 
 function EightBall(client, msg, args)   {
+
+    if(args.length == 0)    {
+        return;
+    }
+
     const responses = [
         'It is certain',
         'It is decidedly so',
