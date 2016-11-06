@@ -3,6 +3,8 @@
  */
 
 let rp = require('request-promise-native');
+const shuffle = require('knuth-shuffle').knuthShuffle;
+const numeral = require('numeral');
 
 /**
  * @param {Client} client
@@ -11,22 +13,28 @@ let rp = require('request-promise-native');
  * @return {Promise|string}
  */
 function Imgur(client, msg, args)   {
+    const defaults = {
+        baseUrl: 'https://api.imgur.com/3',
+        headers:    {
+            Authorization: 'Client-Id ' + process.env.imgur
+        },
+        json: true
+    };
 
-    const arr = msg.attachments.array();
-    if(arr.length > 0) {
-        const defaults = {
-            baseUrl: 'https://api.imgur.com/',
-            headers:    {
-                Authorization: 'Client-Id ' + process.env.imgur
-            },
-            json: true
-        };
-        rp = rp.defaults(defaults);
+    rp = rp.defaults(defaults);
+
+    if(msg.attachments.size !== 0) {
+
+        const arr = msg.attachments.array();
+
+        if(arr.length == 0) {
+            return 'i\'m not a miracle worker :wink:';
+        }
 
         const ul = [];
         for(let i = 0; i < arr.length; i++) {
             const q = {
-                uri: '/3/image',
+                uri: '/image',
                 body: {
                     image: arr[i].url
                 }
@@ -46,7 +54,7 @@ function Imgur(client, msg, args)   {
                 }).join(',');
 
                 const q = {
-                    uri: '/3/album',
+                    uri: '/album',
                     body: {
                         ids: string
                     }
@@ -64,6 +72,7 @@ function Imgur(client, msg, args)   {
                 return msg.delete();
             });
         }   else    {
+
             return ul[0].then(function(img)    {
                 msg.channel.stopTyping();
                 return msg.reply('https://imgur.com/' + img.data.id);
@@ -71,8 +80,15 @@ function Imgur(client, msg, args)   {
                 return msg.delete();
             });
         }
-    }   else    {
-        return 'i\'m not a miracle worker :wink:';
+
+    }   else {
+
+        return rp.get('gallery/hot/viral/0.json').then(res => {
+            return shuffle(res.data)[0];
+        }).then(rand => {
+            return '**' + rand.title + '** - ' + rand.account_url + '\n' +
+                ':eye: ' + numeral(rand.views).format('0,0') + ' - :goal: ' + numeral(rand.score).format('0,0') + '\n' + rand.link;
+        })
     }
 }
 
