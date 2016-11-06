@@ -147,6 +147,10 @@ class Command   {
             [
                 'coinflip',
                 require('../commands/coinflip')
+            ],
+            [
+                '8ball',
+                require('../commands/8ball')
             ]
         ];
 
