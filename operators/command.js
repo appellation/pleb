@@ -251,11 +251,6 @@ class Command   {
          - the author is not restricted
          */
         if((msg.channel.name == 'pleb' || msg.channel.guild == null || Command.mentionedFirst(text)) && parsed.length > 0)    {
-            if(msg.member.restrictedUse)    {
-                if(msg.member.restrictedUse == true || msg.member.restrictedUse < new Date())   {
-                    return null;
-                }
-            }
             return Command.fetch(cmd);
         }
 
