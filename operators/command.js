@@ -201,7 +201,7 @@ class Command   {
                 resolve();
             }
         }).then(res => {
-            if(options.respond && typeof res == 'string') {
+            if(options.respond && typeof res == 'string' && res.length > 0) {
                 return self.msg.channel.sendMessage(res);
             }
             return Promise.resolve(res);
