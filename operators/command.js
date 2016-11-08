@@ -151,6 +151,10 @@ class Command   {
             [
                 '8ball',
                 require('../commands/8ball')
+            ],
+            [
+                'weather',
+                require('../commands/weather')
             ]
         ];
 
