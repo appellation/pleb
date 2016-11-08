@@ -120,6 +120,10 @@ function Weather(client, msg, args) {
             data = [cur];
         }
 
+        if(type == 'hourly')    {
+            data.splice(0, 24);
+        }
+
         for(let i = 0; i < data.length;)    {
             const point = data[i];
 
@@ -161,13 +165,13 @@ function Weather(client, msg, args) {
             if(type == 'minutely')    {
                 i += 10;
             }   else if(type == 'hourly')   {
-                i += 8;
+                i += 4;
             }   else {
                 i++;
             }
         }
 
-        out += 'Powered by Dark Sky (<https://darksky.net/poweredby/>)';
+        out += '*Powered by Dark Sky (<https://darksky.net/poweredby/>)*';
 
         return out;
     });
