@@ -5,11 +5,33 @@
 const rp = require('request-promise-native');
 const numeral = require('numeral');
 
+/**
+ *
+ * @param {Client} client
+ * @param {Message} msg
+ * @param {[]} args
+ * @return {Promise|string}
+ */
 function Weather(client, msg, args) {
+    const poss = [
+        'currently',
+        'minutely',
+        'hourly',
+        'daily'
+    ];
+
+    let index = poss.indexOf(args[0]);
+    if(index == -1) {
+        args.unshift('currently');
+        index = 0;
+    }
+
+    poss.splice(index, 1);
+
     const rpDarksky = rp.defaults({
         baseUrl: 'https://api.darksky.net/forecast/' + process.env.darksky,
         qs: {
-            exclude: 'minutely,hourly,daily'
+            exclude: poss.join(',')
         },
         json: true,
         method: 'get'
@@ -27,7 +49,7 @@ function Weather(client, msg, args) {
     return rpGoogle({
         uri: 'geocode/json',
         qs: {
-            address: args.join(' ')
+            address: args.slice(1).join(' ')
         }
     }).then(loc => {
         if(loc.status == 'ZERO_RESULTS')    {
