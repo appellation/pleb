@@ -3,7 +3,7 @@
  */
 
 const rp = require('request-promise-native');
-const moment = require('moment');
+const numeral = require('numeral');
 
 function Weather(client, msg, args) {
     const rpDarksky = rp.defaults({
@@ -95,21 +95,21 @@ function Weather(client, msg, args) {
             `:compression: \`${cur.pressure}\`mb\n` +
             `:sweat_drops: \`${Math.round(cur.humidity * 100)}\`% humidity\n`;
 
-        if(cur.precipIntensity)    {
-            switch(cur.precipType)  {
-                case 'rain':
-                    out += ':cloud_rain: Rain';
-                    break;
-                case 'snow':
-                    out += ':cloud_snow: Snow';
-                    break;
-                case 'sleet':
-                    out += ':umbrella: Sleet';
-                    break;
-            }
-
-            out += ` - \`${Math.round(cur.precipProbability * 100)}\`% at \`${cur.precipIntensity}\`in/hr`
+        switch(cur.precipType)  {
+            case 'rain':
+                out += ':cloud_rain: Rain';
+                break;
+            case 'snow':
+                out += ':cloud_snow: Snow';
+                break;
+            case 'sleet':
+                out += ':umbrella: Sleet';
+                break;
+            default:
+                out += ':umbrella2: Precipitation';
         }
+
+        out += ` - \`${numeral(cur.precipProbability * 100).format('0.00')}\`% at \`${cur.precipIntensity}\`in/hr`
 
         return out;
     });
