@@ -12,9 +12,9 @@ const moment = require('moment');
  */
 function Status(client, msg, args)  {
     if(args[0] === 'guilds' && msg.author.id == '116690352584392704')    {
-        return client.guilds.map(function(guild)    {
+        return msg.channel.sendMessage(client.guilds.map(function(guild)    {
             return (guild.available ? ":white_check_mark:" : ":x:") + " **" + guild.name + "** - `" + guild.memberCount + "` members - `" + guild.owner.user.username + "#" + guild.owner.user.discriminator + "`";
-        }).join("\n");
+        }).join("\n"), {split: true});
     }   else    {
         return "**Guilds:** " + client.guilds.size + "\n" +
             "**Channels:** " + client.channels.size + "\n" +
