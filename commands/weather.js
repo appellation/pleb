@@ -27,7 +27,7 @@ function Weather(client, msg, args) {
     return rpGoogle({
         uri: 'geocode/json',
         qs: {
-            address: encodeURIComponent(args.join(' '))
+            address: args.join(' ')
         }
     }).then(loc => {
         if(loc.status == 'ZERO_RESULTS')    {
