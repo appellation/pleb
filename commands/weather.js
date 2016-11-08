@@ -8,34 +8,52 @@ const moment = require('moment');
 function Weather(client, msg, args) {
     const rpDarksky = rp.defaults({
         baseUrl: 'https://api.darksky.net/forecast/' + process.env.darksky,
+        qs: {
+            exclude: 'minutely,hourly,daily'
+        },
         json: true,
         method: 'get'
     });
 
     const rpGoogle = rp.defaults({
-        uri: 'https://maps.googleapis.com/maps/api/geocode/json',
+        baseUrl: 'https://maps.googleapis.com/maps/api',
         qs: {
-            key: process.env.youtube,
-            exclude: 'minutely,hourly,daily'
+            key: process.env.youtube
         },
         method: 'get',
         json: true
     });
 
     return rpGoogle({
+        uri: 'geocode/json',
         qs: {
             address: encodeURIComponent(args.join(' '))
         }
     }).then(loc => {
-        if(loc.status == 'ZERO_RESULTS') return Promise.reject('no results found');
+        if(loc.status == 'ZERO_RESULTS')    {
+            return;
+        }
 
         const coords = loc.results[0].geometry.location;
-        return rpDarksky({
-            uri: coords.lat + ',' + coords.lng
-        });
-    }).then(weather => {
+        return Promise.all([
+            rpDarksky({
+                uri: coords.lat + ',' + coords.lng
+            }),
+            loc.results[0]
+        ]);
+    }).then(res => {
+
+        if(!res) {
+            return 'no location found';
+        }
+
+        const weather = res[0];
+        const loc = res[1];
+
         const cur = weather.currently;
         let out = '';
+
+        out += `\`${loc.formatted_address}\`\n\n`;
 
         switch(cur.icon)    {
             case 'clear-day':
@@ -94,7 +112,7 @@ function Weather(client, msg, args) {
         }
 
         return out;
-    }).catch(console.error);
+    });
 }
 
 module.exports = Weather;
