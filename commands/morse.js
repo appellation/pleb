@@ -47,12 +47,12 @@ const dict = {
  * @param client
  * @param msg
  * @param args
- * @returns {string|undefined}
+ * @returns {string|Promise|undefined}
  */
 function Morse(client, msg, args)   {
     if(args.length == 0) return;
 
-    let out = '`';
+    let out = '';
     const low = args.join().toLowerCase();
 
     for(let i = 0; i < low.length; i++) {
@@ -60,7 +60,10 @@ function Morse(client, msg, args)   {
         out += dict[low[i]] + ' ';
     }
 
-    return out + '`';
+    return Promise.all([
+        msg.channel.sendMessage(out + '', {split: {char: ' '}}),
+        msg.delete()
+    ]);
 }
 
 module.exports = Morse;
