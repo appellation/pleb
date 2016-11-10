@@ -37,7 +37,8 @@ A really simple Discord bot available for free.  Add me: <https://discordapp.com
 - `sanitize` - delete last 10 messages from bot
 - `sanitize [num]` - deleted last `num` messages from bot
 - `info` - get bot info
-- `ban [mention]+ [time]` - bans mentioned users for `time`, at which re-invites them
+- `weather [location]` - get current weather at a location
+- `weather (currently|minutely|hourly|daily) [location]` - get weather as specified for a location
 
 #### Random
 - `imgur [title?]` - upload an image to Imgur with an optional title; use this in the comment of a file upload

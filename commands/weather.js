@@ -4,12 +4,35 @@
 
 const rp = require('request-promise-native');
 const numeral = require('numeral');
+const moment = require('moment');
 
+/**
+ *
+ * @param {Client} client
+ * @param {Message} msg
+ * @param {[]} args
+ * @return {Promise|string}
+ */
 function Weather(client, msg, args) {
+    const poss = [
+        'currently',
+        'minutely',
+        'hourly',
+        'daily'
+    ];
+
+    let index = poss.indexOf(args[0]);
+    if(index == -1) {
+        args.unshift('currently');
+        index = 0;
+    }
+
+    const type = poss.splice(index, 1).join('');
+
     const rpDarksky = rp.defaults({
         baseUrl: 'https://api.darksky.net/forecast/' + process.env.darksky,
         qs: {
-            exclude: 'minutely,hourly,daily'
+            exclude: poss.join(',')
         },
         json: true,
         method: 'get'
@@ -27,7 +50,7 @@ function Weather(client, msg, args) {
     return rpGoogle({
         uri: 'geocode/json',
         qs: {
-            address: args.join(' ')
+            address: args.slice(1).join(' ')
         }
     }).then(loc => {
         if(loc.status == 'ZERO_RESULTS')    {
@@ -50,7 +73,7 @@ function Weather(client, msg, args) {
         const weather = res[0];
         const loc = res[1];
 
-        const cur = weather.currently;
+        const cur = weather[type];
         let out = '';
 
         out += `\`${loc.formatted_address}\`\n\n`;
@@ -90,26 +113,65 @@ function Weather(client, msg, args) {
 
         out += ' **' +cur.summary + '**\n\n';
 
-        out += `:thermometer: \`${cur.temperature}\`F (feels like \`${cur.apparentTemperature}\`)\n` +
-            `:wind_blowing_face: \`${cur.windSpeed}\`MPH at \`${cur.windBearing}\`°\n` +
-            `:compression: \`${cur.pressure}\`mb\n` +
-            `:sweat_drops: \`${Math.round(cur.humidity * 100)}\`% humidity\n`;
-
-        switch(cur.precipType)  {
-            case 'rain':
-                out += ':cloud_rain: Rain';
-                break;
-            case 'snow':
-                out += ':cloud_snow: Snow';
-                break;
-            case 'sleet':
-                out += ':umbrella: Sleet';
-                break;
-            default:
-                out += ':umbrella2: Precipitation';
+        let data;
+        if(Array.isArray(cur.data)) {
+            data = cur.data;
+        }   else    {
+            data = [cur];
         }
 
-        out += ` - \`${numeral(cur.precipProbability * 100).format('0.00')}\`% at \`${cur.precipIntensity}\`in/hr`
+        if(type == 'hourly')    {
+            data.splice(0, 24);
+        }
+
+        for(let i = 0; i < data.length;)    {
+            const point = data[i];
+
+            out += '`' + moment.unix(point.time).format('MM-DD-YYYY HH:mm:ss a') + '`\n';
+
+            if(point.temperature)   {
+                out += `:thermometer: \`${point.temperature}F\` (feels like \`${point.apparentTemperature}\`)\n`;
+            }
+
+            if(point.windSpeed) {
+                out += `:wind_blowing_face: \`${point.windSpeed}MPH\` at \`${point.windBearing}°\`\n`;
+            }
+
+            if(point.pressure)  {
+                out += `:compression: \`${point.pressure}mb\`\n`;
+            }
+
+            if(point.humidity)  {
+                out += `:sweat_drops: \`${Math.round(point.humidity * 100)}%\` humidity\n`;
+            }
+
+            switch(point.precipType)  {
+                case 'rain':
+                    out += ':cloud_rain: Rain';
+                    break;
+                case 'snow':
+                    out += ':cloud_snow: Snow';
+                    break;
+                case 'sleet':
+                    out += ':umbrella: Sleet';
+                    break;
+                default:
+                    out += ':umbrella2: Precipitation';
+            }
+
+            out += ` - \`${numeral(point.precipProbability * 100).format('0.00')}%\` at \`${numeral(point.precipIntensity).format('0.00')}in/hr\``;
+            out += '\n\n';
+
+            if(type == 'minutely')    {
+                i += 10;
+            }   else if(type == 'hourly')   {
+                i += 4;
+            }   else {
+                i++;
+            }
+        }
+
+        out += '*Powered by Dark Sky (<https://darksky.net/poweredby/>)*';
 
         return out;
     });
