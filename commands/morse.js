@@ -47,18 +47,20 @@ const dict = {
  * @param client
  * @param msg
  * @param args
- * @returns {string}
+ * @returns {string|undefined}
  */
 function Morse(client, msg, args)   {
-    let out = '';
+    if(args.length == 0) return;
+
+    let out = '`';
     const low = args.join().toLowerCase();
 
     for(let i = 0; i < low.length; i++) {
-        if(!low[i]) continue;
+        if(!dict[low[i]]) continue;
         out += dict[low[i]] + ' ';
     }
 
-    return out;
+    return out + '`';
 }
 
 module.exports = Morse;
