@@ -61,7 +61,7 @@ function Morse(client, msg, args)   {
     }
 
     return Promise.all([
-        msg.channel.sendMessage(out + '', {split: {char: ' '}}),
+        out + '',
         msg.delete()
     ]);
 }
