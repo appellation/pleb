@@ -155,6 +155,10 @@ class Command   {
             [
                 'weather',
                 require('../commands/weather')
+            ],
+            [
+                'morse',
+                require('../commands/morse')
             ]
         ];
 
