@@ -227,11 +227,11 @@ class Command   {
      * Check if the a message is a command.  This should be called before constructing.
      * @param {Message} msg
      * @param {string} [body] - optional raw text to be evaluated as a command
-     * @returns {Function}
+     * @returns {Function|undefined}
      */
     static validate(msg, body)   {
         if(msg.author.bot)  {
-            return null;
+            return;
         }
 
         const text = body ? body : msg.content;
@@ -248,7 +248,7 @@ class Command   {
          */
         if(Command.isNSFW(cmd))   {
             if(msg.member && !msg.member.roles.find('name', 'nsfw') && msg.channel.name != 'nsfw')   {
-                return null;
+                return;
             }
         }
 
@@ -265,8 +265,6 @@ class Command   {
         if((msg.channel.name == 'pleb' || msg.channel.guild == null || Command.mentionedFirst(text)) && parsed.length > 0)    {
             return Command.fetch(cmd);
         }
-
-        return null;
     }
 
     /**
