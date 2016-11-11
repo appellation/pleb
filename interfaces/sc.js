@@ -101,6 +101,7 @@
 
                     return resolve(self.list);
                 }).catch(function(err)  {
+                    console.error(err);
                     if(err.response.body)   {
                         return reject(err.response.body.errors[0].error_message);
                     }   else    {
