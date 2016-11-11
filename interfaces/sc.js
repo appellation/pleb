@@ -65,12 +65,9 @@
         add(urlIn) {
             const self = this;
 
-            const parsed = URL.parse(urlIn);
-            const params = parsed.pathname.split('/').slice(1);
-
             return new Promise(function(resolve, reject)    {
                 if(!SCPlaylist.isSoundCloudURL(urlIn)) {
-                    reject();
+                    return reject();
                 }
 
                 const options = {
@@ -96,22 +93,21 @@
                         if(resource.streamable) {
                             self.list.add(new StreamStructure(resource.stream_url, resource.title, true));
                         }   else    {
-                            reject('not streamable.')
+                            return reject('not streamable.')
                         }
                     }   else    {
-                        reject();
-                        return;
+                        return reject();
                     }
 
-                    resolve(self.list);
+                    return resolve(self.list);
                 }).catch(function(err)  {
                     if(err.response.body)   {
-                        reject(err.response.body.errors[0].error_message);
+                        return reject(err.response.body.errors[0].error_message);
                     }   else    {
                         if(err.statusCode === 403)  {
-                            reject('not authorized for some unknown reason.')
+                            return reject('not authorized for some unknown reason.')
                         }   else    {
-                            reject(err);
+                            return reject(err);
                         }
                     }
                 })
