@@ -159,6 +159,10 @@ class Command   {
             [
                 'morse',
                 require('../commands/morse')
+            ],
+            [
+                'def',
+                require('../commands/def')
             ]
         ];
 

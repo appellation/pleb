@@ -26,7 +26,7 @@ function Remind(client, msg, args)  {
     }
 
     const newDate = date(args.slice(timeIndex + 1).join(' '));
-    if(newDate < new Date()) {
+    if(newDate <= new Date()) {
         return 'that date doesn\'t seem to be valid.';
     }
 
