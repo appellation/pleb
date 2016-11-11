@@ -161,6 +161,19 @@
         }
 
         /**
+         * Revert the playlist to the previous song.
+         * @returns {StreamStructure} Previous song.
+         */
+        prev()  {
+            this.emit('prev');
+            if(this.list.hasPrev()) {
+                this.list.prev();
+                this.emit('preved');
+                return this.list.getCurrent();
+            }
+        }
+
+        /**
          * Advance the playlist.
          * @returns {StreamStructure} Next song.
          */

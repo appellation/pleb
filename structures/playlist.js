@@ -51,6 +51,23 @@
         };
 
         /**
+         * Revert the playlist to the previous track.
+         */
+        prev()  {
+            if(this.hasPrev())  {
+                this.pos--;
+            }
+        }
+
+        /**
+         * If the playlist has a previous track.
+         * @returns {boolean}
+         */
+        hasPrev()   {
+            return this.pos > 0;
+        }
+
+        /**
          * Advance the playlist position counter.
          */
         next()  {

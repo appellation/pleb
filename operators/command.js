@@ -163,6 +163,10 @@ class Command   {
             [
                 'def',
                 require('../commands/def')
+            ],
+            [
+                'prev',
+                require('../commands/prev')
             ]
         ];
 
