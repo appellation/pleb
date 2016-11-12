@@ -9,7 +9,7 @@
  * @return {Promise}
  */
 function Xd(client, msg, args)  {
-    return msg.channel.sendFile('assets/images/xd.gif');
+    return msg.channel.sendFile(__dirname + '/../assets/images/xd.gif');
 }
 
 module.exports = Xd;

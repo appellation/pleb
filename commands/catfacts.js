@@ -16,7 +16,7 @@ function Catfacts(client, msg, args)    {
     return new Promise(resolve => {
         let arr = [];
         readline.createInterface({
-            input: fs.createReadStream('assets/data/catfacts.txt')
+            input: fs.createReadStream(__dirname + '/../assets/data/catfacts.txt')
         }).on('line', line => {
             arr.push(line);
         }).on('close', () => {
