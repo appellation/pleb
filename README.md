@@ -57,7 +57,7 @@ Create a bot on <https://discordapp.com/developers/applications/me>.
 
 You'll need to make a `.env` file (or have some other way to access environment variables) with the below data:
 
-- `discord` - your Discord app secret
+- `discord` - your Discord token
 - `discord_client_id` - your Discord app client ID
 - `youtube` - a Google API browser key authorized for YouTube Data
 - `raven` - a Sentry.io logging URL; optional
