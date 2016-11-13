@@ -200,7 +200,6 @@ class Command   {
      * @returns {Promise}
      */
     call(options = {respond: true})  {
-        console.log("count#command." + this.parsed[0] + "=1");
         this.msg.channel.startTyping();
 
         const self = this;

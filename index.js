@@ -45,8 +45,6 @@ client.on('guildMemberSpeaking', function(member, speaking) {
 });
 
 client.on('message', function (message) {
-    console.log("count#event.message=1");
-
     const cmd = require('./operators/command')(client, message);
     if(cmd) {
         cmd.call();
