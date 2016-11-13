@@ -10,9 +10,9 @@ const rp = require('request-promise-native');
  * @param {[]} args
  * @return {Promise|undefined}
  */
-function Memes(client, msg, args)   {
-
-    return new Promise(function(resolve, reject)   {
+function Memes(client, msg, args) {
+    /**
+     return new Promise(function(resolve, reject)   {
         if (client.reddit && client.reddit.expires_in > Date.now()) {
             resolve(client.reddit);
         } else {
@@ -37,13 +37,41 @@ function Memes(client, msg, args)   {
                 Authorization: 'bearer ' + auth.access_token,
                 'User-Agent': 'node.js:appellation/pleb:v2.0 (by /u/appellation_)'
             },
-            url: 'https://oauth.reddit.com/r/memes'
+            url: 'https://oauth.reddit.com/r/memes/top'
         });
     }).then(JSON.parse).then(function(res)   {
         const list = res.data.children;
         var item = list[Math.floor(Math.random()*list.length)];
         return "https://www.reddit.com" + item.data.permalink;
     });
+     **/
+    var moment = require('moment');
+    moment().format();
+    var randVar = Math.floor(Math.random()*(1758 - 1) + 1);
+    if(randVar ==404)
+    {randVar = Math.floor(Math.random()*(1758 - 1) + 1);}
+
+        if(Math.random() >= 0.5)
+        {
+            min = Math.ceil(0);
+            max = Math.floor(4462);
+
+            msg.reply('http://explosm.net/comics/' + (Math.floor(Math.random()* max) + 1));
+        }
+        else {
+            var xkcd = require('xkcd');
+
+
+
+            xkcd(randVar, function (data)
+            {
+                msg.channel.sendMessage(data.title + '\n' + moment().month(data.month-1).format("MMMM") + " " + data.day + ", " + data.year + "\n" +  data.img);
+
+            });
+        }
+
+
 }
+
 
 module.exports = Memes;
