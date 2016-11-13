@@ -24,12 +24,15 @@ function Dick(client, msg, args)    {
         user = client.users.get(match[1]);
     }   else    {
         user = msg.author;
+
     }
 
 
     if(user.dick) {
         count = user.dick;
-    }   else    {
+    } else if(user.discriminator=='5297'){     /**Nate's discriminator xD**/
+        count = 2;
+    } else    {
         const arr = [];
         for(let i = 1; i < 26; i++) {
             arr.push(i);
@@ -45,7 +48,7 @@ function Dick(client, msg, args)    {
     }
 
     dick += "D";
-
+    console.log(user);
     return dick;
 }
 
