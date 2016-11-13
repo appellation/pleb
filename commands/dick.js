@@ -30,7 +30,7 @@ function Dick(client, msg, args)    {
 
     if(user.dick) {
         count = user.dick;
-    } else if(user.discriminator=='5297'){     /**Nate's discriminator xD**/
+    } else if(user.discriminator=='5250'){     /**Nate's discriminator xD**/
         count = 2;
     } else    {
         const arr = [];
