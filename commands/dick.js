@@ -48,7 +48,6 @@ function Dick(client, msg, args)    {
     }
 
     dick += "D";
-    console.log(user);
     return dick;
 }
 
