@@ -167,7 +167,11 @@ class Command   {
             [
                 'prev',
                 require('../commands/prev')
-            ]
+            ]/*,
+            [
+                'emojify',
+                require('../commands/emojify')
+            ]*/
         ];
 
         return new Map(arr);
