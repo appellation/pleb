@@ -6,12 +6,6 @@ require('dotenv').config({
 });
 const Discord = require('discord.js');
 
-if(process.env.raven)   {
-    const raven = require('raven');
-    var ravenClient = new raven.Client(process.env.raven);
-    ravenClient.patchGlobal();
-}
-
 var client = new Discord.Client();
 
 client.on('ready', function()   {
