@@ -27,7 +27,6 @@
     "node-schedule": "^1.2.0",
     "numeral": "^1.5.3",
     "random-js": "^1.0.8",
-    "raven": "^0.12.1",
     "request": "^2.74.0",
     "request-promise-native": "^1.0.3",
     "sharp": "^0.16.2",
