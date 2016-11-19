@@ -80,34 +80,34 @@ function Weather(client, msg, args) {
 
         switch(cur.icon)    {
             case 'clear-day':
-                out += ':sunny:';
+                out += '☀';
                 break;
             case 'clear-night':
-                out += ':last_quarter_moon_with_face:';
+                out += '🌜';
                 break;
             case 'rain':
-                out += ':cloud_rain:';
+                out += '🌧';
                 break;
             case 'snow':
-                out += ':cloud_snow:';
+                out += '🌨';
                 break;
             case 'sleet':
-                out += ':umbrella:';
+                out += '☔';
                 break;
             case 'wind':
-                out += ':dash:';
+                out += '💨';
                 break;
             case 'fog':
-                out += ':fog:';
+                out += '🌫';
                 break;
             case 'cloudy':
-                out += ':cloud:';
+                out += '☁';
                 break;
             case 'partly-cloudy-day':
-                out += ':partly_sunny:';
+                out += '⛅';
                 break;
             case 'partly-cloudy-night':
-                out += ':cloud:';
+                out += '☁';
                 break;
         }
 
@@ -130,33 +130,33 @@ function Weather(client, msg, args) {
             out += '`' + moment.unix(point.time).format('MM-DD-YYYY HH:mm:ss a') + '`\n';
 
             if(point.temperature)   {
-                out += `:thermometer: \`${point.temperature}F\` (feels like \`${point.apparentTemperature}\`)\n`;
+                out += `🌡 \`${point.temperature}F\` (feels like \`${point.apparentTemperature}\`)\n`;
             }
 
             if(point.windSpeed) {
-                out += `:wind_blowing_face: \`${point.windSpeed}MPH\` at \`${point.windBearing}°\`\n`;
+                out += `🌬 \`${point.windSpeed}MPH\` at \`${point.windBearing}°\`\n`;
             }
 
             if(point.pressure)  {
-                out += `:compression: \`${point.pressure}mb\`\n`;
+                out += `🗜 \`${point.pressure}mb\`\n`;
             }
 
             if(point.humidity)  {
-                out += `:sweat_drops: \`${Math.round(point.humidity * 100)}%\` humidity\n`;
+                out += `💦 \`${Math.round(point.humidity * 100)}%\` humidity\n`;
             }
 
             switch(point.precipType)  {
                 case 'rain':
-                    out += ':cloud_rain: Rain';
+                    out += '🌧 Rain';
                     break;
                 case 'snow':
-                    out += ':cloud_snow: Snow';
+                    out += '🌨 Snow';
                     break;
                 case 'sleet':
-                    out += ':umbrella: Sleet';
+                    out += '☔ Sleet';
                     break;
                 default:
-                    out += ':umbrella2: Precipitation';
+                    out += '☂ Precipitation';
             }
 
             out += ` - \`${numeral(point.precipProbability * 100).format('0.00')}%\` at \`${numeral(point.precipIntensity).format('0.00')}in/hr\``;

@@ -14,11 +14,11 @@ const httpPing = require('node-http-ping');
 function Ping(client, msg, args)    {
     if(!args[0])    {
         return msg.channel.sendMessage('pinging....').then(function(newMessage) {
-            newMessage.edit((newMessage.createdTimestamp - msg.createdTimestamp) + 'ms :stopwatch:');
+            newMessage.edit((newMessage.createdTimestamp - msg.createdTimestamp) + 'ms');
         });
     }   else    {
         return httpPing(args[0]).then(function(time)    {
-            msg.channel.sendMessage(args[0] + ': ' + time + 'ms :stopwatch:');
+            msg.channel.sendMessage(args[0] + ': ' + time + 'ms');
         }).catch(function(err)  {
             msg.reply('error pinging ' + args[0] + ': ' + err);
         });
