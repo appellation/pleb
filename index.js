@@ -5,6 +5,7 @@ require('dotenv').config({
     silent: true
 });
 const Discord = require('discord.js');
+const pmx = require('pmx');
 
 var client = new Discord.Client();
 
@@ -39,6 +40,7 @@ client.on('guildMemberSpeaking', function(member, speaking) {
 });
 
 client.on('message', function (message) {
+    pmx.emit('message', message.content);
     const cmd = require('./operators/command')(client, message);
     if(cmd) {
         cmd.call();

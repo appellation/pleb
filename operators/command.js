@@ -2,6 +2,8 @@
  * Created by Will on 10/20/2016.
  */
 
+const pmx = require('pmx');
+
 /**
  * Initialize the Command factory.
  * @param client
@@ -209,15 +211,20 @@ class Command   {
         const self = this;
         return new Promise((resolve, reject) => {
             if(typeof self.func !== 'function')  {
-                reject('not a function.');
+                return reject('not a function.');
             }
+
+            pmx.emit('command', {
+                text: this.parsed[0],
+                func: self.func.name
+            });
 
             const exec = self.func(self.client, self.msg, self.parsed.slice(1));
 
             if(typeof exec !== 'undefined') {
-                resolve(exec);
+                return resolve(exec);
             }   else {
-                resolve();
+                return resolve();
             }
         }).then(res => {
             if(options.respond && typeof res == 'string' && res.length > 0) {
@@ -267,13 +274,13 @@ class Command   {
          These are valid command forms:
          - channel name is 'pleb' OR
          - message is a direct message OR
-         - the bot is mentioned first
+         - the bot is mentioned first OR
+         - a raw body is provided
 
          These are exclusion parameters:
-         - the length of the command is > 0 AND
-         - the author is not restricted
+         - the length of the command is > 0
          */
-        if((msg.channel.name == 'pleb' || msg.channel.guild == null || Command.mentionedFirst(text)) && parsed.length > 0)    {
+        if((msg.channel.name == 'pleb' || msg.channel.guild == null || Command.mentionedFirst(text) || body) && parsed.length > 0)    {
             return Command.fetch(cmd);
         }
     }

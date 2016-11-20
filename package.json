@@ -26,6 +26,7 @@
     "node-http-ping": "^0.2.2",
     "node-schedule": "^1.2.0",
     "numeral": "^1.5.3",
+    "pmx": "^0.6.8",
     "random-js": "^1.0.8",
     "request": "^2.74.0",
     "request-promise-native": "^1.0.3",
