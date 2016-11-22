@@ -12,7 +12,7 @@ const dict = {
     e: dot,
     f: dot + dot + dash + dot,
     g: dash + dash + dot,
-    h: dot + dot + dot,
+    h: dot + dot + dot + dot,
     i: dot + dot,
     j: dot + dash + dash + dash,
     k: dash + dot + dash,
