@@ -49,6 +49,8 @@ A really simple Discord bot available for free.  Add me: <https://discordapp.com
 - `dice|roll ([count] [size])` - roll `count` dice with `size` sides (defaults to 2 6-sided dice)
 - `coinflip` - flip a coin
 - `/ay+/i` - lmao
+- `xD|XD` - XD
+- `morse [text]` - convert given text to morse
 
 ## Development
 `npm install`

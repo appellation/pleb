@@ -163,7 +163,7 @@ class Command   {
                 require('../commands/morse')
             ],
             [
-                'def',
+                'define',
                 require('../commands/def')
             ],
             [
@@ -281,7 +281,8 @@ class Command   {
          - the length of the command is > 0 AND
          - the user doesn't have `no-pleb` role
          */
-        if((msg.channel.name == 'pleb' || msg.channel.guild == null || Command.mentionedFirst(text) || body) && parsed.length > 0 && msg.member.roles.find('name', 'no-pleb') === null)    {
+        if(msg.member && msg.member.roles.find('name', 'no-pleb') === null) return;
+        if((msg.channel.name == 'pleb' || msg.channel.guild == null || Command.mentionedFirst(text) || body) && parsed.length > 0)    {
             return Command.fetch(cmd);
         }
     }

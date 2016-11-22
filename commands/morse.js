@@ -60,10 +60,9 @@ function Morse(client, msg, args)   {
         out += dict[low[i]] + ' ';
     }
 
-    return Promise.all([
-        out + '',
-        msg.delete()
-    ]);
+    if(msg.deletable) msg.delete();
+
+    return out;
 }
 
 module.exports = Morse;
