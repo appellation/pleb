@@ -2,6 +2,8 @@
  * Created by Will on 10/20/2016.
  */
 
+const rp = require('request-promise-native');
+
 /**
  * Initialize the Command factory.
  * @param client
@@ -161,7 +163,7 @@ class Command   {
                 require('../commands/morse')
             ],
             [
-                'def',
+                'define',
                 require('../commands/def')
             ],
             [
@@ -209,15 +211,26 @@ class Command   {
         const self = this;
         return new Promise((resolve, reject) => {
             if(typeof self.func !== 'function')  {
-                reject('not a function.');
+                return reject('not a function.');
             }
 
             const exec = self.func(self.client, self.msg, self.parsed.slice(1));
 
+            if(process.env.ifttt)   {
+                rp.post('https://maker.ifttt.com/trigger/pleb/with/key/' + process.env.ifttt, {
+                    body: {
+                        value1: this.func.name,
+                        value2: this.parsed[0],
+                        value3: this.parsed.slice(1).join(' ')
+                    },
+                    json: true
+                }).catch(console.error);
+            }
+
             if(typeof exec !== 'undefined') {
-                resolve(exec);
+                return resolve(exec);
             }   else {
-                resolve();
+                return resolve();
             }
         }).then(res => {
             if(options.respond && typeof res == 'string' && res.length > 0) {
@@ -258,7 +271,7 @@ class Command   {
         ~ The command is invalid.
          */
         if(Command.isNSFW(cmd))   {
-            if(msg.member && !msg.member.roles.find('name', 'nsfw') && msg.channel.name != 'nsfw')   {
+            if(msg.member && !msg.member.roles.exists('name', 'nsfw') && msg.channel.name != 'nsfw')   {
                 return;
             }
         }
@@ -267,13 +280,15 @@ class Command   {
          These are valid command forms:
          - channel name is 'pleb' OR
          - message is a direct message OR
-         - the bot is mentioned first
+         - the bot is mentioned first OR
+         - a raw body is provided
 
          These are exclusion parameters:
          - the length of the command is > 0 AND
-         - the author is not restricted
+         - the user doesn't have `no-pleb` role
          */
-        if((msg.channel.name == 'pleb' || msg.channel.guild == null || Command.mentionedFirst(text)) && parsed.length > 0)    {
+        if(msg.member && msg.member.roles.exists('name', 'no-pleb')) return;
+        if((msg.channel.name == 'pleb' || msg.channel.guild == null || Command.mentionedFirst(text) || body) && parsed.length > 0)    {
             return Command.fetch(cmd);
         }
     }

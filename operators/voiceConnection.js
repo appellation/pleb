@@ -2,8 +2,9 @@
  * Created by Will on 9/7/2016.
  */
 
+let speech;
 if(process.env.google_cloud_project_id) {
-    const speech = require('@google-cloud/speech')({
+    speech = require('@google-cloud/speech')({
         projectId: process.env.google_cloud_project_id,
         credentials: {
             client_email: process.env.google_cloud_email,

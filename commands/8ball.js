@@ -33,7 +33,7 @@ function EightBall(client, msg, args)   {
         'Very doubtful'
     ];
 
-    return msg.reply(shuffle(responses)[0]);
+    return msg.reply('🎱 ' + shuffle(responses)[0]);
 }
 
 module.exports = EightBall;

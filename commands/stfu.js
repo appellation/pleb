@@ -21,7 +21,7 @@ function Stfu(client, msg, args)    {
         msg.guild.voiceConnection.disconnect();
     }
 
-    return 'k :cry:';
+    return 'k 😢';
 }
 
 module.exports = Stfu;

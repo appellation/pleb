@@ -12,7 +12,7 @@ const dict = {
     e: dot,
     f: dot + dot + dash + dot,
     g: dash + dash + dot,
-    h: dot + dot + dot,
+    h: dot + dot + dot + dot,
     i: dot + dot,
     j: dot + dash + dash + dash,
     k: dash + dot + dash,
@@ -60,10 +60,9 @@ function Morse(client, msg, args)   {
         out += dict[low[i]] + ' ';
     }
 
-    return Promise.all([
-        out + '',
-        msg.delete()
-    ]);
+    if(msg.deletable) msg.delete();
+
+    return out;
 }
 
 module.exports = Morse;
