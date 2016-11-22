@@ -29,8 +29,9 @@ class ModOperator   {
      * @return {Promise.<Message>}
      */
     ban()   {
+        if(!this._verify('ban')) return ModOperator.permissionsError();
         return this.guild.member(this.actee).ban().then(() => {
-            return this._log();
+            return this._log('ban');
         });
     }
 
@@ -39,6 +40,7 @@ class ModOperator   {
      * @return {Promise.<Message>}
      */
     kick()  {
+        if(!this._verify('kick')) return ModOperator.permissionsError();
         return this.guild.member(this.actee).kick().then(() => {
             return this._log('kick');
         });
@@ -48,7 +50,9 @@ class ModOperator   {
      * Mute member in channel.
      * @return {Promise.<Message>}
      */
-    muteChannel()  {
+    mute()  {
+        if(!this._verify('mute')) return ModOperator.permissionsError();
+
         let perm;
         if(this.channel.type === 'voice')    {
             perm = {
@@ -65,15 +69,12 @@ class ModOperator   {
         });
     }
 
-    muteGuild() {
-        //
-    }
-
     /**
      * Unban a user.
      * @return {Promise.<Message>}
      */
     unban() {
+        if(!this._verify('unban')) return ModOperator.permissionsError();
         return this.guild.unban(this.actee).then(user => {
             this.user = user;
             return this._log('unban ' + user);
@@ -85,6 +86,7 @@ class ModOperator   {
      * @return {Promise.<Message>}
      */
     invite()    {
+        if(!this._verify('invite')) return ModOperator.permissionsError();
         this.channel.createInvite({
             maxUses: 1
         }).then(invite => {
@@ -100,6 +102,29 @@ class ModOperator   {
             });
         }).then(() => {
             return this._log('invite generated for ' + this.actee);
+        });
+    }
+
+    /**
+     * Unmute a member.
+     * @returns {Promise.<Message>}
+     */
+    unmute()    {
+        if(!this._verify('unmute')) return ModOperator.permissionsError();
+
+        let perm;
+        if(this.channel.type === 'voice')    {
+            perm = {
+                'SPEAK': true
+            }
+        }   else {
+            perm = {
+                'SEND_MESSAGES': true
+            }
+        }
+
+        return this.channel.overwritePermissions(this.actee, perm).then(() => {
+            return this._log('unmute in ' + this.channel);
         });
     }
 
@@ -123,7 +148,7 @@ class ModOperator   {
         }
 
         let text;
-        text += `${icon} **${action}**\n`;
+        text = `${icon} **${action}**\n`;
         text += `**User:** ${this.actee}\n`;
         text += `**Mod:** ${this.actor}\n`;
         text += `**Reason:** ${this.reason}`;
@@ -135,7 +160,7 @@ class ModOperator   {
 
     /**
      * Get mod log channel.
-     * @return {Promise<TextChannel>}
+     * @return {Promise.<TextChannel>}
      */
     get _sendChannel()   {
         return new Promise((resolve, reject) => {
@@ -147,28 +172,33 @@ class ModOperator   {
         });
     }
 
-    /**
-     * Get role for server-wide mute.
-     * @return {Promise.<Role>}
-     * @private
-     */
-    get _muteRole() {
-        return new Promise((resolve, reject) => {
-            let role = this.guild.roles.find('name', 'muted');
-            if(!role)   {
-                // TODO: put in options
-                return this.guild.createRole();
-            }
-        });
+    _verify(action) {
+        let perm;
+        switch (action) {
+            case 'ban':
+            case 'unban':
+                perm = 'BAN_MEMBERS';
+                break;
+            case 'kick':
+                perm = 'KICK_MEMBERS';
+                break;
+            case 'invite':
+                perm = 'CREATE_INSTANT_INVITE';
+                break;
+            case 'mute':
+            case 'unmute':
+                perm = 'MANAGE_ROLES_OR_PERMISSIONS';
+        }
+
+        return this.isActorAuthorized(perm) && this.clientCanTakeAction(action);
     }
 
     /**
      * Whether the actor is authorized.
      * @param {PermissionResolvable} perm
      * @return {boolean}
-     * @private
      */
-    _isActorAuthorized(perm)  {
+    isActorAuthorized(perm)  {
         const member = this.guild.member(this.actee);
         if(!member) return true;
 
@@ -181,9 +211,8 @@ class ModOperator   {
      * Whether the client can take a given action.
      * @param {string} action
      * @return {boolean}
-     * @private
      */
-    _clientCanTakeAction(action)   {
+    clientCanTakeAction(action)   {
         switch (action)   {
             case 'ban':
                 this._requireActeeGuildMember();
@@ -197,7 +226,10 @@ class ModOperator   {
                 return this._clientHasPermission('CREATE_INSTANT_INVITE');
             case 'mute':
             case 'unmute':
-                //
+                this._requireActeeGuildMember();
+                return this._clientHasPermission('MANAGE_ROLES_OR_PERMISSIONS');
+            default:
+                return false;
         }
     }
 
@@ -218,5 +250,13 @@ class ModOperator   {
      */
     _requireActeeGuildMember()  {
         if(!(this.actee instanceof djs.GuildMember)) throw new Error();
+    }
+
+    /**
+     * Reject due to permissions.
+     * @returns {Promise.<string>}
+     */
+    static permissionsError() {
+        return Promise.reject('permissions error');
     }
 }
