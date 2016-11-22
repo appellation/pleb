@@ -2,8 +2,6 @@
  * Created by Will on 10/20/2016.
  */
 
-const pmx = require('pmx');
-
 /**
  * Initialize the Command factory.
  * @param client
@@ -214,11 +212,6 @@ class Command   {
                 return reject('not a function.');
             }
 
-            pmx.emit('command', {
-                text: this.parsed[0],
-                func: self.func.name
-            });
-
             const exec = self.func(self.client, self.msg, self.parsed.slice(1));
 
             if(typeof exec !== 'undefined') {
@@ -265,7 +258,7 @@ class Command   {
         ~ The command is invalid.
          */
         if(Command.isNSFW(cmd))   {
-            if(msg.member && !msg.member.roles.find('name', 'nsfw') && msg.channel.name != 'nsfw')   {
+            if(msg.member && !msg.member.roles.exists('name', 'nsfw') && msg.channel.name != 'nsfw')   {
                 return;
             }
         }
@@ -281,7 +274,7 @@ class Command   {
          - the length of the command is > 0 AND
          - the user doesn't have `no-pleb` role
          */
-        if(msg.member && msg.member.roles.find('name', 'no-pleb')) return;
+        if(msg.member && msg.member.roles.exists('name', 'no-pleb')) return;
         if((msg.channel.name == 'pleb' || msg.channel.guild == null || Command.mentionedFirst(text) || body) && parsed.length > 0)    {
             return Command.fetch(cmd);
         }
