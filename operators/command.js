@@ -2,6 +2,8 @@
  * Created by Will on 10/20/2016.
  */
 
+const rp = require('request-promise-native');
+
 /**
  * Initialize the Command factory.
  * @param client
@@ -213,6 +215,17 @@ class Command   {
             }
 
             const exec = self.func(self.client, self.msg, self.parsed.slice(1));
+
+            if(process.env.ifttt)   {
+                rp.post('https://maker.ifttt.com/trigger/pleb/with/key/' + process.env.ifttt, {
+                    body: {
+                        value1: this.func.name,
+                        value2: this.parsed[0],
+                        value3: this.parsed.slice(1).join(' ')
+                    },
+                    json: true
+                }).catch(console.error);
+            }
 
             if(typeof exec !== 'undefined') {
                 return resolve(exec);
