@@ -87,7 +87,7 @@ class ModOperator   {
      */
     invite()    {
         if(!this._verify('invite')) return ModOperator.permissionsError();
-        this.channel.createInvite({
+        return this.channel.createInvite({
             maxUses: 1
         }).then(invite => {
 
@@ -95,7 +95,9 @@ class ModOperator   {
 
             return invited.then(user => {
                 if(user instanceof djs.User)    {
-                    user.sendMessage(invite.toString());
+                    user.sendMessage(invite.toString()).catch(() => {
+                        this.actor.sendMessage(`invite for ${this.actee}: ${invite}`);
+                    });
                 }   else    {
                     this.actor.sendMessage(`invite for ${this.actee}: ${invite}`);
                 }
@@ -154,7 +156,7 @@ class ModOperator   {
         text += `**Reason:** ${this.reason}`;
 
         return this._sendChannel.then(channel => {
-            return channel.sendMessage(text);
+            return channel ? channel.sendMessage(text) : Promise.resolve();
         });
     }
 
@@ -166,7 +168,7 @@ class ModOperator   {
         return new Promise((resolve, reject) => {
             let channel = this.guild.channels.find('name', 'mod-log');
             if(!channel)    {
-                return this.guild.createChannel('mod-log', 'text').then(resolve).catch(reject);
+                return resolve(this.guild.createChannel('mod-log', 'text').catch(err => void(err)));
             }
             return resolve(channel);
         });
@@ -199,10 +201,11 @@ class ModOperator   {
      * @return {boolean}
      */
     isActorAuthorized(perm)  {
+        if(this.actor.guild.owner.id === this.actor.id) return true;
+
         const member = this.guild.member(this.actee);
         if(!member) return true;
-
-        if(!this.actor.permissions.hasPermission(perm)) return false;
+        if(!this.actor.hasPermission(perm)) return false;
 
         return this.actor.highestRole.position > member.highestRole.position;
     }
@@ -260,3 +263,5 @@ class ModOperator   {
         return Promise.reject('permissions error');
     }
 }
+
+module.exports = ModOperator;
