@@ -43,7 +43,7 @@ A really simple Discord bot available for free.  Add me: <https://discordapp.com
 #### Random
 - `imgur [title?]` - upload an image to Imgur with an optional title; use this in the comment of a file upload
 - `boobs` - get a random photo of boobs
-- `memes` -  get a random meme from `/r/memes`
+- `memes` -  get a random meme from Cyanide & Happiness or xkcd
 - `dick [mention]?` - get a dick size
 - `catfacts` - send a random cat fact
 - `dice|roll ([count] [size])` - roll `count` dice with `size` sides (defaults to 2 6-sided dice)
@@ -61,7 +61,7 @@ You'll need to make a `.env` file (or have some other way to access environment 
 
 - `discord` - your Discord token
 - `discord_client_id` - your Discord app client ID
-- `youtube` - a Google API browser key authorized for YouTube Data
+- `youtube` - a Google API browser key authorized for YouTube Data, URL shortening, speech, and geocoding
 - `raven` - a Sentry.io logging URL; optional
 - `soundcloud` - a SoundCloud client ID
 - `soundcloud_secret` - a SoundCloud secret
@@ -70,8 +70,7 @@ You'll need to make a `.env` file (or have some other way to access environment 
 - `google_cloud_email` - a Google Cloud service account email
 - `google_cloud_project_id` - a Google Cloud project ID
 - `google_cloud_private_key` - a Google Cloud service account private key (make sure to double-quote this)
-- `reddit` - a Reddit app key
-- `reddit_secret` a Reddit app secret
+- `ifttt` - a IFTTT Maker key
 
 Add your bot to a server using `https://discordapp.com/oauth2/authorize?client_id=<YOUR_CLIENT_ID>&scope=bot&permissions=3173376`.
 
