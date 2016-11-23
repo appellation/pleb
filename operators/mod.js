@@ -30,9 +30,7 @@ class ModOperator   {
      */
     ban()   {
         if(!this._verify('ban')) return ModOperator.permissionsError();
-        return this.guild.fetchMember(this.actee).then(member => {
-            return member.ban();
-        }).then(() => {
+        return this.guild.fetchMember(this.actee).ban().then(() => {
             return this._log('ban');
         });
     }
@@ -43,9 +41,7 @@ class ModOperator   {
      */
     kick()  {
         if(!this._verify('kick')) return ModOperator.permissionsError();
-        return this.guild.fetchMember(this.actee).then(member => {
-            return member.kick();
-        }).then(() => {
+        return this.guild.member(this.actee).kick().then(() => {
             return this._log('kick');
         });
     }
@@ -80,11 +76,13 @@ class ModOperator   {
     unban() {
         if(!this._verify('unban')) return ModOperator.permissionsError();
 
-        return this.guild.fetchBans().then(users => {
-            return users.get(this.actee);
+        return Promise.all([
+            this.client.fetchUser(this.actee),
+            this.guild.fetchBans()
+        ]).then(([user, bans]) => {
+            return bans.get(user.id);
         }).then(user => {
-            if(user) return this.guild.unban(user);
-            else return Promise.reject('can\'t unban someone that isn\'t banned');
+            return user ? this.guild.unban(user) : Promise.reject('can\'t unban someone that isn\'t banned');
         }).then(user => {
             this.user = user;
             return this._log('unban');
@@ -105,11 +103,11 @@ class ModOperator   {
 
             return invited.then(user => {
                 if(user instanceof djs.User)    {
-                    user.sendMessage(invite.toString()).catch(() => {
-                        this.actor.sendMessage(`invite for ${this.actee}: ${invite}`);
+                    return user.sendMessage(invite.toString()).catch(() => {
+                        return this.actor.sendMessage(`invite for ${this.actee}: ${invite}`);
                     });
                 }   else    {
-                    this.actor.sendMessage(`invite for ${this.actee}: ${invite}`);
+                    return this.actor.sendMessage(`invite for ${this.actee}: ${invite}`);
                 }
             });
         }).then(() => {
@@ -164,10 +162,7 @@ class ModOperator   {
         return Promise.all([
             this._sendChannel,
             fetch
-        ]).then(resolutions => {
-            const channel = resolutions[0];
-            let user = resolutions[1];
-
+        ]).then(([channel, user]) => {
             if(this.actee instanceof djs.GuildMember)
                 user = this.actee.user;
 
