@@ -202,6 +202,12 @@ class ModOperator   {
         });
     }
 
+    /**
+     * Check both client and actor permissions.
+     * @param {string} action
+     * @return {boolean}
+     * @private
+     */
     _verify(action) {
         let perm;
         switch (action) {
