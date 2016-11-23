@@ -41,7 +41,7 @@ function Help(client, msg, args)    {
         "- **coinflip** - flip a coin\n" +
         "- **weather (currently|minutely|hourly|daily)? [location]** - get weather (defaults to currently) for a **location**\n" +
         "- **morse [text]** - convert given text to morse code\n" +
-        "- **define [word]** - get the dictionary definition for a given work\n\n" +
+        "- **define [word]** - get the dictionary definition for a given word\n\n" +
         "NSFW commands (noted by an [NSFW] tag above) can only be given in the `#nsfw` channel or by people with the `nsfw` role.  Members with the `no-pleb` role will be unable to use commands.\n\n" +
         "For human help, check out my GitHub repo at <https://github.com/appellation/pleb>"
     , {split: true});
