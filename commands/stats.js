@@ -18,7 +18,7 @@ function Status(client, msg, args)  {
     }   else    {
         return "**Guilds:** " + client.guilds.size + "\n" +
             "**Channels:** " + client.channels.size + "\n" +
-            "**Start time:** " + moment(client.readyTime).format("MMMM D, YYYY, h:mm:ss a") + "\n" +
+            "**Start time:** " + moment(client.readyAt).format("MMMM D, YYYY, h:mm:ss a") + "\n" +
             "**Users:** " + client.users.size;
     }
 }
