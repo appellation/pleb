@@ -30,7 +30,9 @@ class ModOperator   {
      */
     ban()   {
         if(!this._verify('ban')) return ModOperator.permissionsError();
-        return this.guild.member(this.actee).ban().then(() => {
+        return this.guild.fetchMember(this.actee).then(member => {
+            return member.ban();
+        }).then(() => {
             return this._log('ban');
         });
     }
@@ -41,7 +43,9 @@ class ModOperator   {
      */
     kick()  {
         if(!this._verify('kick')) return ModOperator.permissionsError();
-        return this.guild.member(this.actee).kick().then(() => {
+        return this.guild.fetchMember(this.actee).then(member => {
+            return member.kick();
+        }).then(() => {
             return this._log('kick');
         });
     }
@@ -84,7 +88,7 @@ class ModOperator   {
         }).then(user => {
             this.user = user;
             return this._log('unban');
-        }).catch(console.error);
+        });
     }
 
     /**
@@ -189,7 +193,7 @@ class ModOperator   {
      * @return {Promise.<TextChannel>}
      */
     get _sendChannel()   {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             let channel = this.guild.channels.find('name', 'mod-log');
             if(!channel)    {
                 return resolve(this.guild.createChannel('mod-log', 'text').catch(err => void err));
