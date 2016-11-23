@@ -4,11 +4,9 @@
 
 const mod = require('../operators/mod');
 
-function Kick(client, msg, args)    {
-    if(!msg.guild || msg.mentions.users.size === 0) return;
-
+function Ban(client, msg, args) {
     const op = new mod(client, msg.member, msg.guild.member(msg.mentions.users.first()), args.slice(1).join(' '), msg.guild, msg.channel);
-    return op.kick();
+    return op.ban();
 }
 
-module.exports = Kick;
+module.exports = Ban;

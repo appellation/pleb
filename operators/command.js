@@ -181,6 +181,14 @@ class Command   {
             [
                 'kick',
                 require('../commands/kick')
+            ],
+            [
+                'unban',
+                require('../commands/unban')
+            ],
+            [
+                'ban',
+                require('../commands/ban')
             ]
         ];
 

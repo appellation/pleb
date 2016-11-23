@@ -75,10 +75,16 @@ class ModOperator   {
      */
     unban() {
         if(!this._verify('unban')) return ModOperator.permissionsError();
-        return this.guild.unban(this.actee).then(user => {
+
+        return this.guild.fetchBans().then(users => {
+            return users.get(this.actee);
+        }).then(user => {
+            if(user) return this.guild.unban(user);
+            else return Promise.reject('can\'t unban someone that isn\'t banned');
+        }).then(user => {
             this.user = user;
-            return this._log('unban ' + user);
-        });
+            return this._log('unban');
+        }).catch(console.error);
     }
 
     /**
@@ -103,7 +109,7 @@ class ModOperator   {
                 }
             });
         }).then(() => {
-            return this._log('invite generated for ' + this.actee);
+            return this._log('invite');
         });
     }
 
@@ -149,14 +155,32 @@ class ModOperator   {
                 break;
         }
 
-        let text;
-        text = `${icon} **${action}**\n`;
-        text += `**User:** ${this.actee}\n`;
-        text += `**Mod:** ${this.actor}\n`;
-        text += `**Reason:** ${this.reason}`;
+        const fetch = typeof this.actee === 'string' ? this.client.fetchUser(this.actee) : Promise.resolve();
 
-        return this._sendChannel.then(channel => {
-            return channel ? channel.sendMessage(text) : Promise.resolve();
+        return Promise.all([
+            this._sendChannel,
+            fetch
+        ]).then(resolutions => {
+            const channel = resolutions[0];
+            let user = resolutions[1];
+
+            if(this.actee instanceof djs.GuildMember)
+                user = this.actee.user;
+
+            let userDisp;
+            if(user || this.actee instanceof djs.User)    {
+                userDisp = `${user.toString()} - \`${user.username}#${user.discriminator}\` (${user.id})`;
+            }   else {
+                userDisp = this.actee;
+            }
+
+            let text;
+            text = `${icon} **${action}**\n`;
+            text += `**User:** ${userDisp}\n`;
+            text += `**Mod:** ${this.actor}\n`;
+            text += `**Reason:** ${this.reason}`;
+
+            return channel ? channel.sendMessage(text).catch(err => void err) : Promise.resolve();
         });
     }
 
@@ -168,7 +192,7 @@ class ModOperator   {
         return new Promise((resolve, reject) => {
             let channel = this.guild.channels.find('name', 'mod-log');
             if(!channel)    {
-                return resolve(this.guild.createChannel('mod-log', 'text').catch(err => void(err)));
+                return resolve(this.guild.createChannel('mod-log', 'text').catch(err => void err));
             }
             return resolve(channel);
         });
