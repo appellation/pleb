@@ -72,6 +72,6 @@ You'll need to make a `.env` file (or have some other way to access environment 
 - `google_cloud_private_key` - a Google Cloud service account private key (make sure to double-quote this)
 - `ifttt` - a IFTTT Maker key
 
-Add your bot to a server using `https://discordapp.com/oauth2/authorize?client_id=<YOUR_CLIENT_ID>&scope=bot&permissions=3173376`.
+Add your bot to a server using `https://discordapp.com/oauth2/authorize?client_id=<YOUR_CLIENT_ID>&scope=bot&permissions=3173398`.
 
 The first word of a command gets interpolated and calls a function as defined in `static list()` in `operators/command.js`, passing in the Discord.js client, the message, and any arguments of the command (defined as text after the command word).  Some commands (e.g. `shuffle` and `add`) rely on other commands.

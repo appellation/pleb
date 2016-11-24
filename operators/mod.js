@@ -141,7 +141,7 @@ class ModOperator   {
     /**
      * Send a message to the mod log.
      * @param {string} action
-     * @return {Promise.<Message>}
+     * @return {Promise.<Message>|undefined}
      * @private
      */
     _log(action)  {
@@ -185,7 +185,7 @@ class ModOperator   {
 
     /**
      * Get mod log channel.
-     * @return {Promise.<TextChannel>}
+     * @return {Promise.<TextChannel>|undefined}
      */
     get _sendChannel()   {
         return new Promise(resolve => {
