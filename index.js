@@ -13,7 +13,6 @@ client.on('ready', function()   {
 });
 
 client.on('guildCreate', function(guild) {
-    console.log("count#event.guildCreate=1");
     guild.defaultChannel.sendMessage('Sup.  Try `@Pleb help`.');
 });
 
