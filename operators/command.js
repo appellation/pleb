@@ -173,7 +173,7 @@ class Command   {
             [
                 'emojify',
                 require('../commands/emojify')
-            ]*/,
+            ]*//*,
             [
                 'invite',
                 require('../commands/invite')
@@ -189,7 +189,7 @@ class Command   {
             [
                 'ban',
                 require('../commands/ban')
-            ]
+            ]*/
         ];
 
         return new Map(arr);

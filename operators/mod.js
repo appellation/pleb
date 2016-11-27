@@ -26,10 +26,12 @@ class ModOperator   {
 
     /**
      * Ban a member.
-     * @return {Promise.<Message>}
+     * @return {Promise.<Message>|string}
      */
     ban()   {
-        if(!this._verify('ban')) return ModOperator.permissionsError();
+        const v = this._verify('ban');
+        if(v) return v;
+
         return this.guild.fetchMember(this.actee).ban().then(() => {
             return this._log('ban');
         });
@@ -37,10 +39,12 @@ class ModOperator   {
 
     /**
      * Kick a member.
-     * @return {Promise.<Message>}
+     * @return {Promise.<Message>|string}
      */
     kick()  {
-        if(!this._verify('kick')) return ModOperator.permissionsError();
+        const v = this._verify('kick');
+        if(v) return v;
+
         return this.guild.member(this.actee).kick().then(() => {
             return this._log('kick');
         });
@@ -48,10 +52,11 @@ class ModOperator   {
 
     /**
      * Mute member in channel.
-     * @return {Promise.<Message>}
+     * @return {Promise.<Message>|string}
      */
     mute()  {
-        if(!this._verify('mute')) return ModOperator.permissionsError();
+        const v = this._verify('mute');
+        if(v) return v;
 
         let perm;
         if(this.channel.type === 'voice')    {
@@ -71,10 +76,11 @@ class ModOperator   {
 
     /**
      * Unban a user.
-     * @return {Promise.<Message>}
+     * @return {Promise.<Message>|string}
      */
     unban() {
-        if(!this._verify('unban')) return ModOperator.permissionsError();
+        const v = this._verify('unban');
+        if(v) return v;
 
         return Promise.all([
             this.client.fetchUser(this.actee),
@@ -91,10 +97,12 @@ class ModOperator   {
 
     /**
      * Create an invite.
-     * @return {Promise.<Message>}
+     * @return {Promise.<Message>|string}
      */
     invite()    {
-        if(!this._verify('invite')) return ModOperator.permissionsError();
+        const v = this._verify('invite');
+        if(v) return v;
+
         return this.channel.createInvite({
             maxUses: 1
         }).then(invite => {
@@ -117,10 +125,11 @@ class ModOperator   {
 
     /**
      * Unmute a member.
-     * @returns {Promise.<Message>}
+     * @returns {Promise.<Message>|string}
      */
     unmute()    {
-        if(!this._verify('unmute')) return ModOperator.permissionsError();
+        const v = this._verify('unmute');
+        if(v) return v;
 
         let perm;
         if(this.channel.type === 'voice')    {
@@ -198,9 +207,9 @@ class ModOperator   {
     }
 
     /**
-     * Check both client and actor permissions.
+     * Check both client and actor permissions.  Undefined for verified.
      * @param {string} action
-     * @return {boolean}
+     * @return {string|undefined}
      * @private
      */
     _verify(action) {
@@ -221,7 +230,11 @@ class ModOperator   {
                 perm = 'MANAGE_ROLES_OR_PERMISSIONS';
         }
 
-        return this.isActorAuthorized(perm) && this.clientCanTakeAction(action);
+        const act = this.isActorAuthorized(perm);
+        const cli = this.clientCanTakeAction(action);
+
+        if(act) return 'action not authorized';
+        if(cli) return 'client not authorized';
     }
 
     /**
@@ -282,14 +295,6 @@ class ModOperator   {
      */
     _requireActeeGuildMember()  {
         if(!(this.actee instanceof djs.GuildMember)) throw new Error();
-    }
-
-    /**
-     * Reject due to permissions.
-     * @returns {Promise.<string>}
-     */
-    static permissionsError() {
-        return Promise.reject('permissions error');
     }
 }
 
