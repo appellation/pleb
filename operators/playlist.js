@@ -91,9 +91,11 @@
                     }
 
                     function noContinue()   {
-                        if(self.dispatcher && typeof self.dispatcher.removeListener == 'function') {
+                        if(self.dispatcher && typeof self.dispatcher.removeListener === 'function') {
                             self.dispatcher.removeListener('end', end);
                         }
+                        self.removeListener('stop', noContinue);
+                        self.removeListener('destroy', noContinue);
                     }
                 }
             }

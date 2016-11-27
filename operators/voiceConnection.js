@@ -70,7 +70,7 @@ const ffmpeg = require('fluent-ffmpeg');
 
                 if(authorChannel) {
                     authorChannel.join().then(resolve).catch(() => {
-                        reject('could\'t join voice channel');
+                        reject('couldn\'t join voice channel');
                     });
                 }   else    {
                     reject('No voice channel to join.');
