@@ -3,6 +3,7 @@
  */
 
 const moment = require('moment');
+require('moment-duration-format');
 
 /**
  * @param {Client} client
@@ -18,7 +19,7 @@ function Status(client, msg, args)  {
     }   else    {
         return "**Guilds:** " + client.guilds.size + "\n" +
             "**Channels:** " + client.channels.size + "\n" +
-            "**Start time:** " + moment(client.readyAt).format("MMMM D, YYYY, h:mm:ss a") + "\n" +
+            "**Uptime:** " + moment.duration((new Date()) - client.readyTimestamp, 'ms').format("d [days] h [hrs] mm [mins] ss [secs]") + "\n" +
             "**Users:** " + client.users.size;
     }
 }
