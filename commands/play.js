@@ -28,6 +28,10 @@ function Play (client, msg, args, playlistIn, shuffle) {
 
         msg.guild.playlist = playlist;
 
+        playlist.once('destroy', () => {
+            delete msg.guild.playlist;
+        });
+
         return playlist.add(args);
     }).then(function()  {
         playlist.stop();
