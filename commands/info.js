@@ -12,7 +12,7 @@ function Info(client, msg, args)    {
 
     msg.author.sendMessage("**Bot Info:**\n" +
         "Version: `" + packageJSON.version + "`\n" +
-        "Author: `" + packageJSON.author + "`\n" +
+        "Author: `Will Nelson <nelson.will@live.com>`\n" +
         "Contributors: <https://github.com/appellation/pleb/graphs/contributors>\n" +
         "Help: `@Pleb help`\n" +
         "Licence: `" + packageJSON.license + "`\n" +
