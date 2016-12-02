@@ -52,6 +52,9 @@ A really simple Discord bot available for free.  Add me: <https://discordapp.com
 - `xD|XD` - XD
 - `morse [text]` - convert given text to morse
 
+## Support
+If you have any questions, contact a dev at [our (admittedly small) discord](https://discord.gg/DPuaDvP).
+
 ## Development
 `npm install`
 
