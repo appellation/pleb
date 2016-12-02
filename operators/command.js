@@ -193,6 +193,10 @@ class Command   {
             [
                 'queue',
                 require('../commands/queue')
+            ],
+            [
+                'link',
+                require('../commands/link')
             ]
         ];
 

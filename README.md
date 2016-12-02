@@ -40,6 +40,7 @@ A really simple Discord bot available for free.  Add me: <https://discordapp.com
 - `info` - get bot info
 - `weather [location]` - get current weather at a location
 - `weather (currently|minutely|hourly|daily) [location]` - get weather as specified for a location
+- `link` - get the bot's invite link
 
 #### Random
 - `imgur [title?]` - upload an image to Imgur with an optional title; use this in the comment of a file upload
