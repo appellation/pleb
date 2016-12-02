@@ -204,12 +204,13 @@
          * Destroy the audio connection.
          */
         destroy() {
-            this.emit('destroy');
             this.stop();
+            this.emit('destroy');
             if(this.vc) {
                 this.vc.disconnect();
                 this.vc = null;
                 this.emit('destroyed');
+                this.removeAllListeners();
             }
         };
 
