@@ -24,6 +24,7 @@ A really simple Discord bot available for free.  Add me: <https://discordapp.com
 - `resume` - resumes playback
 - `stfu` - stops playback and disconnects Pleb from the voice channel
 - `listen` - converts speech to text when message author speaks the next time
+- `queue [page]?` - list the next 5 songs; optionally provide a page number
 
 #### Functionality
 - `ping` - calculates time between command message and response message
