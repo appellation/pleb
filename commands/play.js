@@ -14,7 +14,7 @@ const VC = require('../operators/voiceConnection');
  * @param {Playlist|null} [playlistIn] - A pre-existing playlist to play.
  * @param {boolean} [shuffle] - Whether to shuffle on play.
  */
-function Play (client, msg, args, playlistIn, shuffle) {
+function Play (client, msg, args, {playlistIn = null, shuffle = false} = {}) {
 
     let playlist;
     return VC.checkCurrent(client, msg).then(function(conn)  {

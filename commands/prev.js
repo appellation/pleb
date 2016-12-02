@@ -15,7 +15,9 @@ function Prev(client, msg, args)    {
             playlist.prev();
         }
 
-        return Play(client, msg, [], playlist);
+        return Play(client, msg, [], {
+            playlistIn: playlist
+        });
     }
 }
 

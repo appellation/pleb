@@ -189,7 +189,11 @@ class Command   {
             [
                 'ban',
                 require('../commands/ban')
-            ]*/
+            ]*/,
+            [
+                'queue',
+                require('../commands/queue')
+            ]
         ];
 
         return new Map(arr);

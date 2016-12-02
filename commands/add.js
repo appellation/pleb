@@ -14,7 +14,10 @@ function Add(client, msg, args) {
     if(args[0])     {
 
         if(args[0] === 'shuffle') {
-            return Play(client, msg, args.slice(1), msg.guild.playlist, true);
+            return Play(client, msg, args.slice(1), {
+                playlistIn: msg.guild.playlist,
+                shuffle: true
+            });
         }   else if(msg.guild.playlist)   {
             msg.guild.playlist.add(args);
             return 'added';

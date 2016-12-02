@@ -21,7 +21,9 @@ function Next(client, msg, args)    {
             playlist.next();
         }
 
-        return Play(client, msg, [], playlist);
+        return Play(client, msg, [], {
+            playlistIn: playlist
+        });
     }
 }
 
