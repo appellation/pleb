@@ -19,6 +19,7 @@ function Help(client, msg, args)    {
         "- **resume** - resumes\n" +
         "- **stfu** - stops and disconnects\n" +
         "- **queue [page]?** - show song queue: next 5 or page number\n" +
+        "- **playlist [query]** - search YouTube for a playlist and play it\n\n" +
         "- **ping [url]?** - pings the bot or an optional website\n" +
         "- **imgur [title]?** - used with file uploads; uploads a file to Imgur with an optional **title**\n" +
         "- **memes** - get a random meme from Cyanide & Happiness or xkcd\n" +

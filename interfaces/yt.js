@@ -7,6 +7,7 @@
 (function() {
 
     const StreamStructure = require('../structures/stream');
+    const PlaylistStructure = require('../structures/playlist');
 
     const URL = require('url');
     const validUrl = require('valid-url');
@@ -26,11 +27,11 @@
 
         /**
          * Constructor.
-         * @param {PlaylistStructure} list - A playlist structure to interact with.
+         * @param {PlaylistStructure} [list] - A playlist structure to interact with.
          * @constructor
          */
         constructor(list) {
-            this.list = list;
+            this.list = list || new PlaylistStructure();
         }
 
         /**
@@ -166,9 +167,7 @@
             const self = this;
 
             return new Promise(function(resolve, reject)    {
-                if(!query)  {
-                    reject();
-                }
+                if(!query) return reject();
 
                 rp({
                     uri: 'https://www.googleapis.com/youtube/v3/search',
@@ -181,7 +180,7 @@
                     json: true
                 }).then(res => {
                     for(const item of res.items)    {
-                        if(item.snippet.liveBroadcastContent == 'none') {
+                        if(item.snippet.liveBroadcastContent === 'none') {
                             self.list.add(new StreamStructure('https://www.youtube.com/watch?v=' + item.id.videoId, item.snippet.title));
                             resolve(self.list);
                             return;
@@ -192,6 +191,26 @@
                 });
             });
         };
+
+        addPlaylistQuery(query)    {
+            return new Promise((resolve, reject) => {
+                if(!query) return reject();
+
+                rp({
+                    url: 'https://www.googleapis.com/youtube/v3/search',
+                    qs: {
+                        q: query,
+                        type: 'playlist',
+                        part: 'id',
+                        key: process.env.youtube
+                    },
+                    json: true
+                }).then(res => {
+                    if(res.items.length === 0) return reject('no playlist for that query');
+                    return resolve(this.addPlaylist('https://www.youtube.com/playlist?list=' + res.items[0].id.playlistId));
+                })
+            });
+        }
 
 
         // STATIC

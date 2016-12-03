@@ -197,6 +197,10 @@ class Command   {
             [
                 'link',
                 require('../commands/link')
+            ],
+            [
+                'playlist',
+                require('../commands/playlist')
             ]
         ];
 
