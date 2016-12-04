@@ -13,12 +13,17 @@ const Play = require('./play');
 function Shuffle(client, msg, args) {
 
     if(args.length > 0) {
-        return Play(client, msg, args, null, true);
+        return Play(client, msg, args, {
+            shuffle: true
+        });
     }   else    {
         const playlist = msg.guild.playlist;
 
         if(playlist && playlist.list.list.length > 0)    {
-            return Play(client, msg, args, playlist, true);
+            return Play(client, msg, args, {
+                playlistIn: playlist,
+                shuffle: true
+            });
         }   else    {
             return msg.reply('takes two (or more :thinking:) to tango.');
         }
