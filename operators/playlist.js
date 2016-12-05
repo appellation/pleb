@@ -206,12 +206,16 @@
         destroy() {
             this.stop();
             this.emit('destroy');
+            this.list = null;
             if(this.vc) {
                 this.vc.disconnect();
                 this.vc = null;
-                this.emit('destroyed');
                 this.removeAllListeners();
             }
+            if(this.dispatcher) {
+                this.dispatcher.removeAllListeners();
+            }
+            this.emit('destroyed');
         };
 
         /**
