@@ -14,14 +14,15 @@ const date = require('date.js');
  * @return {string}
  */
 function Remind(client, msg, args)  {
-    const remIndex = args.indexOf('to');
+    let remIndex = args.indexOf('to');
+    remIndex = remIndex === -1 ? 0 : remIndex;
 
     const atIndex = args.lastIndexOf('at');
     const inIndex = args.lastIndexOf('in');
 
     const timeIndex = atIndex > inIndex ? args.lastIndexOf('at') : args.lastIndexOf('in');
 
-    if(!remIndex || !timeIndex || timeIndex == -1 || remIndex == -1 || timeIndex < remIndex)    {
+    if(timeIndex < remIndex)    {
         return "can\'t parse that :cry:";
     }
 
