@@ -6,6 +6,24 @@ const rp = require('request-promise-native');
 const numeral = require('numeral');
 const moment = require('moment');
 
+const weatherIconMap = {
+    'clear-day': '☀',
+    'clear-night': '🌜',
+    rain: '🌧',
+    snow: '🌨',
+    sleet: '☔',
+    wind: '💨',
+    fog: '🌫',
+    cloudy: '☁',
+    'partly-cloudy-day': '⛅',
+    'partly-cloudy-night': '☁'
+};
+const precipDescMap = {
+    rain: '🌧 Rain',
+    snow: '🌨 Snow',
+    sleet: '☔ Sleet'
+};
+
 /**
  *
  * @param {Client} client
@@ -76,40 +94,7 @@ function Weather(client, msg, args) {
         const cur = weather[type];
         let out = '';
 
-        out += `\`${loc.formatted_address}\`\n\n`;
-
-        switch(cur.icon)    {
-            case 'clear-day':
-                out += '☀';
-                break;
-            case 'clear-night':
-                out += '🌜';
-                break;
-            case 'rain':
-                out += '🌧';
-                break;
-            case 'snow':
-                out += '🌨';
-                break;
-            case 'sleet':
-                out += '☔';
-                break;
-            case 'wind':
-                out += '💨';
-                break;
-            case 'fog':
-                out += '🌫';
-                break;
-            case 'cloudy':
-                out += '☁';
-                break;
-            case 'partly-cloudy-day':
-                out += '⛅';
-                break;
-            case 'partly-cloudy-night':
-                out += '☁';
-                break;
-        }
+        out += `\`${loc.formatted_address}\`\n\n${weatherIconMap[cur.icon]}`;
 
         out += ' **' +cur.summary + '**\n\n';
 
@@ -145,19 +130,7 @@ function Weather(client, msg, args) {
                 out += `💦 \`${Math.round(point.humidity * 100)}%\` humidity\n`;
             }
 
-            switch(point.precipType)  {
-                case 'rain':
-                    out += '🌧 Rain';
-                    break;
-                case 'snow':
-                    out += '🌨 Snow';
-                    break;
-                case 'sleet':
-                    out += '☔ Sleet';
-                    break;
-                default:
-                    out += '☂ Precipitation';
-            }
+            out += precipDescMap[poing.precipType] || '☂ Precipitation';
 
             out += ` - \`${numeral(point.precipProbability * 100).format('0.00')}%\` at \`${numeral(point.precipIntensity).format('0.00')}in/hr\``;
             out += '\n\n';

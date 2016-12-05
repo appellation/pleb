@@ -6,6 +6,12 @@ const rp = require('request-promise-native');
 const numeral = require('numeral');
 const moment = require('moment');
 
+const countryMap = {
+    brazil: 'BR',
+    singapore: 'MY',
+    sydney: 'AU',
+};
+
 /**
  * @param {Client} client
  * @param {Message} msg
@@ -14,26 +20,7 @@ const moment = require('moment');
  * @constructor
  */
 function Search(client, msg, args)  {
-    let cc;
-
-    if(msg.guild)   {
-        switch (msg.guild.region) {
-            case 'brazil':
-                cc = 'BR';
-                break;
-            case 'singapore':
-                cc = 'MY';
-                break;
-            case 'sydney':
-                cc = 'AU';
-                break;
-            default:
-                cc = 'US';
-                break;
-        }
-    }   else    {
-        cc = 'US';
-    }
+    const cc = countryMap[msg.guild.region] || 'US';
 
     return rp.get({
         uri: 'https://api.cognitive.microsoft.com/bing/v5.0/search',
