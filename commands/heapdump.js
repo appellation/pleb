@@ -7,9 +7,9 @@ const heapdump = require('heapdump');
 function Heapdump(client, msg, args)    {
     if(msg.author.id !== '116690352584392704') return;
     return new Promise((resolve, reject) => {
-        heapdump.writeSnapshot(`../assets/heapdumps/${Date.now()}.heapsnapshot`, (err, filename) => {
+        heapdump.writeSnapshot(`${__dirname}/../assets/heapdumps/${Date.now()}.heapsnapshot`, (err, filename) => {
             if(err) return reject(err);
-            return resolve(`heapdump successfully written to ${filename}`);
+            return resolve(msg.channel.sendFile(filename));
         });
     });
 }
