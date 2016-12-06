@@ -130,7 +130,7 @@ function Weather(client, msg, args) {
                 out += `💦 \`${Math.round(point.humidity * 100)}%\` humidity\n`;
             }
 
-            out += precipDescMap[poing.precipType] || '☂ Precipitation';
+            out += precipDescMap[point.precipType] || '☂ Precipitation';
 
             out += ` - \`${numeral(point.precipProbability * 100).format('0.00')}%\` at \`${numeral(point.precipIntensity).format('0.00')}in/hr\``;
             out += '\n\n';
