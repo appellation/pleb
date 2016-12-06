@@ -5,44 +5,17 @@ require('dotenv').config({
     silent: true
 });
 const Discord = require('discord.js');
-
 var client = new Discord.Client();
 
-client.on('ready', function()   {
-    console.log('Bot is ready.');
-});
+const readyHandler = require('./handlers/ready');
+const guildCreateHandler = require('./handlers/guildCreate');
+const guildMemberSpeakingHandler = require('./handlers/guildMemberSpeaking');
+const messageHandler = require('./handlers/message');
 
-client.on('guildCreate', function(guild) {
-    guild.defaultChannel.sendMessage('Sup.  Try `@Pleb help`.');
-});
-
-client.on('guildMemberSpeaking', function(member, speaking) {
-    if(member.listen && speaking)   {
-
-        const msg = member.listen;
-        member.listen = false;
-
-        member.voiceChannel.join().then(conn => {
-            return require('./operators/voiceConnection').speechToText(conn.createReceiver().createPCMStream(member))
-        }).then(text => {
-            if(msg.constructor.name == 'Message')    {
-                msg.channel.sendMessage('`' + text + '`');
-            }
-
-            const cmd = require('./operators/command')(client, msg, text.toLowerCase());
-            if(cmd) {
-                cmd.call();
-            }
-        }).catch(console.error);
-    }
-});
-
-client.on('message', function (message) {
-    const cmd = require('./operators/command')(client, message);
-    if(cmd) {
-        cmd.call();
-    }
-});
+client.on('ready', readyHandler);
+client.on('guildCreate', guildCreateHandler);
+client.on('guildMemberSpeaking', guildMemberSpeakingHandler);
+client.on('message', messageHandler);
 
 client.login(process.env.discord).then(function()   {
     console.log('Logged in.');

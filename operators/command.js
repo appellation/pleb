@@ -6,8 +6,8 @@ const rp = require('request-promise-native');
 
 /**
  * Initialize the Command factory.
- * @param client
- * @param msg
+ * @param {Client} client
+ * @param {Message} msg
  * @param [body]
  * @returns {Command|boolean}
  */
