@@ -11,11 +11,13 @@ const readyHandler = require('./handlers/ready');
 const guildCreateHandler = require('./handlers/guildCreate');
 const guildMemberSpeakingHandler = require('./handlers/guildMemberSpeaking');
 const messageHandler = require('./handlers/message');
+const voiceStateUpdateHandler = require('./handlers/voiceStateUpdate');
 
 client.on('ready', readyHandler);
 client.on('guildCreate', guildCreateHandler);
 client.on('guildMemberSpeaking', guildMemberSpeakingHandler);
 client.on('message', messageHandler);
+client.on('voiceStateUpdate', voiceStateUpdateHandler);
 
 client.login(process.env.discord).then(function()   {
     console.log('Logged in.');
