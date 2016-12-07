@@ -6,8 +6,8 @@ require('dotenv').config({
 });
 const Discord = require('discord.js');
 var client = new Discord.Client({
-    messageCacheLifetime: 30,
-    messageSweepInterval: 30,
+    messageCacheLifetime: 1800,
+    messageSweepInterval: 900,
     disabledEvents: [
         'CHANNEL_CREATE',
         'CHANNEL_UPDATE',
