@@ -88,6 +88,8 @@
                         if (self.list.hasNext()) {
                             self.list.next();
                             playQueue();
+                        }   else {
+                            noContinue();
                         }
                     }
 
