@@ -3,6 +3,7 @@
  */
 
 const Play = require('../commands/play');
+const storage = require('../storage/playlists');
 
 /**
  * @param {Client} client
@@ -15,11 +16,11 @@ function Add(client, msg, args) {
 
         if(args[0] === 'shuffle') {
             return Play(client, msg, args.slice(1), {
-                playlistIn: msg.guild.playlist,
+                playlistIn: storage.get(msg.guild.id),
                 shuffle: true
             });
-        }   else if(msg.guild.playlist)   {
-            msg.guild.playlist.add(args);
+        }   else if(storage.get(msg.guild.id))   {
+            storage.get(msg.guild.id).add(args);
             return 'added';
         }   else {
             return 'no playlist.';

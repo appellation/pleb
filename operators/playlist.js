@@ -11,6 +11,7 @@
     const PlaylistStructure = require('../structures/playlist');
     const YTPlaylist = require('../interfaces/yt');
     const SCPlaylist = require('../interfaces/sc');
+    const storage = require('../storage/playlists');
 
     class Playlist extends EventEmitter {
 
@@ -96,6 +97,7 @@
                         }
                         self.removeListener('stop', noContinue);
                         self.removeListener('destroy', noContinue);
+                        storage.delete(self.vc.channel.guild.id);
                     }
                 }
             }

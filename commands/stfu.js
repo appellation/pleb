@@ -2,6 +2,8 @@
  * Created by Will on 8/25/2016.
  */
 
+const storage = require('../storage/playlists');
+
 /**
  * @param {Client} client
  * @param {Message} msg
@@ -12,11 +14,11 @@ function Stfu(client, msg, args)    {
     if(!msg.guild)  {
         return;
     }
-    const playlist = msg.guild.playlist;
+    const playlist = storage.get(msg.guild.id);
 
     if(playlist)  {
         playlist.destroy();
-        delete msg.guild.playlist;
+        storage.delete(msg.guild.id);
     }   else if(msg.guild.voiceConnection)  {
         msg.guild.voiceConnection.disconnect();
     }

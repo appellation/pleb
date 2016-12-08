@@ -6,6 +6,7 @@
 
 const Playlist = require('../operators/playlist');
 const VC = require('../operators/voiceConnection');
+const storage = require('../storage/playlists');
 
 /**
  * @param {Client} client
@@ -22,15 +23,11 @@ function Play (client, msg, args, {playlistIn = null, shuffle = false} = {}) {
         playlist = playlistIn ? playlistIn : new Playlist(conn);
 
         // NOTE: if playlistIn is passed from msg.guild.playlist, they will be the exact same object at this point.
-        if(msg.guild.playlist) {
-            msg.guild.playlist.stop();
+        if(storage.get(msg.guild.id)) {
+            storage.get(msg.guild.id).stop();
         }
 
-        msg.guild.playlist = playlist;
-
-        playlist.once('destroy', () => {
-            delete msg.guild.playlist;
-        });
+        storage.set(msg.guild.id, playlist);
 
         return playlist.add(args);
     }).then(function()  {

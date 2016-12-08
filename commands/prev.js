@@ -3,9 +3,10 @@
  */
 
 const Play = require('./play');
+const storage = require('../storage/playlists');
 
 function Prev(client, msg, args)    {
-    const playlist = msg.guild.playlist;
+    const playlist = storage.get(msg.guild.id);
     const num = Number.parseInt(args[0]) || 1;
 
     if(playlist && !isNaN(num) && num > 0)    {
