@@ -39,9 +39,9 @@
                 const params = parsed.pathname.split('/').slice(1);
 
                 if(params[1] === 'sets')    {
-                    return (params[0].match(regex) !== null && params[2].match(regex) !== null && params.length === 3);
+                    return (params.length === 3 && params[0].match(regex) !== null && params[2].match(regex) !== null);
                 }   else    {
-                    return (params[0].match(regex) !== null && params[1].match(regex) !== null && params.length === 2);
+                    return (params.length === 2 && params[0].match(regex) !== null && params[1].match(regex) !== null);
                 }
             }
 
