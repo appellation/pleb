@@ -85,6 +85,7 @@ const ffmpeg = require('fluent-ffmpeg');
          * @returns {Promise} - Resolves with the preferred voice connection.
          */
         static checkCurrent(client, msg) {
+            if(msg.channel.type !== 'text') return Promise.reject('can\'t play outside of a guild');
             return new Promise(resolve => {
 
                 const clientVC = client.voiceConnections.get(msg.guild.id);
