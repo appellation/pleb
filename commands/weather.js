@@ -32,6 +32,7 @@ const precipDescMap = {
  * @return {Promise|string}
  */
 function Weather(client, msg, args) {
+    if(args.length === 0) return 'no location specified';
     const poss = [
         'currently',
         'minutely',
