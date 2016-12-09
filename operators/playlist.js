@@ -24,9 +24,7 @@
         constructor(conn, listIn) {
             super();
 
-            if (!conn) {
-                throw new Error('No voice connection.');
-            }
+            if (!conn) throw new Error('No voice connection.');
 
             /**
              * @type {VoiceConnection}
@@ -34,7 +32,7 @@
             this.vc = conn;
 
             /**
-             * @type {StreamDispatcher|null}
+             * @type {StreamDispatcher}
              */
             this.dispatcher = null;
 
