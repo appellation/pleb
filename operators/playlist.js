@@ -220,6 +220,7 @@
             if(this.dispatcher) {
                 this.dispatcher.removeAllListeners();
             }
+            storage.delete(this.vc.channel.guild.id);
             this.emit('destroyed');
         };
 
