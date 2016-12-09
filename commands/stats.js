@@ -5,6 +5,7 @@
 const moment = require('moment');
 require('moment-duration-format');
 const request = require('request');
+const playlistStorage = require('../storage/playlists');
 
 /**
  * @param {Client} client
@@ -25,16 +26,13 @@ function Status(client, msg, args)  {
         json: true
     });
 
-    if(args[0] === 'guilds' && msg.author.id == '116690352584392704')    {
-        return msg.channel.sendMessage(client.guilds.map(function(guild)    {
-            return (guild.available ? ":white_check_mark:" : ":x:") + " **" + guild.name + "** - `" + guild.memberCount + "` members - `" + guild.owner.user.username + "#" + guild.owner.user.discriminator + "`";
-        }).join("\n"), {split: true});
-    }   else    {
-        return "**Guilds:** " + client.guilds.size + "\n" +
-            "**Channels:** " + client.channels.size + "\n" +
-            "**Uptime:** " + moment.duration((new Date()) - client.readyTimestamp, 'ms').format("d [days] h [hrs] mm [mins] ss [secs]") + "\n" +
-            "**Users:** " + client.users.size;
-    }
+    return `**Guilds:** ${client.guilds.size}\n` +
+        `**Channels:** ${client.channels.size}\n` +
+        `**Users:** ${client.users.size}\n` +
+        `**Playlists:** ${playlistStorage.size}\n\n` +
+        "__**Process info:**__\n" +
+        `**Memory:** ${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)} MB\n` +
+        `**Uptime:** ${moment.duration((new Date()) - client.readyTimestamp, 'ms').format("d [days] h [hrs] mm [mins] ss [secs]")}\n`;
 }
 
 module.exports = Status;
