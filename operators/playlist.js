@@ -212,6 +212,7 @@
             this.stop();
             this.emit('destroy');
             this.list = null;
+            storage.delete(this.vc.channel.guild.id);
             if(this.vc) {
                 this.vc.disconnect();
                 this.vc = null;
@@ -220,7 +221,6 @@
             if(this.dispatcher) {
                 this.dispatcher.removeAllListeners();
             }
-            storage.delete(this.vc.channel.guild.id);
             this.emit('destroyed');
         };
 
