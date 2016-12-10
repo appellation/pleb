@@ -201,10 +201,6 @@ class Command   {
             [
                 'playlist',
                 require('../commands/playlist')
-            ],
-            [
-                'heapdump',
-                require('../commands/heapdump')
             ]
         ];
 
