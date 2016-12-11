@@ -54,7 +54,7 @@ class Playlist extends EventEmitter {
                 self.stop();
             }
 
-            if (self.list.hasCurrent()) {
+            if (self.list && self.list.hasCurrent()) {
                 const stream = self.getStream();
 
                 if(!stream)  {
