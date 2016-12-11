@@ -9,13 +9,15 @@
  * @return {string}
  */
 function Id(client, msg, args)  {
-    const mentions = msg.mentions;
+    if(!args[0]) return msg.author.id;
 
-    if(mentions.size == 0)  {
-        return '`' + msg.author.id + '`';
+    const mentions = msg.mentions;
+    let out = [];
+    for(const user of mentions.users)   {
+        if(user[1].equals(client.user)) continue;
+        out.push(user[1] + ': `' + user[1].id + '`');
     }
 
-    let out = [];
     for(const channel of mentions.channels) {
         out.push(channel[1] + ': `' + channel[1].id +'`');
     }

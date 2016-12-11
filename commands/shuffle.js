@@ -9,7 +9,7 @@ const storage = require('../storage/playlists');
  * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
- * @return {Promise}
+ * @return {Promise|string}
  */
 function Shuffle(client, msg, args) {
 
@@ -26,7 +26,7 @@ function Shuffle(client, msg, args) {
                 shuffle: true
             });
         }   else    {
-            return msg.reply('takes two (or more :thinking:) to tango.');
+            return 'takes two (or more :thinking:) to tango.';
         }
     }
 }

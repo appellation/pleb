@@ -14,20 +14,9 @@ function Sanitize(client, msg, args)    {
 
     return msg.channel.fetchMessages().then(collection => {
         let messages = collection.findAll('author', client.user);
+        if(messages.length <= 1) return;
 
-        if(messages.length > 0) {
-
-            if(num > messages.length - 1)   {
-                num = messages.length - 1;
-            }
-
-            const out = [];
-            for(let i = 0; i < num; i++)    {
-                out.push(messages[i].delete());
-            }
-
-            return Promise.all(out);
-        }
+        return msg.channel.bulkDelete(messages.slice(0, num));
     });
 }
 

@@ -17,7 +17,7 @@ function Boobs(client, msg, args)   {
             encoding: null
         });
     }).then(function(res)   {
-        msg.channel.sendFile(res);
+        return msg.channel.sendFile(res);
     });
 }
 

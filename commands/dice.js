@@ -38,7 +38,7 @@ function Dice(client, msg, args, options)    {
     }
 
     if(options && options.coinflip)    {
-        return sum == 1 ? 'heads' : 'tails';
+        return sum === 1 ? 'heads' : 'tails';
     }   else {
         return '🎲 `' + sum + '`';
     }

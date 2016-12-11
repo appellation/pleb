@@ -2,13 +2,14 @@
  * Created by Will on 10/29/2016.
  */
 
+const packageJSON = require('../package.json');
+
 /**
  * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
  */
 function Info(client, msg, args)    {
-    const packageJSON = require('../package.json');
 
     msg.author.sendMessage("**Bot Info:**\n" +
         "Version: `" + packageJSON.version + "`\n" +

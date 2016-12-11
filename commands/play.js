@@ -18,27 +18,22 @@ const storage = require('../storage/playlists');
 function Play (client, msg, args, {playlistIn = null, shuffle = false} = {}) {
 
     let playlist;
-    return VC.checkCurrent(client, msg).then(function(conn)  {
+    return VC.checkCurrent(client, msg).then(conn =>  {
 
         playlist = playlistIn ? playlistIn : new Playlist(conn);
 
         // NOTE: if playlistIn is passed from msg.guild.playlist, they will be the exact same object at this point.
-        if(storage.get(msg.guild.id)) {
-            storage.get(msg.guild.id).stop();
-        }
-
+        if(storage.get(msg.guild.id)) storage.get(msg.guild.id).stop();
         storage.set(msg.guild.id, playlist);
 
         return playlist.add(args);
-    }).then(function()  {
+    }).then(() =>  {
         playlist.stop();
 
-        if(shuffle) {
-            playlist.shuffle();
-        }
+        if(shuffle) playlist.shuffle();
 
         // see issue #37, but a delay seems to be needed to properly end the stream dispatcher
-        setTimeout(function() {
+        setTimeout(() => {
             playlist.start(msg, args);
         }, 300);
     });

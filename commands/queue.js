@@ -22,11 +22,8 @@ function Queue(client, msg, args)   {
     const list = playlist.list.list;
     const part = list.slice(pos, pos + perPage);
     let out = args[0] ? `Page **${Math.floor(pos/perPage + 1)}** of **${Math.ceil((list.length-1)/perPage)}**\n` : "";
-    let current = pos + 1;
-    out += part.map(song => {
-        const str = `**${current}** of ${list.length} - \`${song.name}\``;
-        current++;
-        return str;
+    out += part.map((song, index) => {
+        return `**${index + pos + 1}** of ${list.length} - \`${song.name}\``;
     }).join('\n');
 
     return out;

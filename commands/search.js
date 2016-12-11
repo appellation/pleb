@@ -16,10 +16,11 @@ const countryMap = {
  * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
- * @return {Promise}
+ * @return {Promise|undefined}
  * @constructor
  */
 function Search(client, msg, args)  {
+    if(args.length === 0) return;
     const cc = countryMap[msg.guild.region] || 'US';
 
     return rp.get({
@@ -34,7 +35,7 @@ function Search(client, msg, args)  {
             'X-MSEdge-ClientID': msg.author.id
         },
         json: true
-    }).then(function(res)  {
+    }).then(res =>  {
         // format response
 
         const first = res.rankingResponse.mainline.items[0];

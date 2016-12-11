@@ -8,16 +8,14 @@ const shuffle = require('knuth-shuffle').knuthShuffle;
  * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
- * @return {Promise.<string>}
+ * @return {String}
  */
 function Insult(client, msg, args)  {
-    const regex = /<@!?[0-9]+>/;
     const ins = shuffle(insults)[0];
-
-    if(args[0] && args[0].match(regex))    {
-        return Promise.resolve(args[0] + ", " + ins);
+    if(msg.mentions.users.first())    {
+        return `${msg.mentions.users.first().toString()}, ${ins}`;
     }   else {
-        return Promise.resolve(msg.author.toString() + ", " + ins);
+        return `${msg.author.toString()}, ${ins}`;
     }
 }
 

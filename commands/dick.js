@@ -16,23 +16,15 @@ function Dick(client, msg, args)    {
     let user;
 
     if(args[0]) {
-        const match = args[0].match(/<@!?([0-9]+)>/);
-        if(match === null)  {
-            return 'hey, that\'s not a user';
-        }
-
-        user = client.users.get(match[1]);
+        user = msg.mentions.users.first();
+        if(!user) return 'no user mentioned';
     }   else    {
         user = msg.author;
-
     }
-
 
     if(user.dick) {
         count = user.dick;
-    } else if(user.id==''){ /**Nate's ID here**/
-        count = 2;
-    } else    {
+    }   else    {
         const arr = [];
         for(let i = 1; i < 26; i++) {
             arr.push(i);

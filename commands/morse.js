@@ -2,8 +2,8 @@
  * Created by Will on 11/9/2016.
  */
 
-const dot = '.';
-const dash = '-';
+const dot = '😂';
+const dash = '😑';
 const dict = {
     a: dot + dash,
     b: dash + dot + dot + dot,

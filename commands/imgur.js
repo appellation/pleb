@@ -2,7 +2,13 @@
  * Created by Will on 9/12/2016.
  */
 
-let rp = require('request-promise-native');
+let rp = require('request-promise-native').defaults({
+    baseUrl: 'https://api.imgur.com/3',
+    headers:    {
+        Authorization: 'Client-Id ' + process.env.imgur
+    },
+    json: true
+});
 const shuffle = require('knuth-shuffle').knuthShuffle;
 const numeral = require('numeral');
 
@@ -13,34 +19,17 @@ const numeral = require('numeral');
  * @return {Promise|string}
  */
 function Imgur(client, msg, args)   {
-    const defaults = {
-        baseUrl: 'https://api.imgur.com/3',
-        headers:    {
-            Authorization: 'Client-Id ' + process.env.imgur
-        },
-        json: true
-    };
-
-    rp = rp.defaults(defaults);
-
     if(msg.attachments.size !== 0) {
-
-        const arr = msg.attachments.array();
-
-        if(arr.length == 0) {
-            return 'i\'m not a miracle worker :wink:';
-        }
-
         const ul = [];
-        for(let i = 0; i < arr.length; i++) {
+        for(const attachment of msg.attachments) {
             const q = {
                 uri: '/image',
                 body: {
-                    image: arr[i].url
+                    image: attachment[1].url
                 }
             };
 
-            if(arr.length === 1 && args.length > 0)    {
+            if(msg.attachments.size === 1 && args.length > 0)    {
                 q.body.title = args.join(' ');
             }
 
@@ -48,8 +37,8 @@ function Imgur(client, msg, args)   {
         }
 
         if(ul.length > 1)  {
-            return Promise.all(ul).then(function(imgs)  {
-                const string = imgs.map(function(elem)  {
+            return Promise.all(ul).then(imgs =>  {
+                const string = imgs.map(elem =>  {
                     return elem.id;
                 }).join(',');
 
@@ -60,23 +49,23 @@ function Imgur(client, msg, args)   {
                     }
                 };
 
-                if(arr.length > 0 && args.length > 0) {
+                if(msg.attachments.size > 0 && args.length > 0) {
                     q.body.title = args.join(' ');
                 }
 
                 return rp.post(q);
-            }).then(function(album) {
+            }).then(album => {
                 msg.channel.stopTyping();
                 return msg.reply('https://imgur.com/a/' + album.data.id);
-            }).then(function()   {
+            }).then(() =>   {
                 return msg.delete();
             });
         }   else    {
 
-            return ul[0].then(function(img)    {
+            return ul[0].then(img =>    {
                 msg.channel.stopTyping();
                 return msg.reply('https://imgur.com/' + img.data.id);
-            }).then(function()   {
+            }).then(() =>   {
                 return msg.delete();
             });
         }
