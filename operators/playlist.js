@@ -54,7 +54,7 @@ class Playlist extends EventEmitter {
                 self.stop();
             }
 
-            if (self.list.hasCurrent()) {
+            if (self.list && self.list.hasCurrent()) {
                 const stream = self.getStream();
 
                 if(!stream)  {
@@ -71,7 +71,7 @@ class Playlist extends EventEmitter {
 
                 if(self.list.list.length > 1)  {
                     const message = '**' + (self.list.pos + 1) + '** of ' + self.list.list.length + ': `' + self.list.getCurrent().name + "`";
-                    msg.channel.sendMessage(message);
+                    msg.channel.sendMessage(message).catch(() => null);
                 }
 
                 self.once('stop', noContinue);
@@ -80,6 +80,7 @@ class Playlist extends EventEmitter {
                 self.dispatcher.once('end', end);
                 function end() {
                     self.dispatcher = null;
+                    self.stop();
 
                     if (self.list.hasNext()) {
                         self.list.next();
@@ -87,9 +88,6 @@ class Playlist extends EventEmitter {
                     }   else {
                         noContinue();
                     }
-
-                    self.removeListener('stop', noContinue);
-                    self.removeListener('destroy', noContinue);
                 }
 
                 function noContinue()   {
@@ -104,15 +102,15 @@ class Playlist extends EventEmitter {
         self.once('init', function(playlist)   {
             if(playlist.list.length === 1)  {
                 if(!SCPlaylist.isSoundCloudURL(args[0]) && !YTPlaylist.isYouTubeURL(args[0]))    {
-                    msg.reply('now playing ' + playlist.getCurrent().url);
+                    msg.reply('now playing ' + playlist.getCurrent().url).catch(() => null);
                 }   else    {
-                    msg.reply('now playing');
+                    msg.reply('now playing').catch(() => null);
                 }
             }
         });
 
         playQueue();
-    };
+    }
 
     /**
      * Add an array of command arguments to the playlist.
@@ -194,11 +192,13 @@ class Playlist extends EventEmitter {
      */
     stop() {
         this.emit('stop');
+        this.removeListener('stop', noContinue);
+        this.removeListener('destroy', noContinue);
         if(this.dispatcher) {
             this.dispatcher.end();
             this.dispatcher = null;
-            this.emit('stopped');
         }
+        this.emit('stopped');
     };
 
     /**

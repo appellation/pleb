@@ -3,52 +3,374 @@
  */
 
 const rp = require('request-promise-native');
-const fsX = require('fs-extra');
-const fs = require('fs');
-
-const commands = (() => {
-    return new Promise(resolve => {
-        const files = [];
-        const walker = fsX.walk('../commands');
-
-        walker.on('file', (root, stat, next) => {
-            files.push(root + stat.name);
-        });
-        walker.on('end', () => {
-            resolve(files);
-        });
-    }).then(files => {
-        const contents = new Map();
-        for(const file of files)    {
-            const mod = require(file);
-            if(mod.triggers && typeof mod.triggers[Symbol.iterator] === 'function')  {
-                for(const trigger of mod.triggers)  {
-                    contents.set(trigger, {
-                        func: mod.func,
-                        validation: mod.validation
-                    });
-                }
-            }   else    {
-                contents.set(mod.triggers, {
-                    fun: mod.func,
-                    validation: mod.validation
-                });
-            }
-        }
-        return contents;
-    });
-})();
 
 /**
- * @typedef {Object} CommandStructure
- * @property {Function} func
- * @property {Iterable|Object} triggers
- * @property {Function} [validation]
- * @property {[CommandStructure]} [options]
+ * Initialize the Command factory.
+ * @param {Client} client
+ * @param {Message} msg
+ * @param [body]
+ * @returns {Command|boolean}
  */
-
-function Command(message)   {
-    //
+function cmd(client, msg, body)   {
+    const validated = Command.validate(msg, body);
+    if(validated)  {
+        return new Command(validated, client, msg, body);
+    }   else {
+        return false;
+    }
 }
 
-module.exports = Command;
+module.exports = cmd;
+
+class Command   {
+
+    static _list() {
+        const arr = [
+            [
+                'add',
+                require('../commands/add')
+            ],
+            [
+                'play',
+                require('../commands/play')
+            ],
+            [
+                'stfu',
+                require('../commands/stfu')
+            ],
+            [
+                'shuffle',
+                require('../commands/shuffle')
+            ],
+            [
+                'pause',
+                require('../commands/pause')
+            ],
+            [
+                'resume',
+                require('../commands/resume')
+            ],
+            [
+                'next',
+                require('../commands/next')
+            ],
+            [
+                'ping',
+                require('../commands/ping')
+            ],
+            [
+                'imgur',
+                require('../commands/imgur')
+            ],
+            [
+                'help',
+                require('../commands/help')
+            ],
+            [
+                'boobs',
+                require('../commands/boobs')
+            ],
+            [
+                'memes',
+                require('../commands/memes')
+            ],
+            [
+                'stats',
+                require('../commands/stats')
+            ],
+            [
+                'dick',
+                require('../commands/dick')
+            ],
+            [
+                'id',
+                require('../commands/id')
+            ],
+            [
+                'born',
+                require('../commands/born')
+            ],
+            [
+                'search',
+                require('../commands/search')
+            ],
+            [
+                'insult',
+                require('../commands/insult')
+            ],
+            [
+                'catfacts',
+                require('../commands/catfacts')
+            ],
+            [
+                'listen',
+                require('../commands/listen')
+            ],
+            [
+                'ass',
+                require('../commands/ass')
+            ],
+            [
+                'remind',
+                require('../commands/remind')
+            ],
+            [
+                'eval',
+                require('../commands/eval')
+            ],
+            [
+                /^(hi|hello)$/,
+                require('../commands/hello')
+            ],
+            [
+                'info',
+                require('../commands/info')
+            ],
+            [
+                'sanitize',
+                require('../commands/sanitize')
+            ],
+            [
+                /^ay+$/i,
+                require('../commands/ayy')
+            ],
+            [
+                /^(xD|XD)$/,
+                require('../commands/xd')
+            ],
+            [
+                /^(roll|dice)$/,
+                require('../commands/dice')
+            ],
+            [
+                'coinflip',
+                require('../commands/coinflip')
+            ],
+            [
+                '8ball',
+                require('../commands/8ball')
+            ],
+            [
+                'weather',
+                require('../commands/weather')
+            ],
+            [
+                'morse',
+                require('../commands/morse')
+            ],
+            [
+                'define',
+                require('../commands/def')
+            ],
+            [
+                'prev',
+                require('../commands/prev')
+            ]/*,
+            [
+                'emojify',
+                require('../commands/emojify')
+            ]*//*,
+            [
+                'invite',
+                require('../commands/invite')
+            ],
+            [
+                'kick',
+                require('../commands/kick')
+            ],
+            [
+                'unban',
+                require('../commands/unban')
+            ],
+            [
+                'ban',
+                require('../commands/ban')
+            ]*/,
+            [
+                'queue',
+                require('../commands/queue')
+            ],
+            [
+                'link',
+                require('../commands/link')
+            ],
+            [
+                'playlist',
+                require('../commands/playlist')
+            ]
+        ];
+
+        return new Map(arr);
+    };
+
+    static _nsfwList()   {
+        return [
+            'boobs',
+            'ass'
+        ]
+    }
+
+    /**
+     * @constructor
+     * @param {Function} func - The function to call with the command.
+     * @param {Client} client - The Discord.js client
+     * @param {Message} msg - The message that initiated the command.
+     * @param {string} [body] - An optional command body; if this is not provided, the command will default to the message content.
+     */
+    constructor(func, client, msg, body)  {
+        this.func = func;
+        this.parsed = Command.parse(body ? body : msg.content);
+        this.client = client;
+        this.msg = msg;
+    }
+
+    /**
+     * Execute the command.
+     * @param {{}} [options]
+     * @returns {Promise}
+     */
+    call(options = {respond: true})  {
+        this.msg.channel.startTyping();
+
+        const self = this;
+        return new Promise((resolve, reject) => {
+            if(typeof self.func !== 'function')  {
+                return reject('not a function.');
+            }
+
+            const exec = self.func(self.client, self.msg, self.parsed.slice(1));
+
+            if(process.env.ifttt)   {
+                rp.post('https://maker.ifttt.com/trigger/pleb/with/key/' + process.env.ifttt, {
+                    body: {
+                        value1: this.func.name,
+                        value2: this.parsed[0],
+                        value3: this.parsed.slice(1).join(' ')
+                    },
+                    json: true
+                }).catch(console.error);
+            }
+
+            if(typeof exec !== 'undefined') {
+                return resolve(exec);
+            }   else {
+                return resolve();
+            }
+        }).then(res => {
+            if(options.respond && typeof res == 'string' && res.length > 0) {
+                return self.msg.channel.sendMessage(res);
+            }
+            return Promise.resolve(res);
+        }).then(res => {
+            self.msg.channel.stopTyping();
+            return res;
+        }).catch(err => {
+            console.error(err);
+            self.msg.reply(err).catch(() => null);
+            self.msg.channel.stopTyping();
+        });
+    }
+
+    /**
+     * Check if the a message is a command.  This should be called before constructing.
+     * @param {Message} msg
+     * @param {string} [body] - optional raw text to be evaluated as a command
+     * @returns {Function|undefined}
+     */
+    static validate(msg, body)   {
+        if(msg.author.bot)  {
+            return;
+        }
+
+        const text = body ? body : msg.content;
+        const parsed = Command.parse(text);
+        const cmd = parsed[0];
+
+        /*
+        If the command is NSFW:
+        - The message is NOT a direct message AND
+        - The author does NOT have the 'nsfw' role AND
+        - The channel is NOT named 'nsfw'
+
+        ~ The command is invalid.
+         */
+        if(Command.isNSFW(cmd))   {
+            if(msg.member && !msg.member.roles.exists('name', 'nsfw') && msg.channel.name != 'nsfw')   {
+                return;
+            }
+        }
+
+        /*
+         These are valid command forms:
+         - channel name is 'pleb' OR
+         - message is a direct message OR
+         - the bot is mentioned first OR
+         - a raw body is provided
+
+         These are exclusion parameters:
+         - the length of the command is > 0 AND
+         - the user doesn't have `no-pleb` role
+         */
+        if(msg.member && msg.member.roles.exists('name', 'no-pleb')) return;
+        if((msg.channel.name == 'pleb' || msg.channel.guild == null || Command.mentionedFirst(text) || body) && parsed.length > 0)    {
+            return Command.fetch(cmd);
+        }
+    }
+
+    /**
+     * Check if a command is NSFW.
+     * @param {String} str
+     * @returns {boolean}
+     */
+    static isNSFW(str)  {
+        return Command._nsfwList().indexOf(str) !== -1;
+    }
+
+    /**
+     * Check if a given string is a command function.
+     * @param {string} str
+     * @returns {Function}
+     */
+    static fetch(str) {
+        if(typeof Command._list().get(str) == 'function')    {
+            return Command._list().get(str);
+        }
+
+        for(const [key, val] of Command._list())    {
+            if(typeof key == 'string')  {
+                if(key === str) {
+                    return val;
+                }
+            }   else if(str.match(key))  {
+                return val;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Check if the bot was mentioned first.
+     * @param {string} msg
+     * @returns {boolean}
+     */
+    static mentionedFirst(msg)  {
+        const content = msg.split(' ');
+        return (content[0] === '<@' + process.env.discord_client_id + '>') || (content[0] === '<@!' + process.env.discord_client_id + '>');
+    }
+
+    /**
+     * Parse an incoming command.
+     * @param {string} msg
+     * @returns {[]}
+     */
+    static parse(msg)    {
+        const parts = msg.split(' ');
+
+        if(Command.mentionedFirst(msg))    {
+            return parts.slice(1);
+        }   else    {
+            return parts;
+        }
+    }
+}
