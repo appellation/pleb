@@ -11,4 +11,13 @@ function Hello(client, msg, args)   {
     return msg.reply(':wave:');
 }
 
-module.exports = Hello;
+module.exports = {
+    func: Hello,
+    triggers: [
+        'hello',
+        'hi',
+        'hey',
+        'sup',
+        'wassup'
+    ]
+};

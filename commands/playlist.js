@@ -27,4 +27,7 @@ function Playlist(client, msg, args)    {
     });
 }
 
-module.exports = Playlist;
+module.exports = {
+    func: Playlist,
+    triggers: 'playlist'
+};

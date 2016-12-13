@@ -81,4 +81,7 @@ function Imgur(client, msg, args)   {
     }
 }
 
-module.exports = Imgur;
+module.exports = {
+    triggers: 'imgur',
+    func: Imgur
+};

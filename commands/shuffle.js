@@ -31,4 +31,7 @@ function Shuffle(client, msg, args) {
     }
 }
 
-module.exports = Shuffle;
+module.exports = {
+    func: Shuffle,
+    triggers: 'shuffle'
+};

@@ -88,4 +88,7 @@ function shortenURL(url)    {
     });
 }
 
-module.exports = Search;
+module.exports = {
+    func: Search,
+    triggers: 'search'
+};

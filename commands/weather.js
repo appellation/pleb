@@ -151,4 +151,7 @@ function Weather(client, msg, args) {
     });
 }
 
-module.exports = Weather;
+module.exports = {
+    func: Weather,
+    triggers: 'weather'
+};

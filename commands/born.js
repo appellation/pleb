@@ -15,4 +15,10 @@ function Born(client, msg, args)    {
     return msg.reply("you were born on " + moment(date).format("MMMM Do, YYYY") + " at " + moment(date).format("h:mm:ss a"));
 }
 
-module.exports = Born;
+/**
+ * @type {CommandStructure}
+ */
+module.exports = {
+    func: Born,
+    triggers: 'born'
+};

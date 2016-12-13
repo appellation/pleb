@@ -21,6 +21,7 @@
     "dotenv": "^2.0.0",
     "erlpack": "github:hammerandchisel/erlpack",
     "fluent-ffmpeg": "^2.1.0",
+    "fs-extra": "^1.0.0",
     "image-size": "^0.5.0",
     "knuth-shuffle": "^1.0.1",
     "moment": "^2.16.0",

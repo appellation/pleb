@@ -45,4 +45,7 @@ function Emojify(client, msg, args) {
     }).catch(console.error);
 }
 
-module.exports = Emojify;
+module.exports = {
+    triggers: 'emojify',
+    func: Emojify
+};

@@ -16,4 +16,7 @@ const VC = require('../operators/voiceConnection');
     });
 }
 
-module.exports = Listen;
+module.exports = {
+    func: Listen,
+    triggers: 'listen'
+};

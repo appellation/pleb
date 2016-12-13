@@ -34,4 +34,10 @@ function EightBall(client, msg, args)   {
     return msg.reply('🎱 ' + shuffle(responses)[0]);
 }
 
-module.exports = EightBall;
+/**
+ * @type {CommandStructure}
+ */
+module.exports = {
+    func: EightBall,
+    triggers: '8ball'
+};

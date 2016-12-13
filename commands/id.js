@@ -29,4 +29,7 @@ function Id(client, msg, args)  {
     return out.join('\n');
 }
 
-module.exports = Id;
+module.exports = {
+    triggers: 'id',
+    func: Id
+};

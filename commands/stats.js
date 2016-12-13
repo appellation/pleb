@@ -35,4 +35,10 @@ function Status(client, msg, args)  {
         `**Uptime:** ${moment.duration((new Date()) - client.readyTimestamp, 'ms').format("d [days] h [hrs] mm [mins] ss [secs]")}\n`;
 }
 
-module.exports = Status;
+module.exports = {
+    func: Status,
+    triggers: [
+        'status',
+        'stats'
+    ]
+};

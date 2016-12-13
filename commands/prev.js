@@ -22,4 +22,7 @@ function Prev(client, msg, args)    {
     }
 }
 
-module.exports = Prev;
+module.exports = {
+    func: Prev,
+    triggers: 'prev'
+};

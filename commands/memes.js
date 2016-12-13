@@ -28,4 +28,7 @@ function Memes(client, msg, args)   {
         });
     }
 }
-module.exports = Memes;
+module.exports = {
+    func: Memes,
+    triggers: 'memes'
+};

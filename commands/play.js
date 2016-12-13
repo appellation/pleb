@@ -39,4 +39,7 @@ function Play (client, msg, args, {playlistIn = null, shuffle = false} = {}) {
     });
 }
 
-module.exports = Play;
+module.exports = {
+    func: Play,
+    triggers: 'play'
+};

@@ -9,4 +9,7 @@ function Link() {
     return 'https://discordapp.com/oauth2/authorize?client_id=218227587166502923&scope=bot&permissions=3173398';
 }
 
-module.exports = Link;
+module.exports = {
+    func: Link,
+    triggers: 'link'
+};

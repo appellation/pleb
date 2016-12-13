@@ -50,4 +50,7 @@ function Help(client, msg, args)    {
     , {split: true});
 }
 
-module.exports = Help;
+module.exports = {
+    triggers: 'help',
+    func: Help
+};

@@ -18,4 +18,7 @@ function Pause(client, msg, args)   {
     }
 }
 
-module.exports = Pause;
+module.exports = {
+    func: Pause,
+    triggers: 'pause'
+};

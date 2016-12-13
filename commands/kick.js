@@ -11,4 +11,7 @@ function Kick(client, msg, args)    {
     return op.kick();
 }
 
-module.exports = Kick;
+module.exports = {
+    func: Kick,
+    triggers: 'kick'
+};

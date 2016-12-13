@@ -21,4 +21,10 @@ function Boobs(client, msg, args)   {
     });
 }
 
-module.exports = Boobs;
+/**
+ * @type {CommandStructure}
+ */
+module.exports = {
+    func: Boobs,
+    triggers: 'boobs'
+};

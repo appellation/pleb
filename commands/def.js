@@ -55,4 +55,7 @@ function Def(client, msg, args) {
     })
 }
 
-module.exports = Def;
+module.exports = {
+    triggers: 'define',
+    func: Def
+};

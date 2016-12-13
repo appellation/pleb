@@ -44,7 +44,10 @@ function Dice(client, msg, args, options)    {
     }
 }
 
-module.exports = Dice;
+module.exports = {
+    triggers: 'dice',
+    func: Dice
+};
 
 function roll(sides)    {
     const arr = [];

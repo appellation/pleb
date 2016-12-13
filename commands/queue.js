@@ -29,4 +29,7 @@ function Queue(client, msg, args)   {
     return out;
 }
 
-module.exports = Queue;
+module.exports = {
+    func: Queue,
+    triggers: 'queue'
+};

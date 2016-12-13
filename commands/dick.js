@@ -43,4 +43,7 @@ function Dick(client, msg, args)    {
     return dick;
 }
 
-module.exports = Dick;
+module.exports = {
+    triggers: 'dick',
+    func: Dick
+};

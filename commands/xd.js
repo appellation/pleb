@@ -12,4 +12,10 @@ function Xd(client, msg, args)  {
     return msg.channel.sendFile(__dirname + '/../assets/images/xd.gif');
 }
 
-module.exports = Xd;
+module.exports = {
+    func: Xd,
+    triggers: [
+        'xD',
+        'XD'
+    ]
+};

@@ -9,4 +9,7 @@ function Ban(client, msg, args) {
     return op.ban();
 }
 
-module.exports = Ban;
+module.exports = {
+    func: Ban,
+    triggers: 'ban'
+};

@@ -17,4 +17,7 @@ function Invite(client, msg, args) {
     return op.invite();
 }
 
-module.exports = Invite;
+module.exports = {
+    func: Invite,
+    triggers: 'invite'
+};

@@ -9,4 +9,7 @@ function Unban(client, msg, args)   {
     return op.unban();
 }
 
-module.exports = Unban;
+module.exports = {
+    func: Unban,
+    triggers: 'unban'
+};

@@ -20,4 +20,11 @@ function Sanitize(client, msg, args)    {
     });
 }
 
-module.exports = Sanitize;
+module.exports = {
+    func: Sanitize,
+    triggers: [
+        'sanitize',
+        'purge',
+        'clean'
+    ]
+};

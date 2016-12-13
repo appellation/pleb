@@ -18,4 +18,7 @@ function Resume(client, msg, args)  {
     }
 }
 
-module.exports = Resume;
+module.exports = {
+    func: Resume,
+    triggers: 'resume'
+};

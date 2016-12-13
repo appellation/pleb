@@ -46,4 +46,7 @@ function Remind(client, msg, args)  {
     
 }
 
-module.exports = Remind;
+module.exports = {
+    func: Remind,
+    triggers: 'remind'
+};

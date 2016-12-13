@@ -24,4 +24,7 @@ function Info(client, msg, args)    {
         "v8 version: `" + process.versions.v8 + "`\n");
 }
 
-module.exports = Info;
+module.exports = {
+    func: Info,
+    triggers: 'info'
+};

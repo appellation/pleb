@@ -26,4 +26,11 @@ function Stfu(client, msg, args)    {
     return 'k 😢';
 }
 
-module.exports = Stfu;
+module.exports = {
+    func: Stfu,
+    triggers: [
+        'stfu',
+        'stop',
+        'leave'
+    ]
+};

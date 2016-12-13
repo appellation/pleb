@@ -65,4 +65,7 @@ function Morse(client, msg, args)   {
     return out;
 }
 
-module.exports = Morse;
+module.exports = {
+    func: Morse,
+    triggers: 'morse'
+};

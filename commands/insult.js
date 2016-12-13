@@ -19,7 +19,10 @@ function Insult(client, msg, args)  {
     }
 }
 
-module.exports = Insult;
+module.exports = {
+    func: Insult,
+    triggers: 'insult'
+};
 
 const insults = [
     'Is your ass jealous of the amount of shit that just came out of your mouth?',

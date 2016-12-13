@@ -21,4 +21,10 @@ function Ass(client, msg, args) {
     });
 }
 
-module.exports = Ass;
+/**
+ * @type {CommandStructure}
+ */
+module.exports = {
+    func: Ass,
+    triggers: 'ass'
+};

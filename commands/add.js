@@ -31,4 +31,10 @@ function Add(client, msg, args) {
     }
 }
 
-module.exports = Add;
+/**
+ * @type {CommandStructure}
+ */
+module.exports = {
+    func: Add,
+    triggers: 'add'
+};

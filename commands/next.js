@@ -28,4 +28,7 @@ function Next(client, msg, args)    {
     }
 }
 
-module.exports = Next;
+module.exports = {
+    func: Next,
+    triggers: 'next'
+};

@@ -25,4 +25,7 @@ function Ping(client, msg, args)    {
     }
 }
 
-module.exports = Ping;
+module.exports = {
+    func: Ping,
+    triggers: 'ping'
+};

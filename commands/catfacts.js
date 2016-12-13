@@ -26,4 +26,7 @@ function Catfacts(client, msg, args)    {
     })
 }
 
-module.exports = Catfacts;
+module.exports = {
+    func: Catfacts,
+    triggers: 'catfacts'
+};

@@ -28,4 +28,7 @@ function Eval(client, msg, args)    {
     })
 }
 
-module.exports = Eval;
+module.exports = {
+    triggers: 'eval',
+    func: Eval
+};
