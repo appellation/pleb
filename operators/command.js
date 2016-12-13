@@ -266,7 +266,7 @@ class Command   {
             return res;
         }).catch(err => {
             console.error(err);
-            self.msg.reply(err);
+            self.msg.reply(err).catch(() => null);
             self.msg.channel.stopTyping();
         });
     }
