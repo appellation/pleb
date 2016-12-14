@@ -6,78 +6,48 @@ const rp = require('request-promise-native');
 const fsX = require('fs-extra');
 const fs = require('fs');
 
-const commands = CommandOperator.fetchCommands();
-const prefixes = [
-    `<@${process.env.discord_client_id}> `,
-    `<!@${process.env.discord_client_id}> `
-];
-
-/**
- * @typedef {Object} CommandStructure
- * @property {Function} func
- * @property {Iterable|Object} triggers
- * @property {Function} [validation]
- * @property {[CommandStructure]} [options]
- */
-
-function Command(message, body)   {
-    let content;
-    if(body)    {
-        content = body;
-    }   else {
-        for(const pref of prefixes) {
-            if(message.content.startsWith(pref)) {
-                content = message.content.substring(pref.length);
-                break;
-            }
-        }
-        if(!content) return;
-    }
-
-    let command;
-    for(const cmd of commands.keys())  {
-        if(cmd instanceof RegExp)   {
-            if(content.match(cmd))  {
-                command = commands.get(cmd);
-                break;
-            }
-        }   else if(typeof cmd === 'string')    {
-            if(content.startsWith(cmd)) {
-                command = commands.get(cmd);
-                break;
-            }
-        }
-    }
-    if(!command) return;
-
-    return new Promise((resolve, reject) => {
-        if(typeof command.validation === 'function')    {
-            const valid = command.validation(message);
-            if(typeof valid.then === 'function' && typeof valid.catch === 'function')   {
-                return valid.then(res => res ? resolve(command.func) : reject()).catch(reject);
-            }   else {
-                return valid ? resolve(command.func) : reject();
-            }
-        }   else {
-            resolve(command.func);
-        }
-    }).then(func => {
-        console.log(func);
-    })
-}
-
-module.exports = Command;
-
 class CommandOperator   {
 
     constructor(message)    {
         this.msg = message;
+        this.content = message.content;
     }
 
-    isPrefixed()    {
-        //
+    trimPrefix()    {
+        const prefixes = [
+            `<@${process.env.discord_client_id}> `,
+            `<!@${process.env.discord_client_id}> `
+        ];
+
+        for(const pref of prefixes) {
+            console.log(pref);
+            if(this.msg.content.startsWith(pref)) {
+                return this.msg.content.substring(pref.length);
+            }
+        }
+        return null;
     }
 
+    get command()    {
+        for(const cmd of commands.keys())  {
+            if(cmd instanceof RegExp)   {
+                if(this.content.match(cmd))  {
+                    return commands.get(cmd);
+                }
+            }   else if(typeof cmd === 'string')    {
+                if(this.content.startsWith(cmd)) {
+                    return commands.get(cmd);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Fetch all commands
+     * @return {Promise.<Map>}
+     */
     static fetchCommands()  {
         return new Promise(resolve => {
             const files = [];
@@ -88,7 +58,7 @@ class CommandOperator   {
             });
             walker.on('errors', console.error);
             walker.on('end', () => {
-                resolve(files);
+                return resolve(files);
             });
         }).then(files => {
             const contents = new Map();
@@ -111,6 +81,45 @@ class CommandOperator   {
                 }
             }
             return contents;
-        }).then(console.log).catch(console.error);
+        });
     }
 }
+
+const commands = CommandOperator.fetchCommands();
+
+/**
+ * @typedef {Object} CommandStructure
+ * @property {Function} func
+ * @property {Iterable|Object} triggers
+ * @property {Function} [validation]
+ * @property {[CommandStructure]} [options]
+ */
+
+function Command(message, body)   {
+    const operator = new CommandOperator(message);
+
+    const content = body || operator.trimPrefix();
+    console.log(content);
+    if(!content) return;
+    operator.content = content;
+
+    const command = operator.command;
+    if(!command) return;
+
+    return new Promise((resolve, reject) => {
+        if(typeof command.validation === 'function')    {
+            const valid = command.validation(message);
+            if(typeof valid.then === 'function' && typeof valid.catch === 'function')   {
+                return valid.then(res => res ? resolve(command.func) : reject()).catch(reject);
+            }   else {
+                return valid ? resolve(command.func) : reject();
+            }
+        }   else {
+            resolve(command.func);
+        }
+    }).then(func => {
+        console.log(func);
+    });
+}
+
+module.exports = Command;
