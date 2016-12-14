@@ -86,15 +86,8 @@ class Playlist extends EventEmitter {
                         self.list.next();
                         playQueue();
                     }   else {
-                        noContinue();
+                        self._noContinue();
                     }
-                }
-
-                function noContinue()   {
-                    if(self.dispatcher && typeof self.dispatcher.removeListener === 'function') {
-                        self.dispatcher.removeListener('end', end);
-                    }
-                    storage.delete(self.vc.channel.guild.id);
                 }
             }
         }
@@ -187,13 +180,20 @@ class Playlist extends EventEmitter {
         }
     };
 
+    _noContinue()   {
+        if(this.dispatcher && typeof this.dispatcher.removeListener === 'function') {
+            this.dispatcher.removeListener('end', end);
+        }
+        storage.delete(this.vc.channel.guild.id);
+    }
+
     /**
      * Stop playback.
      */
     stop() {
         this.emit('stop');
-        this.removeListener('stop', noContinue);
-        this.removeListener('destroy', noContinue);
+        this.removeListener('stop', this._noContinue);
+        this.removeListener('destroy', this._noContinue);
         if(this.dispatcher) {
             this.dispatcher.end();
             this.dispatcher = null;
