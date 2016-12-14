@@ -5,10 +5,7 @@
 const command = require('../operators/command');
 
 function message(message)   {
-    const cmd = command(message.client, message);
-    if(cmd) {
-        cmd.call();
-    }
+    command(message);
 }
 
 module.exports = message;

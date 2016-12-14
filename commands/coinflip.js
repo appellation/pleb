@@ -12,4 +12,7 @@ function Coinflip(client, msg, args)    {
     return require('./dice')(client, msg, args, {coinflip: true});
 }
 
-module.exports = Coinflip;
+module.exports = {
+    func: Coinflip,
+    triggers: 'coinflip'
+};
