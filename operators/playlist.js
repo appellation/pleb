@@ -46,53 +46,14 @@ class Playlist extends EventEmitter {
      * @param {[]} args
      */
     start(msg, args) {
-        var init = true;
-        const self = this;
+        this.init = true;
 
-        function playQueue() {
-            if (self.dispatcher) {
-                self.stop();
-            }
-
-            if (self.list && self.list.hasCurrent()) {
-                const stream = self.getStream();
-
-                if(!stream)  {
-                    self.emit('error', 'No stream.');
-                    return;
-                }
-
-                self.dispatcher = self.play(stream);
-
-                if(init)    {
-                    self.emit('init', self.list);
-                    init = false;
-                }
-
-                if(self.list.list.length > 1)  {
-                    const message = '**' + (self.list.pos + 1) + '** of ' + self.list.list.length + ': `' + self.list.getCurrent().name + "`";
-                    msg.channel.sendMessage(message).catch(() => null);
-                }
-
-                self.once('stop', noContinue);
-                self.once('destroy', noContinue);
-
-                self.dispatcher.once('end', end);
-                function end() {
-                    self.dispatcher = null;
-                    self.stop();
-
-                    if (self.list.hasNext()) {
-                        self.list.next();
-                        playQueue();
-                    }   else {
-                        self._noContinue();
-                    }
-                }
-            }
+        if(this.list.list.length > 1)  {
+            const message = '**' + (this.list.pos + 1) + '** of ' + this.list.list.length + ': `' + this.list.getCurrent().name + "`";
+            msg.channel.sendMessage(message).catch(() => null);
         }
 
-        self.once('init', function(playlist)   {
+        this.once('init', function(playlist)   {
             if(playlist.list.length === 1)  {
                 if(!SCPlaylist.isSoundCloudURL(args[0]) && !YTPlaylist.isYouTubeURL(args[0]))    {
                     msg.reply('now playing ' + playlist.getCurrent().url).catch(() => null);
@@ -102,7 +63,54 @@ class Playlist extends EventEmitter {
             }
         });
 
-        playQueue();
+        this._playQueue();
+    }
+
+    _playQueue() {
+        const self = this;
+        if (self.dispatcher) {
+            self.stop();
+        }
+
+        if (self.list && self.list.hasCurrent()) {
+            const stream = self.getStream();
+
+            if(!stream)  {
+                self.emit('error', 'No stream.');
+                return;
+            }
+
+            self.dispatcher = self.play(stream);
+
+            if(self.init)    {
+                self.emit('init', self.list);
+                self.init = false;
+            }
+
+            self.once('stop', self._noContinue);
+            self.once('destroy', self._noContinue);
+
+            self.dispatcher.once('end', self._end);
+        }
+    }
+
+    _noContinue()   {
+        if(this.dispatcher && typeof this.dispatcher.removeListener === 'function') {
+            this.dispatcher.removeListener('end', this._end);
+        }
+        storage.delete(this.vc.channel.guild.id);
+    }
+
+    _end() {
+        this.dispatcher = null;
+        this.stop();
+
+        if (this.list.hasNext()) {
+            this.list.next();
+            this._playQueue();
+        }   else {
+            this._noContinue();
+        }
     }
 
     /**
@@ -179,13 +187,6 @@ class Playlist extends EventEmitter {
             return this.list.getCurrent();
         }
     };
-
-    _noContinue()   {
-        if(this.dispatcher && typeof this.dispatcher.removeListener === 'function') {
-            this.dispatcher.removeListener('end', end);
-        }
-        storage.delete(this.vc.channel.guild.id);
-    }
 
     /**
      * Stop playback.
