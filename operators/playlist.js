@@ -74,8 +74,8 @@ class Playlist extends EventEmitter {
                     msg.channel.sendMessage(message).catch(() => null);
                 }
 
-                self.once('stop', noContinue);
-                self.once('destroy', noContinue);
+                self.once('stop', self._noContinue);
+                self.once('destroy', self._noContinue);
 
                 self.dispatcher.once('end', end);
                 function end() {
