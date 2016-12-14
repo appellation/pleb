@@ -46,75 +46,73 @@ class Playlist extends EventEmitter {
      * @param {[]} args
      */
     start(msg, args) {
-        this.init = true;
-        this.msg = msg;
+        var init = true;
+        const self = this;
 
-        this.once('init', function(playlist)   {
+        function playQueue() {
+            if (self.dispatcher) {
+                self.stop();
+            }
+
+            if (self.list && self.list.hasCurrent()) {
+                const stream = self.getStream();
+
+                if(!stream)  {
+                    self.emit('error', 'No stream.');
+                    return;
+                }
+
+                self.dispatcher = self.play(stream);
+
+                if(init)    {
+                    self.emit('init', self.list);
+                    init = false;
+                }
+
+                if(self.list.list.length > 1)  {
+                    const message = '**' + (self.list.pos + 1) + '** of ' + self.list.list.length + ': `' + self.list.getCurrent().name + "`";
+                    msg.channel.sendMessage(message);
+                }
+
+                self.once('stop', noContinue);
+                self.once('destroy', noContinue);
+
+                self.dispatcher.once('end', end);
+                function end() {
+                    self.dispatcher = null;
+
+                    if (self.list.hasNext()) {
+                        self.list.next();
+                        playQueue();
+                    }   else {
+                        noContinue();
+                    }
+
+                    self.removeListener('stop', noContinue);
+                    self.removeListener('destroy', noContinue);
+                }
+
+                function noContinue()   {
+                    if(self.dispatcher && typeof self.dispatcher.removeListener === 'function') {
+                        self.dispatcher.removeListener('end', end);
+                    }
+                    storage.delete(self.vc.channel.guild.id);
+                }
+            }
+        }
+
+        self.once('init', function(playlist)   {
             if(playlist.list.length === 1)  {
                 if(!SCPlaylist.isSoundCloudURL(args[0]) && !YTPlaylist.isYouTubeURL(args[0]))    {
-                    this.msg.reply('now playing ' + playlist.getCurrent().url).catch(() => null);
+                    msg.reply('now playing ' + playlist.getCurrent().url);
                 }   else    {
-                    this.msg.reply('now playing').catch(() => null);
+                    msg.reply('now playing');
                 }
             }
         });
 
-        this._playQueue();
-    }
-
-    _playQueue() {
-        if (this.dispatcher) {
-            this.stop();
-        }
-
-        if (this.list && this.list.hasCurrent()) {
-            const stream = this.getStream();
-
-            if(!stream)  {
-                this.emit('error', 'No stream.');
-                return;
-            }
-
-            this.dispatcher = this.play(stream);
-
-            if(this.list.list.length > 1)  {
-                const message = '**' + (this.list.pos + 1) + '** of ' + this.list.list.length + ': `' + this.list.getCurrent().name + "`";
-                this.msg ? this.msg.channel.sendMessage(message).catch(() => null) : null;
-            }
-
-            if(this.init)    {
-                this.emit('init', this.list);
-                this.init = false;
-            }
-
-            this.once('stop', this._noContinue);
-            this.once('destroy', this._noContinue);
-
-            this.dispatcher.once('end', this._end.bind(this));
-        }
-    }
-
-    _noContinue()   {
-        this.removeListener('stop', this._noContinue);
-        this.removeListener('destroy', this._noContinue);
-
-        if(this.dispatcher && typeof this.dispatcher.removeListener === 'function') {
-            this.dispatcher.removeListener('end', this._end.bind(this));
-        }
-        storage.delete(this.vc.channel.guild.id);
-    }
-
-    _end() {
-        this.removeListener('stop', this._noContinue);
-        this.removeListener('destroy', this._noContinue);
-
-        if (this.list.hasNext()) {
-            this.list.next();
-            this._playQueue();
-        }   else {
-            this._noContinue();
-        }
-    }
+        playQueue();
+    };
 
     /**
      * Add an array of command arguments to the playlist.
@@ -199,8 +197,8 @@ class Playlist extends EventEmitter {
         if(this.dispatcher) {
             this.dispatcher.end();
             this.dispatcher = null;
+            this.emit('stopped');
         }
-        this.emit('stopped');
     };
 
     /**
