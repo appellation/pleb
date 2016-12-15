@@ -96,7 +96,7 @@ class Playlist extends EventEmitter {
 
             if(this.list.list.length > 1)  {
                 const message = '**' + (this.list.pos + 1) + '** of ' + this.list.list.length + ': `' + this.list.getCurrent().name + "`";
-                if(this.msg) this.msg.channel.sendMessage(message);
+                if(this.msg) this.msg.channel.sendMessage(message).catch(() => null);
             }
 
             this.dispatcher.once('end', this._end.bind(this));
