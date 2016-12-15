@@ -26,7 +26,7 @@ function Shuffle(client, msg, args) {
                 shuffle: true
             });
         }   else    {
-            return 'takes two (or more :thinking:) to tango.';
+            return 'takes two (or more 🤔) to tango.';
         }
     }
 }
