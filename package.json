@@ -8,11 +8,11 @@
     "start": "node index.js"
   },
   "engines": {
-    "node": "6.5.0",
+    "node": "7.2.0",
     "npm": "3.10.7"
   },
   "repository": "appellation/pleb",
-  "author": "Will Nelson <nelson.will@live.com>",
+  "author": "Will Nelson <appellation@topkek.pw>",
   "license": "ISC",
   "dependencies": {
     "@google-cloud/speech": "^0.3.0",
