@@ -101,9 +101,12 @@ class Playlist extends EventEmitter {
      * @private
      */
     _end(reason)  {
-        if (this.list.hasNext() && reason !== 'user') {
+        if(reason === 'user') return;
+        if (this.list.hasNext()) {
             this.list.next();
             this._playQueue();
+        }   else   {
+            this.destroy();
         }
     }
 
