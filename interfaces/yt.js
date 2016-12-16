@@ -13,7 +13,6 @@
     const validUrl = require('valid-url');
     const ytNode = require('youtube-node');
     const rp = require('request-promise-native');
-    const _ = require('underscore');
 
     const ytApi = new ytNode();
     ytApi.setKey(process.env.youtube);
@@ -97,7 +96,7 @@
 
                     rp(options).then(function(result)  {
 
-                        _.each(result.items, function(elem) {
+                        for(const elem of result.items) {
                             if(elem.status.privacyStatus == 'public' || elem.status.privacyStatus == 'unlisted')    {
                                 self.list.add(new StreamStructure('https://www.youtube.com/watch?v=' + elem.contentDetails.videoId, elem.snippet.title));
 
@@ -106,7 +105,7 @@
                                     first = false;
                                 }
                             }
-                        });
+                        }
 
                         if(result.nextPageToken)    {
                             recurse(result.nextPageToken);
