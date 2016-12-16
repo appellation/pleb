@@ -14,12 +14,9 @@ function Stfu(msg, args)    {
         return;
     }
     const playlist = storage.get(msg.guild.id);
+    if(playlist) playlist.destroy();
 
-    if(playlist)  {
-        playlist.disconnect();
-    }   else if(msg.guild.voiceConnection)  {
-        msg.guild.voiceConnection.disconnect();
-    }
+    msg.guild.voiceConnection.disconnect();
 
     return 'k 😢';
 }
