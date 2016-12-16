@@ -13,5 +13,6 @@ function Kick(msg, args)    {
 
 module.exports = {
     func: Kick,
-    triggers: 'kick'
+    triggers: 'kick',
+    disabled: true
 };

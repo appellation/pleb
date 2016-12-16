@@ -11,5 +11,6 @@ function Ban(msg, args) {
 
 module.exports = {
     func: Ban,
-    triggers: 'ban'
+    triggers: 'ban',
+    disabled: true
 };

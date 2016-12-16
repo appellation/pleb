@@ -19,5 +19,6 @@ function Invite(msg, args) {
 
 module.exports = {
     func: Invite,
-    triggers: 'invite'
+    triggers: 'invite',
+    disabled: true
 };

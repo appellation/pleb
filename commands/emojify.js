@@ -47,5 +47,6 @@ function Emojify(msg, args) {
 
 module.exports = {
     triggers: 'emojify',
-    func: Emojify
+    func: Emojify,
+    disabled: true
 };

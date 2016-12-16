@@ -11,5 +11,6 @@ function Unban(msg, args)   {
 
 module.exports = {
     func: Unban,
-    triggers: 'unban'
+    triggers: 'unban',
+    disabled: true
 };
