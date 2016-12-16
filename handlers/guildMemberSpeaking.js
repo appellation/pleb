@@ -3,7 +3,7 @@
  */
 
 const voiceConnectionOperator = require('../operators/voiceConnection');
-const commandOperator = require('../operators/command');
+const commandOperator = require('./message');
 
 function guildMemberSpeaking(member, speaking)  {
     if(member.listen && speaking)   {
@@ -17,10 +17,7 @@ function guildMemberSpeaking(member, speaking)  {
             if(msg.constructor.name == 'Message')    {
                 msg.channel.sendMessage('`' + text + '`');
 
-                const cmd = commandOperator(msg.client, msg, text.toLowerCase());
-                if(cmd) {
-                    cmd.call();
-                }
+                return commandOperator(msg, text.toLowerCase());
             }
         }).catch(console.error);
     }

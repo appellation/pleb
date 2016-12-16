@@ -4,11 +4,17 @@
 
 const command = require('discord-handles')({
     respond: true,
-    directory: __dirname + '/../commands'
+    directory: __dirname + '/../commands',
+    validator: message => {
+        const regex = new RegExp(`^<@!?${process.env.discord_client_id}> *`);
+
+        if(message.channel.name === 'pleb') return message.content.replace(regex, '');
+        if(regex.test(message.content)) return message.content.replace(regex, '');
+    }
 });
 
-function message(message)   {
-    command(message).catch(console.error);
+function message(message, body)   {
+    command(message, body).catch(console.error);
 }
 
 module.exports = message;
