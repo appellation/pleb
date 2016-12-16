@@ -38,6 +38,12 @@ class Playlist extends EventEmitter {
          * @type {PlaylistStructure}
          */
         this.list = listIn || new PlaylistStructure();
+
+        /**
+         * Whether to continue the playlist.
+         * @type {boolean}
+         */
+        this.continue = true;
     }
 
     /**
@@ -47,69 +53,64 @@ class Playlist extends EventEmitter {
      */
     start(msg, args) {
         this.init = true;
-
-        if(this.list.list.length > 1)  {
-            const message = '**' + (this.list.pos + 1) + '** of ' + this.list.list.length + ': `' + this.list.getCurrent().name + "`";
-            msg.channel.sendMessage(message).catch(() => null);
-        }
+        this.msg = msg;
+        this.continue = true;
 
         this.once('init', function(playlist)   {
             if(playlist.list.length === 1)  {
                 if(!SCPlaylist.isSoundCloudURL(args[0]) && !YTPlaylist.isYouTubeURL(args[0]))    {
-                    msg.reply('now playing ' + playlist.getCurrent().url).catch(() => null);
+                    msg.reply('now playing ' + playlist.getCurrent().url);
                 }   else    {
-                    msg.reply('now playing').catch(() => null);
+                    msg.reply('now playing');
                 }
             }
         });
 
         this._playQueue();
-    }
+    };
 
-    _playQueue() {
-        const self = this;
-        if (self.dispatcher) {
-            self.stop();
+    /**
+     * Play the queue.
+     * @private
+     */
+    _playQueue()    {
+        if(!this.continue) return;
+        if (this.dispatcher) {
+            this.stop();
         }
 
-        if (self.list && self.list.hasCurrent()) {
-            const stream = self.getStream();
+        if (this.list && this.list.hasCurrent()) {
+            const stream = this.getStream();
 
             if(!stream)  {
-                self.emit('error', 'No stream.');
+                this.emit('error', 'No stream.');
                 return;
             }
 
-            self.dispatcher = self.play(stream);
+            this.dispatcher = this.play(stream);
 
-            if(self.init)    {
-                self.emit('init', self.list);
-                self.init = false;
+            if(this.init)    {
+                this.emit('init', this.list);
+                this.init = false;
             }
 
-            self.once('stop', self._noContinue);
-            self.once('destroy', self._noContinue);
+            if(this.list.list.length > 1)  {
+                const message = '**' + (this.list.pos + 1) + '** of ' + this.list.list.length + ': `' + this.list.getCurrent().name + "`";
+                if(this.msg) this.msg.channel.sendMessage(message).catch(() => null);
+            }
 
-            self.dispatcher.once('end', self._end);
+            this.dispatcher.once('end', this._end.bind(this));
         }
     }
 
-    _noContinue()   {
-        if(this.dispatcher && typeof this.dispatcher.removeListener === 'function') {
-            this.dispatcher.removeListener('end', this._end);
-        }
-        storage.delete(this.vc.channel.guild.id);
-    }
-
-    _end() {
-        this.dispatcher = null;
-        this.stop();
-
-        if (this.list.hasNext()) {
+    /**
+     * Dispatcher end listener.
+     * @private
+     */
+    _end()  {
+        if (this.list.hasNext() && this.continue) {
             this.list.next();
             this._playQueue();
-        }   else {
-            this._noContinue();
         }
     }
 
@@ -193,8 +194,7 @@ class Playlist extends EventEmitter {
      */
     stop() {
         this.emit('stop');
-        this.removeListener('stop', this._noContinue);
-        this.removeListener('destroy', this._noContinue);
+        this.continue = false;
         if(this.dispatcher) {
             this.dispatcher.end();
             this.dispatcher = null;
@@ -203,23 +203,23 @@ class Playlist extends EventEmitter {
     };
 
     /**
-     * Destroy the audio connection.
+     * Destroy the playlist.
      */
     destroy() {
         this.stop();
         this.emit('destroy');
-        this.list = null;
         storage.delete(this.vc.channel.guild.id);
+        this.emit('destroyed');
+    };
+
+    disconnect()    {
+        this.destroy();
         if(this.vc) {
             this.vc.disconnect();
             this.vc = null;
             this.removeAllListeners();
         }
-        if(this.dispatcher) {
-            this.dispatcher.removeAllListeners();
-        }
-        this.emit('destroyed');
-    };
+    }
 
     /**
      * Pause playback.

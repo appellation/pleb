@@ -19,7 +19,7 @@ function Play (msg, args, {playlistIn = null, shuffle = false} = {}) {
     let playlist;
     return VC.checkCurrent(msg.client, msg).then(conn =>  {
 
-        playlist = playlistIn ? playlistIn : new Playlist(conn);
+        playlist = playlistIn || new Playlist(conn);
 
         // NOTE: if playlistIn is passed from msg.guild.playlist, they will be the exact same object at this point.
         if(storage.get(msg.guild.id)) storage.get(msg.guild.id).stop();

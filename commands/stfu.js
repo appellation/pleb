@@ -16,8 +16,7 @@ function Stfu(msg, args)    {
     const playlist = storage.get(msg.guild.id);
 
     if(playlist)  {
-        playlist.destroy();
-        storage.delete(msg.guild.id);
+        playlist.disconnect();
     }   else if(msg.guild.voiceConnection)  {
         msg.guild.voiceConnection.disconnect();
     }
