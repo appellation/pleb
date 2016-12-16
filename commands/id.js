@@ -3,18 +3,17 @@
  */
 
 /**
- * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
  * @return {string}
  */
-function Id(client, msg, args)  {
+function Id(msg, args)  {
     if(!args[0]) return msg.author.id;
 
     const mentions = msg.mentions;
     let out = [];
     for(const user of mentions.users)   {
-        if(user[1].equals(client.user)) continue;
+        if(user[1].equals(msg.client.user)) continue;
         out.push(user[1] + ': `' + user[1].id + '`');
     }
 

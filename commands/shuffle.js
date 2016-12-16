@@ -6,22 +6,21 @@ const Play = require('./play');
 const storage = require('../storage/playlists');
 
 /**
- * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
  * @return {Promise|string}
  */
-function Shuffle(client, msg, args) {
+function Shuffle(msg, args) {
 
     if(args.length > 0) {
-        return Play(client, msg, args, {
+        return Play.func(msg, args, {
             shuffle: true
         });
     }   else    {
         const playlist = storage.get(msg.guild.id);
 
         if(playlist && playlist.list.list.length > 0)    {
-            return Play(client, msg, args, {
+            return Play.func(msg, args, {
                 playlistIn: playlist,
                 shuffle: true
             });

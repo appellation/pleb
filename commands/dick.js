@@ -5,12 +5,11 @@
 const shuffle = require('knuth-shuffle');
 
 /**
- * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
  * @return {string}
  */
-function Dick(client, msg, args)    {
+function Dick(msg, args)    {
     let dick = "8";
     let count;
     let user;

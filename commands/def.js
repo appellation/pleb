@@ -4,7 +4,7 @@
 
 const rp = require('request-promise-native');
 
-function Def(client, msg, args) {
+function Def(msg, args) {
     return rp.get({
         uri: 'http://api.pearson.com/v2/dictionaries/ldoce5/entries',
         qs: {

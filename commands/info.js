@@ -9,7 +9,7 @@ const packageJSON = require('../package.json');
  * @param {Message} msg
  * @param {[]} args
  */
-function Info(client, msg, args)    {
+function Info(msg, args)    {
 
     msg.author.sendMessage("**Bot Info:**\n" +
         "Version: `" + packageJSON.version + "`\n" +

@@ -44,12 +44,11 @@ const dict = {
 };
 
 /**
- * @param client
  * @param msg
  * @param args
  * @returns {string|Promise|undefined}
  */
-function Morse(client, msg, args)   {
+function Morse(msg, args)   {
     if(args.length == 0) return;
 
     let out = '';

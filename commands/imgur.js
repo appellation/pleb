@@ -13,12 +13,11 @@ const shuffle = require('knuth-shuffle').knuthShuffle;
 const numeral = require('numeral');
 
 /**
- * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
  * @return {Promise|string}
  */
-function Imgur(client, msg, args)   {
+function Imgur(msg, args)   {
     if(msg.attachments.size !== 0) {
         const ul = [];
         for(const attachment of msg.attachments) {

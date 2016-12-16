@@ -6,12 +6,11 @@ const Play = require('./play');
 const storage = require('../storage/playlists');
 
 /**
- * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
  * @return {Promise|undefined}
  */
-function Next(client, msg, args)    {
+function Next(msg, args)    {
     const playlist = storage.get(msg.guild.id);
     const num = Number.parseInt(args[0]) || 1;
 
@@ -22,7 +21,7 @@ function Next(client, msg, args)    {
             playlist.next();
         }
 
-        return Play(client, msg, [], {
+        return Play.func(msg, [], {
             playlistIn: playlist
         });
     }

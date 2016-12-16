@@ -9,16 +9,15 @@ const VC = require('../operators/voiceConnection');
 const storage = require('../storage/playlists');
 
 /**
- * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
  * @param {Playlist|null} [playlistIn] - A pre-existing playlist to play.
  * @param {boolean} [shuffle] - Whether to shuffle on play.
  */
-function Play (client, msg, args, {playlistIn = null, shuffle = false} = {}) {
+function Play (msg, args, {playlistIn = null, shuffle = false} = {}) {
 
     let playlist;
-    return VC.checkCurrent(client, msg).then(conn =>  {
+    return VC.checkCurrent(msg.client, msg).then(conn =>  {
 
         playlist = playlistIn ? playlistIn : new Playlist(conn);
 

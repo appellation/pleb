@@ -5,7 +5,7 @@
 const Play = require('./play');
 const storage = require('../storage/playlists');
 
-function Prev(client, msg, args)    {
+function Prev(msg, args)    {
     const playlist = storage.get(msg.guild.id);
     const num = Number.parseInt(args[0]) || 1;
 
@@ -16,7 +16,7 @@ function Prev(client, msg, args)    {
             playlist.prev();
         }
 
-        return Play(client, msg, [], {
+        return Play.func(msg, [], {
             playlistIn: playlist
         });
     }

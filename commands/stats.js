@@ -8,12 +8,12 @@ const request = require('request');
 const playlistStorage = require('../storage/playlists');
 
 /**
- * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
  * @return {string}
  */
-function Status(client, msg, args)  {
+function Status(msg, args)  {
+    const client = msg.client;
     request({
         uri: `https://bots.discord.pw/api/bots/${process.env.discord_client_id}/stats`,
         method: 'post',

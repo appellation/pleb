@@ -5,12 +5,11 @@
 const storage = require('../storage/playlists');
 
 /**
- * @param client
  * @param msg
  * @param args
  * @return string|undefined
  */
-function Queue(client, msg, args)   {
+function Queue(msg, args)   {
     const playlist = storage.get(msg.guild.id);
     if(!playlist) return;
 

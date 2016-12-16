@@ -3,13 +3,12 @@
  */
 
 /**
- * @param client
  * @param msg
  * @param args
  * @returns {string}
  */
-function Coinflip(client, msg, args)    {
-    return require('./dice')(client, msg, args, {coinflip: true});
+function Coinflip(msg, args)    {
+    return require('./dice')(msg, args, {coinflip: true});
 }
 
 module.exports = {

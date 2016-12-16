@@ -5,12 +5,11 @@
 const moment = require('moment');
 
 /**
- * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
  * @return {Promise|undefined}
  */
-function Memes(client, msg, args)   {
+function Memes(msg, args)   {
 
     /**Randomly chooses between XKCD and C&H**/
     if(Math.random() >= 0.5)    {

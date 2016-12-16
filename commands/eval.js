@@ -8,7 +8,7 @@
  * @param {[]} args
  * @return {Promise|undefined}
  */
-function Eval(client, msg, args)    {
+function Eval(msg, args)    {
     if(msg.author.id !== '116690352584392704') return;
 
     return new Promise(resolve => {

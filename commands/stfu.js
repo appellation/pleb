@@ -5,12 +5,11 @@
 const storage = require('../storage/playlists');
 
 /**
- * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
  * @return {string|undefined}
  */
-function Stfu(client, msg, args)    {
+function Stfu(msg, args)    {
     if(!msg.guild)  {
         return;
     }

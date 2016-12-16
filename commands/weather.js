@@ -25,13 +25,11 @@ const precipDescMap = {
 };
 
 /**
- *
- * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
  * @return {Promise|string}
  */
-function Weather(client, msg, args) {
+function Weather(msg, args) {
     if(args.length === 0) return 'no location specified';
     const poss = [
         'currently',
@@ -153,5 +151,8 @@ function Weather(client, msg, args) {
 
 module.exports = {
     func: Weather,
-    triggers: 'weather'
+    triggers: 'weather',
+    validator: (message, args) => {
+        return args.length !== 0;
+    }
 };

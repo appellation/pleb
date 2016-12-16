@@ -3,11 +3,10 @@
  */
 
 /**
- * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
  */
-function Hello(client, msg, args)   {
+function Hello(msg, args)   {
     return msg.reply(':wave:');
 }
 

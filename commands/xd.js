@@ -3,12 +3,11 @@
  */
 
 /**
- * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
  * @return {Promise}
  */
-function Xd(client, msg, args)  {
+function Xd(msg, args)  {
     return msg.channel.sendFile(__dirname + '/../assets/images/xd.gif');
 }
 

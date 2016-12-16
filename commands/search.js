@@ -13,13 +13,12 @@ const countryMap = {
 };
 
 /**
- * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
  * @return {Promise|undefined}
  * @constructor
  */
-function Search(client, msg, args)  {
+function Search(msg, args)  {
     if(args.length === 0) return;
     const cc = countryMap[msg.guild.region] || 'US';
 

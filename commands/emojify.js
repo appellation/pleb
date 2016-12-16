@@ -6,7 +6,7 @@ const sharp = require('sharp');
 const request = require('request');
 const imgSize = require('image-size');
 
-function Emojify(client, msg, args) {
+function Emojify(msg, args) {
 
     return new Promise((resolve, reject) => {
 

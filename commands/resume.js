@@ -5,11 +5,10 @@
 const storage = require('../storage/playlists');
 
 /**
- * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
  */
-function Resume(client, msg, args)  {
+function Resume(msg, args)  {
     const playlist = storage.get(msg.guild.id);
     if(playlist)    {
         playlist.resume();

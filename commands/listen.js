@@ -10,7 +10,7 @@ const VC = require('../operators/voiceConnection');
   * @param {[]} args
   * @return {Promise}
   */
- function Listen(client, msg, args)  {
+ function Listen(msg, args)  {
     return VC.checkUser(msg).then(() => {
         msg.member.listen = msg;
     });

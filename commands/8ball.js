@@ -4,7 +4,7 @@
 
 const shuffle = require('knuth-shuffle').knuthShuffle;
 
-function EightBall(client, msg, args)   {
+function EightBall(msg, args)   {
 
     if(args.length == 0) return;
 

@@ -9,11 +9,11 @@
  * @return {Promise}
  * @constructor
  */
-function Sanitize(client, msg, args)    {
+function Sanitize(msg, args)    {
     let num = parseInt(args[0], 10) || 10;
 
     return msg.channel.fetchMessages().then(collection => {
-        let messages = collection.findAll('author', client.user);
+        let messages = collection.findAll('author', msg.client.user);
         if(messages.length <= 1) return;
 
         return msg.channel.bulkDelete(messages.slice(0, num));

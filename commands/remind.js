@@ -7,13 +7,11 @@ const moment = require('moment');
 const date = require('date.js');
 
 /**
- *
- * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
  * @return {string}
  */
-function Remind(client, msg, args)  {
+function Remind(msg, args)  {
     let remIndex = args.indexOf('to');
     remIndex = remIndex === -1 ? 0 : remIndex;
 

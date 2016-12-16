@@ -5,11 +5,10 @@
 const storage = require('../storage/playlists');
 
 /**
- * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
  */
-function Pause(client, msg, args)   {
+function Pause(msg, args)   {
     const playlist = storage.get(msg.guild.id);
     if(playlist)    {
         playlist.pause();

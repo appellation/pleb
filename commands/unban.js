@@ -4,8 +4,8 @@
 
 const mod = require('../operators/mod');
 
-function Unban(client, msg, args)   {
-    const op = new mod(client, msg.member, args[0], args.slice(1), msg.guild, msg.channel);
+function Unban(msg, args)   {
+    const op = new mod(msg.client, msg.member, args[0], args.slice(1), msg.guild, msg.channel);
     return op.unban();
 }
 

@@ -5,13 +5,12 @@
 const httpPing = require('node-http-ping');
 
 /**
- * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
  * @return {Promise}
  * @constructor
  */
-function Ping(client, msg, args)    {
+function Ping(msg, args)    {
     if(!args[0])    {
         return msg.channel.sendMessage('pinging....').then(newMessage => {
             newMessage.edit((newMessage.createdTimestamp - msg.createdTimestamp) + 'ms');

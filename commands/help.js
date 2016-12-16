@@ -3,11 +3,10 @@
  */
 
 /**
- * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
  */
-function Help(client, msg, args)    {
+function Help(msg, args)    {
     return msg.author.sendMessage(
         "**`@mention` in any channel or just type in `#pleb`.**\n\n" +
         "- **play [query, YT URL, SoundCloud URL]** - plays makes a playlist from the link\n" +

@@ -5,13 +5,12 @@
 const shuffle = require('knuth-shuffle').knuthShuffle;
 
 /**
- * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
- * @param {{}} options
+ * @param {{coinflip}} options
  * @returns {string}
  */
-function Dice(client, msg, args, options)    {
+function Dice(msg, args, options)    {
     if(options && options.coinflip) {
         args[0] = 1;
         args[1] = 2;

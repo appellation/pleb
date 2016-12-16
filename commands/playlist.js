@@ -8,11 +8,10 @@ const YT = require('../interfaces/yt');
 const VC = require('../operators/voiceConnection');
 
 /**
- * @param client
  * @param msg
  * @param args
  */
-function Playlist(client, msg, args)    {
+function Playlist(msg, args)    {
     if(args.length === 0) return;
 
     const yt = new YT();
@@ -21,7 +20,7 @@ function Playlist(client, msg, args)    {
         VC.checkUser(msg)
     ]).then(([listStructure, conn]) => {
         const list = new playlist(conn, listStructure);
-        return Play(client, msg, args, {
+        return Play.func(msg, args, {
             playlistIn: list,
         });
     });

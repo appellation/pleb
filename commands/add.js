@@ -6,16 +6,15 @@ const Play = require('../commands/play');
 const storage = require('../storage/playlists');
 
 /**
- * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
  * @return {string}
  */
-function Add(client, msg, args) {
+function Add(msg, args) {
     if(args[0])     {
 
         if(args[0] === 'shuffle') {
-            return Play(client, msg, args.slice(1), {
+            return Play.func(msg, args.slice(1), {
                 playlistIn: storage.get(msg.guild.id),
                 shuffle: true
             });

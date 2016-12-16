@@ -5,12 +5,11 @@
 const shuffle = require('knuth-shuffle').knuthShuffle;
 
 /**
- * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
  * @return {String}
  */
-function Insult(client, msg, args)  {
+function Insult(msg, args)  {
     const ins = shuffle(insults)[0];
     if(msg.mentions.users.first())    {
         return `${msg.mentions.users.first().toString()}, ${ins}`;
