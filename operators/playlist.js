@@ -208,12 +208,9 @@ class Playlist extends EventEmitter {
     };
 
     disconnect()    {
-        if(this.vc) {
-            this.vc.disconnect();
-            this.vc = null;
-            this.removeAllListeners();
-        }
+        if(this.vc) this.vc.disconnect();
         this.destroy();
+        this.removeAllListeners();
     }
 
     /**
