@@ -3,7 +3,8 @@
  */
 
 const command = require('discord-handles')({
-    respond: true
+    respond: true,
+    directory: __dirname + '/../commands'
 });
 
 function message(message)   {
