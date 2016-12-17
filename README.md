@@ -2,7 +2,7 @@
 A really simple Discord bot available for free.  Add me: <https://discordapp.com/oauth2/authorize?client_id=218227587166502923&scope=bot&permissions=3173376>.
 
 ## Usage
-`@mention` the bot in any channel or just type in `#pleb` to give a command.  **Warning:** there aren't any checks on command authorization, so don't use this bot if you're worried about trolls.
+`@mention` the bot in any channel or just type in `#pleb` to give a command.  Users with `no-pleb` role won't be able to use commands.  NSFW commands will be unavailable except for people with the `nsfw` role or in the `nsfw` channel.
 
 ### Commands:
 
@@ -20,6 +20,8 @@ A really simple Discord bot available for free.  Add me: <https://discordapp.com
 - `add shuffle [query|URL]` - add any of the above to the playlist and then shuffle it
 - `next` - skips to next song
 - `next [num]` - skips to next `num` song
+- `prev` - goes back one song
+- `prev [num]` - goes back `num` songs
 - `pause` - pauses playback
 - `resume` - resumes playback
 - `stfu` - stops playback and disconnects Pleb from the voice channel
@@ -42,10 +44,12 @@ A really simple Discord bot available for free.  Add me: <https://discordapp.com
 - `weather [location]` - get current weather at a location
 - `weather (currently|minutely|hourly|daily) [location]` - get weather as specified for a location
 - `link` - get the bot's invite link
+- `define [word]` - define a word
 
 #### Random
 - `imgur [title?]` - upload an image to Imgur with an optional title; use this in the comment of a file upload
-- `boobs` - get a random photo of boobs
+- `boobs` - get a random photo of boobs [NSFW]
+- `ass` - get a random photo of ass [NSFW]
 - `memes` -  get a random meme from Cyanide & Happiness or xkcd
 - `dick [mention]?` - get a dick size
 - `catfacts` - send a random cat fact
@@ -54,6 +58,8 @@ A really simple Discord bot available for free.  Add me: <https://discordapp.com
 - `/ay+/i` - lmao
 - `xD|XD` - XD
 - `morse [text]` - convert given text to morse
+- `8ball [question]` - ask a question of the all-knowing 8-ball
+- `hello|hi|hey|wassup` - :wave:
 
 ## Support
 If you have any questions, contact a dev at [our (admittedly small) discord](https://discord.gg/DPuaDvP).
