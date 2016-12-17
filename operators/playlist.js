@@ -59,40 +59,37 @@ class Playlist extends EventEmitter {
             }
         });
 
+        this.vc.once('disconnect', this.destroy.bind(this));
         this._playQueue();
-    };
+    }
 
     /**
      * Play the queue.
      * @private
      */
     _playQueue()    {
-        if (this.dispatcher) {
-            this.stop();
+        if (this.dispatcher) this.stop();
+        if (!this.list || !this.list.hasCurrent()) return;
+
+        const stream = this.getStream();
+        if(!stream)  {
+            this.emit('error', 'No stream.');
+            return;
         }
 
-        if (this.list && this.list.hasCurrent()) {
-            const stream = this.getStream();
+        this.dispatcher = this.play(stream);
 
-            if(!stream)  {
-                this.emit('error', 'No stream.');
-                return;
-            }
-
-            this.dispatcher = this.play(stream);
-
-            if(this.init)    {
-                this.emit('init', this.list);
-                this.init = false;
-            }
-
-            if(this.list.list.length > 1)  {
-                const message = '**' + (this.list.pos + 1) + '** of ' + this.list.list.length + ': `' + this.list.getCurrent().name + "`";
-                if(this.msg) this.msg.channel.sendMessage(message).catch(() => null);
-            }
-
-            this.dispatcher.once('end', this._end.bind(this));
+        if(this.init)    {
+            this.emit('init', this.list);
+            this.init = false;
         }
+
+        if(this.list.list.length > 1)  {
+            const message = '**' + (this.list.pos + 1) + '** of ' + this.list.list.length + ': `' + this.list.getCurrent().name + "`";
+            if(this.msg) this.msg.channel.sendMessage(message).catch(() => null);
+        }
+
+        this.dispatcher.once('end', this._end.bind(this));
     }
 
     /**
@@ -183,7 +180,7 @@ class Playlist extends EventEmitter {
             this.emit('nexted', this.list);
             return this.list.getCurrent();
         }
-    };
+    }
 
     /**
      * Stop playback.
@@ -195,17 +192,19 @@ class Playlist extends EventEmitter {
             this.dispatcher = null;
         }
         this.emit('stopped');
-    };
+    }
 
     /**
      * Destroy the playlist.
      */
     destroy() {
+        const guildID = this.vc.channel.guild.id;
         this.stop();
         this.emit('destroy');
-        storage.delete(this.vc.channel.guild.id);
+        this.vc = null;
+        storage.delete(guildID);
         this.emit('destroyed');
-    };
+    }
 
     /**
      * Pause playback.
@@ -216,7 +215,7 @@ class Playlist extends EventEmitter {
             this.dispatcher.pause();
             this.emit('paused');
         }
-    };
+    }
 
     /**
      * Resume playback.
@@ -227,7 +226,7 @@ class Playlist extends EventEmitter {
             this.dispatcher.resume();
             this.emit('resumed');
         }
-    };
+    }
 
     /**
      * Shuffle the playlist.
@@ -237,7 +236,7 @@ class Playlist extends EventEmitter {
         this.stop();
         this.list.shuffle();
         this.emit('shuffled');
-    };
+    }
 
     /**
      * Play a stream.
@@ -250,7 +249,7 @@ class Playlist extends EventEmitter {
         dispatcher.setVolumeDecibels(0);
         this.emit('started', this.list);
         return dispatcher;
-    };
+    }
 }
 
 
