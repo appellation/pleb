@@ -26,7 +26,6 @@ var client = new Discord.Client({
         'GUILD_MEMBER_ADD',
         'GUILD_MEMBER_AVAILABLE',
         'GUILD_MEMBER_REMOVE',
-        'GUILD_MEMBER_UPDATE',
         'GUILD_MEMBERS_CHUNK',
         'ROLE_CREATE',
         'ROLE_UPDATE',

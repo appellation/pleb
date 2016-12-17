@@ -25,5 +25,8 @@ function Boobs(msg, args)   {
  */
 module.exports = {
     func: Boobs,
-    triggers: 'boobs'
+    triggers: 'boobs',
+    validator: (message, args) => {
+        return message.authors.roles.find('name', 'nsfw') || message.channel.name === 'nsfw';
+    }
 };

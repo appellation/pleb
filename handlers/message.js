@@ -8,13 +8,14 @@ const command = require('discord-handles')({
     directory: __dirname + '/../commands',
     validator: message => {
         const regex = new RegExp(`^<@!?${process.env.discord_client_id}> *`);
-        if(message.channel.name === 'pleb' || regex.test(message.content) || message.channel.type === 'dm') return message.content.replace(regex, '');
+        if((message.channel.name === 'pleb' || regex.test(message.content) || message.channel.type === 'dm') && (message.member && !message.member.roles.find('name', 'no-pleb'))) {
+            return message.content.replace(regex, '');
+        }
     }
 });
 
 if(process.env.ifttt)   {
     command().on('commandStarted', obj => {
-        console.log(obj);
         rp.post('https://maker.ifttt.com/trigger/pleb/with/key/' + process.env.ifttt, {
             body: {
                 value1: obj.content,

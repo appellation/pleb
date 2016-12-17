@@ -25,5 +25,8 @@ function Ass(msg, args) {
  */
 module.exports = {
     func: Ass,
-    triggers: 'ass'
+    triggers: 'ass',
+    validator: (message, args) => {
+        return message.authors.roles.find('name', 'nsfw') || message.channel.name === 'nsfw';
+    }
 };
