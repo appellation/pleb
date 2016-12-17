@@ -3,6 +3,7 @@
  */
 
 const rp = require('request-promise-native');
+const nsfw = require('../functions/message').nsfwAllowed;
 
 /**
  * @param {Message} msg
@@ -27,6 +28,6 @@ module.exports = {
     func: Ass,
     triggers: 'ass',
     validator: (message, args) => {
-        return !!(message.channel.type === 'dm' || message.member.roles.find('name', 'nsfw') || message.channel.name === 'nsfw');
+        return nsfw(message);
     }
 };

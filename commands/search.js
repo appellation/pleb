@@ -5,6 +5,7 @@
 const rp = require('request-promise-native');
 const numeral = require('numeral');
 const moment = require('moment');
+const nsfw = require('../functions/message').nsfwAllowed;
 
 const countryMap = {
     brazil: 'BR',
@@ -27,7 +28,8 @@ function Search(msg, args)  {
         qs: {
             q: args.join(' '),
             mkt: 'en-' + cc,
-            count: 1
+            count: 1,
+            safeSearch: nsfw(msg) ? 'Moderate' : 'Strict'
         },
         headers: {
             'Ocp-Apim-Subscription-Key': process.env.bing,
