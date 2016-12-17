@@ -5,7 +5,6 @@
 const packageJSON = require('../package.json');
 
 /**
- * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
  */
@@ -13,7 +12,7 @@ function Info(msg, args)    {
 
     msg.author.sendMessage("**Bot Info:**\n" +
         "Version: `" + packageJSON.version + "`\n" +
-        "Author: `Will Nelson <nelson.will@live.com>`\n" +
+        "Author: `Will Nelson <appellation@topkek.pw>`\n" +
         "Contributors: <https://github.com/appellation/pleb/graphs/contributors>\n" +
         "Help: `@Pleb help`\n" +
         "Licence: `" + packageJSON.license + "`\n" +
