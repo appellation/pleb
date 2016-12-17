@@ -9,7 +9,7 @@ const command = require('discord-handles')({
     validator: message => {
         const regex = new RegExp(`^<@!?${process.env.discord_client_id}> *`);
         if((message.channel.name === 'pleb' || regex.test(message.content) || message.channel.type === 'dm') && (message.member && !message.member.roles.find('name', 'no-pleb'))) {
-            return message.content.replace(regex, '');
+            return message.content.replace(regex, '').toLowerCase();
         }
     }
 });

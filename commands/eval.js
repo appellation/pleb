@@ -9,8 +9,6 @@
  * @return {Promise|undefined}
  */
 function Eval(msg, args)    {
-    if(msg.author.id !== '116690352584392704') return;
-
     return new Promise(resolve => {
         try {
             const matches = msg.content.match(/`(.*)`/);
@@ -19,7 +17,9 @@ function Eval(msg, args)    {
         }   catch (e)   {
             resolve(e.message);
         }
-    }).then(require('util').inspect).then(res => {
+    }).then(res => {
+        return require('util').inspect(res, { depth: 1 })
+    }).then(res => {
         if(res.length <= 10000)  {
             msg.channel.sendCode("x1", res, {split: true});
         }   else {
@@ -30,5 +30,8 @@ function Eval(msg, args)    {
 
 module.exports = {
     triggers: 'eval',
-    func: Eval
+    func: Eval,
+    validator: message => {
+        return message.author.id === '116690352584392704' && args.length > 1
+    }
 };
