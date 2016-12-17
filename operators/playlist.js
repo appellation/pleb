@@ -43,6 +43,11 @@ class Playlist extends EventEmitter {
          * @type {boolean}
          */
         this.continue = true;
+
+        /**
+         * @type {number}
+         */
+        this.volume = 1;
     }
 
     /**
@@ -83,6 +88,7 @@ class Playlist extends EventEmitter {
         }
 
         this.dispatcher = this.play(stream);
+        this.dispatcher.setVolume(this.volume);
 
         if(this.init)    {
             this.emit('init', this.list);
@@ -95,6 +101,11 @@ class Playlist extends EventEmitter {
         }
 
         this.dispatcher.once('end', this._end.bind(this));
+    }
+
+    setVolume(vol)  {
+        this.volume = vol;
+        this.dispatcher.setVolume(vol);
     }
 
     /**
