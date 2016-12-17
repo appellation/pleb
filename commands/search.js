@@ -21,7 +21,7 @@ const countryMap = {
  */
 function Search(msg, args)  {
     if(args.length === 0) return;
-    const cc = countryMap[msg.guild.region] || 'US';
+    const cc = countryMap[msg.guild ? msg.guild.region : null] || 'US';
 
     return rp.get({
         uri: 'https://api.cognitive.microsoft.com/bing/v5.0/search',
@@ -37,8 +37,9 @@ function Search(msg, args)  {
         },
         json: true
     }).then(res =>  {
-        // format response
+        if(!res.rankingResponse) return 'no results found';
 
+        // format response
         const first = res.rankingResponse.mainline.items[0];
         let reply;
         let item;
