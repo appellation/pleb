@@ -40,6 +40,6 @@
     "xkcd": "^1.1.1",
     "youtube-node": "^1.3.0",
     "ytdl-core": "^0.7.17",
-    "discord-handles": "file:../handles"
+    "discord-handles": "appellation/handles#master"
   }
 }
