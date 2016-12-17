@@ -38,6 +38,11 @@ class Playlist extends EventEmitter {
          * @type {PlaylistStructure}
          */
         this.list = listIn || new PlaylistStructure();
+
+        /**
+         * @type {boolean}
+         */
+        this.continue = true;
     }
 
     /**
@@ -48,6 +53,7 @@ class Playlist extends EventEmitter {
     start(msg, args) {
         this.init = true;
         this.msg = msg;
+        this.continue = true;
 
         this.once('init', function(playlist)   {
             if(playlist.list.length === 1)  {
@@ -97,7 +103,7 @@ class Playlist extends EventEmitter {
      * @private
      */
     _end(reason)  {
-        if(reason === 'user') return;
+        if(!this.continue) return;
         if (this.list.hasNext()) {
             this.list.next();
             this._playQueue();
@@ -186,6 +192,7 @@ class Playlist extends EventEmitter {
      */
     stop() {
         this.emit('stop');
+        this.continue = false;
         if(this.dispatcher) {
             this.dispatcher.end();
             this.dispatcher = null;
