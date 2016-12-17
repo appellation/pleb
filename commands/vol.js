@@ -15,6 +15,6 @@ module.exports = {
         'volume'
     ],
     validator: (msg, args) => {
-        return args.length > 0 && !isNaN(parseFloat(args[0])) && parseFloat(args[0]) < 30 && storage.has(msg.guild.id)
+        return args.length > 0 && !isNaN(parseFloat(args[0])) && Math.abs(parseFloat(args[0])) <= 50 && storage.has(msg.guild.id)
     }
 };
