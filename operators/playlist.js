@@ -200,7 +200,6 @@ class Playlist extends EventEmitter {
         const guildID = this.vc.channel.guild.id;
         this.stop();
         this.emit('destroy');
-        this.vc = null;
         storage.delete(guildID);
         this.emit('destroyed');
     }

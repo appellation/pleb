@@ -17,7 +17,7 @@
   "dependencies": {
     "@google-cloud/speech": "^0.3.0",
     "date.js": "^0.3.1",
-    "discord.js": "github:hydrabolt/discord.js#indev",
+    "discord.js": "github:hydrabolt/discord.js#a20bac72584615d13f421237285ec8147dbc9c8b",
     "dotenv": "^2.0.0",
     "erlpack": "github:hammerandchisel/erlpack",
     "fluent-ffmpeg": "^2.1.0",
