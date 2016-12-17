@@ -59,7 +59,6 @@ class Playlist extends EventEmitter {
             }
         });
 
-        this.vc.once('disconnect', this.destroy.bind(this));
         this._playQueue();
     }
 
