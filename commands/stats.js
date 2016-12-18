@@ -31,8 +31,8 @@ function Status(msg, args)  {
         `**Users:** ${client.users.size}\n` +
         `**Playlists:** ${playlistStorage.size}\n\n` +
         "__**Process info:**__\n" +
-        `**Memory:** ${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)} MB\n` +
-        `**Uptime:** ${moment.duration((new Date()) - client.readyTimestamp, 'ms').format("d [days] h [hrs] mm [mins] ss [secs]")}\n`;
+        `**Memory:** ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB\n` +
+        `**Uptime:** ${moment.duration(client.uptime).format("d [days] h [hrs] mm [mins] ss [secs]")}\n`;
 }
 
 module.exports = {
