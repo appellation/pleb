@@ -1,7 +1,4 @@
-/**
- * Created by Will on 8/25/2016.
- */
-require('dotenv').config({
+/*require('dotenv').config({
     silent: true
 });
 const Discord = require('discord.js');
@@ -60,4 +57,4 @@ client.login(process.env.discord).then(function()   {
     console.log('Logged in.');
 }).catch(function(err)   {
     console.error(err);
-});
+});*/
