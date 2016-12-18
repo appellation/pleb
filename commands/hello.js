@@ -7,7 +7,7 @@
  * @param {[]} args
  */
 function Hello(msg, args)   {
-    return msg.reply(':wave:');
+    return msg.reply('Hey! I\'m a pleb! :wave:');
 }
 
 module.exports = {
