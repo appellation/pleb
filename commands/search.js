@@ -68,7 +68,7 @@ function Search(msg, args)  {
             }
         };
 
-        return (result[first.answerType]) ? result[first.answerType]() : result.Default();
+        return (result[first.answerType] || result.Default)();
     });
 }
 
