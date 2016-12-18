@@ -41,37 +41,34 @@ function Search(msg, args)  {
 
         // format response
         const first = res.rankingResponse.mainline.items[0];
-        let reply;
         let item;
-
-        switch (first.answerType)   {
-            case 'News':
+        let result = {
+            'News': () => {
                 item = res.news.value[0];
-                reply = shortenURL(item.url).then(url => {
-                    return "**" + item.name + "**\n" + item.description + "\n\n" + url
+                return shortenURL(item.url).then(url => {
+                    return `**${item.name}**\n${item.description}\n\n${url}`;
                 });
-                break;
-            case 'Computation':
-                reply = Promise.resolve("`" + res.computation.expression + "` = `" + res.computation.value + "`");
-                break;
-            case 'Images':
+            },
+            'Computation': () => {
+                return Promise.resolve(`\`${res.computation.expression}\` = \`${res.computation.value}\``);
+            },
+            'Images': () => {
                 item = res.images.value[0];
-                reply = "**" + item.name + "**\n" + item.hostPageDisplayUrl;
-                msg.channel.sendFile(item.contentUrl, null, reply);
-                return;
-            case 'TimeZone':
+                return msg.channel.sendFile(item.contentUrl, null, `**${item.name}**\n${item.hostPageDisplayUrl}`);
+            },
+            'TimeZone': () => {
                 item = res.timeZone.primaryCityTime;
-                reply = Promise.resolve("**" + moment(item.time.substring(0, item.time.length - 1), moment.ISO_8601).format("MMM D, YYYY HH:mm:ss A") + "** - `" + item.location + "`");
-                break;
-            default:
+                return Promise.resolve(`**${moment(item.time.substring(0, item.time.length - 1), moment.ISO_8601).format('MMM D, YYYY HH:mm:ss A')}** - \`${item.location}\``);
+            },
+            'Default': () => {
                 item = res.webPages.value[0];
-                reply = shortenURL(item.url).then(url => {
-                    return "I found **" + numeral(res.webPages.totalEstimatedMatches).format('0,0') + "** pages.  Here's the first:\n\n" +
-                    "**" + item.name + "** - `" + item.displayUrl + "`\n" + url
+                return shortenURL(item.url).then(url => {
+                    return `I found *${numeral(res.webPages.totalEstimatedMatches).format('0,0')}** pages. Here's the first:\n\n**${item.name}** - \`${item.displayUrl}\`\n${url}`;
                 });
-        }
+            }
+        };
 
-        return reply;
+        return (result[first.answerType] || result.Default)();
     });
 }
 
