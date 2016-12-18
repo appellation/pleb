@@ -41,7 +41,7 @@ function Search(msg, args)  {
 
         // format response
         const first = res.rankingResponse.mainline.items[0];
-        let item = res[first.answerType.toLowerCase()].value[0];
+        let item = res[first.answerType.toLowerCase()].value[0] || null;
         let result = {
             'News': () => {
                 return shortenURL(item.url).then(url => {
