@@ -63,7 +63,7 @@ function Search(msg, args)  {
             'Default': () => {
                 item = res.webPages.value[0];
                 return shortenURL(item.url).then(url => {
-                    return `I found *${numeral(res.webPages.totalEstimatedMatches).format('0,0')}** pages. Here's the first:\n\n**${item.name}** - \`${item.displayUrl}\`\n${url}`;
+                    return `I found **${numeral(res.webPages.totalEstimatedMatches).format('0,0')}** pages. Here's the first:\n\n**${item.name}** - \`${item.displayUrl}\`\n${url}`;
                 });
             }
         };
