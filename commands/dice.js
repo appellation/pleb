@@ -7,10 +7,11 @@ const shuffle = require('knuth-shuffle').knuthShuffle;
 /**
  * @param {Message} msg
  * @param {[]} args
+ * @param handler
  * @param {{coinflip}} options
  * @returns {string}
  */
-function Dice(msg, args, options)    {
+function Dice(msg, args, handler, options)    {
     if(options && options.coinflip) {
         args[0] = 1;
         args[1] = 2;

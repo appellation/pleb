@@ -5,10 +5,11 @@
 /**
  * @param msg
  * @param args
+ * @param handler
  * @returns {string}
  */
-function Coinflip(msg, args)    {
-    return require('./dice')(msg, args, {coinflip: true});
+function Coinflip(msg, args, handler)    {
+    return require('./dice').func(msg, args, handler, {coinflip: true});
 }
 
 module.exports = {
