@@ -89,6 +89,7 @@ class Playlist extends EventEmitter {
 
         this.dispatcher = this.play(stream);
         this.dispatcher.setVolume(this.volume);
+        this.continue = true;
 
         if(this.init)    {
             this.emit('init', this.list);
