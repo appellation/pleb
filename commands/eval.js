@@ -31,7 +31,7 @@ function Eval(msg, args)    {
 module.exports = {
     triggers: 'eval',
     func: Eval,
-    validator: message => {
-        return message.author.id === '116690352584392704' && args.length > 1
+    validator: (message, args) => {
+        return message.author.id === '116690352584392704' && args.length > 0
     }
 };
