@@ -11,5 +11,8 @@ function Link() {
 
 module.exports = {
     func: Link,
-    triggers: 'link'
+    triggers: [
+        'link',
+        'invite'
+    ]
 };

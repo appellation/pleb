@@ -32,7 +32,7 @@ class Playlist extends EventEmitter {
         /**
          * @type {StreamDispatcher}
          */
-        this.dispatcher = null;
+        this._dispatcher = null;
 
         /**
          * @type {PlaylistStructure}
@@ -60,7 +60,7 @@ class Playlist extends EventEmitter {
         this.msg = msg;
         this.continue = true;
 
-        this.once('init', function(playlist)   {
+        this.once('init', playlist => {
             if(playlist.list.length === 1)  {
                 if(!SCPlaylist.isSoundCloudURL(args[0]) && !YTPlaylist.isYouTubeURL(args[0]))    {
                     msg.reply('now playing ' + playlist.getCurrent().url);
@@ -78,7 +78,7 @@ class Playlist extends EventEmitter {
      * @private
      */
     _playQueue()    {
-        if (this.dispatcher) this.stop();
+        if (this._dispatcher) this._dispatcher.end();
         if (!this.list || !this.list.hasCurrent()) return;
 
         const stream = this.getStream();
@@ -87,9 +87,8 @@ class Playlist extends EventEmitter {
             return;
         }
 
-        this.dispatcher = this.play(stream);
-        this.dispatcher.setVolume(this.volume);
-        this.continue = true;
+        this._dispatcher = this.play(stream);
+        this._dispatcher.setVolume(this.volume);
 
         if(this.init)    {
             this.emit('init', this.list);
@@ -101,12 +100,12 @@ class Playlist extends EventEmitter {
             if(this.msg) this.msg.channel.sendMessage(message).catch(() => null);
         }
 
-        this.dispatcher.once('end', this._end.bind(this));
+        this._dispatcher.once('end', this._end.bind(this));
     }
 
     setVolume(vol)  {
         this.volume = vol;
-        this.dispatcher.setVolume(vol);
+        this._dispatcher.setVolume(vol);
     }
 
     /**
@@ -115,7 +114,11 @@ class Playlist extends EventEmitter {
      * @private
      */
     _end(reason)  {
-        if(!this.continue) return;
+        if(!this.continue)  {
+            if(this._dispatcher) this._dispatcher.end();
+            return;
+        }
+
         if (this.list.hasNext()) {
             this.list.next();
             this._playQueue();
@@ -130,24 +133,13 @@ class Playlist extends EventEmitter {
      * @returns {Promise}
      */
     add(args)   {
-
-        const self = this;
-
-        if(args.length === 0)   {
-            return new Promise(function(resolve)    {
-                resolve(self.list);
-            });
-        }
+        if(args.length === 0) return Promise.resolve(this.list);
 
         const YT = new YTPlaylist(this.list);
         const SC = new SCPlaylist(this.list);
 
-        if(SCPlaylist.isSoundCloudURL(args[0]))    {
-            return SC.add(args[0]);
-
-        }   else    {
-            return YT.add(args);
-        }
+        if(SCPlaylist.isSoundCloudURL(args[0])) return SC.add(args[0]);
+        else return YT.add(args);
     }
 
     /**
@@ -205,9 +197,9 @@ class Playlist extends EventEmitter {
     stop() {
         this.emit('stop');
         this.continue = false;
-        if(this.dispatcher) {
-            this.dispatcher.end();
-            this.dispatcher = null;
+        if(this._dispatcher) {
+            this._dispatcher.end();
+            this._dispatcher = null;
         }
         this.emit('stopped');
     }
@@ -216,10 +208,9 @@ class Playlist extends EventEmitter {
      * Destroy the playlist.
      */
     destroy() {
-        const guildID = this.vc.channel.guild.id;
         this.stop();
         this.emit('destroy');
-        storage.delete(guildID);
+        storage.delete(this.vc.channel.guild.id);
         this.emit('destroyed');
     }
 
@@ -228,8 +219,8 @@ class Playlist extends EventEmitter {
      */
     pause() {
         this.emit('pause');
-        if(this.dispatcher) {
-            this.dispatcher.pause();
+        if(this._dispatcher) {
+            this._dispatcher.pause();
             this.emit('paused');
         }
     }
@@ -239,8 +230,8 @@ class Playlist extends EventEmitter {
      */
     resume() {
         this.emit('resume');
-        if(this.dispatcher) {
-            this.dispatcher.resume();
+        if(this._dispatcher) {
+            this._dispatcher.resume();
             this.emit('resumed');
         }
     }
@@ -263,7 +254,6 @@ class Playlist extends EventEmitter {
     play(stream) {
         this.emit('start');
         const dispatcher = this.vc.playStream(stream);
-        dispatcher.setVolumeDecibels(0);
         this.emit('started', this.list);
         return dispatcher;
     }
