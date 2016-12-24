@@ -4,6 +4,12 @@
 require('dotenv').config({
     silent: true
 });
+
+if(process.env.raven)   {
+    var Raven = require('raven');
+    Raven.config(process.env.raven).install();
+}
+
 const Discord = require('discord.js');
 var client = new Discord.Client({
     messageCacheLifetime: 1800,
