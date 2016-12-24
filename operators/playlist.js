@@ -199,7 +199,6 @@ class Playlist extends EventEmitter {
         this.continue = false;
         if(this._dispatcher) {
             this._dispatcher.end();
-            this._dispatcher = null;
         }
         this.emit('stopped');
     }
