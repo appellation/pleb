@@ -1,5 +1,5 @@
 # Pleb
-A really simple Discord bot available for free.  Add me: <https://discordapp.com/oauth2/authorize?client_id=218227587166502923&scope=bot&permissions=3173376>.
+A really simple Discord bot available for free.  Add me: <https://discordapp.com/oauth2/authorize?permissions=3197952&scope=bot&client_id=218227587166502923>.
 
 ## Usage
 `@mention` the bot in any channel or just type in `#pleb` to give a command.  Users with `no-pleb` role won't be able to use commands.  NSFW commands will be unavailable except for people with the `nsfw` role or in the `nsfw` channel.

@@ -6,7 +6,7 @@
  * @return {string}
  */
 function Link() {
-    return 'https://discordapp.com/oauth2/authorize?client_id=218227587166502923&scope=bot&permissions=3173398';
+    return 'https://discordapp.com/oauth2/authorize?permissions=3197952&scope=bot&client_id=218227587166502923';
 }
 
 module.exports = {

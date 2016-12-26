@@ -114,10 +114,7 @@ class Playlist extends EventEmitter {
      * @private
      */
     _end(reason)  {
-        if(!this.continue)  {
-            if(this._dispatcher) this._dispatcher.end();
-            return;
-        }
+        if(!this.continue) return;
 
         if (this.list.hasNext()) {
             this.list.next();
@@ -197,9 +194,7 @@ class Playlist extends EventEmitter {
     stop() {
         this.emit('stop');
         this.continue = false;
-        if(this._dispatcher) {
-            this._dispatcher.end();
-        }
+        if(this._dispatcher) this._dispatcher.end();
         this.emit('stopped');
     }
 
