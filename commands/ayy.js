@@ -9,10 +9,7 @@ function Ayy() {
     return 'lmao';
 }
 
-/**
- * @type {CommandStructure}
- */
 module.exports = {
     func: Ayy,
-    triggers: /^ay+/i
+    triggers: /^ay+$/i
 };
