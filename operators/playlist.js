@@ -78,7 +78,7 @@ class Playlist extends EventEmitter {
      * @private
      */
     _playQueue()    {
-        if (this._dispatcher) this._dispatcher.end();
+        if (this._dispatcher && this._dispatcher.speaking) this._dispatcher.end();
         if (!this.list || !this.list.hasCurrent()) return;
 
         const stream = this.getStream();

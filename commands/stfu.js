@@ -27,5 +27,8 @@ module.exports = {
         'stfu',
         'stop',
         'leave'
-    ]
+    ],
+    validator: msg => {
+        return !!(msg.guild && msg.guild.voiceConnection)
+    }
 };
