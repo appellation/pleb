@@ -16,11 +16,11 @@ function Queue(msg, args)   {
     const perPage = 5;
     const parsed = parseInt(args[0]);
     if(args[0]) if(isNaN(parsed) && parsed <= 0) return;
-    const pos = !args[0] ? playlist.list.pos + 1 : (parsed - 1) * perPage;
+    const pos = !args[0] ? playlist.list.pos : (parsed - 1) * perPage;
 
     const list = playlist.list.list;
     const part = list.slice(pos, pos + perPage);
-    let out = args[0] ? `Page **${Math.floor(pos/perPage + 1)}** of **${Math.ceil((list.length-1)/perPage)}**\n` : "";
+    let out = args[0] ? `Page **${Math.floor(pos/perPage + 1)}** of **${Math.ceil(list.length/perPage)}**\n` : "⭐ ";
     out += part.map((song, index) => {
         return `**${index + pos + 1}** of ${list.length} - \`${song.name}\``;
     }).join('\n');

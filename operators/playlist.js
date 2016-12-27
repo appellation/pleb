@@ -61,13 +61,18 @@ class Playlist extends EventEmitter {
         this.continue = true;
 
         this.once('init', playlist => {
+            let out;
             if(playlist.list.length === 1)  {
                 if(!SCPlaylist.isSoundCloudURL(args[0]) && !YTPlaylist.isYouTubeURL(args[0]))    {
-                    msg.reply('now playing ' + playlist.getCurrent().url);
+                    out = 'now playing ' + playlist.getCurrent().url;
                 }   else    {
-                    msg.reply('now playing');
+                    out = 'now playing';
                 }
+            }   else {
+                out = `**${playlist.list.length}** songs in queue`;
             }
+
+            msg.channel.sendMessage(out).catch(() => null);
         });
 
         this._playQueue();
@@ -93,11 +98,6 @@ class Playlist extends EventEmitter {
         if(this.init)    {
             this.emit('init', this.list);
             this.init = false;
-        }
-
-        if(this.list.list.length > 1)  {
-            const message = '**' + (this.list.pos + 1) + '** of ' + this.list.list.length + ': `' + this.list.getCurrent().name + "`";
-            if(this.msg) this.msg.channel.sendMessage(message).catch(() => null);
         }
 
         this._dispatcher.once('end', this._end.bind(this));
