@@ -12,12 +12,7 @@ const nsfw = require('../functions/message').nsfwAllowed;
  */
 function Boobs(msg, args)   {
     return rp.get('http://api.oboobs.ru/boobs/0/1/random').then(JSON.parse).then(function(res)  {
-        return rp.get({
-            url:'http://media.oboobs.ru/' + res[0].preview,
-            encoding: null
-        });
-    }).then(function(res)   {
-        return msg.channel.sendFile(res);
+        return 'http://media.oboobs.ru/' + res[0].preview
     });
 }
 
