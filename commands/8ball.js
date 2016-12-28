@@ -2,7 +2,7 @@
  * Created by Will on 11/5/2016.
  */
 
-function eightBall(msg)   {
+exports.func = msg => {
     const responses = [
         'It is certain',
         'It is decidedly so',
@@ -27,13 +27,8 @@ function eightBall(msg)   {
     ];
 
     return msg.reply('🎱 ' + responses.random());
-}
+};
 
-module.exports = {
-    func: eightBall,
-    triggers: '8ball',
-    validator: (msg, args) => {
-        return args.length > 0 && msg.content.endsWith('?');
-    }
-
+exports.validator = (msg, args) => {
+    return args.length > 0 && msg.content.endsWith('?');
 };

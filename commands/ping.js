@@ -4,13 +4,7 @@
 
 const httpPing = require('node-http-ping');
 
-/**
- * @param {Message} msg
- * @param {[]} args
- * @return {Promise}
- * @constructor
- */
-function Ping(msg, args)    {
+exports.func = (msg, args) => {
     if(!args[0])    {
         return msg.channel.sendMessage('pinging....').then(newMessage => {
             newMessage.edit((newMessage.createdTimestamp - msg.createdTimestamp) + 'ms');
@@ -22,9 +16,4 @@ function Ping(msg, args)    {
             msg.reply('error pinging ' + args[0] + ': ' + err);
         });
     }
-}
-
-module.exports = {
-    func: Ping,
-    triggers: 'ping'
 };

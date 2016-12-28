@@ -4,12 +4,7 @@
 
 const dicks = new Map();
 
-/**
- * @param {Message} msg
- * @param {[]} args
- * @return {string}
- */
-function dick(msg, args)    {
+exports.func = msg => {
     const user = (msg.mentions.users.size > 0) ? msg.mentions.users.first() : msg.author;
 
     let count;
@@ -21,9 +16,4 @@ function dick(msg, args)    {
     }
 
     return `8${'='.repeat(count)}D`;
-}
-
-module.exports = {
-    triggers: 'dick',
-    func: dick
 };

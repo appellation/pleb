@@ -7,12 +7,7 @@ require('moment-duration-format');
 const request = require('request');
 const playlistStorage = require('../storage/playlists');
 
-/**
- * @param {Message} msg
- * @param {[]} args
- * @return {string}
- */
-function stats(msg, args)  {
+exports.func = msg => {
     const client = msg.client;
 
     if(process.env.discord_pw)  {
@@ -36,12 +31,9 @@ function stats(msg, args)  {
         __**Process info:**__\n
         **Memory:** ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB\n
         **Uptime:** ${moment.duration(client.uptime).format("d [days] h [hrs] mm [mins] ss [secs]")}\n`;
-}
-
-module.exports = {
-    func: stats,
-    triggers: [
-        'status',
-        'stats'
-    ]
 };
+
+exports.triggers = [
+    'status',
+    'stats'
+];

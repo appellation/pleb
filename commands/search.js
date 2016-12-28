@@ -13,13 +13,7 @@ const countryMap = {
     sydney: 'AU',
 };
 
-/**
- * @param {Message} msg
- * @param {[]} args
- * @return {Promise|undefined}
- * @constructor
- */
-function search(msg, args)  {
+exports.func = (msg, args) => {
     if(args.length === 0) return;
     const cc = countryMap[msg.guild ? msg.guild.region : null] || 'US';
 
@@ -70,7 +64,7 @@ function search(msg, args)  {
 
         return (result[first.answerType] || result.Default)();
     });
-}
+};
 
 function shortenURL(url)    {
     return rp.post({
@@ -86,8 +80,3 @@ function shortenURL(url)    {
         return res.id;
     });
 }
-
-module.exports = {
-    func: search,
-    triggers: 'search'
-};

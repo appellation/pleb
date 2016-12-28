@@ -2,14 +2,7 @@
  * Created by Will on 11/1/2016.
  */
 
-/**
- * @param {Message} msg
- * @param {[]} args
- * @param handler
- * @param {{coinflip}} options
- * @returns {string}
- */
-function Dice(msg, args, handler, options = {})    {
+exports.func = (msg, args, handler, options = {}) => {
     const count = parseInt(options.coinflip ? 1 : (args[0] || 2));
     const sides = parseInt(options.coinflip ? 2 : (args[1] || 6));
 
@@ -24,12 +17,9 @@ function Dice(msg, args, handler, options = {})    {
 
     if(options.coinflip) return (sum === 1) ? 'heads' : 'tails';
     return `🎲 **${sum}**`;
-}
-
-module.exports = {
-    triggers: [
-        'dice',
-        'roll'
-    ],
-    func: Dice
 };
+
+exports.triggers = [
+    'dice',
+    'roll'
+];

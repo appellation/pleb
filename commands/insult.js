@@ -2,9 +2,8 @@
  * Created by Will on 10/4/2016.
  */
 
-module.exports = {
-    func: msg => `${msg.mentions.users.first() || msg.author}, ${insults.random()}`,
-    triggers: 'insult'
+exports.func = msg => {
+    return `${msg.mentions.users.find(u => !u.equals(msg.client.user)) || msg.author}, ${insults.random()}`;
 };
 
 const insults = [

@@ -4,12 +4,7 @@
 
 const storage = require('../storage/playlists');
 
-/**
- * @param msg
- * @param args
- * @return string|undefined
- */
-function Queue(msg, args)   {
+exports.func = (msg, args) => {
     const playlist = storage.get(msg.guild.id);
 
     const perPage = 5;
@@ -23,13 +18,9 @@ function Queue(msg, args)   {
     },
         args[0] ? `Page **${Math.floor(pos/perPage + 1)}** of **${Math.ceil(list.length/perPage)}**\n` : "⭐ "
     );
-}
+};
 
-module.exports = {
-    func: Queue,
-    triggers: 'queue',
-    validator: (msg, args) => {
-        const parsed = parseInt(args[0]);
-        return msg.guild && storage.has(msg.guild.id) && (args[0] ? (!isNaN(parsed) && parsed > 0) : true);
-    }
+exports.validator = (msg, args) => {
+    const parsed = parseInt(args[0]);
+    return msg.guild && storage.has(msg.guild.id) && (args[0] ? (!isNaN(parsed) && parsed > 0) : true);
 };

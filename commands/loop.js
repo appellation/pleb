@@ -3,12 +3,11 @@
  */
 
 const storage = require('../storage/playlists');
-const YT = require('./yt');
 const Playlist = require('../operators/playlist');
 const VC = require('../operators/voiceConnection');
 const Play = require('./play');
 
-function Loop(msg, args)    {
+exports.func = (msg, args) => {
     const yt = new YT();
     return yt.add(args).then(() => {
         for(let i = 0; i < 20; i++) {
@@ -20,13 +19,8 @@ function Loop(msg, args)    {
             return Play.func(msg, args, { playlistIn: new Playlist(conn, yt.list) });
         });
     });
-}
-
-module.exports = {
-    func: Loop,
-    validator: msg => {
-        return msg.channel.type !== 'dm'
-    },
-    triggers: 'loop',
-    disabled: true
 };
+
+exports.validator = msg => msg.channel.type !== 'dm';
+
+exports.disabled = true;

@@ -6,8 +6,7 @@ const sharp = require('sharp');
 const request = require('request');
 const imgSize = require('image-size');
 
-function Emojify(msg, args) {
-
+exports.func = (msg, args) => {
     return new Promise((resolve, reject) => {
 
         let img;
@@ -43,10 +42,8 @@ function Emojify(msg, args) {
     }).then(buffer => {
         return msg.guild.createEmoji(buffer, args[1] || args[0]);
     }).catch(console.error);
-}
-
-module.exports = {
-    triggers: 'emojify',
-    func: Emojify,
-    disabled: true
 };
+
+exports.validator = msg => (msg.attachments.size > 1 || typeof args[0] !== 'undefined');
+
+exports.disabled = true;

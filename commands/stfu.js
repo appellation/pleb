@@ -9,21 +9,17 @@ const storage = require('../storage/playlists');
  * @param {[]} args
  * @return {string|undefined}
  */
-function Stfu(msg, args)    {
+exports.func = (msg, args) => {
     const playlist = storage.get(msg.guild.id);
     if(playlist) playlist.destroy();
     msg.guild.voiceConnection.disconnect();
     return 'k 😢';
-}
-
-module.exports = {
-    func: Stfu,
-    triggers: [
-        'stfu',
-        'stop',
-        'leave'
-    ],
-    validator: msg => {
-        return !!(msg.guild && msg.guild.voiceConnection)
-    }
 };
+
+exports.triggers = [
+    'stfu',
+    'stop',
+    'leave'
+];
+
+exports.validator = msg => msg.guild && msg.guild.voiceConnection;

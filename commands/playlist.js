@@ -6,26 +6,18 @@ const Play = require('./play');
 const playlist = require('../operators/playlist');
 const VC = require('../operators/voiceConnection');
 
-/**
- * @param msg
- * @param args
- */
-function Playlist(msg, args)    {
+exports.func = (msg, args, handler) => {
     let list;
     return VC.checkUser(msg).then(conn => {
         list = new playlist(conn);
         return list.yt.addPlaylistQuery(args.join(' '));
     }).then(() => {
-        return Play.func(msg, args, {
+        return Play.func(msg, args, handler, {
             playlistIn: list,
         });
     });
-}
+};
 
-module.exports = {
-    func: Playlist,
-    triggers: 'playlist',
-    validator: (msg, args) => {
-        return args.length > 0 && msg.channel.type === 'text';
-    }
+exports.validator = (msg, args) => {
+    return args.length > 0 && msg.channel.type === 'text';
 };

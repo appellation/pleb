@@ -4,13 +4,7 @@
 
 const moment = require('moment');
 
-/**
- * @param {Message} msg
- * @param {[]} args
- * @return {Promise|undefined}
- */
-function memes(msg, args)   {
-
+exports.func = (msg, args) => {
     /**Randomly chooses between XKCD and C&H**/
     if(Math.random() >= 0.5)    {
         const max = 4462;
@@ -26,8 +20,4 @@ function memes(msg, args)   {
             msg.channel.sendMessage(data.title + '\n' + moment().month(data.month-1).format("MMMM") + " " + data.day + ", " + data.year + "\n" +  data.img);
         });
     }
-}
-module.exports = {
-    func: memes,
-    triggers: 'memes'
 };

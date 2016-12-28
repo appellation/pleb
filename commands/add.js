@@ -5,14 +5,9 @@
 const Play = require('../commands/play');
 const storage = require('../storage/playlists');
 
-/**
- * @param {Message} msg
- * @param {[]} args
- * @return {string}
- */
-function add(msg, args) {
+exports.func = (msg, args, handler) => {
     if(args[0] === 'shuffle') {
-        return Play.func(msg, args.slice(1), {
+        return Play.func(msg, args.slice(1), handler, {
             playlistIn: storage.get(msg.guild.id),
             shuffle: true
         });
@@ -20,12 +15,8 @@ function add(msg, args) {
         storage.get(msg.guild.id).add(args);
         return 'added';
     }
-}
+};
 
-module.exports = {
-    func: add,
-    triggers: 'add',
-    validator: (msg, args) => {
-        return msg.guild && !!(args[0] || storage.has(msg.guild.id));
-    }
+exports.validator = (msg, args) => {
+    return msg.guild && !!(args[0] || storage.has(msg.guild.id));
 };

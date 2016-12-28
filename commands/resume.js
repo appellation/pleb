@@ -4,8 +4,5 @@
 
 const storage = require('../storage/playlists');
 
-module.exports = {
-    func: msg => storage.get(msg.guild.id).resume(),
-    triggers: 'resume',
-    validator: msg => storage.has(msg.guild.id)
-};
+exports.func = msg => storage.get(msg.guild.id).resume();
+exports.validator = msg => msg.guild && storage.has(msg.guild.id);

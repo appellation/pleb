@@ -24,12 +24,8 @@ const precipDescMap = {
     sleet: '☔ Sleet'
 };
 
-/**
- * @param {Message} msg
- * @param {[]} args
- * @return {Promise|string}
- */
-function Weather(msg, args) {
+
+exports.func = (msg, args) => {
     if(args.length === 0) return 'no location specified';
     const poss = [
         'currently',
@@ -147,12 +143,8 @@ function Weather(msg, args) {
 
         return out;
     });
-}
+};
 
-module.exports = {
-    func: Weather,
-    triggers: 'weather',
-    validator: (message, args) => {
-        return args.length !== 0;
-    }
+exports.validator = (message, args) => {
+    return args.length !== 0;
 };

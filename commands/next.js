@@ -5,12 +5,7 @@
 const Play = require('./play');
 const storage = require('../storage/playlists');
 
-/**
- * @param {Message} msg
- * @param {[]} args
- * @return {Promise|undefined}
- */
-function next(msg, args)    {
+exports.func = (msg, args, handler) => {
     const playlist = storage.get(msg.guild.id);
     const num = parseInt(args[0]) || 1;
 
@@ -20,16 +15,12 @@ function next(msg, args)    {
         playlist.next();
     }
 
-    return Play.func(msg, [], {
+    return Play.func(msg, [], handler, {
         playlistIn: playlist
     });
-}
+};
 
-module.exports = {
-    func: next,
-    triggers: 'next',
-    validator: (msg, args) => {
-        const parsed = parseInt(args[0] || 1);
-        return storage.has(msg.guild.id) && !isNaN(parsed) && parsed > 0;
-    }
+exports.validator = (msg, args) => {
+    const parsed = parseInt(args[0] || 1);
+    return msg.guild && storage.has(msg.guild.id) && !isNaN(parsed) && parsed > 0;
 };

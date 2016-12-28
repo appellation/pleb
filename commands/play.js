@@ -2,20 +2,11 @@
  * Created by Will on 8/25/2016.
  */
 
-"use strict";
-
 const Playlist = require('../operators/playlist');
 const VC = require('../operators/voiceConnection');
 const storage = require('../storage/playlists');
 
-/**
- * @param {Message} msg
- * @param {[]} args
- * @param {Playlist|null} [playlistIn] - A pre-existing playlist to play.
- * @param {boolean} [shuffle] - Whether to shuffle on play.
- */
-function Play (msg, args, {playlistIn = null, shuffle = false} = {}) {
-
+exports.func = (msg, args, handler, {playlistIn = null, shuffle = false} = {}) => {
     let playlist;
     return VC.checkCurrent(msg.client, msg).then(conn =>  {
 
@@ -27,18 +18,8 @@ function Play (msg, args, {playlistIn = null, shuffle = false} = {}) {
         return playlist.add(args);
     }).then(() =>  {
         if(shuffle) playlist.shuffle();
-
-        // see issue #37, but a delay seems to be needed to properly end the stream dispatcher
-        setTimeout(() => {
-            playlist.start(msg, args);
-        }, 300);
+        playlist.start(msg, args);
     });
-}
-
-module.exports = {
-    func: Play,
-    triggers: 'play',
-    validator: msg => {
-        return msg.channel.type === 'text' && msg.content.length > 0;
-    }
 };
+
+exports.validator = (msg, args) => msg.channel.type === 'text' && args.length > 0;

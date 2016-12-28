@@ -4,13 +4,8 @@
 
 const packageJSON = require('../package.json');
 
-/**
- * @param {Message} msg
- * @param {[]} args
- */
-function Info(msg, args)    {
-
-    msg.author.sendMessage("**Bot Info:**\n" +
+exports.func = msg => {
+    return msg.author.sendMessage("**Bot Info:**\n" +
         "Version: `" + packageJSON.version + "`\n" +
         "Author: `Will Nelson <appellation@topkek.pw>`\n" +
         "Contributors: <https://github.com/appellation/pleb/graphs/contributors>\n" +
@@ -21,9 +16,4 @@ function Info(msg, args)    {
         "Language: `Javascript`\n" +
         "Node.JS version: `" + process.version + "`\n" +
         "v8 version: `" + process.versions.v8 + "`\n");
-}
-
-module.exports = {
-    func: Info,
-    triggers: 'info'
 };

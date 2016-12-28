@@ -43,12 +43,8 @@ const dict = {
     9: dash + dash + dash + dash + dot
 };
 
-/**
- * @param msg
- * @param args
- * @returns {string|Promise|undefined}
- */
-function morse(msg, args)   {
+
+exports.func = (msg, args) => {
     let out = '';
     const low = args.join().toLowerCase();
 
@@ -58,11 +54,7 @@ function morse(msg, args)   {
     }
 
     if(msg.deletable) msg.delete();
-    return out;
-}
-
-module.exports = {
-    func: morse,
-    triggers: 'morse',
-    validator: (msg, args) => args.length > 0
+    return out || 'no characters could be converted to morse 😭';
 };
+
+exports.validator = (msg, args) => args.length > 0;

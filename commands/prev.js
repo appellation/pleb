@@ -5,9 +5,9 @@
 const Play = require('./play');
 const storage = require('../storage/playlists');
 
-function Prev(msg, args)    {
+exports.func = (msg, args, handler) => {
     const playlist = storage.get(msg.guild.id);
-    const num = Number.parseInt(args[0]) || 1;
+    const num = parseInt(args[0]) || 1;
 
     playlist.stop();
 
@@ -15,16 +15,12 @@ function Prev(msg, args)    {
         playlist.prev();
     }
 
-    return Play.func(msg, [], {
+    return Play.func(msg, [], handler, {
         playlistIn: playlist
     });
-}
+};
 
-module.exports = {
-    func: Prev,
-    triggers: 'prev',
-    validator: (msg, args) => {
-        const parsed = parseInt(args[0] || 1);
-        return msg.guild && storage.has(msg.guild.id) && !isNaN(parsed) && parsed > 0;
-    }
+exports.validator = (msg, args) => {
+    const parsed = parseInt(args[0] || 1);
+    return msg.guild && storage.has(msg.guild.id) && !isNaN(parsed) && parsed > 0;
 };
