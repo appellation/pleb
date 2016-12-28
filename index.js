@@ -11,7 +11,7 @@ if(process.env.raven)   {
 }
 
 const Discord = require('discord.js');
-var client = new Discord.Client({
+const client = new Discord.Client({
     messageCacheLifetime: 1800,
     messageSweepInterval: 900,
     disabledEvents: [
@@ -62,8 +62,4 @@ client.on('guildMemberSpeaking', guildMemberSpeakingHandler);
 client.on('message', messageHandler);
 client.on('voiceStateUpdate', voiceStateUpdateHandler);
 
-client.login(process.env.discord).then(function()   {
-    console.log('Logged in.');
-}).catch(function(err)   {
-    console.error(err);
-});
+client.login(process.env.discord).then(() => { console.log('Logged in.'); }).catch((err) => { console.error(err); });
