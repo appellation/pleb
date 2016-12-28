@@ -5,11 +5,7 @@
 /**
  * @return {string}
  */
-function Ayy() {
-    return 'lmao';
-}
-
 module.exports = {
-    func: Ayy,
+    func: () => 'lmao',
     triggers: /^ay+$/i
 };

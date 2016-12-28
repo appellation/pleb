@@ -3,7 +3,7 @@
  */
 
 const storage = require('../storage/playlists');
-const YT = require('../interfaces/yt');
+const YT = require('./yt');
 const Playlist = require('../operators/playlist');
 const VC = require('../operators/voiceConnection');
 const Play = require('./play');

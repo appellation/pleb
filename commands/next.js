@@ -10,9 +10,9 @@ const storage = require('../storage/playlists');
  * @param {[]} args
  * @return {Promise|undefined}
  */
-function Next(msg, args)    {
+function next(msg, args)    {
     const playlist = storage.get(msg.guild.id);
-    const num = Number.parseInt(args[0]) || 1;
+    const num = parseInt(args[0]) || 1;
 
     playlist.stop();
 
@@ -26,7 +26,7 @@ function Next(msg, args)    {
 }
 
 module.exports = {
-    func: Next,
+    func: next,
     triggers: 'next',
     validator: (msg, args) => {
         const parsed = parseInt(args[0] || 1);

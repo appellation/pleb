@@ -9,7 +9,6 @@ let rp = require('request-promise-native').defaults({
     },
     json: true
 });
-const shuffle = require('knuth-shuffle').knuthShuffle;
 const numeral = require('numeral');
 
 /**
@@ -17,7 +16,7 @@ const numeral = require('numeral');
  * @param {[]} args
  * @return {Promise|string}
  */
-function Imgur(msg, args)   {
+function imgur(msg, args)   {
     if(msg.attachments.size !== 0) {
         const ul = [];
         for(const attachment of msg.attachments) {
@@ -35,52 +34,35 @@ function Imgur(msg, args)   {
             ul.push(rp.post(q));
         }
 
-        if(ul.length > 1)  {
-            return Promise.all(ul).then(imgs =>  {
-                const string = imgs.map(elem =>  {
-                    return elem.id;
-                }).join(',');
-
+        return Promise.all(ul).then(imgs => {
+            if(imgs.length > 1) {
                 const q = {
                     uri: '/album',
                     body: {
-                        ids: string
+                        ids: imgs.reduce((prev, cur) => `${prev},${cur.id}`, '')
                     }
                 };
 
-                if(msg.attachments.size > 0 && args.length > 0) {
-                    q.body.title = args.join(' ');
-                }
-
+                if(args.length > 0) q.body.title = args.join(' ');
                 return rp.post(q);
-            }).then(album => {
-                msg.channel.stopTyping();
-                return msg.reply('https://imgur.com/a/' + album.data.id);
-            }).then(() =>   {
-                return msg.delete();
-            });
-        }   else    {
-
-            return ul[0].then(img =>    {
-                msg.channel.stopTyping();
-                return msg.reply('https://imgur.com/' + img.data.id);
-            }).then(() =>   {
-                return msg.delete();
-            });
-        }
+            }   else {
+                return imgs[0];
+            }
+        }).then(res => {
+            if(msg.deletable) msg.delete();
+            return res.data.link;
+        });
 
     }   else {
 
         return rp.get('gallery/hot/viral/0.json').then(res => {
-            return shuffle(res.data)[0];
-        }).then(rand => {
-            return '**' + rand.title + '** - ' + rand.account_url + '\n' +
-                ':eye: ' + numeral(rand.views).format('0,0') + ' - :goal: ' + numeral(rand.score).format('0,0') + '\n' + rand.link;
+            const rand = res.data.random();
+            return `**${rand.title}** - ${rand.account_url}\n👁 ${numeral(rand.views).format('0,0')} - 🥅 ${numeral(rand.score).format('0,0')}\n${rand.link}`;
         })
     }
 }
 
 module.exports = {
     triggers: 'imgur',
-    func: Imgur
+    func: imgur
 };

@@ -2,14 +2,14 @@
  * Created by Will on 10/29/2016.
  */
 
-/**
+/*
  * @param {Client} client
  * @param {Message} msg
  * @param {[]} args
  * @return {Promise}
  * @constructor
  */
-function Sanitize(msg, args)    {
+function sanitize(msg, args)    {
     let num = parseInt(args[0], 10) || 10;
 
     return msg.channel.fetchMessages().then(collection => {
@@ -21,10 +21,14 @@ function Sanitize(msg, args)    {
 }
 
 module.exports = {
-    func: Sanitize,
+    func: sanitize,
     triggers: [
         'sanitize',
         'purge',
         'clean'
-    ]
+    ],
+    validator: (msg, args) => {
+        const parsed = parseInt(args[0]);
+        return !isNaN(parsed) && parsed > 1;
+    }
 };

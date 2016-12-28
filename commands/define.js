@@ -4,7 +4,7 @@
 
 const rp = require('request-promise-native');
 
-function Def(msg, args) {
+function define(msg, args) {
     return rp.get({
         uri: 'http://api.pearson.com/v2/dictionaries/ldoce5/entries',
         qs: {
@@ -57,5 +57,8 @@ function Def(msg, args) {
 
 module.exports = {
     triggers: 'define',
-    func: Def
+    func: define,
+    validator: (msg, args) => {
+        return args.length > 0;
+    }
 };

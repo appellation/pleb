@@ -9,7 +9,7 @@ const moment = require('moment');
  * @param {[]} args
  * @return {Promise|undefined}
  */
-function Memes(msg, args)   {
+function memes(msg, args)   {
 
     /**Randomly chooses between XKCD and C&H**/
     if(Math.random() >= 0.5)    {
@@ -28,6 +28,6 @@ function Memes(msg, args)   {
     }
 }
 module.exports = {
-    func: Memes,
+    func: memes,
     triggers: 'memes'
 };

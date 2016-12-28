@@ -14,7 +14,6 @@ function Queue(msg, args)   {
 
     const perPage = 5;
     const parsed = parseInt(args[0]);
-    if(args[0]) if(isNaN(parsed) && parsed <= 0) return;
     const pos = !args[0] ? playlist.list.pos : (parsed - 1) * perPage;
 
     const list = playlist.list.list;

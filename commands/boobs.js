@@ -6,20 +6,18 @@ const rp = require('request-promise-native');
 const nsfw = require('../functions/message').nsfwAllowed;
 
 /**
- * @param {Message} msg
- * @param {[]} args
  * @return {Promise}
  */
-function Boobs(msg, args)   {
-    return rp.get('http://api.oboobs.ru/boobs/0/1/random').then(JSON.parse).then(function(res)  {
+function boobs()   {
+    return rp.get('http://api.oboobs.ru/boobs/0/1/random').then(JSON.parse).then(res => {
         return 'http://media.oboobs.ru/' + res[0].preview
     });
 }
 
 module.exports = {
-    func: Boobs,
+    func: boobs,
     triggers: 'boobs',
-    validator: (message, args) => {
+    validator: message => {
         return nsfw(message);
     }
 };

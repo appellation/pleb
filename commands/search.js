@@ -19,7 +19,7 @@ const countryMap = {
  * @return {Promise|undefined}
  * @constructor
  */
-function Search(msg, args)  {
+function search(msg, args)  {
     if(args.length === 0) return;
     const cc = countryMap[msg.guild ? msg.guild.region : null] || 'US';
 
@@ -88,6 +88,6 @@ function shortenURL(url)    {
 }
 
 module.exports = {
-    func: Search,
+    func: search,
     triggers: 'search'
 };

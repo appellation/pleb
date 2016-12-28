@@ -2,35 +2,21 @@
  * Created by Will on 10/27/2016.
  */
 
-/**
- * @param {Client} client
- * @param {Message} msg
- * @param {[]} args
- * @return {Promise|undefined}
- */
-function Eval(msg, args)    {
-    return new Promise(resolve => {
-        try {
-            const matches = msg.content.match(/`(.*)`/);
-            const res = eval(matches ? matches[1] : args.join(' '));
-            resolve(res);
-        }   catch (e)   {
-            resolve(e.message);
-        }
-    }).then(res => {
-        return require('util').inspect(res, { depth: 1 })
-    }).then(res => {
-        if(res.length <= 10000)  {
-            msg.channel.sendCode("x1", res, {split: true});
-        }   else {
-            return 'that response would be too big';
-        }
-    })
-}
-
 module.exports = {
     triggers: 'eval',
-    func: Eval,
+    func: (msg, args) => {
+        return new Promise(resolve => {
+            try {
+                const res = eval(args.join(' '));
+                resolve(res);
+            }   catch (e)   {
+                resolve(e.message);
+            }
+        }).then(res => {
+            const inspected = require('util').inspect(res, { depth: 1 });
+            return (inspected.length <= 6000) ? msg.channel.sendCode("js", inspected, {split: true}) : 'that response would be too big';
+        });
+    },
     validator: (message, args) => {
         return message.author.id === '116690352584392704' && args.length > 0
     }

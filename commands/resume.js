@@ -4,20 +4,8 @@
 
 const storage = require('../storage/playlists');
 
-/**
- * @param {Message} msg
- * @param {[]} args
- */
-function Resume(msg, args)  {
-    const playlist = storage.get(msg.guild.id);
-    if(playlist)    {
-        playlist.resume();
-    }   else    {
-        msg.reply('nothing to resume, you idiot. 😒');
-    }
-}
-
 module.exports = {
-    func: Resume,
-    triggers: 'resume'
+    func: msg => storage.get(msg.guild.id).resume(),
+    triggers: 'resume',
+    validator: msg => storage.has(msg.guild.id)
 };

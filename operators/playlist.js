@@ -6,9 +6,9 @@ const request = require('request');
 const EventEmitter = require('events');
 const ytdl = require('ytdl-core');
 
-const PlaylistStructure = require('../structures/playlist');
-const YTPlaylist = require('../interfaces/yt');
-const SCPlaylist = require('../interfaces/sc');
+const PlaylistStructure = require('structures/playlist');
+const YTPlaylist = require('interfaces/yt');
+const SCPlaylist = require('interfaces/sc');
 const storage = require('../storage/playlists');
 
 class Playlist extends EventEmitter {

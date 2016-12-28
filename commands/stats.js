@@ -12,19 +12,22 @@ const playlistStorage = require('../storage/playlists');
  * @param {[]} args
  * @return {string}
  */
-function Status(msg, args)  {
+function stats(msg, args)  {
     const client = msg.client;
-    request({
-        uri: `https://bots.discord.pw/api/bots/${process.env.discord_client_id}/stats`,
-        method: 'post',
-        body: {
-            server_count: client.guilds.size
-        },
-        headers: {
-            Authorization: process.env.discord_pw
-        },
-        json: true
-    });
+
+    if(process.env.discord_pw)  {
+        request({
+            uri: `https://bots.discord.pw/api/bots/${process.env.discord_client_id}/stats`,
+            method: 'post',
+            body: {
+                server_count: client.guilds.size
+            },
+            headers: {
+                Authorization: process.env.discord_pw
+            },
+            json: true
+        });
+    }
 
     return `**Guilds:** ${client.guilds.size}\n
         **Channels:** ${client.channels.size}\n
@@ -36,7 +39,7 @@ function Status(msg, args)  {
 }
 
 module.exports = {
-    func: Status,
+    func: stats,
     triggers: [
         'status',
         'stats'

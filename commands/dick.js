@@ -2,47 +2,28 @@
  * Created by Will on 9/24/2016.
  */
 
-const shuffle = require('knuth-shuffle');
+const dicks = new Map();
 
 /**
  * @param {Message} msg
  * @param {[]} args
  * @return {string}
  */
-function Dick(msg, args)    {
-    let dick = "8";
+function dick(msg, args)    {
+    const user = (msg.mentions.users.size > 0) ? msg.mentions.users.first() : msg.author;
+
     let count;
-    let user;
-
-    if(args[0]) {
-        user = msg.mentions.users.first();
-        if(!user) return 'no user mentioned';
-    }   else    {
-        user = msg.author;
+    if(dicks.has(user.id))  {
+        count = dicks.get(user.id);
+    }   else {
+        count = Math.floor(Math.random() * 25) + 1;
+        dicks.set(user.id, count);
     }
 
-    if(user.dick) {
-        count = user.dick;
-    }   else    {
-        const arr = [];
-        for(let i = 1; i < 26; i++) {
-            arr.push(i);
-        }
-
-        // count = random.integer(1,25)(engine);
-        count = shuffle.knuthShuffle(arr)[0];
-        user.dick = count;
-    }
-
-    for(let i = 0; i < count; i++)  {
-        dick += "=";
-    }
-
-    dick += "D";
-    return dick;
+    return `8${'='.repeat(count)}D`;
 }
 
 module.exports = {
     triggers: 'dick',
-    func: Dick
+    func: dick
 };

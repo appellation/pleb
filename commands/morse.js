@@ -48,23 +48,21 @@ const dict = {
  * @param args
  * @returns {string|Promise|undefined}
  */
-function Morse(msg, args)   {
-    if(args.length == 0) return;
-
+function morse(msg, args)   {
     let out = '';
     const low = args.join().toLowerCase();
 
-    for(let i = 0; i < low.length; i++) {
-        if(!dict[low[i]]) continue;
-        out += dict[low[i]] + ' ';
+    for(const char of low) {
+        if(!dict[char]) continue;
+        out += dict[char] + ' ';
     }
 
     if(msg.deletable) msg.delete();
-
     return out;
 }
 
 module.exports = {
-    func: Morse,
-    triggers: 'morse'
+    func: morse,
+    triggers: 'morse',
+    validator: (msg, args) => args.length > 0
 };

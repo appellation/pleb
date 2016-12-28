@@ -2,24 +2,8 @@
  * Created by Will on 10/4/2016.
  */
 
-const shuffle = require('knuth-shuffle').knuthShuffle;
-
-/**
- * @param {Message} msg
- * @param {[]} args
- * @return {String}
- */
-function Insult(msg, args)  {
-    const ins = shuffle(insults)[0];
-    if(msg.mentions.users.first())    {
-        return `${msg.mentions.users.first().toString()}, ${ins}`;
-    }   else {
-        return `${msg.author.toString()}, ${ins}`;
-    }
-}
-
 module.exports = {
-    func: Insult,
+    func: msg => `${msg.mentions.users.first() || msg.author}, ${insults.random()}`,
     triggers: 'insult'
 };
 

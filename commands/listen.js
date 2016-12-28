@@ -4,19 +4,18 @@
 
 const VC = require('../operators/voiceConnection');
 
- /**
-  * @param {Client} client
-  * @param {Message} msg
-  * @param {[]} args
-  * @return {Promise}
-  */
- function Listen(msg, args)  {
+/**
+ * @param {Message} msg
+ * @param {[]} args
+ * @return {Promise}
+ */
+function listen(msg, args)  {
     return VC.checkUser(msg).then(() => {
         msg.member.listen = msg;
     });
 }
 
 module.exports = {
-    func: Listen,
+    func: listen,
     triggers: 'listen'
 };

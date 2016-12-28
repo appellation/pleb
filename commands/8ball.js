@@ -2,12 +2,7 @@
  * Created by Will on 11/5/2016.
  */
 
-const shuffle = require('knuth-shuffle').knuthShuffle;
-
-function EightBall(msg, args)   {
-
-    if(args.length == 0) return;
-
+function eightBall(msg)   {
     const responses = [
         'It is certain',
         'It is decidedly so',
@@ -31,13 +26,14 @@ function EightBall(msg, args)   {
         'Very doubtful'
     ];
 
-    return msg.reply('🎱 ' + shuffle(responses)[0]);
+    return msg.reply('🎱 ' + responses.random());
 }
 
-/**
- * @type {CommandStructure}
- */
 module.exports = {
-    func: EightBall,
-    triggers: '8ball'
+    func: eightBall,
+    triggers: '8ball',
+    validator: (msg, args) => {
+        return args.length > 0 && msg.content.endsWith('?');
+    }
+
 };
