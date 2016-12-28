@@ -1,10 +1,7 @@
 /**
  * Created by Will on 8/25/2016.
  */
-require('./functions/array');
-require('dotenv').config({
-    silent: true
-});
+require('dotenv').config({ silent: true });
 
 if(process.env.raven)   {
     var Raven = require('raven');
