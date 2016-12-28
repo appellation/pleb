@@ -62,4 +62,4 @@ client.on('guildMemberSpeaking', guildMemberSpeakingHandler);
 client.on('message', messageHandler);
 client.on('voiceStateUpdate', voiceStateUpdateHandler);
 
-client.login(process.env.discord).then(() => { console.log('Logged in.'); }).catch(console.error(err));
+client.login(process.env.discord).then(() => { console.log('Logged in.'); }).catch(console.error);
