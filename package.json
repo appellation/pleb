@@ -16,8 +16,8 @@
   "dependencies": {
     "@google-cloud/speech": "^0.3.0",
     "date.js": "^0.3.1",
-    "discord-handles": "appellation/handles#master",
-    "discord.js": "^10.0.1",
+    "discord-handles": "github:appellation/handles#master",
+    "discord.js": "git+https://github.com/hydrabolt/discord.js.git#indev-prism",
     "dotenv": "^2.0.0",
     "erlpack": "github:hammerandchisel/erlpack",
     "fluent-ffmpeg": "^2.1.0",
@@ -28,6 +28,7 @@
     "node-http-ping": "^0.2.2",
     "node-schedule": "^1.2.0",
     "numeral": "^1.5.3",
+    "prism-media": "github:hydrabolt/prism-media#master",
     "raven": "^1.1.1",
     "request": "^2.74.0",
     "request-promise-native": "^1.0.3",
