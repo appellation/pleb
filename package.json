@@ -1,10 +1,9 @@
 {
   "name": "pleb",
   "version": "4.0.2",
-  "description": "A very low class Discord bot.",
+  "description": "A very low class Discord bot made by a very low class guy.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\"",
     "start": "node index.js"
   },
   "engines": {
