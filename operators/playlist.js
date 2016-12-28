@@ -25,29 +25,54 @@ class Playlist extends EventEmitter {
         if (!conn) throw new Error('No voice connection.');
 
         /**
+         * The voice connection to play on.
          * @type {VoiceConnection}
          */
         this.vc = conn;
 
         /**
+         * The dispatcher for the current audio.
          * @type {StreamDispatcher}
+         * @private
          */
         this._dispatcher = null;
 
         /**
+         * The playlist.
          * @type {PlaylistStructure}
          */
         this.list = listIn || new PlaylistStructure();
 
         /**
+         * Whether to continue to the next song on end.
          * @type {boolean}
          */
         this.continue = true;
 
         /**
+         * Volume of the playlist.
          * @type {number}
+         * @private
          */
-        this.volume = 1;
+        this._volume = 1;
+
+        /**
+         * True if the playlist has not been started.
+         * @type {boolean}
+         */
+        this.init = true;
+
+        /**
+         * YouTube interactions with the playlist.
+         * @type {YTPlaylist}
+         */
+        this.yt = new YTPlaylist(this.list);
+
+        /**
+         * SoundCloud interactions with the playlist.
+         * @type {SCPlaylist}
+         */
+        this.sc = new SCPlaylist(this.list);
     }
 
     /**
@@ -56,7 +81,6 @@ class Playlist extends EventEmitter {
      * @param {[]} args
      */
     start(msg, args) {
-        this.init = true;
         this.msg = msg;
         this.continue = true;
 
@@ -93,7 +117,7 @@ class Playlist extends EventEmitter {
         }
 
         this._dispatcher = this.play(stream);
-        this._dispatcher.setVolume(this.volume);
+        this._dispatcher.setVolume(this._volume);
 
         if(this.init)    {
             this.emit('init', this.list);
@@ -103,17 +127,20 @@ class Playlist extends EventEmitter {
         this._dispatcher.once('end', this._end.bind(this));
     }
 
-    setVolume(vol)  {
-        this.volume = vol;
+    set volume(vol)  {
+        this._volume = vol;
         this._dispatcher.setVolume(vol);
+    }
+
+    get volume()    {
+        return this._dispatcher.volume;
     }
 
     /**
      * Dispatcher end listener.
-     * @param reason - the reason the dispatcher was ended.
      * @private
      */
-    _end(reason)  {
+    _end()  {
         if(!this.continue) return;
 
         if (this.list.hasNext()) {
@@ -132,11 +159,8 @@ class Playlist extends EventEmitter {
     add(args)   {
         if(args.length === 0) return Promise.resolve(this.list);
 
-        const YT = new YTPlaylist(this.list);
-        const SC = new SCPlaylist(this.list);
-
-        if(SCPlaylist.isSoundCloudURL(args[0])) return SC.add(args[0]);
-        else return YT.add(args);
+        if(SCPlaylist.isSoundCloudURL(args[0])) return this.sc.add(args[0]);
+        return this.yt.add(args);
     }
 
     /**

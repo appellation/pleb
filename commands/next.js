@@ -14,20 +14,22 @@ function Next(msg, args)    {
     const playlist = storage.get(msg.guild.id);
     const num = Number.parseInt(args[0]) || 1;
 
-    if(playlist && !isNaN(num) && num > 0)    {
-        playlist.stop();
+    playlist.stop();
 
-        for(let i = 0; i < num; i++)    {
-            playlist.next();
-        }
-
-        return Play.func(msg, [], {
-            playlistIn: playlist
-        });
+    for(let i = 0; i < num; i++)    {
+        playlist.next();
     }
+
+    return Play.func(msg, [], {
+        playlistIn: playlist
+    });
 }
 
 module.exports = {
     func: Next,
-    triggers: 'next'
+    triggers: 'next',
+    validator: (msg, args) => {
+        const parsed = parseInt(args[0] || 1);
+        return storage.has(msg.guild.id) && !isNaN(parsed) && parsed > 0;
+    }
 };

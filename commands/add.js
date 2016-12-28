@@ -18,7 +18,7 @@ function Add(msg, args) {
                 playlistIn: storage.get(msg.guild.id),
                 shuffle: true
             });
-        }   else if(storage.get(msg.guild.id))   {
+        }   else if(storage.has(msg.guild.id))   {
             storage.get(msg.guild.id).add(args);
             return 'added';
         }   else {
@@ -30,10 +30,10 @@ function Add(msg, args) {
     }
 }
 
-/**
- * @type {CommandStructure}
- */
 module.exports = {
     func: Add,
-    triggers: 'add'
+    triggers: 'add',
+    validator: (msg, args) => {
+        return msg.guild && !!(args[0] || storage.has(msg.guild.id));
+    }
 };

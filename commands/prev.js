@@ -9,20 +9,22 @@ function Prev(msg, args)    {
     const playlist = storage.get(msg.guild.id);
     const num = Number.parseInt(args[0]) || 1;
 
-    if(playlist && !isNaN(num) && num > 0)    {
-        playlist.stop();
+    playlist.stop();
 
-        for(let i = 0; i < num; i++)    {
-            playlist.prev();
-        }
-
-        return Play.func(msg, [], {
-            playlistIn: playlist
-        });
+    for(let i = 0; i < num; i++)    {
+        playlist.prev();
     }
+
+    return Play.func(msg, [], {
+        playlistIn: playlist
+    });
 }
 
 module.exports = {
     func: Prev,
-    triggers: 'prev'
+    triggers: 'prev',
+    validator: (msg, args) => {
+        const parsed = parseInt(args[0] || 1);
+        return msg.guild && storage.has(msg.guild.id) && !isNaN(parsed) && parsed > 0;
+    }
 };

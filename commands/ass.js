@@ -16,9 +16,6 @@ function Ass(msg, args) {
     });
 }
 
-/**
- * @type {CommandStructure}
- */
 module.exports = {
     func: Ass,
     triggers: 'ass',

@@ -10,14 +10,9 @@ const storage = require('../storage/playlists');
  * @return {string|undefined}
  */
 function Stfu(msg, args)    {
-    if(!msg.guild)  {
-        return;
-    }
     const playlist = storage.get(msg.guild.id);
     if(playlist) playlist.destroy();
-
     msg.guild.voiceConnection.disconnect();
-
     return 'k 😢';
 }
 

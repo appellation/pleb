@@ -4,7 +4,6 @@
 
 const Play = require('./play');
 const playlist = require('../operators/playlist');
-const YT = require('../interfaces/yt');
 const VC = require('../operators/voiceConnection');
 
 /**
@@ -12,14 +11,11 @@ const VC = require('../operators/voiceConnection');
  * @param args
  */
 function Playlist(msg, args)    {
-    if(args.length === 0) return;
-
-    const yt = new YT();
-    return Promise.all([
-        yt.addPlaylistQuery(args.join(' ')),
-        VC.checkUser(msg)
-    ]).then(([listStructure, conn]) => {
-        const list = new playlist(conn, listStructure);
+    let list;
+    return VC.checkUser(msg).then(conn => {
+        list = new playlist(conn);
+        return list.yt.addPlaylistQuery(args.join(' '));
+    }).then(() => {
         return Play.func(msg, args, {
             playlistIn: list,
         });
@@ -28,5 +24,8 @@ function Playlist(msg, args)    {
 
 module.exports = {
     func: Playlist,
-    triggers: 'playlist'
+    triggers: 'playlist',
+    validator: (msg, args) => {
+        return args.length > 0 && msg.channel.type === 'text';
+    }
 };

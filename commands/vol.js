@@ -5,7 +5,7 @@
 const storage = require('../storage/playlists');
 
 function Vol(msg, args) {
-    storage.get(msg.guild.id).setVolume(parseFloat(args[0]) / 10);
+    storage.get(msg.guild.id).volume = parseFloat(args[0]) / 10;
 }
 
 module.exports = {
@@ -15,6 +15,7 @@ module.exports = {
         'volume'
     ],
     validator: (msg, args) => {
-        return args.length > 0 && !isNaN(parseFloat(args[0])) && Math.abs(parseFloat(args[0])) <= 50 && storage.has(msg.guild.id)
+        const parsed = parseFloat(args[0]);
+        return msg.guild && args.length > 0 && !isNaN(parsed) && Math.abs(parsed) <= 50 && storage.has(msg.guild.id)
     }
 };

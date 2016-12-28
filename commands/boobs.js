@@ -16,9 +16,6 @@ function Boobs(msg, args)   {
     });
 }
 
-/**
- * @type {CommandStructure}
- */
 module.exports = {
     func: Boobs,
     triggers: 'boobs',

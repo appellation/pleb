@@ -11,7 +11,6 @@ const storage = require('../storage/playlists');
  */
 function Queue(msg, args)   {
     const playlist = storage.get(msg.guild.id);
-    if(!playlist) return;
 
     const perPage = 5;
     const parsed = parseInt(args[0]);
@@ -20,15 +19,18 @@ function Queue(msg, args)   {
 
     const list = playlist.list.list;
     const part = list.slice(pos, pos + perPage);
-    let out = args[0] ? `Page **${Math.floor(pos/perPage + 1)}** of **${Math.ceil(list.length/perPage)}**\n` : "⭐ ";
-    out += part.map((song, index) => {
-        return `**${index + pos + 1}** of ${list.length} - \`${song.name}\``;
-    }).join('\n');
-
-    return out;
+    return part.reduce((prev, song, index) => {
+        return `${prev}**${index + pos + 1}** of ${list.length} - \`${song.name}\`\n`;
+    },
+        args[0] ? `Page **${Math.floor(pos/perPage + 1)}** of **${Math.ceil(list.length/perPage)}**\n` : "⭐ "
+    );
 }
 
 module.exports = {
     func: Queue,
-    triggers: 'queue'
+    triggers: 'queue',
+    validator: (msg, args) => {
+        const parsed = parseInt(args[0]);
+        return msg.guild && storage.has(msg.guild.id) && (args[0] ? (!isNaN(parsed) && parsed > 0) : true);
+    }
 };

@@ -21,14 +21,11 @@ function Play (msg, args, {playlistIn = null, shuffle = false} = {}) {
 
         playlist = playlistIn || new Playlist(conn);
 
-        // NOTE: if playlistIn is passed from msg.guild.playlist, they will be the exact same object at this point.
-        if(storage.get(msg.guild.id)) storage.get(msg.guild.id).stop();
+        if(storage.has(msg.guild.id)) storage.get(msg.guild.id).stop();
         storage.set(msg.guild.id, playlist);
 
         return playlist.add(args);
     }).then(() =>  {
-        playlist.stop();
-
         if(shuffle) playlist.shuffle();
 
         // see issue #37, but a delay seems to be needed to properly end the stream dispatcher
@@ -40,5 +37,8 @@ function Play (msg, args, {playlistIn = null, shuffle = false} = {}) {
 
 module.exports = {
     func: Play,
-    triggers: 'play'
+    triggers: 'play',
+    validator: msg => {
+        return msg.channel.type === 'text' && msg.content.length > 0;
+    }
 };
