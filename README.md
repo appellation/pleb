@@ -68,7 +68,7 @@ If you have any questions, contact a dev at [our (admittedly small) discord](htt
 ## Development
 `npm install`
 
-Create a bot [here](https://discordapp.com/developers/applications/me).
+Create a bot on <https://discordapp.com/developers/applications/me>.
 
 You'll need to make a `.env` file (or have some other way to access environment variables) with the below data:
 
