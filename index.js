@@ -5,7 +5,7 @@ require('./functions/array');
 require('dotenv').config({ silent: true });
 
 if(process.env.raven)   {
-    var Raven = require('raven');
+    const Raven = require('raven');
     Raven.config(process.env.raven).install();
 }
 
