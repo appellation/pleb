@@ -5,3 +5,4 @@
 const VC = require('../operators/voiceConnection');
 
 exports.func = msg => VC.checkUser(msg).then(() => msg.member.listen = msg);
+exports.validator = () => !!process.env.google_cloud_project_id;

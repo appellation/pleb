@@ -3,7 +3,7 @@
  */
 
 exports.func =(msg, args) => {
-    let num = parseInt(args[0], 10) || 10;
+    let num = parseInt(args[0], 10) || 3;
 
     return msg.channel.fetchMessages().then(collection => {
         let messages = collection.findAll('author', msg.client.user);
@@ -15,7 +15,7 @@ exports.func =(msg, args) => {
 
 exports.validator = (msg, args) => {
     const parsed = parseInt(args[0]);
-    return !isNaN(parsed) && parsed > 1;
+    return !isNaN(parsed) && parsed > 1 && parsed <= 100;
 };
 
 exports.triggers = [

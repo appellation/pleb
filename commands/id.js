@@ -19,9 +19,6 @@ exports.func = msg => {
         out.push(role + ': `' + role.id + '`');
     }
 
+    if(out.length === 0) out.push(msg.author.id);
     return out.join('\n');
-};
-
-exports.validator = (msg, args) => {
-    return args.length > 0;
 };

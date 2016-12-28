@@ -22,4 +22,4 @@ exports.triggers = [
     'leave'
 ];
 
-exports.validator = msg => msg.guild && msg.guild.voiceConnection;
+exports.validator = msg => !!(msg.guild && msg.guild.voiceConnection);

@@ -24,13 +24,14 @@ exports.func = msg => {
         });
     }
 
-    return `**Guilds:** ${client.guilds.size}\n
-        **Channels:** ${client.channels.size}\n
-        **Users:** ${client.users.size}\n
-        **Playlists:** ${playlistStorage.size}\n\n
-        __**Process info:**__\n
-        **Memory:** ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB\n
-        **Uptime:** ${moment.duration(client.uptime).format("d [days] h [hrs] mm [mins] ss [secs]")}\n`;
+    return `**Guilds:** ${client.guilds.size}
+**Channels:** ${client.channels.size}
+**Users:** ${client.users.size}
+**Playlists:** ${playlistStorage.size}
+
+__**Process info:**__
+**Memory:** ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB
+**Uptime:** ${moment.duration(client.uptime).format("d [days] h [hrs] mm [mins] ss [secs]")}`;
 };
 
 exports.triggers = [

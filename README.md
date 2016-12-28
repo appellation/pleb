@@ -39,7 +39,7 @@ A simple Discord bot available for free.  [Click here](https://discordapp.com/oa
 - `search [query]` - query the internet and post the first result
 - `help` - PM some help
 - `remind (me|@user) to [action] (in|at) [time]` - set a reminder
-- `sanitize` - delete last 10 messages from bot
+- `sanitize` - delete last 3 messages from bot
 - `sanitize [num]` - deleted last `num` messages from bot
 - `info` - get bot info
 - `weather [location]` - get current weather at a location

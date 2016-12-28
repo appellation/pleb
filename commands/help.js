@@ -30,7 +30,7 @@ exports.func = msg => {
         "- **listen** - interpret the next speech by the message author\n" +
         "- **insult [mention]?** - insult a user (defaults to yourself)\n" +
         "- **remind (me|@user) to [action] (in|at) [time]** - set a reminder\n" +
-        "- **sanitize [num]?** - delete last **num** messages from the bot (defaults to 10)\n" +
+        "- **sanitize [num]?** - delete last **num** messages from the bot (defaults to 3)\n" +
         "- **info** - get info about the bot\n" +
         "- **/ay+/i** - lmao\n" +
         "- **xD|XD** - XD\n" +

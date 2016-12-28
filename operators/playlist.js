@@ -107,7 +107,7 @@ class Playlist extends EventEmitter {
      * @private
      */
     _playQueue()    {
-        if (this._dispatcher && this._dispatcher.speaking) this._dispatcher.end();
+        if (this._dispatcher && this._dispatcher.speaking) this.stop();
         if (!this.list || !this.list.hasCurrent()) return;
 
         const stream = this.getStream();
@@ -117,7 +117,7 @@ class Playlist extends EventEmitter {
         }
 
         this._dispatcher = this.play(stream);
-        this._dispatcher.setVolume(this._volume);
+        this.continue = true;
 
         if(this.init)    {
             this.emit('init', this.list);
@@ -218,7 +218,7 @@ class Playlist extends EventEmitter {
     stop() {
         this.emit('stop');
         this.continue = false;
-        if(this._dispatcher) this._dispatcher.end();
+        if(this._dispatcher && this._dispatcher.speaking) this._dispatcher.end();
         this.emit('stopped');
     }
 
@@ -272,6 +272,7 @@ class Playlist extends EventEmitter {
     play(stream) {
         this.emit('start');
         const dispatcher = this.vc.playStream(stream);
+        dispatcher.setVolume(this._volume);
         this.emit('started', this.list);
         return dispatcher;
     }

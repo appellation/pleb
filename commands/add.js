@@ -18,5 +18,5 @@ exports.func = (msg, args, handler) => {
 };
 
 exports.validator = (msg, args) => {
-    return msg.guild && !!(args[0] || storage.has(msg.guild.id));
+    return msg.guild && storage.has(msg.guild.id) && args.length > 0;
 };
