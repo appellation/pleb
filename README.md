@@ -1,8 +1,8 @@
 # Pleb
-A really simple Discord bot available for free.  Add me: <https://discordapp.com/oauth2/authorize?permissions=3197952&scope=bot&client_id=218227587166502923>.
+A simple Discord bot available for free.  [Click here](https://discordapp.com/oauth2/authorize?permissions=3197952&scope=bot&client_id=218227587166502923) to add me.
 
 ## Usage
-`@mention` the bot in any channel or just type in `#pleb` to give a command.  Users with `no-pleb` role won't be able to use commands.  NSFW commands will be unavailable except for people with the `nsfw` role or in the `nsfw` channel.
+`@mention` the bot in any channel or just type in `#pleb` to give a command.  Users with the `no-pleb` role won't be able to use commands.  NSFW commands will be unavailable except for people with the `nsfw` role or in a `nsfw` channel.
 
 ### Commands:
 
@@ -86,5 +86,3 @@ You'll need to make a `.env` file (or have some other way to access environment 
 - `ifttt` - a IFTTT Maker key
 
 Add your bot to a server using `https://discordapp.com/oauth2/authorize?client_id=<YOUR_CLIENT_ID>&scope=bot&permissions=3173398`.
-
-The first word of a command gets interpolated and calls a function as defined in `static list()` in `operators/command.js`, passing in the Discord.js client, the message, and any arguments of the command (defined as text after the command word).  Some commands (e.g. `shuffle` and `add`) rely on other commands.
