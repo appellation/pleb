@@ -12,9 +12,7 @@ const httpPing = require('node-http-ping');
  */
 function Ping(msg, args)    {
     if(!args[0])    {
-        return msg.channel.sendMessage('pinging....').then(newMessage => {
-            newMessage.edit((newMessage.createdTimestamp - msg.createdTimestamp) + 'ms');
-        });
+        return msg.channel.sendMessage('Pinging...').then(newMessage => { newMessage.edit((newMessage.createdTimestamp - msg.createdTimestamp) + 'ms'); });
     }   else    {
         return httpPing(args[0]).then(function(time)    {
             return args[0] + ': ' + time + 'ms';
