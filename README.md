@@ -1,8 +1,8 @@
 # Pleb
-A really simple Discord bot available for free.  Add me: <https://discordapp.com/oauth2/authorize?permissions=3197952&scope=bot&client_id=218227587166502923>.
+A simple Discord bot available for free.  [Click here](https://discordapp.com/oauth2/authorize?permissions=3197952&scope=bot&client_id=218227587166502923) to add me.
 
 ## Usage
-`@mention` the bot in any channel or just type in `#pleb` to give a command.  Users with `no-pleb` role won't be able to use commands.  NSFW commands will be unavailable except for people with the `nsfw` role or in the `nsfw` channel.
+`@mention` the bot in any channel or just type in `#pleb` to give a command.  Users with the `no-pleb` role won't be able to use commands.  NSFW commands will be unavailable except for people with the `nsfw` role or in a `nsfw` channel.
 
 ### Commands:
 
@@ -68,7 +68,7 @@ If you have any questions, contact a dev at [our (admittedly small) discord](htt
 ## Development
 `npm install`
 
-Create a bot on <https://discordapp.com/developers/applications/me>.
+Create a bot [here](https://discordapp.com/developers/applications/me).
 
 You'll need to make a `.env` file (or have some other way to access environment variables) with the below data:
 
