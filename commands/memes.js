@@ -16,8 +16,7 @@ exports.func = (msg, args) => {
         if(randVar ==404) randVar = Math.floor(Math.random()*(1758 - 1) + 1);
 
         var xkcd = require('xkcd');
-        xkcd(randVar, function (data)   {
-            msg.channel.sendMessage(data.title + '\n' + moment().month(data.month-1).format("MMMM") + " " + data.day + ", " + data.year + "\n" +  data.img);
+        xkcd(randVar, function (data)   { msg.channel.sendMessage(`${data.title}\n${moment().month(data.month-1).format("MMMM")} ${data.day}, ${data.year}\n${data.img});
         });
     }
 };
