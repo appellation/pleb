@@ -11,7 +11,11 @@ const storage = require('../storage/playlists');
  */
 exports.func = (msg, args) => {
     const playlist = storage.get(msg.guild.id);
-    if(playlist) playlist.destroy();
+    if(playlist)    {
+        playlist.continue = false;
+        playlist._dispatcher.end();
+        storage.delete(msg.guild.id);
+    }
     msg.guild.voiceConnection.disconnect();
     return 'k 😢';
 };
