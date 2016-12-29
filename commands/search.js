@@ -35,10 +35,9 @@ exports.func = (msg, args) => {
 
         // format response
         const first = res.rankingResponse.mainline.items[0];
-        let item;
+        let item = (res[first.answerType.toLowerCase()]) ? res[first.answerType.toLowerCase()].value[0] : null;
         let result = {
             'News': () => {
-                item = res.news.value[0];
                 return shortenURL(item.url).then(url => {
                     return `**${item.name}**\n${item.description}\n\n${url}`;
                 });
@@ -47,7 +46,6 @@ exports.func = (msg, args) => {
                 return Promise.resolve(`\`${res.computation.expression}\` = \`${res.computation.value}\``);
             },
             'Images': () => {
-                item = res.images.value[0];
                 return msg.channel.sendFile(item.contentUrl, null, `**${item.name}**\n${item.hostPageDisplayUrl}`);
             },
             'TimeZone': () => {
