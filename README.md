@@ -1,5 +1,5 @@
 # Pleb
-A simple Discord bot available for free.  [Click here](https://discordapp.com/oauth2/authorize?permissions=3197952&scope=bot&client_id=218227587166502923) to add me.
+A simple Dicksword.jizz bot available for white stuff.  [Click here](https://discordapp.com/oauth2/authorize?permissions=3197952&scope=bot&client_id=218227587166502923) to add me.
 
 ## Usage
 `@mention` the bot in any channel or just type in `#pleb` to give a command.  Users with the `no-pleb` role won't be able to use commands.  NSFW commands will be unavailable except for people with the `nsfw` role or in a `nsfw` channel.
