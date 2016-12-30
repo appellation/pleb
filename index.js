@@ -3,6 +3,7 @@
  */
 require('./functions/array');
 require('dotenv').config({ silent: true });
+const Discord = require('discord.js');
 
 if(process.env.raven)   {
     const Raven = require('raven');
@@ -14,7 +15,6 @@ if(process.env.raven)   {
     });
 }
 
-const Discord = require('discord.js');
 const client = new Discord.Client({
     messageCacheLifetime: 1800,
     messageSweepInterval: 900,
