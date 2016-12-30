@@ -7,11 +7,7 @@ const PlaylistStructure = require('../structures/playlist');
 
 const URL = require('url');
 const validUrl = require('valid-url');
-const ytNode = require('youtube-node');
 const rp = require('request-promise-native');
-
-const ytApi = new ytNode();
-ytApi.setKey(process.env.youtube);
 
 const idRegex = /[a-zA-Z0-9-_]+$/;
 
@@ -44,9 +40,7 @@ class YTPlaylist   {
             }   else if(urlType === 'long video' || urlType === 'short video')  {
                 return this.addVideo(url);
             }   else    {
-                return new Promise(function(resolve, reject)    {
-                    reject();
-                });
+                return Promise.reject();
             }
         }   else   {
             return this.addQuery(dataIn.join(' '));
@@ -60,19 +54,18 @@ class YTPlaylist   {
      */
     addPlaylist(playlistUrl)    {
 
-        const self = this;
-
-        return new Promise(function(resolve, reject)    {
+        return new Promise((resolve, reject) => {
 
             if(!YTPlaylist.isYouTubeURL(playlistUrl) || YTPlaylist.getURLType(playlistUrl) !== 'playlist') {
-                reject('Not a YouTube playlist.');
+                return reject('Not a YouTube playlist.');
             }
 
+            const self = this;
             let first = true;
             /*
              * Recursively retrieve videos from a playlist.
              */
-            function recurse(pageToken)  {
+            (function pushPage(pageToken)  {
                 pageToken = pageToken || null;
 
                 const options = {
@@ -88,29 +81,23 @@ class YTPlaylist   {
 
                 if(pageToken) options.qs.pageToken = pageToken;
 
-                rp(options).then(function(result)  {
+                rp(options).then(result => {
 
                     for(const elem of result.items) {
-                        if(elem.status.privacyStatus == 'public' || elem.status.privacyStatus == 'unlisted')    {
-                            self.list.add(new StreamStructure('https://www.youtube.com/watch?v=' + elem.contentDetails.videoId, elem.snippet.title));
-
-                            if(first)   {
-                                resolve(self.list);
-                                first = false;
-                            }
+                        if(elem.status.privacyStatus !== 'public' && elem.status.privacyStatus !== 'unlisted') continue;
+                        self.list.add(new StreamStructure('https://www.youtube.com/watch?v=' + elem.contentDetails.videoId, elem.snippet.title));
+                        if(first)   {
+                            resolve(self.list);
+                            first = false;
                         }
                     }
 
                     if(result.nextPageToken)    {
-                        recurse(result.nextPageToken);
+                        pushPage(result.nextPageToken);
                     }
-                }).catch(function(err)  {
-                    reject(err);
                 });
-            }
-
-            recurse();
-        })
+            })();
+        });
     };
 
     /**
