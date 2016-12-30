@@ -7,11 +7,7 @@ const PlaylistStructure = require('../structures/playlist');
 
 const URL = require('url');
 const validUrl = require('valid-url');
-const ytNode = require('youtube-node');
 const rp = require('request-promise-native');
-
-const ytApi = new ytNode();
-ytApi.setKey(process.env.youtube);
 
 const idRegex = /[a-zA-Z0-9-_]+$/;
 
@@ -44,14 +40,12 @@ class YTPlaylist   {
             }   else if(urlType === 'long video' || urlType === 'short video')  {
                 return this.addVideo(url);
             }   else    {
-                return new Promise(function(resolve, reject)    {
-                    reject();
-                });
+                return Promise.reject();
             }
         }   else   {
             return this.addQuery(dataIn.join(' '));
         }
-    }
+    };
 
     /**
      * Add a YouTube playlist to the playlist.
@@ -60,19 +54,18 @@ class YTPlaylist   {
      */
     addPlaylist(playlistUrl)    {
 
-        const self = this;
-
-        return new Promise(function(resolve, reject)    {
+        return new Promise((resolve, reject) => {
 
             if(!YTPlaylist.isYouTubeURL(playlistUrl) || YTPlaylist.getURLType(playlistUrl) !== 'playlist') {
-                reject('Not a YouTube playlist.');
+                return reject('Not a YouTube playlist.');
             }
 
+            const self = this;
             let first = true;
             /*
              * Recursively retrieve videos from a playlist.
              */
-            function recurse(pageToken)  {
+            (function pushPage(pageToken)  {
                 pageToken = pageToken || null;
 
                 const options = {
@@ -86,34 +79,26 @@ class YTPlaylist   {
                     json: true
                 };
 
-                if(pageToken)   {
-                    options.qs.pageToken = pageToken;
-                }
+                if(pageToken) options.qs.pageToken = pageToken;
 
-                rp(options).then(function(result)  {
+                rp(options).then(result => {
 
                     for(const elem of result.items) {
-                        if(elem.status.privacyStatus == 'public' || elem.status.privacyStatus == 'unlisted')    {
-                            self.list.add(new StreamStructure('https://www.youtube.com/watch?v=' + elem.contentDetails.videoId, elem.snippet.title));
-
-                            if(first)   {
-                                resolve(self.list);
-                                first = false;
-                            }
+                        if(elem.status.privacyStatus !== 'public' && elem.status.privacyStatus !== 'unlisted') continue;
+                        self.list.add(new StreamStructure('https://www.youtube.com/watch?v=' + elem.contentDetails.videoId, elem.snippet.title));
+                        if(first)   {
+                            resolve(self.list);
+                            first = false;
                         }
                     }
 
                     if(result.nextPageToken)    {
-                        recurse(result.nextPageToken);
+                        pushPage(result.nextPageToken);
                     }
-                }).catch(function(err)  {
-                    reject(err);
                 });
-            }
-
-            recurse();
+            })();
         });
-    }
+    };
 
     /**
      * Add a YouTube video to the playlist.
@@ -125,9 +110,7 @@ class YTPlaylist   {
         const self = this;
 
         return new Promise(function(resolve, reject)    {
-            if(!YTPlaylist.isYouTubeURL(videoUrl) || (videoType !== 'short video' && videoType !== 'long video'))   {
-                reject('Not a valid YouTube video URL.');
-            }
+            if(!YTPlaylist.isYouTubeURL(videoUrl) || (videoType !== 'short video' && videoType !== 'long video')) return reject('Not a valid YouTube video URL.');
 
             rp({
                 uri: 'https://www.googleapis.com/youtube/v3/videos',
@@ -147,11 +130,9 @@ class YTPlaylist   {
                 }   else {
                     reject('can\'t play live streams :cry:');
                 }
-            }).catch(() => {
-                reject('Couldn\'t retrieve video information.');
-            });
-        });
-    }
+            }).catch(err => { reject('Couldn\'t retrieve video information.'); });
+        })
+    };
 
     /**
      * Add a YouTube search query to the playlist.
@@ -185,7 +166,7 @@ class YTPlaylist   {
                 reject('Couldn\'t find a video for that query.');
             });
         });
-    }
+    };
 
     addPlaylistQuery(query)    {
         return new Promise((resolve, reject) => {
@@ -203,7 +184,7 @@ class YTPlaylist   {
             }).then(res => {
                 if(res.items.length === 0) return reject('no playlist for that query');
                 return resolve(this.addPlaylist('https://www.youtube.com/playlist?list=' + res.items[0].id.playlistId));
-            });
+            })
         });
     }
 
@@ -232,7 +213,7 @@ class YTPlaylist   {
         }
 
         return false;
-    }
+    };
 
     /**
      * Returns whether a given URL is a video.
@@ -250,9 +231,7 @@ class YTPlaylist   {
      * @static
      */
     static getURLType(testUrl) {
-        if(!YTPlaylist.isYouTubeURL(testUrl)) {
-            return false;
-        }
+        if(!YTPlaylist.isYouTubeURL(testUrl)) return false;
 
         const parsed = URL.parse(testUrl, true);
         if(parsed.host === 'www.youtube.com' || parsed.host == 'youtube.com')   {
@@ -266,7 +245,7 @@ class YTPlaylist   {
         }
 
         return false;
-    }
+    };
 
     /**
      * Determines if a provided URL is a valid YouTube link (either playlist or video)
@@ -275,9 +254,7 @@ class YTPlaylist   {
      * @static
      */
     static isYouTubeURL(ytUrl)   {
-        if(!validUrl.is_web_uri(ytUrl)) {
-            return false;
-        }
+        if(!validUrl.is_web_uri(ytUrl)) return false;
 
         const parsed = URL.parse(ytUrl, true);
 
@@ -302,7 +279,7 @@ class YTPlaylist   {
         }
 
         return false;
-    }
+    };
 }
 
 module.exports = YTPlaylist;
