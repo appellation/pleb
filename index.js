@@ -7,6 +7,11 @@ require('dotenv').config({ silent: true });
 if(process.env.raven)   {
     const Raven = require('raven');
     Raven.config(process.env.raven).install();
+
+    process.on('uncaughtException', e => {
+        Raven.captureException(e);
+        process.exit(0);
+    });
 }
 
 const Discord = require('discord.js');
