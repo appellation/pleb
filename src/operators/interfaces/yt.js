@@ -45,7 +45,7 @@ class YTPlaylist   {
         }   else   {
             return this.addQuery(dataIn.join(' '));
         }
-    };
+    }
 
     /**
      * Add a YouTube playlist to the playlist.
@@ -98,7 +98,7 @@ class YTPlaylist   {
                 });
             })();
         });
-    };
+    }
 
     /**
      * Add a YouTube video to the playlist.
@@ -130,9 +130,9 @@ class YTPlaylist   {
                 }   else {
                     reject('can\'t play live streams :cry:');
                 }
-            }).catch(err => { reject('Couldn\'t retrieve video information.'); });
-        })
-    };
+            }).catch(() => { reject('Couldn\'t retrieve video information.'); });
+        });
+    }
 
     /**
      * Add a YouTube search query to the playlist.
@@ -166,7 +166,7 @@ class YTPlaylist   {
                 reject('Couldn\'t find a video for that query.');
             });
         });
-    };
+    }
 
     addPlaylistQuery(query)    {
         return new Promise((resolve, reject) => {
@@ -184,7 +184,7 @@ class YTPlaylist   {
             }).then(res => {
                 if(res.items.length === 0) return reject('no playlist for that query');
                 return resolve(this.addPlaylist('https://www.youtube.com/playlist?list=' + res.items[0].id.playlistId));
-            })
+            });
         });
     }
 
@@ -213,7 +213,7 @@ class YTPlaylist   {
         }
 
         return false;
-    };
+    }
 
     /**
      * Returns whether a given URL is a video.
@@ -245,7 +245,7 @@ class YTPlaylist   {
         }
 
         return false;
-    };
+    }
 
     /**
      * Determines if a provided URL is a valid YouTube link (either playlist or video)
@@ -279,7 +279,7 @@ class YTPlaylist   {
         }
 
         return false;
-    };
+    }
 }
 
 module.exports = YTPlaylist;
