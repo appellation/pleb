@@ -66,9 +66,7 @@ exports.func = (msg, args) => {
             address: args.slice(1).join(' ')
         }
     }).then(loc => {
-        if(loc.status == 'ZERO_RESULTS')    {
-            return;
-        }
+        if(loc.status == 'ZERO_RESULTS') return;
 
         const coords = loc.results[0].geometry.location;
         return Promise.all([
@@ -79,9 +77,7 @@ exports.func = (msg, args) => {
         ]);
     }).then(res => {
 
-        if(!res) {
-            return 'no location found';
-        }
+        if(!res) return 'no location found';
 
         const weather = res[0];
         const loc = res[1];
@@ -100,9 +96,7 @@ exports.func = (msg, args) => {
             data = [cur];
         }
 
-        if(type == 'hourly')    {
-            data.splice(0, 24);
-        }
+        if(type == 'hourly') data.splice(0, 24);
 
         for(let i = 0; i < data.length;)    {
             const point = data[i];
