@@ -86,9 +86,7 @@ class YTPlaylist   {
                     json: true
                 };
 
-                if(pageToken)   {
-                    options.qs.pageToken = pageToken;
-                }
+                if(pageToken) options.qs.pageToken = pageToken;
 
                 rp(options).then(function(result)  {
 
@@ -125,9 +123,7 @@ class YTPlaylist   {
         const self = this;
 
         return new Promise(function(resolve, reject)    {
-            if(!YTPlaylist.isYouTubeURL(videoUrl) || (videoType !== 'short video' && videoType !== 'long video'))   {
-                reject('Not a valid YouTube video URL.');
-            }
+            if(!YTPlaylist.isYouTubeURL(videoUrl) || (videoType !== 'short video' && videoType !== 'long video')) reject('Not a valid YouTube video URL.');
 
             rp({
                 uri: 'https://www.googleapis.com/youtube/v3/videos',
@@ -147,9 +143,7 @@ class YTPlaylist   {
                 }   else {
                     reject('can\'t play live streams :cry:');
                 }
-            }).catch(err => {
-                reject('Couldn\'t retrieve video information.');
-            });
+            }).catch(reject('Couldn\'t retrieve video information.'));
         })
     };
 
@@ -250,9 +244,7 @@ class YTPlaylist   {
      * @static
      */
     static getURLType(testUrl) {
-        if(!YTPlaylist.isYouTubeURL(testUrl)) {
-            return false;
-        }
+        if(!YTPlaylist.isYouTubeURL(testUrl)) return false;
 
         const parsed = URL.parse(testUrl, true);
         if(parsed.host === 'www.youtube.com' || parsed.host == 'youtube.com')   {
@@ -275,9 +267,7 @@ class YTPlaylist   {
      * @static
      */
     static isYouTubeURL(ytUrl)   {
-        if(!validUrl.is_web_uri(ytUrl)) {
-            return false;
-        }
+        if(!validUrl.is_web_uri(ytUrl)) return false;
 
         const parsed = URL.parse(ytUrl, true);
 
