@@ -123,7 +123,7 @@ class YTPlaylist   {
         const self = this;
 
         return new Promise(function(resolve, reject)    {
-            if(!YTPlaylist.isYouTubeURL(videoUrl) || (videoType !== 'short video' && videoType !== 'long video')) reject('Not a valid YouTube video URL.');
+            if(!YTPlaylist.isYouTubeURL(videoUrl) || (videoType !== 'short video' && videoType !== 'long video')) return reject('Not a valid YouTube video URL.');
 
             rp({
                 uri: 'https://www.googleapis.com/youtube/v3/videos',
@@ -143,7 +143,7 @@ class YTPlaylist   {
                 }   else {
                     reject('can\'t play live streams :cry:');
                 }
-            }).catch(reject('Couldn\'t retrieve video information.'));
+            }).catch(err => { reject('Couldn\'t retrieve video information.'); });
         })
     };
 
