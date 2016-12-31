@@ -2,9 +2,9 @@
  * Created by Will on 8/25/2016.
  */
 
-const Playlist = require('./playlist');
-const VC = require('./voiceConnection');
-const storage = require('./playlists');
+const Playlist = require('../operators/playlist');
+const VC = require('../operators/voiceConnection');
+const storage = require('../storage/playlists');
 
 exports.func = (msg, args, handler, {playlistIn = null, shuffle = false} = {}) => {
     let playlist;
@@ -15,7 +15,7 @@ exports.func = (msg, args, handler, {playlistIn = null, shuffle = false} = {}) =
         if(storage.has(msg.guild.id)) storage.get(msg.guild.id).stop();
         storage.set(msg.guild.id, playlist);
 
-        return playlist.add(args);
+        return playlist.add(args).catch(err => msg.channel.sendCode('xl', err));
     }).then(() =>  {
         if(shuffle) playlist.shuffle();
         playlist.start(msg, args);

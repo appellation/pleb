@@ -4,7 +4,7 @@
   "description": "A very low class Discord bot made by a very low class guy.",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node src/index.js",
     "test": "eslint src/**"
   },
   "engines": {

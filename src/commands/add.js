@@ -2,8 +2,8 @@
  * Created by Will on 9/11/2016.
  */
 
-const Play = require('/play');
-const storage = require('./playlists');
+const Play = require('./play');
+const storage = require('../storage/playlists');
 
 exports.func = (msg, args, handler) => {
     if(args[0] === 'shuffle') {

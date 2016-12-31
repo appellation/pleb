@@ -49,142 +49,125 @@ class YTPlaylist   {
 
     /**
      * Add a YouTube playlist to the playlist.
-     * @param {string} playlistUrl
+     * @param {String} playlistUrl
      * @returns {Promise} - A promise that resolves when the playlist is finished getting added.
      */
     addPlaylist(playlistUrl)    {
+        if(!YTPlaylist.isYouTubeURL(playlistUrl) || YTPlaylist.getURLType(playlistUrl) !== 'playlist') return Promise.reject('Not a YouTube playlist.');
+        return this._addPlaylistPage(URL.parse(playlistUrl, true).query.list);
+    }
 
-        return new Promise((resolve, reject) => {
+    /**
+     * Add a playlist by query.
+     *
+     * @param {String} query
+     * @return {Promise}
+     */
+    addPlaylistQuery(query)    {
+        if(!query) throw new Error('no query provided');
+        return rp.get({
+            url: 'https://www.googleapis.com/youtube/v3/search',
+            qs: {
+                q: query,
+                type: 'playlist',
+                part: 'id',
+                key: process.env.youtube
+            },
+            json: true
+        }).then(res => {
+            if(res.items.length === 0) return Promise.reject('no playlist for that query');
+            return this._addPlaylistPage(res.items[0].id.playlistId);
+        });
+    }
 
-            if(!YTPlaylist.isYouTubeURL(playlistUrl) || YTPlaylist.getURLType(playlistUrl) !== 'playlist') {
-                return reject('Not a YouTube playlist.');
+    /**
+     * Recursively add a playlist.
+     *
+     * @param playlistID
+     * @param [pageToken]
+     * @return {Promise}
+     * @private
+     */
+    _addPlaylistPage(playlistID, pageToken) {
+        const options = {
+            uri: 'https://www.googleapis.com/youtube/v3/playlistItems',
+            qs: {
+                part: 'contentDetails,snippet,status',
+                playlistId: playlistID,
+                maxResults: 50,
+                key: process.env.youtube
+            },
+            json: true
+        };
+
+        if(pageToken) options.qs.pageToken = pageToken;
+
+        return rp.get(options).then(result => {
+            for(const elem of result.items) {
+                if(elem.status.privacyStatus !== 'public' && elem.status.privacyStatus !== 'unlisted') continue;
+                this.list.add(new StreamStructure('https://www.youtube.com/watch?v=' + elem.contentDetails.videoId, elem.snippet.title));
             }
 
-            const self = this;
-            let first = true;
-            /*
-             * Recursively retrieve videos from a playlist.
-             */
-            (function pushPage(pageToken)  {
-                pageToken = pageToken || null;
-
-                const options = {
-                    uri: 'https://www.googleapis.com/youtube/v3/playlistItems',
-                    qs: {
-                        part: 'contentDetails,snippet,status',
-                        playlistId: URL.parse(playlistUrl, true).query.list,
-                        maxResults: 50,
-                        key: process.env.youtube
-                    },
-                    json: true
-                };
-
-                if(pageToken) options.qs.pageToken = pageToken;
-
-                rp(options).then(result => {
-
-                    for(const elem of result.items) {
-                        if(elem.status.privacyStatus !== 'public' && elem.status.privacyStatus !== 'unlisted') continue;
-                        self.list.add(new StreamStructure('https://www.youtube.com/watch?v=' + elem.contentDetails.videoId, elem.snippet.title));
-                        if(first)   {
-                            resolve(self.list);
-                            first = false;
-                        }
-                    }
-
-                    if(result.nextPageToken)    {
-                        pushPage(result.nextPageToken);
-                    }
-                });
-            })();
+            if(result.nextPageToken) return this._addPlaylistPage(playlistID, result.nextPageToken);
+            return this.list;
         });
     }
 
     /**
      * Add a YouTube video to the playlist.
-     * @param {string} videoUrl
+     * @param {String} videoUrl
      * @returns {Promise}
      */
     addVideo(videoUrl)  {
         const videoType = YTPlaylist.getURLType(videoUrl);
-        const self = this;
 
-        return new Promise(function(resolve, reject)    {
-            if(!YTPlaylist.isYouTubeURL(videoUrl) || (videoType !== 'short video' && videoType !== 'long video')) return reject('Not a valid YouTube video URL.');
+        if(!YTPlaylist.isYouTubeURL(videoUrl) || (videoType !== 'short video' && videoType !== 'long video')) return Promise.reject('Not a valid YouTube video URL.');
 
-            rp({
-                uri: 'https://www.googleapis.com/youtube/v3/videos',
-                qs: {
-                    part: 'snippet,id,liveStreamingDetails',
-                    id: YTPlaylist.getURLID(videoUrl),
-                    maxResults: 1,
-                    key: process.env.youtube
-                },
-                json: true
-            }).then(res => {
-                const item = res.items[0];
+        return rp.get({
+            uri: 'https://www.googleapis.com/youtube/v3/videos',
+            qs: {
+                part: 'snippet,id,liveStreamingDetails',
+                id: YTPlaylist.getURLID(videoUrl),
+                maxResults: 1,
+                key: process.env.youtube
+            },
+            json: true
+        }).then(res => {
+            const item = res.items[0];
 
-                if(typeof item.liveStreamingDetails == 'undefined') {
-                    self.list.add(new StreamStructure('https://www.youtube.com/watch?v=' + item.id, item.snippet.title));
-                    resolve(self.list);
-                }   else {
-                    reject('can\'t play live streams :cry:');
-                }
-            }).catch(() => { reject('Couldn\'t retrieve video information.'); });
-        });
+            if(typeof item.liveStreamingDetails == 'undefined') {
+                this.list.add(new StreamStructure('https://www.youtube.com/watch?v=' + item.id, item.snippet.title));
+                return this.list;
+            }   else {
+                return Promise.reject('can\'t play live streams :cry:');
+            }
+        }).catch(() => Promise.reject('Couldn\'t retrieve video information.'));
     }
 
     /**
      * Add a YouTube search query to the playlist.
-     * @param {string} query
+     * @param {String} query
      * @returns {Promise}
      */
     addQuery(query) {
-        const self = this;
+        if(!query) throw new Error('no query provided.');
+        return rp.get({
+            uri: 'https://www.googleapis.com/youtube/v3/search',
+            qs: {
+                q: query,
+                type: 'video',
+                part: 'id,snippet',
+                key: process.env.youtube
+            },
+            json: true
+        }).then(res => {
+            for(const item of res.items)    {
+                if(item.snippet.liveBroadcastContent !== 'none') continue;
+                this.list.add(new StreamStructure('https://www.youtube.com/watch?v=' + item.id.videoId, item.snippet.title));
+                return this.list;
+            }
 
-        return new Promise(function(resolve, reject)    {
-            if(!query) return reject();
-
-            rp({
-                uri: 'https://www.googleapis.com/youtube/v3/search',
-                qs: {
-                    q: query,
-                    type: 'video',
-                    part: 'id,snippet',
-                    key: process.env.youtube
-                },
-                json: true
-            }).then(res => {
-                for(const item of res.items)    {
-                    if(item.snippet.liveBroadcastContent === 'none') {
-                        self.list.add(new StreamStructure('https://www.youtube.com/watch?v=' + item.id.videoId, item.snippet.title));
-                        resolve(self.list);
-                        return;
-                    }
-                }
-
-                reject('Couldn\'t find a video for that query.');
-            });
-        });
-    }
-
-    addPlaylistQuery(query)    {
-        return new Promise((resolve, reject) => {
-            if(!query) return reject();
-
-            rp({
-                url: 'https://www.googleapis.com/youtube/v3/search',
-                qs: {
-                    q: query,
-                    type: 'playlist',
-                    part: 'id',
-                    key: process.env.youtube
-                },
-                json: true
-            }).then(res => {
-                if(res.items.length === 0) return reject('no playlist for that query');
-                return resolve(this.addPlaylist('https://www.youtube.com/playlist?list=' + res.items[0].id.playlistId));
-            });
+            return Promise.reject('Couldn\'t find a video for that query.');
         });
     }
 
@@ -193,31 +176,27 @@ class YTPlaylist   {
 
     /**
      * Get the ID of the supplied URL based on its type.
-     * @param {string} testUrl
-     * @returns {boolean|string}
+     * @param {String} testUrl
+     * @returns {String|null}
      * @static
      */
     static getURLID (testUrl) {
-        if(!this.isYouTubeURL(testUrl)) {
-            return false;
-        }
+        if(!this.isYouTubeURL(testUrl)) return null;
 
         const parsed = URL.parse(testUrl, true);
         const type = this.getURLType(testUrl);
-        if(type ===  'short video') {
-            return parsed.pathname.substring(1);
-        }   else if(type === 'long video')  {
-            return parsed.query.v;
-        }   else if(type === 'playlist')    {
-            return parsed.query.list;
-        }
+        switch (type)   { /* eslint-disable indent */
+            case 'short video': return parsed.pathname.substring(1);
+            case 'long video': return parsed.query.v;
+            case 'playlist': return parsed.query.list;
+        } /* eslint-enable indent */
 
-        return false;
+        return null;
     }
 
     /**
      * Returns whether a given URL is a video.
-     * @param {string} testURL
+     * @param {String} testURL
      * @returns {boolean}
      */
     static isVideo(testURL) {
@@ -226,12 +205,12 @@ class YTPlaylist   {
 
     /**
      * Get the type of the link.
-     * @param {string} testUrl - URL to be tested.
-     * @returns {boolean|string}
+     * @param {String} testUrl - URL to be tested.
+     * @returns {String|null}
      * @static
      */
     static getURLType(testUrl) {
-        if(!YTPlaylist.isYouTubeURL(testUrl)) return false;
+        if(!YTPlaylist.isYouTubeURL(testUrl)) return null;
 
         const parsed = URL.parse(testUrl, true);
         if(parsed.host === 'www.youtube.com' || parsed.host == 'youtube.com')   {
@@ -244,12 +223,12 @@ class YTPlaylist   {
             return 'short video';
         }
 
-        return false;
+        return null;
     }
 
     /**
      * Determines if a provided URL is a valid YouTube link (either playlist or video)
-     * @param {string} ytUrl
+     * @param {String} ytUrl
      * @returns {boolean}
      * @static
      */
@@ -257,22 +236,14 @@ class YTPlaylist   {
         if(!validUrl.is_web_uri(ytUrl)) return false;
 
         const parsed = URL.parse(ytUrl, true);
-
         if(parsed.host === 'www.youtube.com' || parsed.host === 'youtube.com')  {
             if(parsed.pathname === '/watch')    {
-                if(!parsed.query.v) {
-                    return false;
-                }
-
+                if(!parsed.query.v) return false;
                 return parsed.query.v.match(idRegex) !== null;
 
             }   else if(parsed.pathname === '/playlist')    {
-                if(!parsed.query.list)  {
-                    return false;
-                }
-
+                if(!parsed.query.list) return false;
                 return parsed.query.list.match(idRegex) !== null;
-
             }
         }   else if(parsed.host === 'youtu.be') {
             return parsed.pathname.substring(1).match(idRegex) !== null;

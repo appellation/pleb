@@ -3,7 +3,7 @@
  */
 
 const Play = require('./play');
-const storage = require('./playlists');
+const storage = require('../storage/playlists');
 
 exports.func = (msg, args, handler) => {
     if(args.length > 0) {
