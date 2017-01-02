@@ -13,6 +13,10 @@ if(process.env.raven)   {
         Raven.captureException(e);
         process.exit(0);
     });
+
+    process.on('unhandledRejection', e => {
+        Raven.captureException(e);
+    });
 }
 
 const client = new Discord.Client({
@@ -36,4 +40,4 @@ client.on('guildMemberSpeaking', guildMemberSpeakingHandler);
 client.on('message', messageHandler);
 client.on('voiceStateUpdate', voiceStateUpdateHandler);
 
-client.login(process.env.discord).then(() => console.log('Logged in.')).catch(console.error); // eslint-disable-line no-console
+client.login(process.env.discord);
