@@ -18,5 +18,6 @@ exports.func = (msg, args, handler) => {
 };
 
 exports.validator = (msg, args) => {
-    return msg.guild && storage.has(msg.guild.id) && args.length > 0;
+    const voiceChannel = msg.guild.member(msg.client.user);
+    return msg.guild && storage.has(msg.guild.id) && args.length > 0 && voiceChannel && voiceChannel.members.has(msg.author.id);
 };

@@ -22,4 +22,7 @@ exports.func = (msg, args, handler, {playlistIn = null, shuffle = false} = {}) =
     });
 };
 
-exports.validator = (msg, args) => msg.channel.type === 'text' && args.length > 0;
+exports.validator = (msg, args) => {
+    const voiceChannel = msg.guild.member(msg.client.user).voiceChannel;
+    return msg.channel.type === 'text' && args.length > 0 && voiceChannel && voiceChannel.members.has(msg.author.id);
+};
