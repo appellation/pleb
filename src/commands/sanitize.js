@@ -4,6 +4,7 @@
 
 exports.func =(msg, args) => {
     let num = parseInt(args[0], 10) || 3;
+    if(isNaN(num)) return;
 
     return msg.channel.fetchMessages().then(collection => {
         let messages = collection.findAll('author', msg.client.user);
@@ -11,11 +12,6 @@ exports.func =(msg, args) => {
 
         return msg.channel.bulkDelete(messages.slice(0, num));
     });
-};
-
-exports.validator = (msg, args) => {
-    const parsed = parseInt(args[0]);
-    return !isNaN(parsed) && parsed > 1 && parsed <= 100;
 };
 
 exports.triggers = [
