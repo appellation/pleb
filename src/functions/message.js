@@ -4,6 +4,6 @@
 
 module.exports = {
     nsfwAllowed: message => {
-        return !!(message.channel.type === 'dm' || message.member.roles.find('name', 'nsfw') || message.channel.name === 'nsfw');
+        return !!(message.channel.type === 'dm' || message.member.roles.find(role => role.name.toLowerCase() === 'nsfw') || message.channel.name.toLowerCase() === 'nsfw');
     }
 };
