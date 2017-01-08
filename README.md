@@ -18,6 +18,9 @@ A simple Discord bot available for free.  [Click here](https://discordapp.com/oa
 - `shuffle [search]` - exactly the same as `play [search]`
 - `add [query|URL]` -  add any of a YouTube video, YT playlist, SoundCloud video, SC set, or search query to the end of the playlist
 - `add shuffle [query|URL]` - add any of the above to the playlist and then shuffle it
+- `loop [YouTube video URL]` - loops a YouTube video (accepts both youtube.com and youtu.be URLs)
+- `loop [SoundCloud sound URL]` - loops a SoundCloud track
+- `loop [search]` - loops the first YouTube video from a search query
 - `next` - skips to next song
 - `next [num]` - skips to next `num` song
 - `prev` - goes back one song

@@ -11,7 +11,7 @@ exports.func = (msg, args, handler) => {
     let playlist;
     return VC.checkCurrent(msg.client, msg).then(conn => {
         playlist = new Playlist(conn);
-        return playlist.yt.addQuery(args.join(' '));
+        return playlist.add(args.join(' '));
     }).then(list => {
         for(let i = 0; i < 19; i++) list.add(list.list[0]);
         return Play.func(msg, [], handler, {playlistIn: playlist});
