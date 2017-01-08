@@ -15,7 +15,7 @@ exports.func = (msg, args, handler) => {
     }).then(list => {
         for(let i = 0; i < 19; i++) list.add(list.list[0]);
         return Play.func(msg, [], handler, {playlistIn: playlist});
-    }).catch(console.error);
+    });
 };
 
 exports.validator = msg => msg.channel.type !== 'dm';
