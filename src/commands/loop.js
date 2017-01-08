@@ -5,23 +5,17 @@
 // const storage = require('../storage/playlists');
 const Playlist = require('../operators/playlist');
 const VC = require('../operators/voiceConnection');
-const YT = require('../operators/interfaces/yt');
 const Play = require('./play');
 
-exports.func = (msg, args) => {
-    const yt = new YT();
-    return yt.add(args).then(() => {
-        for(let i = 0; i < 20; i++) {
-            // console.log(yt.list);
-            // yt.list.add(yt.list.list[0]);
-        }
-
-        return VC.checkCurrent(msg.client, msg).then(conn => {
-            return Play.func(msg, args, { playlistIn: new Playlist(conn, yt.list) });
-        });
-    });
+exports.func = (msg, args, handler) => {
+    let playlist;
+    return VC.checkCurrent(msg.client, msg).then(conn => {
+        playlist = new Playlist(conn);
+        return playlist.yt.addQuery(args.join(' '));
+    }).then(list => {
+        for(let i = 0; i < 19; i++) list.add(list.list[0]);
+        return Play.func(msg, [], handler, {playlistIn: playlist});
+    }).catch(console.error);
 };
 
 exports.validator = msg => msg.channel.type !== 'dm';
-
-exports.disabled = true;
