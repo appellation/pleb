@@ -3,6 +3,6 @@
  */
 
 exports.func = () => {
-    let num = Math.floor(Math.random() * 12) + 1;
+    const num = Math.floor(Math.random() * 12) + 1;
     return `👌 **${num}/${num === 9 ? 11 : 10}**`;
 };
