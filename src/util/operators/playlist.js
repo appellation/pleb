@@ -57,12 +57,6 @@ class Playlist extends EventEmitter {
         this._volume = 1;
 
         /**
-         * True if the playlist has not been started.
-         * @type {boolean}
-         */
-        this.init = true;
-
-        /**
          * YouTube interactions with the playlist.
          * @type {YTPlaylist}
          */
@@ -84,7 +78,7 @@ class Playlist extends EventEmitter {
         this.msg = msg;
         this.continue = true;
 
-        this.once('init', playlist => {
+        this.once('started', playlist => {
             let out;
             if(playlist.list.length === 1)  {
                 if(!SCPlaylist.isSoundCloudURL(args[0]) && !YTPlaylist.isYouTubeURL(args[0]))    {
@@ -118,12 +112,6 @@ class Playlist extends EventEmitter {
 
         this._dispatcher = this.play(stream);
         this.continue = true;
-
-        if(this.init)    {
-            this.emit('init', this.list);
-            this.init = false;
-        }
-
         this._dispatcher.once('end', this._end.bind(this));
     }
 
@@ -270,7 +258,7 @@ class Playlist extends EventEmitter {
      * @returns {EventEmitter}
      */
     play(stream) {
-        this.emit('start');
+        this.emit('start', this.list);
         const dispatcher = this.vc.playStream(stream);
         dispatcher.setVolume(this._volume);
         this.emit('started', this.list);
