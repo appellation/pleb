@@ -29,7 +29,7 @@ if(process.env.ifttt)   {
 }
 
 function message(message, body)   {
-    command(message, body).catch(() => null);
+    command(message, body);
 }
 
 module.exports = message;

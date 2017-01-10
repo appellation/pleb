@@ -50,6 +50,12 @@ class Playlist extends EventEmitter {
         this.continue = true;
 
         /**
+         * Whether this playlist has not been started.
+         * @type {boolean}
+         */
+        this.init = true;
+
+        /**
          * Volume of the playlist.
          * @type {number}
          * @private
@@ -78,7 +84,7 @@ class Playlist extends EventEmitter {
         this.msg = msg;
         this.continue = true;
 
-        this.once('started', playlist => {
+        this.once('init', playlist => {
             let out;
             if(playlist.list.length === 1)  {
                 if(!SCPlaylist.isSoundCloudURL(args[0]) && !YTPlaylist.isYouTubeURL(args[0]))    {
@@ -101,17 +107,20 @@ class Playlist extends EventEmitter {
      * @private
      */
     _playQueue()    {
-        if (this._dispatcher && this._dispatcher.speaking) this.stop();
+        this.stop();
         if (!this.list || !this.list.hasCurrent()) return;
 
         const stream = this.getStream();
-        if(!stream)  {
-            this.emit('error', 'No stream.');
-            return;
-        }
+        if(!stream) return this.emit('error', 'No stream.');
 
         this._dispatcher = this.play(stream);
         this.continue = true;
+
+        if(this.init) {
+            this.emit('init', this.list);
+            this.init = false;
+        }
+
         this._dispatcher.once('end', this._end.bind(this));
     }
 
@@ -135,6 +144,7 @@ class Playlist extends EventEmitter {
             this.list.next();
             this._playQueue();
         }   else   {
+            this.emit('end');
             this.destroy();
         }
     }
@@ -176,38 +186,30 @@ class Playlist extends EventEmitter {
 
     /**
      * Revert the playlist to the previous song.
-     * @returns {StreamStructure} Previous song.
+     * @returns {StreamStructure|undefined} Previous song.
      */
     prev()  {
-        this.emit('prev');
-        if(this.list.hasPrev()) {
-            this.list.prev();
-            this.emit('preved');
-            return this.list.getCurrent();
-        }
+        if(!this.list.hasPrev()) return;
+        this.list.prev();
+        return this.list.getCurrent();
     }
 
     /**
      * Advance the playlist.
-     * @returns {StreamStructure} Next song.
+     * @returns {StreamStructure|undefined} Next song.
      */
     next() {
-        this.emit('next');
-        if (this.list.hasNext()) {
-            this.list.next();
-            this.emit('nexted', this.list);
-            return this.list.getCurrent();
-        }
+        if (!this.list.hasNext()) return;
+        this.list.next();
+        return this.list.getCurrent();
     }
 
     /**
      * Stop playback.
      */
     stop() {
-        this.emit('stop');
         this.continue = false;
         if(this._dispatcher && this._dispatcher.speaking) this._dispatcher.end();
-        this.emit('stopped');
     }
 
     /**
@@ -215,41 +217,29 @@ class Playlist extends EventEmitter {
      */
     destroy() {
         this.stop();
-        this.emit('destroy');
         storage.delete(this.vc.channel.guild.id);
-        this.emit('destroyed');
     }
 
     /**
      * Pause playback.
      */
     pause() {
-        this.emit('pause');
-        if(this._dispatcher) {
-            this._dispatcher.pause();
-            this.emit('paused');
-        }
+        if(this._dispatcher && !this._dispatcher.paused) this._dispatcher.pause();
     }
 
     /**
      * Resume playback.
      */
     resume() {
-        this.emit('resume');
-        if(this._dispatcher) {
-            this._dispatcher.resume();
-            this.emit('resumed');
-        }
+        if(this._dispatcher && this._dispatcher.paused) this._dispatcher.resume();
     }
 
     /**
      * Shuffle the playlist.
      */
     shuffle() {
-        this.emit('shuffle');
         this.stop();
         this.list.shuffle();
-        this.emit('shuffled');
     }
 
     /**
