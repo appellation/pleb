@@ -5,7 +5,7 @@
 const moment = require('moment');
 require('moment-duration-format');
 const request = require('request');
-const playlistStorage = require('../storage/playlists');
+const playlistStorage = require('../util/storage/playlists');
 
 exports.func = msg => {
     const client = msg.client;

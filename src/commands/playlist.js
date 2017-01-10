@@ -3,8 +3,8 @@
  */
 
 const Play = require('./play');
-const playlist = require('../operators/playlist');
-const VC = require('../operators/voiceConnection');
+const playlist = require('../util/operators/playlist');
+const VC = require('../util/operators/voiceConnection');
 
 exports.func = (msg, args, handler) => {
     let list;

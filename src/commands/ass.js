@@ -3,7 +3,7 @@
  */
 
 const rp = require('request-promise-native');
-const nsfw = require('../functions/message').nsfwAllowed;
+const nsfw = require('../util/message').nsfwAllowed;
 
 exports.func = () => {
     return rp.get('http://api.obutts.ru/butts/0/1/random').then(JSON.parse).then(res => {

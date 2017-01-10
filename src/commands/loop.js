@@ -3,8 +3,8 @@
  */
 
 // const storage = require('../storage/playlists');
-const Playlist = require('../operators/playlist');
-const VC = require('../operators/voiceConnection');
+const Playlist = require('./playlist');
+const VC = require('../util/operators/voiceConnection');
 const Play = require('./play');
 
 exports.func = (msg, args, handler) => {

@@ -2,7 +2,7 @@
  * Created by Will on 8/25/2016.
  */
 
-const storage = require('../storage/playlists');
+const storage = require('../util/storage/playlists');
 
 exports.func = msg => {
     const playlist = storage.get(msg.guild.id);

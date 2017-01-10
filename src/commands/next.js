@@ -3,7 +3,7 @@
  */
 
 const Play = require('./play');
-const storage = require('../storage/playlists');
+const storage = require('../util/storage/playlists');
 
 exports.func = (msg, args, handler) => {
     const playlist = storage.get(msg.guild.id);

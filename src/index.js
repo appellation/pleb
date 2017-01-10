@@ -1,7 +1,7 @@
 /**
  * Created by Will on 8/25/2016.
  */
-require('./functions/array');
+require('./util/array');
 require('dotenv').config({ silent: true });
 const Discord = require('discord.js');
 
