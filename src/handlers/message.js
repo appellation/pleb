@@ -24,7 +24,7 @@ if(process.env.ifttt)   {
                 value3: guild ? guild.id : 'dm'
             },
             json: true
-        }).catch(() => null);
+        });
     });
 }
 
