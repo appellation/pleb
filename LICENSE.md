@@ -1,6 +1,6 @@
 # ISC License (ISC)
 
-Copyright (c) 2016, William Nelson <nelson.will@live.com>
+Copyright (c) 2017, William Nelson <appellation@topkek.pw>
 
 Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
