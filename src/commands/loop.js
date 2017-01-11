@@ -4,7 +4,7 @@
 
 // const storage = require('../storage/playlists');
 const Playlist = require('./playlist');
-const VC = require('../util/operators/voiceConnection');
+const VC = require('../util/voiceConnection');
 const Play = require('./play');
 
 exports.func = (msg, args, handler) => {

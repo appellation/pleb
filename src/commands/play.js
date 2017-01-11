@@ -2,8 +2,8 @@
  * Created by Will on 8/25/2016.
  */
 
-const Playlist = require('../util/operators/playlist');
-const VC = require('../util/operators/voiceConnection');
+const Playlist = require('../util/playlist');
+const VC = require('../util/voiceConnection');
 const storage = require('../util/storage/playlists');
 
 exports.func = (msg, args, handler, {playlistIn = null, shuffle = false} = {}) => {
