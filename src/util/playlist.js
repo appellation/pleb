@@ -70,39 +70,39 @@ class PlaylistOperator extends EventEmitter {
 
     /**
      * Start the playlist.
-     * @param client
-     * @param member
-     * @param toStart
+     * @param {Message} message
+     * @param {PlaylistStructure|Array} [list] - Either a playlist or an array of command arguments.
      * @return {Promise}
      */
-    start(client, member, toStart)  {
-        return VC.checkCurrent(client, member).then(conn => {
-            this.vc = conn;
-            if(toStart instanceof PlaylistStructure) {
-                return this.list = toStart;
-            }   else if(toStart instanceof Array) {
-                return this.add(toStart);
+    static init(message, list)  {
+        return VC.checkCurrent(message.client, message.member).then(conn => {
+            const operator = storage.has(message.guild.id) ? storage.get(message.guild.id) : new PlaylistOperator(conn);
+            operator.stop();
+
+            if(list instanceof PlaylistStructure)    {
+                operator.list = list;
+                return operator;
+            }   else if(Array.isArray(list))   {
+                return operator.add(list).then(() => operator);
             }
-            return this.list;
-        }).then(() => {
-            this.playQueue();
         });
     }
 
-    initializeMessage(msg) {
-        this.once('start', playlist => {
+    initializeMessage(channel) {
+        this.once('start', () => {
             let out;
-            if(playlist.list.length === 1)  {
-                if(!SCPlaylist.isSoundCloudURL(args[0]) && !YTPlaylist.isYouTubeURL(args[0]))    {
-                    out = 'now playing ' + playlist.getCurrent().url;
+            if(this.list.length === 1)  {
+                const url = this.list.getCurrent().url;
+                if(!SCPlaylist.isSoundCloudURL(url) && !YTPlaylist.isYouTubeURL(url))    {
+                    out = 'now playing ' + url;
                 }   else    {
                     out = 'now playing';
                 }
             }   else {
-                out = `**${playlist.list.length}** songs in queue`;
+                out = `**${this.list.length}** songs in queue`;
             }
 
-            msg.channel.sendMessage(out).catch(() => null);
+            channel.sendMessage(out).catch(() => null);
         });
     }
 

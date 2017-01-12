@@ -3,22 +3,11 @@
  */
 
 const Playlist = require('../util/playlist');
-const VC = require('../util/voiceConnection');
-const storage = require('../util/storage/playlists');
 
-exports.func = (msg, args, handler, {playlistIn = null, shuffle = false} = {}) => {
-    let playlist;
-    return VC.checkCurrent(msg.client, msg).then(conn =>  {
-
-        playlist = playlistIn || new Playlist(conn);
-
-        if(storage.has(msg.guild.id)) storage.get(msg.guild.id).stop();
-        storage.set(msg.guild.id, playlist);
-
-        return playlist.add(args).catch(err => msg.channel.sendCode('xl', err));
-    }).then(() =>  {
-        if(shuffle) playlist.shuffle();
-        playlist.start(msg, args);
+exports.func = (msg, args) => {
+    return Playlist.init(msg, args).then(operator => {
+        operator.initializeMessage(msg.channel);
+        operator.playQueue();
     });
 };
 

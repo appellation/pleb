@@ -2,14 +2,14 @@
  * Created by Will on 9/11/2016.
  */
 
-const Play = require('./play');
+const Playlist = require('../util/playlist');
 const storage = require('../util/storage/playlists');
 
-exports.func = (msg, args, handler) => {
+exports.func = (msg, args) => {
     if(args[0] === 'shuffle') {
-        return Play.func(msg, args.slice(1), handler, {
-            playlistIn: storage.get(msg.guild.id),
-            shuffle: true
+        Playlist.init(msg, args).then(operator => {
+            operator.shuffle();
+            operator.playQueue();
         });
     }   else {
         storage.get(msg.guild.id).add(args);

@@ -2,19 +2,11 @@
  * Created by Will on 12/2/2016.
  */
 
-const Play = require('./play');
-const playlist = require('../util/playlist');
-const VC = require('../util/voiceConnection');
+const Playlist = require('../util/playlist');
 
-exports.func = (msg, args, handler) => {
-    let list;
-    return VC.checkUser(msg).then(conn => {
-        list = new playlist(conn);
-        return list.yt.addPlaylistQuery(args.join(' '));
-    }).then(() => {
-        return Play.func(msg, args, handler, {
-            playlistIn: list,
-        });
+exports.func = (msg, args) => {
+    return Playlist.init(msg, args).then(operator => {
+        return operator.yt.addPlaylistQuery(args.join(' ')).then(() => operator.playQueue());
     });
 };
 

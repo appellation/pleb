@@ -30,6 +30,9 @@ class PlaylistStructure {
         this.pos = 0;
     }
 
+    get length()    {
+        return this.list.length;
+    }
 
     /**
      * Check if there is a current song.

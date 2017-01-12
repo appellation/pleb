@@ -2,21 +2,13 @@
  * Created by Will on 11/11/2016.
  */
 
-const Play = require('./play');
+const Playlist = require('../util/playlist');
 const storage = require('../util/storage/playlists');
 
-exports.func = (msg, args, handler) => {
-    const playlist = storage.get(msg.guild.id);
-    const num = parseInt(args[0]) || 1;
-
-    playlist.stop();
-
-    for(let i = 0; i < num; i++)    {
-        playlist.prev();
-    }
-
-    return Play.func(msg, [], handler, {
-        playlistIn: playlist
+exports.func = (msg, args) => {
+    Playlist.init(msg, args).then(operator => {
+        for(let i = 0; i < parseInt(args[0]); i++) operator.list.prev();
+        operator.playQueue();
     });
 };
 
