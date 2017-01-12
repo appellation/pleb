@@ -9,20 +9,19 @@ const ytdl = require('ytdl-core');
 const PlaylistStructure = require('./structures/playlist');
 const YTPlaylist = require('./interfaces/yt');
 const SCPlaylist = require('./interfaces/sc');
+const VC = require('./voiceConnection');
 const storage = require('./storage/playlists');
 
 class PlaylistOperator extends EventEmitter {
 
     /**
      * Operate a generic playlist.
-     * @param {VoiceConnection} conn
+     * @param {VoiceConnection} [conn]
      * @param {PlaylistStructure} [listIn]
      * @constructor
      */
     constructor(conn, listIn) {
         super();
-
-        if (!conn) throw new Error('No voice connection.');
 
         /**
          * The voice connection to play on.
@@ -50,12 +49,6 @@ class PlaylistOperator extends EventEmitter {
         this.continue = true;
 
         /**
-         * Whether this playlist has not been started.
-         * @type {boolean}
-         */
-        this.init = true;
-
-        /**
          * Volume of the playlist.
          * @type {number}
          * @private
@@ -77,14 +70,27 @@ class PlaylistOperator extends EventEmitter {
 
     /**
      * Start the playlist.
-     * @param {Message} msg - The message used to execute this method.
-     * @param {[]} args
+     * @param client
+     * @param member
+     * @param toStart
+     * @return {Promise}
      */
-    start(msg, args) {
-        this.msg = msg;
-        this.continue = true;
+    start(client, member, toStart)  {
+        return VC.checkCurrent(client, member).then(conn => {
+            this.vc = conn;
+            if(toStart instanceof PlaylistStructure) {
+                return this.list = toStart;
+            }   else if(toStart instanceof Array) {
+                return this.add(toStart);
+            }
+            return this.list;
+        }).then(() => {
+            this.playQueue();
+        });
+    }
 
-        this.once('init', playlist => {
+    initializeMessage(msg) {
+        this.once('start', playlist => {
             let out;
             if(playlist.list.length === 1)  {
                 if(!SCPlaylist.isSoundCloudURL(args[0]) && !YTPlaylist.isYouTubeURL(args[0]))    {
@@ -98,15 +104,12 @@ class PlaylistOperator extends EventEmitter {
 
             msg.channel.sendMessage(out).catch(() => null);
         });
-
-        this._playQueue();
     }
 
     /**
      * Play the queue.
-     * @private
      */
-    _playQueue()    {
+    playQueue()    {
         this.stop();
         if (!this.list || !this.list.hasCurrent()) return;
 
@@ -115,11 +118,6 @@ class PlaylistOperator extends EventEmitter {
 
         this._dispatcher = this.play(stream);
         this.continue = true;
-
-        if(this.init) {
-            this.emit('init', this.list);
-            this.init = false;
-        }
 
         this._dispatcher.once('end', this._end.bind(this));
     }
@@ -142,7 +140,7 @@ class PlaylistOperator extends EventEmitter {
 
         if (this.list.hasNext()) {
             this.list.next();
-            this._playQueue();
+            this.playQueue();
         }   else   {
             this.emit('end');
             this.destroy();
@@ -240,6 +238,7 @@ class PlaylistOperator extends EventEmitter {
     shuffle() {
         this.stop();
         this.list.shuffle();
+        this.playQueue();
     }
 
     /**

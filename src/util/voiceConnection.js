@@ -60,41 +60,31 @@ class VC   {
 
     /**
      * Check if author is in a voice channel and connect if so.
-     * @param {Message} msg
+     * @param {GuildMember} member
      * @returns {Promise}
      */
-    static checkUser(msg)   {
-        return new Promise((resolve, reject) => {
-            const authorChannel = msg.member.voiceChannel;
-
-            if(authorChannel) {
-                authorChannel.join().then(resolve).catch(() => {
-                    reject('couldn\'t join voice channel');
-                });
-            }   else    {
-                reject('No voice channel to join.');
-            }
-        });
+    static checkUser(member)   {
+        const authorChannel = member.voiceChannel;
+        if(authorChannel) {
+            return authorChannel.join();
+        }   else    {
+            Promise.reject('No voice channel to join.');
+        }
     }
 
     /**
      * Check voice connections in a given guild.  Prioritizes existing connections over the author connection.
      * @param {Client} client
-     * @param {Message} msg
+     * @param {GuildMember} member
      * @returns {Promise} - Resolves with the preferred voice connection.
      */
-    static checkCurrent(client, msg) {
-        if(msg.channel.type !== 'text') return Promise.reject('can\'t play outside of a guild');
-        return new Promise(resolve => {
-
-            const clientVC = client.voiceConnections.get(msg.guild.id);
-
-            if(!clientVC) {
-                resolve(VC.checkUser(msg));
-            }   else    {
-                resolve(clientVC);
-            }
-        });
+    static checkCurrent(client, member) {
+        const clientVC = client.voiceConnections.get(member.guild.id);
+        if(!clientVC)   {
+            return VC.checkUser(member);
+        }   else {
+            return Promise.resolve(clientVC);
+        }
     }
 }
 
