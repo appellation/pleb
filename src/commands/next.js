@@ -2,22 +2,13 @@
  * Created by Will on 9/11/2016.
  */
 
-const Play = require('./play');
 const storage = require('../util/storage/playlists');
 
 exports.func = (msg, args, handler) => {
     const playlist = storage.get(msg.guild.id);
     const num = parseInt(args[0]) || 1;
-
-    playlist.stop();
-
-    for(let i = 0; i < num; i++)    {
-        playlist.next();
-    }
-
-    return Play.func(msg, [], handler, {
-        playlistIn: playlist
-    });
+    for(let i = 0; i < num && playlist.list.hasNext(); i++) playlist.list.next();
+    playlist.playQueue();
 };
 
 exports.validator = (msg, args) => {
