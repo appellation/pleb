@@ -53,7 +53,7 @@ class PlaylistOperator extends EventEmitter {
          * @type {number}
          * @private
          */
-        this._volume = 1;
+        this._volume = 0.2;
 
         /**
          * YouTube interactions with the playlist.
