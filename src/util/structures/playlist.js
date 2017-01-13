@@ -34,6 +34,10 @@ class PlaylistStructure {
         return this.list.length;
     }
 
+    get last()   {
+        return this.list[this.length - 1];
+    }
+
     /**
      * Check if there is a current song.
      * @returns {boolean}

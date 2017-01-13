@@ -6,6 +6,7 @@ const Playlist = require('../util/playlist');
 
 exports.func = (msg, args) => {
     return Playlist.init(msg, args).then(operator => {
+        operator.initializeMessage(msg.channel);
         return operator.yt.addPlaylistQuery(args.join(' ')).then(() => operator.playQueue());
     });
 };
