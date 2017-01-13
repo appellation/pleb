@@ -76,15 +76,10 @@ class PlaylistOperator extends EventEmitter {
      */
     static init(message, list)  {
         return VC.checkCurrent(message.client, message.member).then(conn => {
-            let operator;
-            if(storage.has(message.guild.id)) {
-                operator = storage.get(message.guild.id);
-            } else {
-                operator = new PlaylistOperator(conn);
-                storage.set(message.guild.id, operator);
-            }
+            if(storage.has(message.guild.id)) storage.get(message.guild.id).stop();
 
-            operator.stop();
+            const operator = new PlaylistOperator(conn);
+            storage.set(message.guild.id, operator);
 
             if(list instanceof PlaylistStructure)    {
                 operator.list = list;
