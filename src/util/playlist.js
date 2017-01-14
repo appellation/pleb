@@ -90,13 +90,13 @@ class PlaylistOperator extends EventEmitter {
         });
     }
 
-    initializeMessage(channel) {
+    initializeMessage(channel, args = []) {
         this.once('start', () => {
             let out;
             if(this.list.length === 1)  {
-                const url = this.list.getCurrent().url;
+                const url = args[0];
                 if(!SCPlaylist.isSoundCloudURL(url) && !YTPlaylist.isYouTubeURL(url))    {
-                    out = 'now playing ' + url;
+                    out = 'now playing ' + this.list.getCurrent().url;
                 }   else    {
                     out = 'now playing';
                 }
