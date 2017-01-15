@@ -21,10 +21,23 @@ const Constants = {
 
 class Youtube   {
 
+    /**
+     * @constructor
+     * @param {Playlist} list
+     */
     constructor(list)   {
+
+        /**
+         * @type {Playlist}
+         */
         this.playlist = list;
     }
 
+    /**
+     * Add command arguments to a playlists.  Automatically adds any non-url arguments and a query.
+     * @param {Array} args
+     * @return {Promise}
+     */
     add(args)   {
         const urls = [];
         const query = args.filter(e => {
@@ -52,8 +65,13 @@ class Youtube   {
         return Promise.all(resolved.filter(e => e));
     }
 
+    /**
+     * Load a query as a single video into the playlist.
+     * @param {string} query
+     * @return {Promise}
+     */
     loadTrackQuery(query)   {
-        if(!query) return;
+        if(!query) return Promise.resolve();
         return rp.get({
             uri: 'search',
             qs: {
@@ -68,8 +86,13 @@ class Youtube   {
         });
     }
 
+    /**
+     * Load a query as a playlist into the playlist.
+     * @param {string} query
+     * @return {Promise}
+     */
     loadPlaylistQuery(query)    {
-        if(!query) return;
+        if(!query) return Promise.resolve();
         return rp.get({
             uri: 'search',
             qs: {
@@ -84,6 +107,12 @@ class Youtube   {
         });
     }
 
+    /**
+     * Load a YouTube playlist by ID into the playlist.
+     * @param id
+     * @param pageToken
+     * @return {Promise}
+     */
     loadPlaylist(id, pageToken = null) {
         return rp.get({
             uri: 'playlistItems',
@@ -100,6 +129,11 @@ class Youtube   {
         });
     }
 
+    /**
+     * Load a YouTube track by ID into the playlist.
+     * @param {string} id
+     * @return {Promise}
+     */
     loadTrack(id)  {
         return rp.get({
             uri: 'videos',
@@ -114,12 +148,23 @@ class Youtube   {
         });
     }
 
+    /**
+     * Add a YouTube playlist resource into the playlist.
+     * @param resource
+     * @return {Promise.<*>}
+     * @private
+     */
     _addPlaylist(resource) {
         const tracks = [];
         for(const item of resource.items) tracks.push(this.loadTrack(item.snippet.resourceId.videoId));
         return Promise.all(tracks);
     }
 
+    /**
+     * Add a YouTube video resource into the playlist.
+     * @param resource
+     * @private
+     */
     _addTrack(resource) {
         if(resource.liveStreamingDetails) return;
         this.playlist.addSong({
@@ -136,6 +181,11 @@ class Youtube   {
         });
     }
 
+    /**
+     * Get the type of the URL.
+     * @param {string} testURL
+     * @return {string|null}
+     */
     static getType(testURL) {
         const parsed = url.parse(testURL, true);
 
@@ -150,6 +200,11 @@ class Youtube   {
         return null;
     }
 
+    /**
+     * Find the ID of any YouTube URL.
+     * @param testURL
+     * @return {string|null}
+     */
     static parseID(testURL) {
         const type = Youtube.getType(testURL);
         const parsed = url.parse(testURL, true);
@@ -170,10 +225,21 @@ class Youtube   {
         return Youtube._testID(toTest);
     }
 
+    /**
+     * Whether the YouTube link is a front-end URL.
+     * @param testURL
+     * @return {boolean}
+     */
     static isViewURL(testURL)   {
         return !!Youtube.parseID(testURL);
     }
 
+    /**
+     * Test a string whether it contains a YouTube ID pattern.
+     * @param {string} string
+     * @return {null|string}
+     * @private
+     */
     static _testID(string) {
         const idRegex = /[A-Za-z0-9_-]+/;
         return idRegex.test(string) ? string : null;

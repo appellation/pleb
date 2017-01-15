@@ -19,9 +19,18 @@ class Soundcloud {
      * @param {Playlist} list
      */
     constructor(list)   {
+
+        /**
+         * @type {Playlist}
+         */
         this.playlist = list;
     }
 
+    /**
+     * Add command arguments to the playlist.
+     * @param {Array} args
+     * @return {Promise.<Playlist>}
+     */
     add(args)    {
         const urls = args.filter(e => Soundcloud.isViewURL(e));
         const resolved = [];
@@ -31,6 +40,12 @@ class Soundcloud {
         return Promise.all(resolved).then(() => this.playlist);
     }
 
+    /**
+     * Load a SoundCloud resource.
+     * @param url
+     * @return {Promise}
+     * @private
+     */
     _loadResource(url)  {
         return rp.get({
             uri: 'resolve',
@@ -47,10 +62,20 @@ class Soundcloud {
         });
     }
 
+    /**
+     * Add a SoundCloud playlist resource to the playlist.
+     * @param resource
+     * @private
+     */
     _addPlaylist(resource)  {
         for(const track of resource.tracks) this._addTrack(track);
     }
 
+    /**
+     * Add a SoundCloud track resource to the playlist.
+     * @param track
+     * @private
+     */
     _addTrack(track) {
         if(!track.streamable) return;
         this.playlist.addSong({
@@ -70,6 +95,7 @@ class Soundcloud {
     }
 
     /**
+     * Whether the given string is a valid URL form for resolving.
      * @param {String} testURL
      * @return {boolean}
      */
