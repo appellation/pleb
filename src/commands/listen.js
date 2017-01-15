@@ -6,3 +6,4 @@ const VC = require('../util/audio/voiceConnection');
 
 exports.func = msg => VC.checkUser(msg).then(() => msg.member.listen = msg);
 exports.validator = () => !!process.env.google_cloud_project_id;
+exports.disabled = true;

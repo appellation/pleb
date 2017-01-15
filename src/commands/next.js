@@ -5,10 +5,10 @@
 const storage = require('../util/storage/playlists');
 
 exports.func = (msg, args) => {
-    const playlist = storage.get(msg.guild.id);
+    const operator = storage.get(msg.guild.id);
     const num = parseInt(args[0]) || 1;
-    for(let i = 0; i < num && playlist.list.hasNext(); i++) playlist.list.next();
-    playlist.playQueue();
+    for(let i = 0; i < num && operator.playlist.hasNext(); i++) operator.playlist.next();
+    operator.start();
 };
 
 exports.validator = (msg, args) => {

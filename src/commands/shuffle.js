@@ -9,8 +9,8 @@ exports.func = (msg, args) => {
     if(args.length > 0) {
         return Playlist.init(msg, args).then(operator => {
             operator.initializeMessage(msg.channel);
-            operator.list.shuffle();
-            operator.playQueue();
+            operator.playlist.shuffle();
+            operator.start();
         });
     }   else    {
         const playlist = storage.get(msg.guild.id);

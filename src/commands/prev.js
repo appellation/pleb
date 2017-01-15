@@ -7,8 +7,8 @@ const storage = require('../util/storage/playlists');
 exports.func = (msg, args) => {
     const operator = storage.get(msg.guild.id);
     const num = parseInt(args[0]) || 1;
-    for(let i = 0; i < num && operator.list.hasPrev(); i++) operator.list.prev();
-    operator.playQueue();
+    for(let i = 0; i < num && operator.playlist.hasPrev(); i++) operator.playlist.prev();
+    operator.start();
 };
 
 exports.validator = (msg, args) => {

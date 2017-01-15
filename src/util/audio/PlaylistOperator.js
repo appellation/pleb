@@ -11,10 +11,11 @@ class PlaylistOperator  {
         this.vc = conn;
         this.playlist = new Playlist();
         this.dispatcher = null;
+        this._vol = 0.2;
     }
 
     static init(msg)  {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             if(storage.has(msg.guild.id)) {
                 const pl = storage.get(msg.guild.id);
                 const conn = pl.vc;
@@ -32,12 +33,9 @@ class PlaylistOperator  {
     start() {
         this.stop();
         const stream = this.playlist.current.stream();
-        console.log('hi');
         this.dispatcher = this.vc.playStream(stream);
+        this.dispatcher.setVolume(this._vol);
         this.dispatcher.on('end', this._end.bind(this));
-        this.dispatcher.on('start', () => console.log('start'));
-        this.dispatcher.on('error', console.error);
-        this.dispatcher.on('debug', console.log);
     }
 
     _end(reason)  {
@@ -52,6 +50,15 @@ class PlaylistOperator  {
 
     add(args)   {
         return this.playlist.add(args).then(() => this);
+    }
+
+    set volume(vol) {
+        this._vol = vol / 100;
+        this.dispatcher.setVolume(this._vol);
+    }
+
+    get volume()    {
+        return this.dispatcher.volume * 100;
     }
 
     destroy()   {

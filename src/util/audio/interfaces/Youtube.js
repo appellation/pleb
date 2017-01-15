@@ -36,7 +36,7 @@ class Youtube   {
         }, urls[0]);
 
         const resolved = [];
-        resolved.push(this.loadQuery(query));
+        resolved.push(this.loadTrackQuery(query));
         for(const resource of urls) {
             const type = Youtube.getType(resource);
             const id = Youtube.parseID(resource);
@@ -51,7 +51,8 @@ class Youtube   {
         return Promise.all(resolved.filter(e => e));
     }
 
-    loadQuery(query)   {
+    loadTrackQuery(query)   {
+        console.log('track query');
         if(!query) return;
         return rp.get({
             uri: 'search',
@@ -65,6 +66,22 @@ class Youtube   {
             if(res.items.length === 0) return;
             return this.loadTrack(res.items[0].id.videoId);
         });
+    }
+
+    loadPlaylistQuery(query)    {
+        if(!query) return;
+        return rp.get({
+            uri: 'search',
+            qs: {
+                part: 'snippet',
+                q: query,
+                maxResults: 1,
+                type: 'playlist'
+            }
+        }).then(res => {
+            if(res.items.length === 0) return;
+            return this.loadPlaylist(res.items[0].id.playlistId);
+        })
     }
 
     loadPlaylist(id, pageToken = null) {
@@ -92,6 +109,7 @@ class Youtube   {
                 maxResults: 1
             }
         }).then(res => {
+            if(res.items.length === 0) return;
             return this._addTrack(res.items[0]);
         });
     }

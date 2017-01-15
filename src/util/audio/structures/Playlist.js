@@ -5,6 +5,8 @@
 const Soundcloud = require('../interfaces/Soundcloud');
 const Youtube = require('../interfaces/Youtube');
 
+const shuffle = require('knuth-shuffle').knuthShuffle;
+
 /**
  * @typedef {Object} Song
  * @property {String} name
@@ -33,17 +35,13 @@ class Playlist  {
         return this._pos + 1;
     }
 
-    set pos(newPos) {
-        if(!this.hasNext()|| !this.hasPrev()) return;
-        this._pos = newPos - 1;
-    }
-
     get current()   {
-        return this.list[this.pos];
+        return this.list[this._pos];
     }
 
     prev()  {
-        return --this.pos;
+        if(this.hasPrev()) this._pos--;
+        return this.pos;
     }
 
     hasPrev()   {
@@ -51,11 +49,20 @@ class Playlist  {
     }
 
     next()  {
-        return ++this.pos;
+        if(this.hasNext()) this._pos++;
+        return this.pos;
     }
 
     hasNext()   {
         return (this._pos + 1) <= this.length;
+    }
+
+    getNext()  {
+        return this.list[this._pos + 1];
+    }
+
+    shuffle()   {
+        this.list = shuffle(this.list);
     }
 
     add(args)   {

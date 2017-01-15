@@ -6,8 +6,7 @@ const Playlist = require('../util/audio/PlaylistOperator');
 
 exports.func = (msg, args) => {
     return Playlist.init(msg, args).then(operator => {
-        operator.initializeMessage(msg.channel, args);
-        return operator.yt.addPlaylistQuery(args.join(' ')).then(() => operator.playQueue());
+        return operator.playlist.yt.loadPlaylistQuery(args.join(' ')).then(() => operator.start());
     });
 };
 
