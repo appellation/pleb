@@ -19,10 +19,6 @@ if(process.env.raven)   {
     });
 }
 
-process.on('unhandledRejection', e => {
-    console.error(e);
-});
-
 const client = new Discord.Client({
     messageCacheLifetime: 1800,
     messageSweepInterval: 900,

@@ -81,7 +81,7 @@ class Youtube   {
         }).then(res => {
             if(res.items.length === 0) return;
             return this.loadPlaylist(res.items[0].id.playlistId);
-        })
+        });
     }
 
     loadPlaylist(id, pageToken = null) {
@@ -155,7 +155,7 @@ class Youtube   {
         const parsed = url.parse(testURL, true);
 
         let toTest;
-        switch (type)   {
+        switch (type)   {   /* eslint-disable indent */
             case Constants.video:
                 toTest = parsed.query.v;
                 break;
@@ -165,7 +165,7 @@ class Youtube   {
             case Constants.playlist:
                 toTest = parsed.query.list;
                 break;
-        }
+        } /* esline-enable indent */
 
         return Youtube._testID(toTest);
     }

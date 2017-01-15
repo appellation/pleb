@@ -2,7 +2,7 @@
  * Created by Will on 1/14/2017.
  */
 
-const Playlist = require('./structures/Playlist');
+const Playlist = require('./Playlist');
 const VC = require('./voiceConnection');
 const storage = require('../storage/playlists');
 

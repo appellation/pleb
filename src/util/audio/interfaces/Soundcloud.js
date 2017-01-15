@@ -38,12 +38,12 @@ class Soundcloud {
                 url
             }
         }).then(thing => {
-            switch (thing.kind) {
+            switch (thing.kind) {   /* eslint-disable indent */
                 case 'playlist':
                     return this._addPlaylist(thing);
                 case 'track':
                     return this._addTrack(thing);
-            }
+            }   /* eslint-enable indent */
         });
     }
 
