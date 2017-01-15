@@ -5,7 +5,7 @@
 const rp = require('request-promise-native');
 const numeral = require('numeral');
 const moment = require('moment');
-const nsfw = require('../util/message').nsfwAllowed;
+const nsfw = require('../util/command').nsfwAllowed;
 
 const countryMap = {
     brazil: 'BR',

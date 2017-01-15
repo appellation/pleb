@@ -4,20 +4,7 @@
 require('./util/array');
 require('dotenv').config({ silent: true });
 const Discord = require('discord.js');
-
-if(process.env.raven)   {
-    const Raven = require('raven');
-    Raven.config(process.env.raven).install();
-
-    process.on('uncaughtException', e => {
-        Raven.captureException(e);
-        process.exit(0);
-    });
-
-    process.on('unhandledRejection', e => {
-        Raven.captureException(e);
-    });
-}
+const Raven = require('raven');
 
 const client = new Discord.Client({
     messageCacheLifetime: 1800,
@@ -28,16 +15,28 @@ const client = new Discord.Client({
     ]
 });
 
-const readyHandler = require('./handlers/ready');
-const guildCreateHandler = require('./handlers/guildCreate');
-const guildMemberSpeakingHandler = require('./handlers/guildMemberSpeaking');
-const messageHandler = require('./handlers/message');
-const voiceStateUpdateHandler = require('./handlers/voiceStateUpdate');
+if(process.env.raven)   {
+    Raven.config(process.env.raven, {
+        captureUnhandledRejections: true
+    }).install();
 
-client.on('ready', readyHandler);
-client.on('guildCreate', guildCreateHandler);
-client.on('guildMemberSpeaking', guildMemberSpeakingHandler);
-client.on('message', messageHandler);
-client.on('voiceStateUpdate', voiceStateUpdateHandler);
+    Raven.wrap(load)();
+}   else {
+    load();
+}
 
-client.login(process.env.discord);
+function load() {
+    const readyHandler = require('./handlers/ready');
+    const guildCreateHandler = require('./handlers/guildCreate');
+    const guildMemberSpeakingHandler = require('./handlers/guildMemberSpeaking');
+    const messageHandler = require('./handlers/message');
+    const voiceStateUpdateHandler = require('./handlers/voiceStateUpdate');
+
+    client.on('ready', readyHandler);
+    client.on('guildCreate', guildCreateHandler);
+    client.on('guildMemberSpeaking', guildMemberSpeakingHandler);
+    client.on('message', messageHandler);
+    client.on('voiceStateUpdate', voiceStateUpdateHandler);
+
+    client.login(process.env.discord);
+}
