@@ -12,6 +12,7 @@ const rp = require('request-promise-native').defaults({
 });
 const ytdl = require('ytdl-core');
 
+const Soundcloud = require('./Soundcloud');
 const Constants = {
     video: 'video',
     playlist: 'playlist',
@@ -26,14 +27,14 @@ class Youtube   {
 
     add(args)   {
         const urls = [];
-        const query = args.reduce((prev, cur) => {
-            if(Youtube.isViewURL(cur)) {
-                urls.push(cur);
-                return prev;
-            }   else {
-                return `${prev} ${cur}`;
+        const query = args.filter(e => {
+            if(Soundcloud.isViewURL(e)) return false;
+            if(Youtube.isViewURL(e)) {
+                urls.push(e);
+                return false;
             }
-        }, urls[0]);
+            return true;
+        }).join(' ');
 
         const resolved = [];
         resolved.push(this.loadTrackQuery(query));
@@ -52,7 +53,6 @@ class Youtube   {
     }
 
     loadTrackQuery(query)   {
-        console.log('track query');
         if(!query) return;
         return rp.get({
             uri: 'search',
