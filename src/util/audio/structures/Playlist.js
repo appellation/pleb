@@ -61,6 +61,10 @@ class Playlist  {
         return this.list[this._pos + 1];
     }
 
+    getLast()   {
+        return this.list[this.list.length - 1];
+    }
+
     shuffle()   {
         this.list = shuffle(this.list);
     }

@@ -6,15 +6,12 @@ const Playlist = require('../util/audio/PlaylistOperator');
 const storage = require('../util/storage/playlists');
 
 exports.func = (msg, args) => {
-    if(args[0] === 'next') {
-        return storage.get(msg.guild.id).add(args).then(operator => {
-            const pl = operator.playlist;
-            pl.list.splice(pl.pos, 0, pl.list.pop());
-            return `added \`${pl.getNext().name}\``;
-        });
-    }
-    storage.get(msg.guild.id).add(args);
-    return 'added';
+    const next = args[0] === 'next';
+    return storage.get(msg.guild.id).add(next ? args.slice(1) : args).then(operator => {
+        const pl = operator.playlist;
+        if(next) pl.list.splice(pl.pos, 0, pl.list.pop());
+        return `added \`${next ? pl.getNext().name : pl.getLast().name}\``;
+    });
 };
 
 exports.validator = (msg, args) => {
