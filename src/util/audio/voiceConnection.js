@@ -65,10 +65,10 @@ class VC   {
      */
     static checkUser(member)   {
         const authorChannel = member.voiceChannel;
-        if(authorChannel) {
+        if(authorChannel && authorChannel.joinable) {
             return authorChannel.join();
         }   else    {
-            Promise.reject('No voice channel to join.');
+            Promise.reject('Unable to join voice channel.');
         }
     }
 
@@ -80,10 +80,10 @@ class VC   {
      */
     static checkCurrent(client, member) {
         const clientVC = client.voiceConnections.get(member.guild.id);
-        if(!clientVC)   {
-            return VC.checkUser(member);
-        }   else {
+        if(clientVC)   {
             return Promise.resolve(clientVC);
+        }   else {
+            return VC.checkUser(member);
         }
     }
 }
