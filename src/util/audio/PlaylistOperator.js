@@ -16,13 +16,12 @@ class PlaylistOperator  {
 
     static init(msg)  {
         return new Promise(resolve => {
-            if(storage.has(msg.guild.id)) {
-                const pl = storage.get(msg.guild.id);
-                const conn = pl.vc;
-                pl.destroy();
-                return resolve(conn);
-            }
-            return resolve(VC.checkCurrent(msg.client, msg.member));
+            if(!storage.has(msg.guild.id)) return resolve(VC.checkCurrent(msg.client, msg.member));
+
+            const pl = storage.get(msg.guild.id);
+            const conn = pl.vc;
+            pl.destroy();
+            return resolve(conn);
         }).then(conn => {
             const playlist = new PlaylistOperator(conn);
             storage.set(msg.guild.id, playlist);

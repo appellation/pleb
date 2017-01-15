@@ -8,6 +8,8 @@ const storage = require('../util/storage/playlists');
 exports.func = (msg, args) => {
     if(args.length > 0) {
         return Playlist.init(msg, args).then(operator => {
+            operator.add(args);
+        }).then(operator => {
             operator.playlist.shuffle();
             operator.start();
         });
