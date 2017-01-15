@@ -7,11 +7,11 @@ const storage = require('../util/storage/playlists');
 
 exports.func = (msg, args) => {
     if(args.length > 0) {
-        return Playlist.init(msg, args).then(operator => {
-            operator.add(args);
+        return Playlist.init(msg).then(operator => {
+            return operator.add(args);
         }).then(operator => {
             operator.playlist.shuffle();
-            operator.start();
+            return operator.start();
         });
     }   else    {
         const operator = storage.get(msg.guild.id);
