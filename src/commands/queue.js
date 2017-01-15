@@ -9,14 +9,14 @@ exports.func = (msg, args) => {
 
     const perPage = 5;
     const parsed = parseInt(args[0]);
-    const pos = isNaN(parsed) ? operator.playlist.pos : parsed;
+    const pos = isNaN(parsed) ? operator.playlist.pos - 1 : (parsed - 1) * perPage;
 
     const list = operator.playlist.list;
-    const part = list.slice(pos - 1, pos + perPage);
+    const part = list.slice(pos, pos + perPage);
     return part.reduce((prev, song, index) => {
-        return `${prev}**${index + pos}** of ${list.length} - \`${song.name}\`\n`;
+        return `${prev}**${index + pos + 1}** of ${list.length} - \`${song.name}\`\n`;
     },
-        args[0] ? `Page **${Math.floor(pos/perPage) + 1}** of **${Math.ceil(list.length/perPage) - 1}**\n` : '⭐ '
+        args[0] ? `Page **${Math.floor(pos/perPage) + 1}** of **${Math.ceil(list.length/perPage)}**\n` : '⭐ '
     );
 };
 
