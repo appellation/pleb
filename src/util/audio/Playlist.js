@@ -103,7 +103,7 @@ class Playlist  {
      * @return {boolean}
      */
     hasNext()   {
-        return (this._pos + 1) <= this.length;
+        return (this._pos + 1) <= this.list.length - 1;
     }
 
     /**
