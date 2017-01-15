@@ -2,7 +2,7 @@
  * Created by Will on 9/7/2016.
  */
 
-const Playlist = require('../util/playlist');
+const Playlist = require('../util/audio/PlaylistOperator');
 const storage = require('../util/storage/playlists');
 
 exports.func = (msg, args) => {

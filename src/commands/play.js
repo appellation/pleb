@@ -2,12 +2,14 @@
  * Created by Will on 8/25/2016.
  */
 
-const Playlist = require('../util/playlist');
+const Playlist = require('../util/audio/PlaylistOperator');
 
 exports.func = (msg, args) => {
     return Playlist.init(msg, args).then(operator => {
-        operator.initializeMessage(msg.channel, args);
-        operator.playQueue();
+        // console.log(operator);
+        return operator.add(args);
+    }).then(operator => {
+        return operator.start();
     });
 };
 
