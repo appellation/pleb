@@ -5,12 +5,9 @@
 const storage = require('../util/storage/playlists');
 
 exports.func = msg => {
-    const playlist = storage.get(msg.guild.id);
-    if(playlist)    {
-        playlist.continue = false;
-        playlist._dispatcher.end();
-        storage.delete(msg.guild.id);
-    }
+    const operator = storage.get(msg.guild.id);
+    if(operator) operator.destroy();
+
     msg.guild.voiceConnection.disconnect();
     return 'k 😢';
 };
