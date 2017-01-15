@@ -14,10 +14,17 @@ class PlaylistOperator  {
      */
     constructor(conn)   {
 
+        if(!conn) throw new Error('No voice connection');
+
         /**
          * @type {VoiceConnection}
          */
         this.vc = conn;
+
+        /**
+         * @type {Guild}
+         */
+        this.guild = conn.channel.guild;
 
         /**
          * @type {Playlist}
@@ -130,7 +137,7 @@ class PlaylistOperator  {
      */
     destroy()   {
         this.stop();
-        storage.delete(this.vc.channel.guild.id);
+        storage.delete(this.guild.id);
     }
 }
 
