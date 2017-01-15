@@ -19,3 +19,5 @@ exports.func = (msg, args) => {
         operator.start();
     }
 };
+
+exports.validator = (msg, args) => storage.has(msg.guild.id);
