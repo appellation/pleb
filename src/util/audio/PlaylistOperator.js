@@ -54,11 +54,11 @@ class PlaylistOperator  {
 
     set volume(vol) {
         this._vol = vol / 100;
-        this.dispatcher.setVolume(this._vol);
+        if(this.dispatcher) this.dispatcher.setVolume(this._vol);
     }
 
     get volume()    {
-        return this.dispatcher.volume * 100;
+        return (this.dispatcher ? this.dispatcher.volume : this._vol) * 100;
     }
 
     destroy()   {

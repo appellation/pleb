@@ -8,12 +8,12 @@ const storage = require('../util/storage/playlists');
 exports.func = (msg, args) => {
     if(args.length > 0) {
         return Playlist.init(msg, args).then(operator => {
-            operator.initializeMessage(msg.channel);
             operator.playlist.shuffle();
             operator.start();
         });
     }   else    {
-        const playlist = storage.get(msg.guild.id);
-        playlist.shuffle();
+        const operator = storage.get(msg.guild.id);
+        operator.playlist.shuffle();
+        operator.start();
     }
 };

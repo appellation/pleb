@@ -2,8 +2,8 @@
  * Created by Will on 1/14/2017.
  */
 
-const Soundcloud = require('interfaces/Soundcloud');
-const Youtube = require('interfaces/Youtube');
+const Soundcloud = require('./interfaces/Soundcloud');
+const Youtube = require('./interfaces/Youtube');
 
 const shuffle = require('knuth-shuffle').knuthShuffle;
 
