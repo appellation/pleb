@@ -13,6 +13,7 @@ const shuffle = require('knuth-shuffle').knuthShuffle;
  * @property {String} url - a display URL
  * @property {String} type
  * @property {Number|String} duration
+ * @property {String} thumbnail
  */
 
 class Playlist  {

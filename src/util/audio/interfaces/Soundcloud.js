@@ -83,6 +83,7 @@ class Soundcloud {
             url: track.permalink_url,
             type: 'soundcloud',
             duration: track.duration,
+            thumbnail: track.artwork_url,
             stream: () => {
                 return request.get({
                     uri: track.stream_url,

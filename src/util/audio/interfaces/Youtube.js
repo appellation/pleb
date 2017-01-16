@@ -172,6 +172,7 @@ class Youtube   {
             url: `https://youtu.be/${resource.id}`,
             duration: resource.contentDetails.duration,
             type: 'youtube',
+            thumbnail: resource.snippet.thumbnails.high.url,
             stream: () => {
                 return ytdl(`https://www.youtube.com/watch?v=${resource.id}`, {
                     quality: 'lowest',

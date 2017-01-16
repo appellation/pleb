@@ -2,17 +2,20 @@
  * Created by Will on 1/14/2017.
  */
 
+const {EventEmitter} = require('events');
+
 const Playlist = require('./Playlist');
 const VC = require('./voiceConnection');
 const storage = require('../storage/playlists');
 
-class PlaylistOperator  {
+class PlaylistOperator extends EventEmitter {
 
     /**
      * @constructor
      * @param {VoiceConnection} conn
      */
     constructor(conn)   {
+        super();
 
         if(!conn) throw new Error('No voice connection');
 
@@ -45,10 +48,11 @@ class PlaylistOperator  {
 
     /**
      * Initialize a new Playlist.
-     * @param msg
+     * @param {Message} msg
+     * @param {boolean} initMessage
      * @return {Promise.<PlaylistOperator>}
      */
-    static init(msg)  {
+    static init(msg, initMessage = false)  {
         return new Promise(resolve => {
             if(!storage.has(msg.guild.id)) return resolve(VC.checkCurrent(msg.client, msg.member));
 
@@ -57,9 +61,14 @@ class PlaylistOperator  {
             pl.destroy();
             return resolve(conn);
         }).then(conn => {
-            const playlist = new PlaylistOperator(conn);
-            storage.set(msg.guild.id, playlist);
-            return playlist;
+            const operator = new PlaylistOperator(conn);
+
+            if(initMessage) operator.once('start', () => {
+                msg.channel.sendMessage(operator.playlist.current.url);
+            });
+
+            storage.set(msg.guild.id, operator);
+            return operator;
         });
     }
 
@@ -68,6 +77,10 @@ class PlaylistOperator  {
      */
     start() {
         this.stop();
+        if(!this.playlist.current) return;
+
+        this.emit('start', this);
+
         const stream = this.playlist.current.stream();
         this.dispatcher = this.vc.playStream(stream);
         this.dispatcher.setVolume(this._vol);
@@ -80,7 +93,8 @@ class PlaylistOperator  {
      * @private
      */
     _end(reason)  {
-        if(!this.playlist.hasNext() || reason === 'manual') return this.destroy();
+        if(!this.playlist.hasNext()) return this.destroy();
+        if(reason === 'manual') return;
         this.playlist.next();
         this.start();
     }
@@ -89,6 +103,7 @@ class PlaylistOperator  {
      * Stop the playlist.
      */
     stop()  {
+        this.emit('stop', this);
         if(this.dispatcher) this.dispatcher.end('manual');
     }
 
