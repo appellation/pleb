@@ -80,7 +80,7 @@ class PlaylistOperator  {
      * @private
      */
     _end(reason)  {
-        if(!this.playlist.hasNext() || reason === 'manual') return;
+        if(!this.playlist.hasNext() || reason === 'manual') return this.destroy();
         this.playlist.next();
         this.start();
     }
