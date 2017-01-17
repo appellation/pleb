@@ -64,7 +64,7 @@ class PlaylistOperator extends EventEmitter {
             const operator = new PlaylistOperator(conn);
 
             if(initMessage) operator.once('start', () => {
-                msg.channel.sendMessage(operator.playlist.current.url);
+                msg.channel.sendMessage(operator.playlist.current.url).catch(() => null);
             });
 
             storage.set(msg.guild.id, operator);
