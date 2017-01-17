@@ -4,7 +4,7 @@
 
 const storage = require('../util/storage/playlists');
 
-exports.func = (msg, args) => {
+exports.func = msg => {
     const cur = storage.get(msg.guild.id).playlist.current;
     return msg.channel.sendMessage(cur.url);
 };

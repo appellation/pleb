@@ -20,4 +20,4 @@ exports.func = (msg, args) => {
     }
 };
 
-exports.validator = (msg, args) => storage.has(msg.guild.id);
+exports.validator = msg => storage.has(msg.guild.id);
