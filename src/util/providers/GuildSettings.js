@@ -10,15 +10,19 @@ class GuildSettings {
      */
     constructor(thonk, guild)   {
         this.provider = thonk;
-        this.table = thonk.r.table('guilds');
+        this.table = this.provider.r.table('guilds');
         this.guild = guild;
         this.key = this.table.get(this.guild.id);
     }
 
     init()  {
+        return this._ensureGuild();
+    }
+
+    _ensureGuild()  {
         return this.table.hasFields(this.guild.id).branch(null, this.table.insert({
             id: this.guild.id
-        }));
+        })).run();
     }
 
     get(key)    {
