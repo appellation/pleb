@@ -3,21 +3,31 @@
  */
 
 const thonk = require('rethinkdbdash');
+const storage = require('../storage/settings');
+const Settings = require('./GuildSettings');
 
 class RethinkProvider   {
-    constructor()   {
+    constructor(client)   {
         this.r = thonk({
             servers: [{
                 host: process.env.rethink
             }],
             db: process.env.rethink_db
         });
+        this.client = client;
     }
 
-    ensureTable(table)   {
-        return this.r.tableList().do(list => {
-            return this.r.branch(list.contains(table), null, this.r.tableCreate(table));
-        }).run();
+    initializeGuilds()  {
+        const out = [];
+        for(const g of this.client.guilds) out.push(this.initializeGuild(g));
+        return Promise.all(out);
+    }
+
+    initializeGuild(guild)  {
+        const setting = new Settings(this, guild);
+        return setting.init().then(() => {
+            storage.set(guild.id, setting);
+        }).catch(() => null);
     }
 }
 
