@@ -49,10 +49,9 @@ class PlaylistOperator extends EventEmitter {
     /**
      * Initialize a new Playlist.
      * @param {Message} msg
-     * @param {boolean} initMessage
      * @return {Promise.<PlaylistOperator>}
      */
-    static init(msg, initMessage = false)  {
+    static init(msg)  {
         return new Promise(resolve => {
             if(!storage.has(msg.guild.id)) return resolve(VC.checkCurrent(msg.client, msg.member));
 
@@ -62,10 +61,6 @@ class PlaylistOperator extends EventEmitter {
             return resolve(conn);
         }).then(conn => {
             const operator = new PlaylistOperator(conn);
-
-            if(initMessage) operator.once('start', () => {
-                msg.channel.sendMessage(operator.playlist.current.url).catch(() => null);
-            });
 
             storage.set(msg.guild.id, operator);
             return operator;
