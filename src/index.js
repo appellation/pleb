@@ -1,6 +1,7 @@
 /**
  * Created by Will on 8/25/2016.
  */
+const Thonk = require('./util/providers/RethinkProvider');
 require('./util/array');
 require('dotenv').config({ silent: true });
 const Discord = require('discord.js');
@@ -25,8 +26,6 @@ if(process.env.raven)   {
     load();
 }
 
-process.on('unhandledRejection', console.error);
-
 function load() {
     const readyHandler = require('./handlers/ready');
     const guildCreateHandler = require('./handlers/guildCreate');
@@ -39,6 +38,11 @@ function load() {
     client.on('guildMemberSpeaking', guildMemberSpeakingHandler);
     client.on('message', messageHandler);
     client.on('voiceStateUpdate', voiceStateUpdateHandler);
+
+    client.once('ready', () => {
+        client.provider = new Thonk(client);
+        client.provider.initializeGuilds();
+    });
 
     client.login(process.env.discord);
 }

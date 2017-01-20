@@ -8,32 +8,28 @@ class GuildSettings {
      * @param {RethinkProvider} thonk
      * @param {Guild} guild
      */
-    constructor(thonk, guild)   {
-        this._provider = thonk;
-        this._table = this._provider.r.table('guilds');
+    constructor(thonk, guild) {
+        this.provider = thonk;
         this.guild = guild;
-        this._key = this.table.get(this.guild.id);
+        this._table = this.provider.r.table('guilds');
+        this.data = {};
     }
 
     init()  {
-        return this._ensureGuild();
-    }
-
-    _ensureGuild()  {
-        return this._table.hasFields(this.guild.id).branch(null, this.table.insert({
-            id: this.guild.id
-        })).run();
+        return this._table.insert({ id: this.guild.id }, { returnChanges: 'always' }).run().then(this._updateCache.bind(this));
     }
 
     get(key)    {
-        return this._key.hasFields(key).branch(this._key(key), null).run();
+        return this.data[key];
     }
 
     set(key, value) {
-        return this._table.insert({
-            id: this.guild.id,
-            [key]: value,
-        }, { conflict: 'update' }).run();
+        return this._table.get(this.guild.id).update({ [key]: value }, { returnChanges: 'always' }).run().then(this._updateCache.bind(this));
+    }
+
+    _updateCache(data)  {
+        this.data = data.changes[0].new_val;
+        return this.data;
     }
 }
 

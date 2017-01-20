@@ -19,7 +19,7 @@ class RethinkProvider   {
 
     initializeGuilds()  {
         const out = [];
-        for(const g of this.client.guilds) out.push(this.initializeGuild(g));
+        for(const [, g] of this.client.guilds) out.push(this.initializeGuild(g));
         return Promise.all(out);
     }
 
@@ -27,7 +27,7 @@ class RethinkProvider   {
         const setting = new Settings(this, guild);
         return setting.init().then(() => {
             storage.set(guild.id, setting);
-        }).catch(() => null);
+        });
     }
 }
 
