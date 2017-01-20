@@ -8,7 +8,7 @@ const nsfw = require('../util/command').nsfwAllowed;
 exports.func = () => {
     return rp.get('http://api.oboobs.ru/boobs/0/1/random').then(JSON.parse).then(res => {
         return 'http://media.oboobs.ru/' + res[0].preview;
-    });
+    }).catch(() => 'no boobs found 😭');
 };
 
 exports.validator = message => {
