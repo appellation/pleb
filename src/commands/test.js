@@ -13,4 +13,4 @@ exports.func = (msg, args) => {
         console.log(g.get('test'));
 
 };
-/* eslint-disable */
+/* eslint-enable */
