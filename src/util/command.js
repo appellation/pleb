@@ -11,6 +11,6 @@ module.exports = {
     },
     fetchPrefix: guild => {
         if(!guild) return new RegExp('');
-        return new RegExp(`^(${(settings.has(guild.id) && settings.get(guild.id).data.prefix) ? RegExp.escape(settings.get(guild.id).data.prefix) : ''}|${idPattern})\\s*`);
+        return new RegExp(`^(${((settings.has(guild.id) && settings.get(guild.id).data.prefix) ? `${RegExp.escape(settings.get(guild.id).data.prefix)}|` : '') + idPattern})\\s*`);
     }
 };
