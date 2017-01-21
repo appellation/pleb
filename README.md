@@ -36,6 +36,7 @@ A simple Discord bot available for free.  [Click here](https://discordapp.com/oa
 - `vol [num]` - set volume scaled to 10 (10 is normal, 20 is double, etc.).  Cannot be more than 50.
 
 #### Functionality
+- `config prefix <value>` - set prefix.
 - `ping` - calculates time between command message and response message
 - `ping [URL]` - simple HTTP ping to a website
 - `stats` - get some bot stats

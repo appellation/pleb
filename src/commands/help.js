@@ -16,7 +16,8 @@ exports.func = msg => {
         '- **queue [page]** - show song queue: next 5 or page number\n' +
         '- **vol <num>** - set volume.  10 is normal, 20 is double, etc.  Must not be more than 50.\n' +
         '- **playlist <query>** - search YouTube for a playlist and play it\n' +
-        '- **loop <query>** - play a song 20 times\n\n' +
+        '- **loop <query>** - play a song 20 times\n' +
+        '- **config prefix <setting>** - set the prefix\n\n' +
         '- **ping [url]** - pings the bot or an optional website\n' +
         '- **imgur [title]** - used with file uploads; uploads a file to Imgur with an optional **title**\n' +
         '- **memes** - get a random meme from Cyanide & Happiness or xkcd\n' +
