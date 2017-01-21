@@ -2,7 +2,7 @@
  * Created by Will on 8/25/2016.
  */
 const Thonk = require('./util/providers/RethinkProvider');
-require('./util/array');
+require('./util/extensions');
 require('dotenv').config({ silent: true });
 const Discord = require('discord.js');
 const Raven = require('raven');

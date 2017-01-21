@@ -10,6 +10,7 @@ module.exports = {
         return !!(message.channel.type === 'dm' || message.member.roles.find(role => role.name.toLowerCase() === 'nsfw') || message.channel.name.toLowerCase() === 'nsfw');
     },
     fetchPrefix: guild => {
-        return new RegExp((settings.has(guild.id) && settings.get(guild.id).data.prefix) ? `^${settings.get(guild.id).data.prefix}\\s*` : idPattern);
+        if(!guild) return new RegExp('');
+        return new RegExp(`^(${(settings.has(guild.id) && settings.get(guild.id).data.prefix) ? RegExp.escape(settings.get(guild.id).data.prefix) : ''}|${idPattern})\\s*`);
     }
 };

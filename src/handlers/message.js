@@ -9,7 +9,7 @@ const command = require('discord-handles')({
     directory: __dirname + '/../commands',
     validator: message => {
         const regex = commandFunctions.fetchPrefix(message.guild);
-        if((message.channel.name === 'pleb' || regex.test(message.content) || message.channel.type === 'dm') && ((message.member && !message.member.roles.find('name', 'no-pleb')) || message.channel.type === 'dm')) {
+        if((message.channel.name === 'pleb' || message.channel.type === 'dm' || regex.test(message.content)) && ((message.member && !message.member.roles.find('name', 'no-pleb')) || message.channel.type === 'dm')) {
             return message.content.replace(regex, '');
         }
     }
