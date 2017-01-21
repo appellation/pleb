@@ -2,13 +2,14 @@
  * Created by Will on 12/6/2016.
  */
 
-const regex = new RegExp(`^<@!?${process.env.discord_client_id}> *`);
+const commandFunctions = require('../util/command');
 const rp = require('request-promise-native');
 const command = require('discord-handles')({
     respond: true,
     directory: __dirname + '/../commands',
     validator: message => {
-        if((message.channel.name === 'pleb' || regex.test(message.content) || message.channel.type === 'dm') && ((message.member && !message.member.roles.find('name', 'no-pleb')) || message.channel.type === 'dm')) {
+        const regex = commandFunctions.fetchPrefix(message.guild);
+        if((message.channel.name === 'pleb' || message.channel.type === 'dm' || regex.test(message.content)) && ((message.member && !message.member.roles.find('name', 'no-pleb')) || message.channel.type === 'dm')) {
             return message.content.replace(regex, '');
         }
     }
