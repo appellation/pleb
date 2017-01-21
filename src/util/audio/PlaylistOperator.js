@@ -59,6 +59,8 @@ class PlaylistOperator extends EventEmitter {
             const conn = pl.vc;
             pl.destroy();
             return resolve(conn);
+        }).catch(err => {
+            msg.channel.sendMessage(err).catch(() => null);
         }).then(conn => {
             const operator = new PlaylistOperator(conn);
 
