@@ -14,4 +14,4 @@ exports.func = (msg, args) => {
     return settings.set(args[0], args.slice(1).join(' ') || null);
 };
 
-exports.validator = (msg) => msg.channel.type === 'text' && args.length >= 1;
+exports.validator = (msg, args) => msg.channel.type === 'text' && args.length >= 1;
