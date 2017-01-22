@@ -11,6 +11,7 @@ const rp = require('request-promise-native').defaults({
     }
 });
 const ytdl = require('ytdl-core');
+const moment = require('moment');
 
 const Soundcloud = require('./Soundcloud');
 const Constants = {
@@ -125,6 +126,7 @@ class Youtube   {
         }).then(res => {
             this._addPlaylist(res);
             if(res.nextPageToken) return this.loadPlaylist(id, res.nextPageToken);
+            Youtube.setPlaylistInfo(this.playlist.info, id);
             return this;
         });
     }
@@ -166,11 +168,11 @@ class Youtube   {
      * @private
      */
     _addTrack(resource) {
-        if(resource.liveStreamingDetails) return;
-        this.playlist.addSong({
+        if(resource.liveStreamingDetails && !resource.liveStreamingDetails.actualEndTime) return;
+        const added = this.playlist.addSong({
             name: resource.snippet.title,
             url: `https://youtu.be/${resource.id}`,
-            duration: resource.contentDetails.duration,
+            duration: moment.duration(resource.contentDetails.duration, moment.ISO_8601).format('hh[h] mm[m] ss[s]'),
             type: 'youtube',
             thumbnail: resource.snippet.thumbnails.high.url,
             stream: () => {
@@ -179,6 +181,40 @@ class Youtube   {
                     filter: 'audioonly'
                 });
             }
+        });
+        Youtube.setChannelInfo(added, resource.snippet.channelId);
+    }
+
+    static setPlaylistInfo(info = {}, id)    {
+        return rp.get({
+            uri: 'playlists',
+            qs: {
+                part: 'snippet',
+                id
+            }
+        }).then(res => {
+            if(res.items.length === 0) return;
+
+            const resource = res.items[0];
+            info.title = resource.snippet.title;
+            info.description = resource.snippet.description;
+            info.thumbnail = resource.snippet.thumbnails.high.url;
+            info.displayURL = `https://www.youtube.com/playlist?list=${resource.id}`;
+
+            Youtube.setChannelInfo(info, resource.snippet.channelId);
+        });
+    }
+
+    static setChannelInfo(info = {}, id) {
+        return rp.get({
+            uri: 'channels',
+            qs: {
+                part: 'snippet',
+                id
+            }
+        }).then(res => {
+            if(res.items.length === 0) return;
+            info.author = res.items[0].snippet.title;
         });
     }
 

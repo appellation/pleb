@@ -14,6 +14,7 @@ const shuffle = require('knuth-shuffle').knuthShuffle;
  * @property {String} type
  * @property {Number|String} duration
  * @property {String} thumbnail
+ * @property {String} author
  */
 
 class Playlist  {
@@ -35,6 +36,17 @@ class Playlist  {
          * @private
          */
         this._pos = 0;
+
+        /**
+         * URL that can display this playlist.
+         * @type {Object}
+         * @property {string} title
+         * @property {string} description
+         * @property {string} thumbnail - URL to thumbnail image.
+         * @property {string} displayURL - URL to playlist itself
+         * @property {string} author
+         */
+        this.info = {};
 
         /**
          * The SoundCloud interface.
@@ -145,9 +157,11 @@ class Playlist  {
     /**
      * Add a song to the playlist.
      * @param {Song} song
+     * @returns {Song}
      */
     addSong(song)   {
         this.list.push(song);
+        return song;
     }
 }
 

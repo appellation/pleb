@@ -3,6 +3,7 @@
  */
 const Thonk = require('./util/providers/RethinkProvider');
 require('./util/extensions');
+require('moment-duration-format');
 require('dotenv').config({ silent: true });
 const Discord = require('discord.js');
 const Raven = require('raven');

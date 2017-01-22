@@ -12,6 +12,7 @@ const rp = require('request-promise-native').defaults({
     },
     json: true
 });
+const moment = require('moment');
 
 class Soundcloud {
 
@@ -68,6 +69,14 @@ class Soundcloud {
      * @private
      */
     _addPlaylist(resource)  {
+        this.playlist.info = {
+            title: resource.title,
+            description: resource.description,
+            thumbnail: resource.artwork_url,
+            displayURL: resource.permalink_url,
+            author: resource.user.username
+        };
+
         for(const track of resource.tracks) this._addTrack(track);
     }
 
@@ -82,7 +91,7 @@ class Soundcloud {
             name: track.title,
             url: track.permalink_url,
             type: 'soundcloud',
-            duration: track.duration,
+            duration: moment.duration(track.duration).format('hh[h] mm[m] ss[s]'),
             thumbnail: track.artwork_url,
             stream: () => {
                 return request.get({
@@ -91,7 +100,8 @@ class Soundcloud {
                     qs: { client_id: process.env.soundcloud },
                     encoding: null
                 });
-            }
+            },
+            author: track.user.username
         });
     }
 

@@ -3,7 +3,6 @@
  */
 
 const moment = require('moment');
-require('moment-duration-format');
 const request = require('request');
 const playlistStorage = require('../util/storage/playlists');
 
@@ -31,7 +30,7 @@ exports.func = msg => {
 
 __**Process info:**__
 **Memory:** ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB
-**Uptime:** ${moment.duration(client.uptime).format('d [days] h [hrs] mm [mins] ss [secs]')}`;
+**Uptime:** ${moment.duration(client.uptime, 'ms').format('d [days] h [hrs] mm [mins] ss [secs]')}`;
 };
 
 exports.triggers = [

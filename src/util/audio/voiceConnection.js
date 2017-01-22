@@ -68,7 +68,7 @@ class VC   {
         if(authorChannel && authorChannel.joinable) {
             return authorChannel.join();
         }   else    {
-            Promise.reject('Unable to join voice channel.');
+            return Promise.reject('Unable to join voice channel.');
         }
     }
 
