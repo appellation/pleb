@@ -38,7 +38,8 @@ class Playlist  {
         this._pos = 0;
 
         /**
-         * URL that can display this playlist.
+         * Information about this playlist. (Not guaranteed to be accurate,
+         * since songs can be arbitrarily manipulated.)
          * @type {Object}
          * @property {string} title
          * @property {string} description
