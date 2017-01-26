@@ -25,12 +25,9 @@ exports.func = (msg, args) => {
     }
 
     schedule.scheduleJob(newDate, () => {
-        if (args[0] == 'me')
-        {
+        if (args[0] == 'me') {
             msg.reply(args.slice(remIndex + 1, timeIndex).join(' '));
-        }
-        else
-        {
+        } else {
             msg.channel.sendMessage(args[0] + ', ' + args.slice(remIndex + 1, timeIndex).join(' '));
         }
     });
