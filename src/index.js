@@ -40,10 +40,12 @@ function load() {
     client.on('message', messageHandler);
     client.on('voiceStateUpdate', voiceStateUpdateHandler);
 
-    client.once('ready', () => {
-        client.provider = new Thonk(client);
-        client.provider.initializeGuilds();
-    });
+    if(process.env.rethink) {
+        client.once('ready', () => {
+            client.provider = new Thonk(client);
+            client.provider.initializeGuilds();
+        });
+    }
 
     client.login(process.env.discord);
 }
