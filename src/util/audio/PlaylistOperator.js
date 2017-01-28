@@ -82,7 +82,7 @@ class PlaylistOperator extends EventEmitter {
         const stream = this.playlist.current.stream();
         this.dispatcher = this.vc.playStream(stream);
         this.dispatcher.setVolume(this._vol);
-        this.dispatcher.on('end', this._end.bind(this));
+        this.dispatcher.once('end', this._end.bind(this));
     }
 
     /**
