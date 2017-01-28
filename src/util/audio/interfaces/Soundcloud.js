@@ -112,6 +112,7 @@ class Soundcloud {
      */
     static isViewURL(testURL)    {
         const parsed = url.parse(testURL);
+        if(!parsed.pathname || !parsed.hostname) return false;
         const parts = parsed.pathname.split('/');
         return (parsed.hostname === 'soundcloud.com' || parsed.hostname === 'www.soundcloud.com') && parts.length >= 2;
     }

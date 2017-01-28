@@ -16,12 +16,12 @@ const command = require('discord-handles')({
 });
 
 if(process.env.ifttt)   {
-    command().on('commandStarted', obj => {
-        const guild = obj.message.guild;
+    command().on('commandStarted', command => {
+        const guild = command.message.guild;
         rp.post('https://maker.ifttt.com/trigger/pleb/with/key/' + process.env.ifttt, {
             body: {
-                value1: obj.content,
-                value2: obj.message.author.id,
+                value1: command.resolvedContent,
+                value2: command.message.author.id,
                 value3: guild ? guild.id : 'dm'
             },
             json: true
