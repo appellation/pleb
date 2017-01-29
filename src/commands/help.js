@@ -14,7 +14,7 @@ exports.func = (res, msg) => {
         '- **resume** - resumes\n' +
         '- **stfu** - stops and disconnects\n' +
         '- **queue [page]** - show song queue: next 5 or page number\n' +
-        '- **vol <num>** - set volume.  10 is normal, 20 is double, etc.  Must not be more than 50.\n' +
+        '- **vol <num>** - set volume from 0 to 100%.\n' +
         '- **playlist <query>** - search YouTube for a playlist and play it\n' +
         '- **loop <query>** - play a song 20 times\n' +
         '- **config prefix <setting>** - set the prefix\n\n' +

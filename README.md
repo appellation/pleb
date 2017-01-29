@@ -33,7 +33,7 @@ A simple Discord bot available for free.  [Click here](https://discordapp.com/oa
 - `listen` - converts speech to text when message author speaks the next time
 - `queue [page]?` - list the next 5 songs; optionally provide a page number
 - `playlist [query]` -  query for a YouTube playlist
-- `vol [num]` - set volume scaled to 10 (10 is normal, 20 is double, etc.).  Cannot be more than 50.
+- `vol [num]` - from 0 to 100%.
 
 #### Functionality
 - `config prefix <value>` - set prefix.
