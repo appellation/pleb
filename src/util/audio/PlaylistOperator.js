@@ -133,7 +133,7 @@ class PlaylistOperator extends EventEmitter {
      */
     set volume(vol) {
         this._vol = vol / 100;
-        if(this.dispatcher) this.dispatcher.setVolume(this._vol);
+        if(this.dispatcher) this.dispatcher.setVolumeLogarithmic(this._vol);
     }
 
     /**
