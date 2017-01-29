@@ -5,9 +5,9 @@
 const rp = require('request-promise-native');
 const nsfw = require('../util/command').nsfwAllowed;
 
-exports.func = () => {
-    return rp.get('http://api.oboobs.ru/boobs/0/1/random').then(JSON.parse).then(res => {
-        return 'http://media.oboobs.ru/' + res[0].preview;
+exports.func = res => {
+    return rp.get('http://api.oboobs.ru/boobs/0/1/random').then(JSON.parse).then(boobs => {
+        return res.send('http://media.oboobs.ru/' + boobs[0].preview);
     }).catch(() => 'no boobs found 😭');
 };
 

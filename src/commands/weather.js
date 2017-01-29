@@ -25,7 +25,7 @@ const precipDescMap = {
 };
 
 
-exports.func = (msg, args) => {
+exports.func = (response, msg, args) => {
     if(args.length === 0) return 'no location specified';
     const poss = [
         'currently',
@@ -135,7 +135,7 @@ exports.func = (msg, args) => {
 
         out += '*Powered by Dark Sky (<https://darksky.net/poweredby/>)*';
 
-        return out;
+        return response.send(out);
     });
 };
 

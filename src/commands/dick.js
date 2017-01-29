@@ -4,8 +4,8 @@
 
 const dicks = new Map();
 
-exports.func = (msg, args) => {
-    let user;
+exports.func = (res, msg, args) => {
+    let user = msg.author.id;
     for(const a of args)    {
         const match = a.match(/<@!?([0-9]+)>/);
         if(match)   {
@@ -13,7 +13,6 @@ exports.func = (msg, args) => {
             break;
         }
     }
-    if(!user) user = msg.author.id;
 
     let count;
     if(dicks.has(user))  {
@@ -23,5 +22,5 @@ exports.func = (msg, args) => {
         dicks.set(user, count);
     }
 
-    return `8${'='.repeat(count)}D`;
+    return res.success(`8${'='.repeat(count)}D`, `<@${user}>`);
 };

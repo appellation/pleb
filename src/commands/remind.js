@@ -6,7 +6,7 @@ const schedule = require('node-schedule');
 const moment = require('moment');
 const date = require('date.js');
 
-exports.func = (msg, args) => {
+exports.func = (res, msg, args) => {
     let remIndex = args.indexOf('to');
     remIndex = remIndex === -1 ? 0 : remIndex;
 
@@ -26,9 +26,9 @@ exports.func = (msg, args) => {
 
     schedule.scheduleJob(newDate, () => {
         if (args[0] == 'me') {
-            msg.reply(args.slice(remIndex + 1, timeIndex).join(' '));
+            res.success(args.slice(remIndex + 1, timeIndex).join(' '));
         } else {
-            msg.channel.sendMessage(args[0] + ', ' + args.slice(remIndex + 1, timeIndex).join(' '));
+            res.success(args[0] + ', ' + args.slice(remIndex + 1, timeIndex).join(' '));
         }
     });
 

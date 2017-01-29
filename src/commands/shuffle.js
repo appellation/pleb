@@ -5,7 +5,7 @@
 const Playlist = require('../util/audio/PlaylistOperator');
 const storage = require('../util/storage/playlists');
 
-exports.func = (msg, args) => {
+exports.func = (res, msg, args) => {
     if(args.length > 0) {
         return Playlist.init(msg).then(operator => {
             return operator.add(args);

@@ -13,7 +13,7 @@ const countryMap = {
     sydney: 'AU',
 };
 
-exports.func = (msg, args) => {
+exports.func = (response, msg, args) => {
     if(args.length === 0) return;
     const cc = countryMap[msg.guild ? msg.guild.region : null] || 'US';
 
@@ -62,7 +62,9 @@ exports.func = (msg, args) => {
             }
         };
 
-        return (result[first.answerType] || result.Default)();
+        return ((result[first.answerType] || result.Default)()).then(result => {
+            return response.send(result);
+        });
     });
 };
 

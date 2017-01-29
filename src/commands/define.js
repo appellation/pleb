@@ -4,7 +4,7 @@
 
 const rp = require('request-promise-native');
 
-exports.func = (msg, args) => {
+exports.func = (response, msg, args) => {
     return rp.get({
         uri: 'http://api.pearson.com/v2/dictionaries/ldoce5/entries',
         qs: {
@@ -51,7 +51,7 @@ exports.func = (msg, args) => {
             out += '\n';
         }
 
-        return out;
+        return response.send(out);
     });
 };
 

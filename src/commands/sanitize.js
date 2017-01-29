@@ -2,7 +2,7 @@
  * Created by Will on 10/29/2016.
  */
 
-exports.func =(msg, args) => {
+exports.func = (res, msg, args) => {
     let num = parseInt(args[0], 10) || 3;
     if(isNaN(num)) return;
 

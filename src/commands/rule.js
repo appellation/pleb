@@ -2,7 +2,7 @@
  * Created by Will on 1/7/2017.
  */
 
-exports.func = (msg, args) => {
+exports.func = (res, msg, args) => {
     const parsed = parseInt(args[0]);
     return msg.channel.sendCode('ldif', rules[parsed - 1]);
 };

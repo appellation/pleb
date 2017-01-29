@@ -12,7 +12,7 @@ let rp = require('request-promise-native').defaults({
 const numeral = require('numeral');
 
 
-exports.func = (msg, args) => {
+exports.func = (response, msg, args) => {
     if(msg.attachments.size !== 0) {
         const ul = [];
         for(const attachment of msg.attachments) {
@@ -46,14 +46,14 @@ exports.func = (msg, args) => {
             }
         }).then(res => {
             if(msg.deletable) msg.delete();
-            return res.data.link;
+            return response.success(res.data.link);
         });
 
     }   else {
 
         return rp.get('gallery/hot/viral/0.json').then(res => {
             const rand = res.data.random();
-            return `**${rand.title}** - ${rand.account_url}\n👁 ${numeral(rand.views).format('0,0')} - 🥅 ${numeral(rand.score).format('0,0')}\n${rand.link}`;
+            return response.success(`**${rand.title}** - ${rand.account_url}\n👁 ${numeral(rand.views).format('0,0')} - 🥅 ${numeral(rand.score).format('0,0')}\n${rand.link}`);
         });
     }
 };

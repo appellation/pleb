@@ -7,14 +7,14 @@ const Playlist = require('./playlist');
 const VC = require('../util/audio/voiceConnection');
 const Play = require('./play');
 
-exports.func = (msg, args, handler) => {
+exports.func = (res, msg, args, handler) => {
     let playlist;
     return VC.checkCurrent(msg.client, msg).then(conn => {
         playlist = new Playlist(conn);
         return playlist.add(args.join(' '));
     }).then(list => {
         for(let i = 0; i < 19; i++) list.add(list.list[0]);
-        return Play.func(msg, [], handler, {playlistIn: playlist});
+        return Play.func(res, msg, [], handler, {playlistIn: playlist});
     });
 };
 

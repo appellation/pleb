@@ -6,7 +6,7 @@ const storage = require('../util/storage/playlists');
 const {RichEmbed} = require('discord.js');
 const moment = require('moment');
 
-exports.func = msg => {
+exports.func = (res, msg) => {
     const embed = new RichEmbed();
     const operator = storage.get(msg.guild.id);
     const playlist = operator.playlist;
@@ -25,7 +25,7 @@ exports.func = msg => {
         embed.addField('Playlist', `[${info.title}](${info.displayURL})`, true);
     }
 
-    return msg.channel.sendEmbed(embed);
+    return res.send({embed});
 };
 
 exports.validator = msg => msg.channel.type === 'text' && storage.has(msg.guild.id);

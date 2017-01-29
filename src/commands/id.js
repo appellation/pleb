@@ -2,7 +2,7 @@
  * Created by Will on 9/24/2016.
  */
 
-exports.func = msg => {
+exports.func = (res, msg) => {
     const mentions = msg.mentions;
     let out = [];
 
@@ -20,5 +20,5 @@ exports.func = msg => {
     }
 
     if(out.length === 0) out.push(msg.author.id);
-    return out.join('\n');
+    return res.success(`**Requested IDs:**\n\n${out.join('\n')}`);
 };

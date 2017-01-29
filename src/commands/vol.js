@@ -4,7 +4,7 @@
 
 const storage = require('../util/storage/playlists');
 
-exports.func = (msg, args) => {
+exports.func = (res, msg, args) => {
     storage.get(msg.guild.id).volume = parseFloat(args[0]);
 };
 

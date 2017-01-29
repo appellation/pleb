@@ -2,7 +2,7 @@
  * Created by Will on 10/27/2016.
  */
 
-exports.func = (msg, args, handler) => { // eslint-disable-line no-unused-vars
+exports.func = (res, msg, args, handler) => { // eslint-disable-line no-unused-vars
     return new Promise(resolve => {
         try {
             const res = eval(args.join(' '));
@@ -12,7 +12,7 @@ exports.func = (msg, args, handler) => { // eslint-disable-line no-unused-vars
         }
     }).then(res => {
         const inspected = require('util').inspect(res, { depth: 1 });
-        return (inspected.length <= 6000) ? msg.channel.sendCode('js', inspected, {split: true}) : 'that response would be too big';
+        return (inspected.length <= 6000) ? msg.channel.sendCode('js', inspected, {split: true}) : res.error('that response would be too big');
     });
 };
 

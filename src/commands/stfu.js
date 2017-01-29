@@ -4,12 +4,12 @@
 
 const storage = require('../util/storage/playlists');
 
-exports.func = msg => {
+exports.func = (res, msg) => {
     const operator = storage.get(msg.guild.id);
     if(operator) operator.destroy();
 
     msg.guild.voiceConnection.disconnect();
-    return 'k 😢';
+    return res.success('k 😢');
 };
 
 exports.triggers = [

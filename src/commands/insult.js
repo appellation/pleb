@@ -2,8 +2,8 @@
  * Created by Will on 10/4/2016.
  */
 
-exports.func = msg => {
-    return `${msg.mentions.users.find(u => !u.equals(msg.client.user)) || msg.author}, ${insults.random()}`;
+exports.func = (res, msg) => {
+    return res.success(insults.random(), msg.mentions.users.find(u => !u.equals(msg.client.user)) || msg.author);
 };
 
 const insults = [

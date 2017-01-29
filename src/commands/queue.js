@@ -4,7 +4,7 @@
 
 const storage = require('../util/storage/playlists');
 
-exports.func = (msg, args) => {
+exports.func = (res, msg, args) => {
     const operator = storage.get(msg.guild.id);
 
     const perPage = 5;
@@ -13,11 +13,11 @@ exports.func = (msg, args) => {
 
     const list = operator.playlist.list;
     const part = list.slice(pos, pos + perPage);
-    return part.reduce((prev, song, index) => {
+    return res.send(part.reduce((prev, song, index) => {
         return `${prev}**${index + pos + 1}** of ${list.length} - \`${song.name}\`\n`;
     },
         args[0] ? `Page **${Math.floor(pos/perPage) + 1}** of **${Math.ceil(list.length/perPage)}**\n` : '⭐ '
-    );
+    ));
 };
 
 exports.validator = (msg, args) => {

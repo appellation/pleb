@@ -44,7 +44,7 @@ const dict = {
 };
 
 
-exports.func = (msg, args) => {
+exports.func = (res, msg, args) => {
     let out = '';
     const low = args.join().toLowerCase();
 
@@ -54,7 +54,7 @@ exports.func = (msg, args) => {
     }
 
     if(msg.deletable) msg.delete();
-    return out || 'no characters could be converted to morse 😭';
+    return res.success(out) || res.error('no characters could be converted to morse 😭');
 };
 
 exports.validator = (msg, args) => args.length > 0;

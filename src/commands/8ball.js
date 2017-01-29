@@ -2,7 +2,7 @@
  * Created by Will on 11/5/2016.
  */
 
-exports.func = msg => {
+exports.func = (res) => {
     const responses = [
         'It is certain',
         'It is decidedly so',
@@ -26,7 +26,7 @@ exports.func = msg => {
         'Very doubtful'
     ];
 
-    return msg.reply('🎱 ' + responses.random());
+    return res.send('🎱 ' + responses.random());
 };
 
 exports.validator = (msg, args) => {

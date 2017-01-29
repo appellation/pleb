@@ -5,7 +5,6 @@
 const commandFunctions = require('../util/command');
 const rp = require('request-promise-native');
 const command = require('discord-handles')({
-    respond: true,
     directory: __dirname + '/../commands',
     validator: message => {
         const regex = commandFunctions.fetchPrefix(message.guild);
@@ -28,6 +27,8 @@ if(process.env.ifttt)   {
         });
     });
 }
+
+command.loader.on('commandFailed', console.log);
 
 function message(message, body)   {
     command(message, body);

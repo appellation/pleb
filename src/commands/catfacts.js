@@ -4,4 +4,6 @@
 
 const rp = require('request-promise-native');
 
-exports.func = () => rp.get('http://catfacts-api.appspot.com/api/facts').then(JSON.parse).then(res => res.facts[0]);
+exports.func = (res) => rp.get('http://catfacts-api.appspot.com/api/facts').then(JSON.parse).then(cats => {
+    return res.success(cats.facts[0]);
+});

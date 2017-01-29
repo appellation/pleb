@@ -74,14 +74,13 @@ class PlaylistOperator extends EventEmitter {
      * Start the playlist.
      */
     start() {
-        this.stop();
+        this.stop('temp');
         if(!this.playlist.current) return;
 
         this.emit('start', this);
 
         const stream = this.playlist.current.stream();
-        this.dispatcher = this.vc.playStream(stream);
-        this.dispatcher.setVolume(this._vol);
+        this.dispatcher = this.vc.playStream(stream, { volume: this._vol });
         this.dispatcher.once('end', this._end.bind(this));
     }
 
@@ -91,8 +90,8 @@ class PlaylistOperator extends EventEmitter {
      * @private
      */
     _end(reason)  {
-        if(!this.playlist.hasNext()) return this.destroy();
-        if(reason === 'manual') return;
+        if(reason === 'terminal') return this.destroy();
+        if(!this.playlist.hasNext()) return;
         this.playlist.next();
         this.start();
     }
@@ -100,9 +99,9 @@ class PlaylistOperator extends EventEmitter {
     /**
      * Stop the playlist.
      */
-    stop()  {
+    stop(reason = 'terminal')  {
         this.emit('stop', this);
-        if(this.dispatcher) this.dispatcher.end('manual');
+        if(this.dispatcher) this.dispatcher.end(reason);
     }
 
     /**

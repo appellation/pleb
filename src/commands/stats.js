@@ -6,7 +6,7 @@ const moment = require('moment');
 const request = require('request');
 const playlistStorage = require('../util/storage/playlists');
 
-exports.func = msg => {
+exports.func = (res, msg) => {
     const client = msg.client;
 
     if(process.env.discord_pw)  {
@@ -23,14 +23,14 @@ exports.func = msg => {
         });
     }
 
-    return `**Guilds:** ${client.guilds.size}
+    return res.send(`**Guilds:** ${client.guilds.size}
 **Channels:** ${client.channels.size}
 **Users:** ${client.users.size}
 **Playlists:** ${playlistStorage.size}
 
 __**Process info:**__
 **Memory:** ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB
-**Uptime:** ${moment.duration(client.uptime, 'ms').format('d [days] h [hrs] mm [mins] ss [secs]')}`;
+**Uptime:** ${moment.duration(client.uptime, 'ms').format('d [days] h [hrs] mm [mins] ss [secs]')}`);
 };
 
 exports.triggers = [
