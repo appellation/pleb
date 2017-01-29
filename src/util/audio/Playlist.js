@@ -141,6 +141,7 @@ class Playlist  {
      */
     shuffle()   {
         this.list = shuffle(this.list);
+        this._pos = 0;
     }
 
     /**
