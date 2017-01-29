@@ -9,7 +9,7 @@ exports.func = (res, msg) => {
     if(operator) operator.destroy();
 
     msg.guild.voiceConnection.disconnect();
-    return res.success('k 😢');
+    return res.send('k 😢');
 };
 
 exports.triggers = [

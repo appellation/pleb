@@ -3,7 +3,7 @@
  */
 
 exports.func = (res, msg) => {
-    return res.success(insults.random(), msg.mentions.users.find(u => !u.equals(msg.client.user)) || msg.author);
+    return res.send(`${msg.mentions.users.find(u => !u.equals(msg.client.user)) || msg.author}, ${insults.random()}`);
 };
 
 const insults = [
