@@ -91,7 +91,7 @@ class PlaylistOperator extends EventEmitter {
      */
     _end(reason)  {
         if(reason === 'terminal') return this.destroy();
-        if(!this.playlist.hasNext()) return;
+        if(!this.playlist.hasNext() || reason === 'temp') return;
         this.playlist.next();
         this.start();
     }
