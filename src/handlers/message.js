@@ -28,8 +28,6 @@ if(process.env.ifttt)   {
     });
 }
 
-command.loader.on('commandFailed', console.log);
-
 function message(message, body)   {
     command(message, body);
 }
