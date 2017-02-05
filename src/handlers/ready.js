@@ -5,5 +5,5 @@
 const playlists = require('../util/storage/playlists');
 
 module.exports = () => {
-    for(const [, p] of playlists) p.destroy();
+    for(const [, p] of playlists) p.stop('continue');
 };

@@ -99,7 +99,7 @@ class PlaylistOperator extends EventEmitter {
     /**
      * Stop the playlist.
      */
-    stop(reason)  {
+    stop(reason = 'temp')  {
         this.emit('stop', this);
         if(this.dispatcher) this.dispatcher.end(reason);
     }
