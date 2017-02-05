@@ -77,7 +77,7 @@ exports.func = (response, msg, args) => {
         ]);
     }).then(res => {
 
-        if(!res) return 'no location found';
+        if(!res) return response.error('no location found');
 
         const weather = res[0];
         const loc = res[1];
