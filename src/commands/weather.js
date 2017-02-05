@@ -66,7 +66,7 @@ exports.func = (response, msg, args) => {
             address: args.slice(1).join(' ')
         }
     }).then(loc => {
-        if(loc.status == 'ZERO_RESULTS') return;
+        if(loc.status == 'ZERO_RESULTS') return [];
 
         const coords = loc.results[0].geometry.location;
         return Promise.all([
@@ -75,12 +75,9 @@ exports.func = (response, msg, args) => {
             }),
             loc.results[0]
         ]);
-    }).then(res => {
+    }).then(([weather, loc]) => {
 
-        if(!res) return response.error('no location found');
-
-        const weather = res[0];
-        const loc = res[1];
+        if(!loc) return response.error('No location found for that query.');
 
         const cur = weather[type];
         let out = '';
