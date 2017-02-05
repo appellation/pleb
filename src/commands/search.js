@@ -33,7 +33,7 @@ exports.func = (response, msg, args, command) => {
         },
         json: true
     }).then(res =>  {
-        if(!res.rankingResponse) return 'no results found';
+        if(Object.keys(res.rankingResponse).length === 0) return response.error('No results found.');
 
         // format response
         const first = res.rankingResponse.mainline.items[0];
@@ -50,7 +50,8 @@ exports.func = (response, msg, args, command) => {
             },
             'Images': () => {
                 item = res.images.value[0];
-                return msg.channel.sendFile(item.contentUrl, null, `**${item.name}**\n${item.hostPageDisplayUrl}`);
+                msg.channel.sendFile(item.contentUrl, null, `**${item.name}**\n${item.hostPageDisplayUrl}`);
+                return Promise.resolve();
             },
             'TimeZone': () => {
                 item = res.timeZone.primaryCityTime;
@@ -65,7 +66,7 @@ exports.func = (response, msg, args, command) => {
         };
 
         return ((result[first.answerType] || result.Default)()).then(result => {
-            return response.send(result);
+            return result ? response.send(result) : null;
         });
     });
 };
