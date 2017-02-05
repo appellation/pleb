@@ -29,6 +29,6 @@ exports.func = (res) => {
     return res.send('🎱 ' + responses.random());
 };
 
-exports.validator = (msg, args) => {
-    return args.length > 0 && msg.content.endsWith('?');
+exports.validator = val => {
+    return val.ensureArgs();
 };

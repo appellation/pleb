@@ -18,4 +18,4 @@ exports.func = (res, msg, args, handler) => {
     });
 };
 
-exports.validator = msg => msg.channel.type !== 'dm';
+exports.validator = msg => msg.ensureGuild(msg);

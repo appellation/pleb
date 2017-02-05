@@ -3,6 +3,7 @@
  */
 
 const Playlist = require('../util/audio/PlaylistOperator');
+const command = require('../util/command');
 
 exports.func = (res, msg, args) => {
     return Playlist.init(msg).then(operator => {
@@ -12,7 +13,4 @@ exports.func = (res, msg, args) => {
     });
 };
 
-exports.validator = (msg, args) => {
-    const voiceChannel = msg.guild.member(msg.client.user).voiceChannel;
-    return msg.channel.type === 'text' && args.length > 0 && voiceChannel && voiceChannel.members.has(msg.author.id);
-};
+exports.validator = val => val.ensureCanPlay();

@@ -16,6 +16,4 @@ exports.func = (res, msg, args, handler) => { // eslint-disable-line no-unused-v
     });
 };
 
-exports.validator = (message, args) => {
-    return message.author.id === '116690352584392704' && args.length > 0;
-};
+exports.validator = val => val.applyValid(val.message.author.id === '116690352584392704', 'This command is owner-only.') && val.ensureArgs();

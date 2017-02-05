@@ -11,8 +11,4 @@ exports.func = (res, msg, args) => {
     operator.start();
 };
 
-exports.validator = (msg, args) => {
-    const parsed = parseInt(args[0] || 1);
-    const voiceChannel = msg.guild.member(msg.client.user).voiceChannel;
-    return msg.guild && storage.has(msg.guild.id) && !isNaN(parsed) && parsed > 0 && voiceChannel && voiceChannel.members.has(msg.author.id);
-};
+exports.validator = val => val.ensurePlaylist();

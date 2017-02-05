@@ -16,4 +16,4 @@ exports.func = (res, msg, args) => {
     });
 };
 
-exports.validator = (msg, args) => msg.channel.type === 'text' && args.length >= 1;
+exports.validator = val => val.ensureGuild() && val.ensureArgs();

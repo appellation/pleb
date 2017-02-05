@@ -8,9 +8,11 @@ exports.func = (res, msg, args) => {
 
     return msg.channel.fetchMessages().then(collection => {
         let messages = collection.findAll('author', msg.client.user);
-        if(messages.length <= 1) return;
+        if(messages.length <= 1) return res.error('Unable to purge less than 2 messages.', msg.author);
 
         return msg.channel.bulkDelete(messages.slice(0, num));
+    }).then(deleted => {
+        return res.success(`Purged last ${deleted.size} messages.`, msg.author);
     });
 };
 

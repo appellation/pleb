@@ -139,6 +139,4 @@ exports.func = (response, msg, args) => {
     });
 };
 
-exports.validator = (message, args) => {
-    return args.length !== 0;
-};
+exports.validator = val => val.ensureArgs();

@@ -4,18 +4,24 @@
 
 const commandFunctions = require('../util/command');
 const rp = require('request-promise-native');
-const command = require('discord-handles')({
+const Response = require('../util/command/Response');
+const ValidationProcessor = require('../util/command/ValidationProcessor');
+const Handles = require('discord-handles');
+
+const command = new Handles({
     directory: __dirname + '/../commands',
     validator: message => {
         const regex = commandFunctions.fetchPrefix(message.guild);
         if((message.channel.name === 'pleb' || message.channel.type === 'dm' || regex.test(message.content)) && ((message.member && !message.member.roles.find('name', 'no-pleb')) || message.channel.type === 'dm')) {
             return message.content.replace(regex, '');
         }
-    }
+    },
+    ValidationProcessor,
+    respond: true
 });
 
 if(process.env.ifttt)   {
-    command().on('commandStarted', command => {
+    command.on('commandStarted', command => {
         const guild = command.message.guild;
         rp.post('https://maker.ifttt.com/trigger/pleb/with/key/' + process.env.ifttt, {
             body: {
@@ -28,8 +34,14 @@ if(process.env.ifttt)   {
     });
 }
 
+command.on('invalidCommand', console.log);/*
+
+command.on('commandStarted', command => {
+    console.log(command);
+});*/
+
 function message(message, body)   {
-    command(message, body);
+    command.handler(message, body);
 }
 
 module.exports = message;

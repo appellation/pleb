@@ -28,7 +28,7 @@ exports.func = (res, msg) => {
     return res.send({embed});
 };
 
-exports.validator = msg => msg.channel.type === 'text' && storage.has(msg.guild.id);
+exports.validator = val => val.ensurePlaylist();
 
 exports.triggers = [
     'current',

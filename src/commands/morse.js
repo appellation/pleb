@@ -54,7 +54,7 @@ exports.func = (res, msg, args) => {
     }
 
     if(msg.deletable) msg.delete();
-    return res.success(out) || res.error('no characters could be converted to morse 😭');
+    return res.send(out) || res.error('no characters could be converted to morse 😭');
 };
 
-exports.validator = (msg, args) => args.length > 0;
+exports.validator = val => val.ensureArgs();

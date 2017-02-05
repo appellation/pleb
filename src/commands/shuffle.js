@@ -20,4 +20,4 @@ exports.func = (res, msg, args) => {
     }
 };
 
-exports.validator = msg => storage.has(msg.guild.id);
+exports.validator = val => val.ensurePlaylist();

@@ -3,6 +3,7 @@
  */
 
 const storage = require('../util/storage/playlists');
+const command = require('../util/command');
 
 exports.func = (res, msg, args) => {
     storage.get(msg.guild.id).volume = parseFloat(args[0]);
@@ -13,7 +14,4 @@ exports.triggers = [
     'volume'
 ];
 
-exports.validator = (msg, args) => {
-    const parsed = parseFloat(args[0]);
-    return msg.guild && args.length > 0 && !isNaN(parsed) && Math.abs(parsed) <= 100 && storage.has(msg.guild.id);
-};
+exports.validator = val => val.ensurePlaylist();

@@ -11,6 +11,6 @@ exports.func = res => {
     }).catch(() => 'no ass found 😭');
 };
 
-exports.validator = message => {
-    return nsfw(message);
+exports.validator = val => {
+    return val.ensureNSFW();
 };

@@ -5,5 +5,7 @@
 const VC = require('../util/audio/voiceConnection');
 
 exports.func = (res, msg) => VC.checkUser(msg).then(() => msg.member.listen = msg);
-exports.validator = () => !!process.env.google_cloud_project_id;
+exports.validator = val => {
+    return val.ensureGuild() && val.applyValid(process.env.google_cloud_project_id, 'Google Cloud Speech is not configured.');
+};
 exports.disabled = true;

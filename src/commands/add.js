@@ -3,6 +3,7 @@
  */
 
 const storage = require('../util/storage/playlists');
+const command = require('../util/command');
 
 exports.func = (res, msg, args) => {
     const next = args[0] === 'next';
@@ -13,7 +14,6 @@ exports.func = (res, msg, args) => {
     });
 };
 
-exports.validator = (msg, args) => {
-    const voiceChannel = msg.guild.member(msg.client.user).voiceChannel;
-    return msg.guild && storage.has(msg.guild.id) && args.length > 0 && voiceChannel && voiceChannel.members.has(msg.author.id);
+exports.validator = val => {
+    return val.ensurePlaylist();
 };

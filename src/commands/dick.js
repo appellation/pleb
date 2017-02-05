@@ -22,5 +22,5 @@ exports.func = (res, msg, args) => {
         dicks.set(user, count);
     }
 
-    return res.success(`8${'='.repeat(count)}D`, `<@${user}>`);
+    return res.send(`<@${user}> 8${'='.repeat(count)}D`);
 };

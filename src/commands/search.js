@@ -5,7 +5,7 @@
 const rp = require('request-promise-native');
 const numeral = require('numeral');
 const moment = require('moment');
-const nsfw = require('../util/command').nsfwAllowed;
+const Validation = require('../util/command/ValidationProcessor');
 
 const countryMap = {
     brazil: 'BR',
@@ -13,9 +13,11 @@ const countryMap = {
     sydney: 'AU',
 };
 
-exports.func = (response, msg, args) => {
+exports.func = (response, msg, args, command) => {
     if(args.length === 0) return;
     const cc = countryMap[msg.guild ? msg.guild.region : null] || 'US';
+
+    const valid = new Validation(command);
 
     return rp.get({
         uri: 'https://api.cognitive.microsoft.com/bing/v5.0/search',
@@ -23,7 +25,7 @@ exports.func = (response, msg, args) => {
             q: args.join(' '),
             mkt: 'en-' + cc,
             count: 1,
-            safeSearch: nsfw(msg) ? 'Moderate' : 'Strict'
+            safeSearch: valid.ensureNSFW() ? 'Moderate' : 'Strict'
         },
         headers: {
             'Ocp-Apim-Subscription-Key': process.env.bing,

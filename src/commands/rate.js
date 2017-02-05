@@ -7,4 +7,4 @@ exports.func = res => {
     return res.success(`👌 **${num}/${num === 9 ? 11 : 10}**`);
 };
 
-exports.validator = (msg, args) => args.length > 0;
+exports.validator = val => val.ensureArgs();
