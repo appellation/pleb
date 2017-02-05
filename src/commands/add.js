@@ -15,5 +15,5 @@ exports.func = (res, msg, args) => {
 };
 
 exports.validator = val => {
-    return val.ensurePlaylist();
+    return val.ensurePlaylist() && val.ensureArgs();
 };
