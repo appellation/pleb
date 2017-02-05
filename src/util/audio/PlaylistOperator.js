@@ -90,8 +90,8 @@ class PlaylistOperator extends EventEmitter {
      * @private
      */
     _end(reason)  {
-        if(reason === 'terminal') return this.destroy();
-        if(!this.playlist.hasNext() || reason === 'temp') return;
+        if(reason === 'temp') return;
+        if(reason === 'terminal' || !this.playlist.hasNext()) return this._destroy();
         this.playlist.next();
         this.start();
     }
@@ -99,7 +99,7 @@ class PlaylistOperator extends EventEmitter {
     /**
      * Stop the playlist.
      */
-    stop(reason = 'terminal')  {
+    stop(reason)  {
         this.emit('stop', this);
         if(this.dispatcher) this.dispatcher.end(reason);
     }
@@ -144,11 +144,14 @@ class PlaylistOperator extends EventEmitter {
         return (this.dispatcher ? this.dispatcher.volume : this._vol) * 100;
     }
 
+    destroy() {
+        this.stop('terminal');
+    }
+
     /**
      * Destroy this playlist.
      */
-    destroy()   {
-        this.stop();
+    _destroy()   {
         storage.delete(this.guild.id);
     }
 }

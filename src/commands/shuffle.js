@@ -20,4 +20,4 @@ exports.func = (res, msg, args) => {
     }
 };
 
-exports.validator = val => val.ensurePlaylist();
+exports.validator = val => val.ensurePlaylist() || val.ensureArgs();
