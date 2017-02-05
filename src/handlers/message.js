@@ -34,12 +34,6 @@ if(process.env.ifttt)   {
     });
 }
 
-command.on('invalidCommand', console.log);/*
-
-command.on('commandStarted', command => {
-    console.log(command);
-});*/
-
 function message(message, body)   {
     command.handler(message, body);
 }
