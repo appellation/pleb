@@ -18,4 +18,4 @@ exports.triggers = [
     'leave'
 ];
 
-exports.validator = val => val.ensurePlaylist();
+exports.validator = val => val.ensureCurrentVoiceChannel();
