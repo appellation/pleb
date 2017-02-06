@@ -4,7 +4,6 @@
 
 const commandFunctions = require('../util/command');
 const rp = require('request-promise-native');
-const Response = require('../util/command/Response');
 const ValidationProcessor = require('../util/command/ValidationProcessor');
 const Handles = require('discord-handles');
 

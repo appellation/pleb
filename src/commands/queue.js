@@ -3,7 +3,6 @@
  */
 
 const storage = require('../util/storage/playlists');
-const command = require('../util/command');
 
 exports.func = (res, msg, args) => {
     const operator = storage.get(msg.guild.id);

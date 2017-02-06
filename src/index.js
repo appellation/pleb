@@ -27,8 +27,6 @@ if(process.env.raven)   {
     load();
 }
 
-process.on('unhandledRejection', console.error);
-
 function load() {
     const readyHandler = require('./handlers/ready');
     const guildCreateHandler = require('./handlers/guildCreate');

@@ -3,7 +3,6 @@
  */
 
 const Playlist = require('../util/audio/PlaylistOperator');
-const command = require('../util/command');
 
 exports.func = (res, msg, args) => {
     return Playlist.init(msg).then(operator => {

@@ -3,7 +3,6 @@
  */
 
 const storage = require('../util/storage/playlists');
-const command = require('../util/command');
 
 exports.func = (res, msg, args) => {
     const next = args[0] === 'next';

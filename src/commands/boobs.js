@@ -3,7 +3,6 @@
  */
 
 const rp = require('request-promise-native');
-const nsfw = require('../util/command').nsfwAllowed;
 
 exports.func = res => {
     return rp.get('http://api.oboobs.ru/boobs/0/1/random').then(JSON.parse).then(boobs => {
