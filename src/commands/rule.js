@@ -4,11 +4,11 @@
 
 exports.func = (res, msg, args) => {
     const parsed = parseInt(args[0]);
-    return msg.channel.sendCode('ldif', rules[parsed - 1]);
+    return msg.channel.sendMessage(`\`\`\`ldif\n${rules[parsed - 1]}\`\`\``);
 };
 
 exports.validator = (val, cmd) => {
-    const parsed = parseInt(cmd.message.args[0]);
+    const parsed = parseInt(cmd.args[0]);
     return val.ensureArgs() && val.applyValid(!isNaN(parsed) && parsed >= 1 && parsed <= 47, 'Must select a number between 1 and 47.');
 };
 
