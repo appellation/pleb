@@ -8,7 +8,7 @@ exports.func = (res, msg, args) => {
     const operator = storage.get(msg.guild.id);
     const num = parseInt(args[0]) || 1;
     for(let i = 0; i < num && operator.playlist.hasNext(); i++) operator.playlist.next();
-    operator.start();
+    operator.start(res);
 };
 
 exports.validator = val => val.ensurePlaylist();

@@ -11,12 +11,12 @@ exports.func = (res, msg, args) => {
             return operator.add(args);
         }).then(operator => {
             operator.playlist.shuffle();
-            return operator.start();
+            return operator.start(res);
         });
     }   else    {
         const operator = storage.get(msg.guild.id);
         operator.playlist.shuffle();
-        operator.start();
+        operator.start(res);
     }
 };
 
