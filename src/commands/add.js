@@ -3,16 +3,25 @@
  */
 
 const storage = require('../util/storage/playlists');
+const playlist = require('../util/audio/PlaylistOperator');
 
 exports.func = (res, msg, args) => {
     const next = args[0] === 'next';
-    return storage.get(msg.guild.id).add(next ? args.slice(1) : args).then(operator => {
-        const pl = operator.playlist;
-        if(next) pl.list.splice(pl.pos, 0, pl.list.pop());
-        return res.success(`added \`${next ? pl.getNext().name : pl.getLast().name}\``);
+    if(storage.has(msg.guild.id)) {
+        return storage.get(msg.guild.id).add(next ? args.slice(1) : args).then(operator => {
+            const pl = operator.playlist;
+            if(next) pl.list.splice(pl.pos, 0, pl.list.pop());
+            return res.success(`added \`${next ? pl.getNext().name : pl.getLast().name}\``);
+        });
+    }
+
+    return playlist.init(msg, res).then(operator => {
+        return operator.add(args);
+    }).then(operator => {
+        operator.start(res);
     });
 };
 
 exports.validator = val => {
-    return val.ensurePlaylist() && val.ensureArgs();
+    return val.ensureArgs();
 };

@@ -49,9 +49,10 @@ class PlaylistOperator extends EventEmitter {
     /**
      * Initialize a new Playlist.
      * @param {Message} msg
+     * @param {Response} res
      * @return {Promise.<PlaylistOperator>}
      */
-    static init(msg)  {
+    static init(msg, res)  {
         return new Promise(resolve => {
             if(!storage.has(msg.guild.id)) return resolve(VC.checkCurrent(msg.client, msg.member));
 
@@ -60,7 +61,7 @@ class PlaylistOperator extends EventEmitter {
             pl.destroy();
             return resolve(conn);
         }).catch(err => {
-            msg.channel.sendMessage(err).catch(() => null);
+            res.error(err);
             return Promise.reject();
         }).then(conn => {
             const operator = new PlaylistOperator(conn);
@@ -73,7 +74,16 @@ class PlaylistOperator extends EventEmitter {
     /**
      * Start the playlist.
      */
-    start() {
+    start(res) {
+        this._start();
+        res.success(`now playing \`${this.playlist.current.name}\``);
+    }
+
+    /**
+     * Play the playlist.
+     * @private
+     */
+    _start() {
         this.stop('temp');
         if(!this.playlist.current) return;
 
@@ -93,7 +103,7 @@ class PlaylistOperator extends EventEmitter {
         if(reason === 'temp') return;
         if(reason === 'terminal' || !this.playlist.hasNext()) return this._destroy();
         this.playlist.next();
-        this.start();
+        this._start();
     }
 
     /**
