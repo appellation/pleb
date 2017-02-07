@@ -17,5 +17,3 @@ exports.triggers = [
     'stop',
     'leave'
 ];
-
-exports.validator = val => val.ensureCurrentVoiceChannel();
