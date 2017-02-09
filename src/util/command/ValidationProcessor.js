@@ -88,7 +88,7 @@ class Validate extends ValidationProcessor {
     }
 
     ensureCanPlay() {
-        return (this.ensurePlaylist()) || (this.ensureJoinable() && this.ensureSpeakable());
+        return (this.ensureJoinable() && this.ensureSpeakable()) || (this.ensurePlaylist());
     }
 
     /**
