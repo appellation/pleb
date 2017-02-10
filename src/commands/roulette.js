@@ -1,7 +1,7 @@
 /**
  * Created by Will on 2/9/2017.
  */
-exports.func = (res, msg, args) => {
+exports.func = (res, msg) => {
     if(!msg.channel.permissionsFor(msg.client.user).hasPermission('MANAGE_CHANNELS'))
         return res.error('I don\'t have perms to ~~brutally murder~~ mute you if you lose.');
     if(msg.member.hasPermission('ADMINISTRATOR') || msg.member.id === msg.guild.ownerID)
