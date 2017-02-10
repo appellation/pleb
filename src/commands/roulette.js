@@ -10,7 +10,7 @@ exports.func = (res, msg, args) => {
     if(Math.random() < 0.5) return res.send(`${msg.author} lives!`);
     return msg.channel.overwritePermissions(msg.author, { SEND_MESSAGES: false }).then(() => {
         setTimeout(() => {
-            msg.channel.permissionOverwrites.get(msg.author.id).delete();
+            msg.channel.overwritePermissions(msg.author, { SEND_MESSAGES: null });
         }, 10000);
         return res.send(`${msg.author} lies dead in chat.`);
     }).catch(() => {
