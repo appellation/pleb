@@ -7,6 +7,7 @@ const {EventEmitter} = require('events');
 const Playlist = require('./Playlist');
 const VC = require('./voiceConnection');
 const storage = require('../storage/playlists');
+const settings = require('../storage/settings');
 
 class PlaylistOperator extends EventEmitter {
 
@@ -43,7 +44,7 @@ class PlaylistOperator extends EventEmitter {
          * @type {number}
          * @private
          */
-        this._vol = 0.2;
+        this._vol = settings.get(this.guild.id).get('volume') || 0.2;
     }
 
     /**
@@ -143,6 +144,7 @@ class PlaylistOperator extends EventEmitter {
      */
     set volume(vol) {
         this._vol = vol / 100;
+        settings.get(this.guild.id).set('volume', this._vol);
         if(this.dispatcher) this.dispatcher.setVolumeLogarithmic(this._vol);
     }
 
