@@ -17,3 +17,5 @@ exports.func = (res, msg) => {
         return res.error('WHO LOADED THE GUN WITH BLANKS⁉ (I couldn\'t mute for some reason)');
     });
 };
+
+exports.validator = val => val.ensureGuild();
