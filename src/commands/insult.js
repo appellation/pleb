@@ -97,5 +97,6 @@ const insults = [
     'Some drink from the fountain of knowledge; you only gargled.',
     'Your parents hated you so much your bath toys were an iron and a toaster',
     'Learn from your parents\' mistakes - use birth control!',
-    'Your face makes onions cry.'
+    'Your face makes onions cry.',
+    'I don\'t exactly hate you, but if you were on fire and I had water, I\'d drink it.'
 ];
