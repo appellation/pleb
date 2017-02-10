@@ -12,3 +12,5 @@ exports.func = (res, msg, args) => {
 };
 
 exports.validator = val => val.ensurePlaylist();
+
+exports.triggers = ['next', 'skip'];

@@ -7,17 +7,17 @@ exports.func = (res, msg) => {
         '**`@mention` in any channel or just type in `#pleb`.**\n\n' +
         '- **play <query, YT URL, SoundCloud URL>** - plays makes a playlist from the link\n' +
         '- **shuffle [Play params]** - shuffles existing playlist (if exists) or shuffle plays a new playlist\n' +
-        '- **add shuffle? <Play params>** - adds stuff to the playlist; optionally shuffle at the same time\n' +
+        '- **add (next)? <Play params>** - adds stuff to the playlist\n' +
         '- **next [num]** - skips to next **num** songs (default 1)\n' +
-        '- **prev [num]** - returns **num** songs (default 1)' +
+        '- **prev [num]** - returns **num** songs (default 1)\n' +
         '- **pause** - pauses\n' +
         '- **resume** - resumes\n' +
         '- **stfu** - stops and disconnects\n' +
         '- **queue [page]** - show song queue: next 5 or page number\n' +
         '- **vol <num>** - set volume from 0 to 100%.\n' +
         '- **playlist <query>** - search YouTube for a playlist and play it\n' +
-        '- **loop <query>** - play a song 20 times\n' +
-        '- **config prefix <setting>** - set the prefix\n\n' +
+        '- **loop <query>** - play a song 20 times\n\n' +
+        '- **config prefix <setting>** - set the prefix\n' +
         '- **ping [url]** - pings the bot or an optional website\n' +
         '- **imgur [title]** - used with file uploads; uploads a file to Imgur with an optional **title**\n' +
         '- **memes** - get a random meme from Cyanide & Happiness or xkcd\n' +
@@ -29,10 +29,10 @@ exports.func = (res, msg) => {
         '- **boobs** - get a random photo of boobs **[NSFW]**\n' +
         '- **ass** - a random photo of ass **[NSFW]**\n' +
         '- **catfacts** - get a random fact about cats\n' +
-        '- **listen** - interpret the next speech by the message author\n' +
         '- **insult [mention]** - insult a user (defaults to yourself)\n' +
         '- **remind (me|@user) to <action> (in|at) <time>** - set a reminder\n' +
-        '- **sanitize [num]** - delete last **num** messages from the bot (defaults to 3)\n' +
+        '- **sanitize [num]** - delete last **num** messages from the bot (defaults to 3)\n\n' +
+        '- **roulette** - play a game of Russian roulette' +
         '- **info** - get info about the bot\n' +
         '- **/ay+/i** - lmao\n' +
         '- **xD|XD** - XD\n' +
