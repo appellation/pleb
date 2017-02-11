@@ -164,6 +164,7 @@ class PlaylistOperator extends EventEmitter {
      * Destroy this playlist.
      */
     _destroy()   {
+        this.vc.disconnect();
         storage.delete(this.guild.id);
     }
 }
