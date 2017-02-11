@@ -11,7 +11,7 @@ exports.func = (res, msg) => {
     return msg.channel.overwritePermissions(msg.author, { SEND_MESSAGES: false }).then(() => {
         setTimeout(() => {
             msg.channel.overwritePermissions(msg.author, { SEND_MESSAGES: null });
-        }, 10000);
+        }, 30000);
         return res.send(`${msg.author} lies dead in chat.`);
     }).catch(() => {
         return res.error('WHO LOADED THE GUN WITH BLANKS⁉ (I couldn\'t mute for some reason)');
