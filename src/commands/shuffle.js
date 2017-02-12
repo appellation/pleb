@@ -7,7 +7,7 @@ const storage = require('../util/storage/playlists');
 
 exports.func = (res, msg, args) => {
     if(args.length > 0) {
-        return Playlist.init(msg).then(operator => {
+        return Playlist.init(msg, res).then(operator => {
             return operator.add(args);
         }).then(operator => {
             operator.playlist.shuffle();
@@ -20,4 +20,4 @@ exports.func = (res, msg, args) => {
     }
 };
 
-exports.validator = val => val.ensurePlaylist() || val.ensureArgs();
+exports.validator = val => val.ensurePlaylist() || (val.ensureArgs() && val.ensureCanPlay());
