@@ -8,9 +8,7 @@ exports.func = (res, msg) => {
     const operator = storage.get(msg.guild.id);
     if(operator) operator.destroy();
 
-    if(!msg.guild.voiceConnection) return;
-
-    msg.guild.voiceConnection.disconnect();
+    if(msg.guild.voiceConnection) msg.guild.voiceConnection.disconnect();
     return res.send('k 😢');
 };
 
