@@ -124,10 +124,11 @@ class Youtube   {
                 pageToken: pageToken
             }
         }).then(res => {
-            this._addPlaylist(res);
-            if(res.nextPageToken) return this.loadPlaylist(id, res.nextPageToken);
-            Youtube.setPlaylistInfo(this.playlist.info, id);
-            return this;
+            return this._addPlaylist(res).then(() => {
+                if(res.nextPageToken) return this.loadPlaylist(id, res.nextPageToken);
+                Youtube.setPlaylistInfo(this.playlist.info, id);
+                return this;
+            });
         });
     }
 
@@ -182,7 +183,9 @@ class Youtube   {
                 });
             }
         });
+
         Youtube.setChannelInfo(added, resource.snippet.channelId);
+        return added;
     }
 
     static setPlaylistInfo(info = {}, id)    {
