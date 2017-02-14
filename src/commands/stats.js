@@ -23,6 +23,18 @@ exports.func = (res, msg) => {
         });
     }
 
+    if(process.env.discordlist) {
+        request({
+            uri: `https://bots.discordlist.net/api`,
+            method: 'post',
+            body: {
+                token: process.env.discordlist,
+                servers: client.guilds.size
+            },
+            json: true
+        });
+    }
+
     return res.send(`**Guilds:** ${client.guilds.size}
 **Channels:** ${client.channels.size}
 **Users:** ${client.users.size}
