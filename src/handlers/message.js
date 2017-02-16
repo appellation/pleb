@@ -34,7 +34,7 @@ if(process.env.ifttt)   {
 }
 
 function message(message, body)   {
-    command.handler(message, body);
+    command.handle(message, body);
 }
 
 module.exports = message;
