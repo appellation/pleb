@@ -6,6 +6,7 @@ const commandFunctions = require('../util/command');
 const rp = require('request-promise-native');
 const ValidationProcessor = require('../util/command/ValidationProcessor');
 const Handles = require('discord-handles');
+const Raven = require('raven');
 
 const command = new Handles({
     directory: __dirname + '/../commands',
@@ -15,8 +16,7 @@ const command = new Handles({
             return message.content.replace(regex, '');
         }
     },
-    ValidationProcessor,
-    respond: true
+    ValidationProcessor
 });
 
 if(process.env.ifttt)   {
@@ -32,6 +32,15 @@ if(process.env.ifttt)   {
         });
     });
 }
+
+command.on('commandFailed', ({ command, err }) => {
+    command.response.error(`\`${err}\`\nYou should never receive an error like this.  Bot owner has been notified.`)
+});
+
+command.on('error', (err) => {
+    if(process.env.raven) Raven.captureException(err);
+    else console.error(err);
+});
 
 function message(message, body)   {
     command.handle(message, body);
