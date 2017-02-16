@@ -13,4 +13,4 @@ exports.triggers = [
     'volume'
 ];
 
-exports.validator = val => val.ensurePlaylist() && val.ensureIsNumber(0);
+exports.validator = val => val.ensurePlaylist() && val.ensureArgs() && val.ensureIsNumber(0);
