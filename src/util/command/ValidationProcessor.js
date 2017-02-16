@@ -12,7 +12,8 @@ const ERRORS = {
     ensureSpeakable: 'Cannot speak in author\'s voice channel.',
     ensureCurrentVoiceChannel: 'Not currently connected to a voice channel.',
     ensurePlaylist: 'No playlist available.',
-    ensureNSFW: 'NSFW is not allowed.'
+    ensureNSFW: 'NSFW is not allowed.',
+    ensureIsNumber: argNum => `Argument ${argNum + 1} must be a number.`
 };
 
 const playlistStorage = require('../storage/playlists');
@@ -97,6 +98,10 @@ class Validate extends ValidationProcessor {
      */
     ensureCurrentVoiceChannel() {
         return this.ensureGuild() && this.applyValid(this.message.client.voiceConnections.has(this.message.guild.id), ERRORS.ensureCurrentVoiceChannel);
+    }
+
+    ensureIsNumber(argNum) {
+        return this.applyValid(!isNaN(this.command.args[argNum]), ERRORS.ensureIsNumber(argNum));
     }
 }
 
