@@ -33,6 +33,10 @@ if(process.env.ifttt)   {
     });
 }
 
+command.on('invalidCommand', validator => {
+    validator.command.response.error(validator.reason);
+});
+
 command.on('commandFailed', ({ command, err }) => {
     command.response.error(`\`${err}\`\nYou should never receive an error like this.  Bot owner has been notified.`)
 });
