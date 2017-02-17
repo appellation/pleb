@@ -15,7 +15,7 @@ if(process.env.google_cloud_project_id) {
 
 const ffmpeg = require('fluent-ffmpeg');
 
-class VC   {
+class VC {
 
     /**
      * @constructor
@@ -30,7 +30,7 @@ class VC   {
      * @param {ReadableStream} stream
      * @returns {Promise}
      */
-    static speechToText(stream)  {
+    static speechToText(stream) {
         const out = speech.createRecognizeStream({
             config: {
                 encoding: 'LINEAR16',
@@ -63,11 +63,11 @@ class VC   {
      * @param {GuildMember} member
      * @returns {Promise}
      */
-    static checkUser(member)   {
+    static checkUser(member) {
         const authorChannel = member.voiceChannel;
         if(authorChannel && authorChannel.joinable) {
             return authorChannel.join();
-        }   else    {
+        } else {
             return Promise.reject('Unable to join voice channel.');
         }
     }
@@ -80,9 +80,9 @@ class VC   {
      */
     static checkCurrent(client, member) {
         const clientVC = client.voiceConnections.get(member.guild.id);
-        if(clientVC)   {
+        if(clientVC) {
             return Promise.resolve(clientVC);
-        }   else {
+        } else {
             return VC.checkUser(member);
         }
     }

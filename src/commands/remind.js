@@ -15,7 +15,7 @@ exports.func = (res, msg, args) => {
 
     const timeIndex = atIndex > inIndex ? args.lastIndexOf('at') : args.lastIndexOf('in');
 
-    if(timeIndex < remIndex)    {
+    if(timeIndex < remIndex) {
         return 'can\'t parse that :cry:';
     }
 

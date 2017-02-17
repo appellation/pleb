@@ -12,6 +12,7 @@
         "linebreak-style": ["error", "unix"],
         "quotes": ["error", "single"],
         "semi": ["error", "always"],
-        "brace-style": ["error", "1tbs"]
+        "brace-style": ["error", "1tbs"],
+        "no-multi-spaces": "error"
     }
 }

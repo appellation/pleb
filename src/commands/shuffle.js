@@ -13,7 +13,7 @@ exports.func = (res, msg, args) => {
             operator.playlist.shuffle();
             return operator.start(res);
         });
-    }   else    {
+    } else {
         const operator = storage.get(msg.guild.id);
         operator.playlist.shuffle();
         operator.start(res);

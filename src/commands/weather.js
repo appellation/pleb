@@ -89,18 +89,18 @@ exports.func = (response, msg, args) => {
         let data;
         if(Array.isArray(cur.data)) {
             data = cur.data;
-        }   else    {
+        } else {
             data = [cur];
         }
 
         if(type == 'hourly') data.splice(0, 24);
 
-        for(let i = 0; i < data.length;)    {
+        for(let i = 0; i < data.length;) {
             const point = data[i];
 
             out += '`' + moment.unix(point.time).format('MM-DD-YYYY HH:mm:ss a') + '`\n';
 
-            if(point.temperature)   {
+            if(point.temperature) {
                 out += `🌡 \`${point.temperature}F\` (feels like \`${point.apparentTemperature}\`)\n`;
             }
 
@@ -108,11 +108,11 @@ exports.func = (response, msg, args) => {
                 out += `🌬 \`${point.windSpeed}MPH\` at \`${point.windBearing}°\`\n`;
             }
 
-            if(point.pressure)  {
+            if(point.pressure) {
                 out += `🗜 \`${point.pressure}mb\`\n`;
             }
 
-            if(point.humidity)  {
+            if(point.humidity) {
                 out += `💦 \`${Math.round(point.humidity * 100)}%\` humidity\n`;
             }
 
@@ -121,11 +121,11 @@ exports.func = (response, msg, args) => {
             out += ` - \`${numeral(point.precipProbability * 100).format('0.00')}%\` at \`${numeral(point.precipIntensity).format('0.00')}in/hr\``;
             out += '\n\n';
 
-            if(type == 'minutely')    {
+            if(type == 'minutely') {
                 i += 10;
-            }   else if(type == 'hourly')   {
+            } else if(type == 'hourly') {
                 i += 4;
-            }   else {
+            } else {
                 i++;
             }
         }

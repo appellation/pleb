@@ -32,7 +32,7 @@ exports.func = (response, msg, args, command) => {
             'X-MSEdge-ClientID': msg.author.id
         },
         json: true
-    }).then(res =>  {
+    }).then(res => {
         if(Object.keys(res.rankingResponse).length === 0) return response.error('No results found.');
 
         // format response
@@ -71,7 +71,7 @@ exports.func = (response, msg, args, command) => {
     });
 };
 
-function shortenURL(url)    {
+function shortenURL(url) {
     return rp.post({
         uri: 'https://www.googleapis.com/urlshortener/v1/url',
         qs: {

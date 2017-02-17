@@ -23,7 +23,7 @@ exports.func = (response, msg, args) => {
                 }
             };
 
-            if(msg.attachments.size === 1 && args.length > 0)    {
+            if(msg.attachments.size === 1 && args.length > 0) {
                 q.body.title = args.join(' ');
             }
 
@@ -41,7 +41,7 @@ exports.func = (response, msg, args) => {
 
                 if(args.length > 0) q.body.title = args.join(' ');
                 return rp.post(q);
-            }   else {
+            } else {
                 return imgs[0];
             }
         }).then(res => {
@@ -49,7 +49,7 @@ exports.func = (response, msg, args) => {
             return response.success(res.data.link);
         });
 
-    }   else {
+    } else {
 
         return rp.get('gallery/hot/viral/0.json').then(res => {
             const rand = res.data.random();

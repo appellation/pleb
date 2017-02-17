@@ -40,7 +40,7 @@ class Validate extends ValidationProcessor {
         return this.ensureGuild() && this.applyValid(this.message.channel.permissionsFor(this.message.guild.member(this.message.client.user)).hasPermission(resolvable), ERRORS.ensureClientPermissions(resolvable));
     }
 
-    ensurePlaylist()    {
+    ensurePlaylist() {
         return this.ensureGuild() && (this.applyValid(playlistStorage.has(this.message.guild.id), ERRORS.ensurePlaylist) && this.ensureCurrentVoiceChannel());
     }
 

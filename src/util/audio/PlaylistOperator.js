@@ -15,7 +15,7 @@ class PlaylistOperator extends EventEmitter {
      * @constructor
      * @param {VoiceConnection} conn
      */
-    constructor(conn)   {
+    constructor(conn) {
         super();
 
         if(!conn) throw new Error('No voice connection');
@@ -53,7 +53,7 @@ class PlaylistOperator extends EventEmitter {
      * @param {Response} res
      * @return {Promise.<PlaylistOperator>}
      */
-    static init(msg, res)  {
+    static init(msg, res) {
         return new Promise(resolve => {
             if(!storage.has(msg.guild.id)) return resolve(VC.checkCurrent(msg.client, msg.member));
 
@@ -100,7 +100,7 @@ class PlaylistOperator extends EventEmitter {
      * @param reason
      * @private
      */
-    _end(reason)  {
+    _end(reason) {
         if(reason === 'temp') return;
         if(reason === 'terminal' || !this.playlist.hasNext()) return this._destroy();
         this.playlist.next();
@@ -110,7 +110,7 @@ class PlaylistOperator extends EventEmitter {
     /**
      * Stop the playlist.
      */
-    stop(reason = 'temp')  {
+    stop(reason = 'temp') {
         this.emit('stop', this);
         if(this.dispatcher) this.dispatcher.end(reason);
     }
@@ -125,7 +125,7 @@ class PlaylistOperator extends EventEmitter {
     /**
      * Resume the playlist.
      */
-    resume()    {
+    resume() {
         if(this.dispatcher && !this.dispatcher.speaking) this.dispatcher.resume();
     }
 
@@ -134,7 +134,7 @@ class PlaylistOperator extends EventEmitter {
      * @param {Array} args
      * @return {Promise.<PlaylistOperator>}
      */
-    add(args)   {
+    add(args) {
         return this.playlist.add(args).then(() => this);
     }
 
@@ -152,7 +152,7 @@ class PlaylistOperator extends EventEmitter {
      * Get the playlist volume.
      * @return {number}
      */
-    get volume()    {
+    get volume() {
         return (this.dispatcher ? this.dispatcher.volume : this._vol) * 100;
     }
 
@@ -163,7 +163,7 @@ class PlaylistOperator extends EventEmitter {
     /**
      * Destroy this playlist.
      */
-    _destroy()   {
+    _destroy() {
         this.vc.disconnect();
         storage.delete(this.guild.id);
     }

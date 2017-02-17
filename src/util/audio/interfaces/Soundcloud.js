@@ -19,7 +19,7 @@ class Soundcloud {
     /**
      * @param {Playlist} list
      */
-    constructor(list)   {
+    constructor(list) {
 
         /**
          * @type {Playlist}
@@ -32,7 +32,7 @@ class Soundcloud {
      * @param {Array} args
      * @return {Promise.<Playlist>}
      */
-    add(args)    {
+    add(args) {
         const urls = args.filter(e => Soundcloud.isViewURL(e));
         const resolved = [];
         for(const resource of urls) {
@@ -47,7 +47,7 @@ class Soundcloud {
      * @return {Promise}
      * @private
      */
-    _loadResource(url)  {
+    _loadResource(url) {
         return rp.get({
             uri: 'resolve',
             qs: {
@@ -68,7 +68,7 @@ class Soundcloud {
      * @param resource
      * @private
      */
-    _addPlaylist(resource)  {
+    _addPlaylist(resource) {
         this.playlist.info = {
             title: resource.title,
             description: resource.description,
@@ -110,7 +110,7 @@ class Soundcloud {
      * @param {String} testURL
      * @return {boolean}
      */
-    static isViewURL(testURL)    {
+    static isViewURL(testURL) {
         const parsed = url.parse(testURL);
         if(!parsed.pathname || !parsed.hostname) return false;
         const parts = parsed.pathname.split('/');

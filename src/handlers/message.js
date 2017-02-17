@@ -20,7 +20,7 @@ const command = new Handles({
     ValidationProcessor
 });
 
-if(process.env.ifttt)   {
+if(process.env.ifttt) {
     command.on('commandStarted', command => {
         const guild = command.message.guild;
         rp.post('https://maker.ifttt.com/trigger/pleb/with/key/' + process.env.ifttt, {
@@ -47,7 +47,7 @@ command.on('error', (err) => {
     else console.error(err); // eslint-disable-line no-console
 });
 
-function message(message, body)   {
+function message(message, body) {
     command.handle(message, body);
 }
 

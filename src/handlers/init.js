@@ -7,7 +7,7 @@ module.exports = client => {
     if(process.env.rethink) {
         client.provider = new Thonk(client);
         client.provider.initializeGuilds();
-    }   else {
+    } else {
         for(const [, g] of client.guilds) storage.set(g.id, { data: {} });
     }
 };

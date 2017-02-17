@@ -20,13 +20,13 @@ const Constants = {
     shortVideo: 'short video'
 };
 
-class Youtube   {
+class Youtube {
 
     /**
      * @constructor
      * @param {Playlist} list
      */
-    constructor(list)   {
+    constructor(list) {
 
         /**
          * @type {Playlist}
@@ -39,7 +39,7 @@ class Youtube   {
      * @param {Array} args
      * @return {Promise}
      */
-    add(args)   {
+    add(args) {
         const urls = [];
         const query = args.filter(e => {
             if(Soundcloud.isViewURL(e)) return false;
@@ -71,7 +71,7 @@ class Youtube   {
      * @param {string} query
      * @return {Promise}
      */
-    loadTrackQuery(query)   {
+    loadTrackQuery(query) {
         if(!query) return Promise.resolve();
         return rp.get({
             uri: 'search',
@@ -92,7 +92,7 @@ class Youtube   {
      * @param {string} query
      * @return {Promise}
      */
-    loadPlaylistQuery(query)    {
+    loadPlaylistQuery(query) {
         if(!query) return Promise.resolve();
         return rp.get({
             uri: 'search',
@@ -137,7 +137,7 @@ class Youtube   {
      * @param {string} id
      * @return {Promise}
      */
-    loadTrack(id)  {
+    loadTrack(id) {
         return rp.get({
             uri: 'videos',
             qs: {
@@ -188,7 +188,7 @@ class Youtube   {
         return added;
     }
 
-    static setPlaylistInfo(info = {}, id)    {
+    static setPlaylistInfo(info = {}, id) {
         return rp.get({
             uri: 'playlists',
             qs: {
@@ -229,12 +229,12 @@ class Youtube   {
     static getType(testURL) {
         const parsed = url.parse(testURL, true);
 
-        if(parsed.hostname === 'www.youtube.com' || parsed.hostname === 'youtube.com')  {
-            if(parsed.pathname === '/watch' && !!parsed.query.v)            return Constants.video;
+        if(parsed.hostname === 'www.youtube.com' || parsed.hostname === 'youtube.com') {
+            if(parsed.pathname === '/watch' && !!parsed.query.v) return Constants.video;
             else if(parsed.pathname === '/playlist' && !!parsed.query.list) return Constants.playlist;
 
             return null;
-        }   else if(parsed.hostname === 'www.youtu.be' || parsed.hostname === 'youtu.be')   {
+        } else if(parsed.hostname === 'www.youtu.be' || parsed.hostname === 'youtu.be') {
             return Constants.shortVideo;
         }
         return null;
@@ -250,7 +250,7 @@ class Youtube   {
         const parsed = url.parse(testURL, true);
 
         let toTest;
-        switch (type)   {   /* eslint-disable indent */
+        switch (type) {   /* eslint-disable indent */
             case Constants.video:
                 toTest = parsed.query.v;
                 break;
@@ -270,7 +270,7 @@ class Youtube   {
      * @param testURL
      * @return {boolean}
      */
-    static isViewURL(testURL)   {
+    static isViewURL(testURL) {
         return !!Youtube.parseID(testURL);
     }
 

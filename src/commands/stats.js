@@ -9,7 +9,7 @@ const playlistStorage = require('../util/storage/playlists');
 exports.func = (res, msg) => {
     const client = msg.client;
 
-    if(process.env.discord_pw)  {
+    if(process.env.discord_pw) {
         request({
             uri: `https://bots.discord.pw/api/bots/${process.env.discord_client_id}/stats`,
             method: 'post',

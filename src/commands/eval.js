@@ -7,7 +7,7 @@ exports.func = (res, msg, args, handler) => { // eslint-disable-line no-unused-v
         try {
             const res = eval(args.join(' '));
             resolve(res);
-        }   catch (e)   {
+        } catch (e) {
             resolve(e.message);
         }
     }).then(res => {

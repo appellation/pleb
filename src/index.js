@@ -16,13 +16,13 @@ const client = new Discord.Client({
     ]
 });
 
-if(process.env.raven)   {
+if(process.env.raven) {
     Raven.config(process.env.raven, {
         captureUnhandledRejections: true
     }).install();
 
     Raven.wrap(load)();
-}   else {
+} else {
     load();
 }
 

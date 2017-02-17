@@ -17,12 +17,12 @@ const shuffle = require('knuth-shuffle').knuthShuffle;
  * @property {String} author
  */
 
-class Playlist  {
+class Playlist {
 
     /**
      * @constructor
      */
-    constructor()   {
+    constructor() {
 
         /**
          * The array of songs.
@@ -66,7 +66,7 @@ class Playlist  {
      * Get the length of the playlist.
      * @return {Number}
      */
-    get length()    {
+    get length() {
         return this.list.length;
     }
 
@@ -74,7 +74,7 @@ class Playlist  {
      * Get the current position of the playlist (starting at 1).
      * @return {number}
      */
-    get pos()   {
+    get pos() {
         return this._pos + 1;
     }
 
@@ -82,7 +82,7 @@ class Playlist  {
      * Get the current playlist item.
      * @return {Song}
      */
-    get current()   {
+    get current() {
         return this.list[this._pos];
     }
 
@@ -90,7 +90,7 @@ class Playlist  {
      * Send the playlist back one song.
      * @return {number}
      */
-    prev()  {
+    prev() {
         if(this.hasPrev()) this._pos--;
         return this.pos;
     }
@@ -99,7 +99,7 @@ class Playlist  {
      * Whether there is a previous song.
      * @return {boolean}
      */
-    hasPrev()   {
+    hasPrev() {
         return (this._pos - 1) >= 0;
     }
 
@@ -107,7 +107,7 @@ class Playlist  {
      * Advance to the next song.
      * @return {number}
      */
-    next()  {
+    next() {
         if(this.hasNext()) this._pos++;
         return this.pos;
     }
@@ -116,7 +116,7 @@ class Playlist  {
      * Whether there is a next song.
      * @return {boolean}
      */
-    hasNext()   {
+    hasNext() {
         return (this._pos + 1) <= this.list.length - 1;
     }
 
@@ -124,7 +124,7 @@ class Playlist  {
      * Get the next song.
      * @return {Song}
      */
-    getNext()  {
+    getNext() {
         return this.list[this._pos + 1];
     }
 
@@ -132,14 +132,14 @@ class Playlist  {
      * Get the last song.
      * @return {Song|*}
      */
-    getLast()   {
+    getLast() {
         return this.list[this.list.length - 1];
     }
 
     /**
      * Shuffle the playlist.
      */
-    shuffle()   {
+    shuffle() {
         this.list = shuffle(this.list);
         this._pos = 0;
     }
@@ -149,7 +149,7 @@ class Playlist  {
      * @param args
      * @return {Promise.<Playlist>}
      */
-    add(args)   {
+    add(args) {
         return Promise.all([
             this.sc.add(args),
             this.yt.add(args)
@@ -161,7 +161,7 @@ class Playlist  {
      * @param {Song} song
      * @returns {Song}
      */
-    addSong(song)   {
+    addSong(song) {
         this.list.push(song);
         return song;
     }

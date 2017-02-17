@@ -21,7 +21,7 @@ exports.func = (res, msg) => {
         .addField('Song', `${playlist.pos} / ${playlist.length}`, true)
         .setColor(cur.type === 'youtube' ? 0xFF0000 : 0xFF5500);
 
-    if(Object.keys(info).length > 0)    {
+    if(Object.keys(info).length > 0) {
         embed.addField('Playlist', `[${info.title}](${info.displayURL})`, true);
     }
 

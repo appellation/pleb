@@ -6,10 +6,10 @@ const moment = require('moment');
 
 exports.func = res => {
     /**Randomly chooses between XKCD and C&H**/
-    if(Math.random() >= 0.5)    {
+    if(Math.random() >= 0.5) {
         const max = 4462;
         res.success('http://explosm.net/comics/' + (Math.floor(Math.random()* max) + 1));
-    }   else    {
+    } else {
         var randVar = Math.floor(Math.random()*(1758 - 1) + 1);
 
         /** XKCD doesn't have a comic #404. Top kek XKCD. **/

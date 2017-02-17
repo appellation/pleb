@@ -5,8 +5,8 @@
 const voiceConnectionOperator = require('../util/audio/voiceConnection');
 const commandOperator = require('./message');
 
-function guildMemberSpeaking(member, speaking)  {
-    if(member.listen && speaking)   {
+function guildMemberSpeaking(member, speaking) {
+    if(member.listen && speaking) {
 
         const msg = member.listen;
         member.listen = false;
@@ -14,7 +14,7 @@ function guildMemberSpeaking(member, speaking)  {
         member.voiceChannel.join().then(conn => {
             return voiceConnectionOperator.speechToText(conn.createReceiver().createPCMStream(member));
         }).then(text => {
-            if(msg.constructor.name == 'Message')    {
+            if(msg.constructor.name == 'Message') {
                 msg.channel.sendMessage('`' + text + '`');
 
                 return commandOperator(msg, text.toLowerCase());
