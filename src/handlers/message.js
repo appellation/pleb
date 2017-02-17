@@ -7,9 +7,10 @@ const rp = require('request-promise-native');
 const ValidationProcessor = require('../util/command/ValidationProcessor');
 const Handles = require('discord-handles');
 const Raven = require('raven');
+const path = require('path');
 
 const command = new Handles({
-    directory: __dirname + '/../commands',
+    directory: path.join('.', 'src', 'commands'),
     validator: message => {
         const regex = commandFunctions.fetchPrefix(message.guild);
         if((message.channel.name === 'pleb' || message.channel.type === 'dm' || regex.test(message.content)) && ((message.member && !message.member.roles.find('name', 'no-pleb')) || message.channel.type === 'dm')) {
@@ -38,12 +39,12 @@ command.on('invalidCommand', validator => {
 });
 
 command.on('commandFailed', ({ command, err }) => {
-    command.response.error(`\`${err}\`\nYou should never receive an error like this.  Bot owner has been notified.`)
+    command.response.error(`\`${err}\`\nYou should never receive an error like this.  Bot owner has been notified.`);
 });
 
 command.on('error', (err) => {
     if(process.env.raven) Raven.captureException(err);
-    else console.error(err);
+    else console.error(err); // eslint-disable-line no-console
 });
 
 function message(message, body)   {

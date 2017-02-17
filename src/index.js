@@ -1,7 +1,6 @@
 /**
  * Created by Will on 8/25/2016.
  */
-const Thonk = require('./util/providers/RethinkProvider');
 require('./util/extensions');
 require('moment-duration-format');
 require('dotenv').config({ silent: true });
@@ -28,24 +27,19 @@ if(process.env.raven)   {
 }
 
 function load() {
+    const initHandler = require('./handlers/init');
     const readyHandler = require('./handlers/ready');
     const guildCreateHandler = require('./handlers/guildCreate');
     const guildMemberSpeakingHandler = require('./handlers/guildMemberSpeaking');
     const messageHandler = require('./handlers/message');
     const voiceStateUpdateHandler = require('./handlers/voiceStateUpdate');
 
+    client.once('ready', () => initHandler(client));
     client.on('ready', readyHandler);
     client.on('guildCreate', guildCreateHandler);
     client.on('guildMemberSpeaking', guildMemberSpeakingHandler);
     client.on('message', messageHandler);
     client.on('voiceStateUpdate', voiceStateUpdateHandler);
-
-    if(process.env.rethink) {
-        client.once('ready', () => {
-            client.provider = new Thonk(client);
-            client.provider.initializeGuilds();
-        });
-    }
 
     client.login(process.env.discord);
 }
