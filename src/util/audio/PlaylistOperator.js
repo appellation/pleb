@@ -45,7 +45,7 @@ class PlaylistOperator extends EventEmitter {
          * @type {number}
          * @private
          */
-        this._vol = settings.get(this.guild.id).get('volume') || 0.2;
+        this._vol = settings.get(this.guild.id).get ? settings.get(this.guild.id).get('volume') || 0.2 : 0.2;
     }
 
     /**
@@ -79,8 +79,8 @@ class PlaylistOperator extends EventEmitter {
             return PlaylistOperator.init(member, list).then(op => op.start(res), res.error.bind(res));
         }, err => {
             if(err.response && err.response.statusCode === 403)
-                res.error('Unauthorized to load that resource.  It likely contains private content.');
-            else res.error(err);
+                res.error('Unauthorized to load all or part of that resource.  It likely contains private content.');
+            else res.error(err.message || err);
         });
     }
 
