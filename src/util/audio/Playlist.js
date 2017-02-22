@@ -147,9 +147,10 @@ class Playlist {
     /**
      * Add command arguments to the playlist.  Order is not guaranteed.
      * @param args
+     * @param {Response} res
      * @return {Promise.<Playlist>}
      */
-    add(args) {
+    add(args, res) {
         return Promise.all([
             this.sc.add(args),
             this.yt.add(args)

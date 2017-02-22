@@ -65,26 +65,19 @@ class VC {
      */
     static checkUser(member) {
         const authorChannel = member.voiceChannel;
-        if(authorChannel && authorChannel.joinable) {
-            return authorChannel.join();
-        } else {
-            return Promise.reject('Unable to join voice channel.');
-        }
+        if(authorChannel && authorChannel.joinable) return authorChannel.join();
+        return Promise.reject(new Error('Unable to join voice channel.'));
     }
 
     /**
      * Check voice connections in a given guild.  Prioritizes existing connections over the author connection.
-     * @param {Client} client
      * @param {GuildMember} member
      * @returns {Promise} - Resolves with the preferred voice connection.
      */
-    static checkCurrent(client, member) {
-        const clientVC = client.voiceConnections.get(member.guild.id);
-        if(clientVC) {
-            return Promise.resolve(clientVC);
-        } else {
-            return VC.checkUser(member);
-        }
+    static checkCurrent(member) {
+        const clientVC = member.client.voiceConnections.get(member.guild.id);
+        if(clientVC) return Promise.resolve(clientVC);
+        return VC.checkUser(member);
     }
 }
 

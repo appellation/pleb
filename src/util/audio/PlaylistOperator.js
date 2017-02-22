@@ -49,27 +49,38 @@ class PlaylistOperator extends EventEmitter {
     }
 
     /**
-     * Initialize a new Playlist.
-     * @param {Message} msg
-     * @param {Response} res
+     * Find a PlaylistOperator and ensure an empty playlist.
+     * @param {GuildMember} member
+     * @param {Playlist} list
      * @return {Promise.<PlaylistOperator>}
      */
-    static init(msg, res) {
-        return new Promise(resolve => {
-            if(!storage.has(msg.guild.id)) return resolve(VC.checkCurrent(msg.client, msg.member));
+    static init(member, list) {
+        if(storage.has(member.guild.id)) {
+            const op = storage.get(member.guild.id);
+            op.stop();
+            op.playlist = list || new Playlist();
+            return Promise.resolve(op);
+        }
 
-            const pl = storage.get(msg.guild.id);
-            const conn = pl.vc;
-            pl.destroy();
-            return resolve(conn);
-        }).catch(err => {
-            res.error(err);
-            return Promise.reject();
-        }).then(conn => {
-            const operator = new PlaylistOperator(conn);
+        return VC.checkCurrent(member)
+            .then(conn => new PlaylistOperator(conn, list));
+    }
 
-            storage.set(msg.guild.id, operator);
-            return operator;
+    /**
+     * Start a new Playlist.
+     * @param {Array} args
+     * @param {Response} res
+     * @param {GuildMember} member
+     * @return {Promise}
+     */
+    static startNew(args, res, member) {
+        const pl = new Playlist();
+        return pl.add(args, res).then(list => {
+            return PlaylistOperator.init(member, list).then(op => op.start(res), res.error.bind(res));
+        }, err => {
+            if(err.response && err.response.statusCode === 403)
+                res.error('Unauthorized to load that resource.  It likely contains private content.');
+            else res.error(err);
         });
     }
 
@@ -77,8 +88,12 @@ class PlaylistOperator extends EventEmitter {
      * Start the playlist.
      */
     start(res) {
-        this._start();
-        res.success(`now playing \`${this.playlist.current.name}\``);
+        if(this.playlist.length) {
+            this._start();
+            res.success(`now playing \`${this.playlist.current.name}\``);
+        } else {
+            res.error('Nothing available to play.');
+        }
     }
 
     /**
