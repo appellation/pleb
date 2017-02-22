@@ -49,7 +49,7 @@ class PlaylistOperator extends EventEmitter {
     }
 
     /**
-     * Find a PlaylistOperator and ensure an empty playlist.
+     * Find a PlaylistOperator and ensure empty or passed playlist.
      * @param {GuildMember} member
      * @param {Playlist} list
      * @return {Promise.<PlaylistOperator>}
@@ -63,7 +63,11 @@ class PlaylistOperator extends EventEmitter {
         }
 
         return VC.checkCurrent(member)
-            .then(conn => new PlaylistOperator(conn, list));
+            .then(conn => {
+                const op = new PlaylistOperator(conn, list);
+                storage.set(member.guild.id, op);
+                return op;
+            });
     }
 
     /**
