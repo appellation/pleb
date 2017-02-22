@@ -14,8 +14,9 @@ class PlaylistOperator extends EventEmitter {
     /**
      * @constructor
      * @param {VoiceConnection} conn
+     * @param {Playlist} [list]
      */
-    constructor(conn) {
+    constructor(conn, list) {
         super();
 
         if(!conn) throw new Error('No voice connection');
@@ -33,7 +34,7 @@ class PlaylistOperator extends EventEmitter {
         /**
          * @type {Playlist}
          */
-        this.playlist = new Playlist();
+        this.playlist = list || new Playlist();
 
         /**
          * @type {StreamDispatcher}
