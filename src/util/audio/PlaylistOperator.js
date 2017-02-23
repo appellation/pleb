@@ -51,7 +51,7 @@ class PlaylistOperator extends EventEmitter {
     /**
      * Find a PlaylistOperator and ensure empty or passed playlist.
      * @param {GuildMember} member
-     * @param {Playlist} list
+     * @param {Playlist} [list]
      * @return {Promise.<PlaylistOperator>}
      */
     static init(member, list) {
