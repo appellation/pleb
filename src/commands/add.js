@@ -3,7 +3,7 @@
  */
 
 const storage = require('../util/storage/playlists');
-const playlist = require('../util/audio/PlaylistOperator');
+const Operator = require('../util/audio/PlaylistOperator');
 
 exports.func = (res, msg, args) => {
     const next = args[0] === 'next';
@@ -15,11 +15,7 @@ exports.func = (res, msg, args) => {
         });
     }
 
-    return playlist.init(msg, res).then(operator => {
-        return operator.add(args);
-    }).then(operator => {
-        operator.start(res);
-    });
+    return Operator.startNew(args, res, msg.member);
 };
 
 exports.validator = val => {

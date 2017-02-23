@@ -79,7 +79,7 @@ class PlaylistOperator extends EventEmitter {
      */
     static startNew(args, res, member) {
         const pl = new Playlist();
-        return pl.add(args, res).then(list => {
+        return pl.add(args).then(list => {
             return PlaylistOperator.init(member, list).then(op => op.start(res), res.error.bind(res));
         }, err => {
             if(err.response && err.response.statusCode === 403)
