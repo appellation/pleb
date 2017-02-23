@@ -14,8 +14,9 @@ class PlaylistOperator extends EventEmitter {
     /**
      * @constructor
      * @param {VoiceConnection} conn
+     * @param {Playlist} [list]
      */
-    constructor(conn) {
+    constructor(conn, list) {
         super();
 
         if(!conn) throw new Error('No voice connection');
@@ -33,7 +34,7 @@ class PlaylistOperator extends EventEmitter {
         /**
          * @type {Playlist}
          */
-        this.playlist = new Playlist();
+        this.playlist = list || new Playlist();
 
         /**
          * @type {StreamDispatcher}
@@ -44,31 +45,46 @@ class PlaylistOperator extends EventEmitter {
          * @type {number}
          * @private
          */
-        this._vol = settings.get(this.guild.id).get('volume') || 0.2;
+        this._vol = settings.get(this.guild.id).get ? settings.get(this.guild.id).get('volume') || 0.2 : 0.2;
     }
 
     /**
-     * Initialize a new Playlist.
-     * @param {Message} msg
-     * @param {Response} res
+     * Find a PlaylistOperator and ensure empty or passed playlist.
+     * @param {GuildMember} member
+     * @param {Playlist} [list]
      * @return {Promise.<PlaylistOperator>}
      */
-    static init(msg, res) {
-        return new Promise(resolve => {
-            if(!storage.has(msg.guild.id)) return resolve(VC.checkCurrent(msg.client, msg.member));
+    static init(member, list) {
+        if(storage.has(member.guild.id)) {
+            const op = storage.get(member.guild.id);
+            op.stop();
+            op.playlist = list || new Playlist();
+            return Promise.resolve(op);
+        }
 
-            const pl = storage.get(msg.guild.id);
-            const conn = pl.vc;
-            pl.destroy();
-            return resolve(conn);
-        }).catch(err => {
-            res.error(err);
-            return Promise.reject();
-        }).then(conn => {
-            const operator = new PlaylistOperator(conn);
+        return VC.checkCurrent(member)
+            .then(conn => {
+                const op = new PlaylistOperator(conn, list);
+                storage.set(member.guild.id, op);
+                return op;
+            });
+    }
 
-            storage.set(msg.guild.id, operator);
-            return operator;
+    /**
+     * Start a new Playlist.
+     * @param {Array} args
+     * @param {Response} res
+     * @param {GuildMember} member
+     * @return {Promise}
+     */
+    static startNew(args, res, member) {
+        const pl = new Playlist();
+        return pl.add(args).then(list => {
+            return PlaylistOperator.init(member, list).then(op => op.start(res), res.error.bind(res));
+        }, err => {
+            if(err.response && err.response.statusCode === 403)
+                res.error('Unauthorized to load all or part of that resource.  It likely contains private content.');
+            else res.error(err.message || err);
         });
     }
 
@@ -76,8 +92,12 @@ class PlaylistOperator extends EventEmitter {
      * Start the playlist.
      */
     start(res) {
-        this._start();
-        res.success(`now playing \`${this.playlist.current.name}\``);
+        if(this.playlist.length) {
+            this._start();
+            res.success(`now playing \`${this.playlist.current.name}\``);
+        } else {
+            res.error('Nothing available to play.');
+        }
     }
 
     /**
