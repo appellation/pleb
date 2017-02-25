@@ -70,25 +70,3 @@ A simple Discord bot available for free.  [Click here](https://discordapp.com/oa
 
 ## Support
 If you have any questions, contact a dev at [our (admittedly small) discord](https://discord.gg/DPuaDvP).
-
-## Development
-`npm install`
-
-Create a bot on <https://discordapp.com/developers/applications/me>.
-
-You'll need to make a `.env` file (or have some other way to access environment variables) with the below data:
-
-- `discord` - your Discord token
-- `discord_client_id` - your Discord app client ID
-- `youtube` - a Google API browser key authorized for YouTube Data, URL shortening, speech, and geocoding
-- `raven` - a Sentry.io logging URL; optional
-- `soundcloud` - a SoundCloud client ID
-- `soundcloud_secret` - a SoundCloud secret
-- `imgur` - a Imgur client ID
-- `bing` - a Bing API access key
-- `google_cloud_email` - a Google Cloud service account email
-- `google_cloud_project_id` - a Google Cloud project ID
-- `google_cloud_private_key` - a Google Cloud service account private key (make sure to double-quote this)
-- `ifttt` - a IFTTT Maker key
-
-Add your bot to a server using `https://discordapp.com/oauth2/authorize?client_id=<YOUR_CLIENT_ID>&scope=bot&permissions=3173398`.
