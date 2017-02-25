@@ -33,7 +33,7 @@ exports.func = (response, msg, args, command) => {
         },
         json: true
     }).then(res => {
-        if(Object.keys(res.rankingResponse).length === 0) return response.error('No results found.');
+        if(!res.rankingResponse || Object.keys(res.rankingResponse).length === 0) return response.error('No results found.');
 
         // format response
         const first = res.rankingResponse.mainline.items[0];
