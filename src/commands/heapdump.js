@@ -31,3 +31,5 @@ exports.func = (res, msg) => {
         });
     })
 };
+
+exports.validator = (val, msg) => val.applyValid(msg.author.id === '116690352584392704', 'This command is owner-only.');
