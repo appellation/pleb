@@ -1,6 +1,6 @@
 {
   "name": "pleb",
-  "version": "4.1.0",
+  "version": "5.0.0",
   "description": "A very low class Discord bot.",
   "main": "src/index.js",
   "scripts": {
