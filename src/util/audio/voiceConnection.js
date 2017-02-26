@@ -2,14 +2,12 @@
  * Created by Will on 9/7/2016.
  */
 
+const path = require('path');
 let speech;
 if(process.env.google_cloud_project_id) {
     speech = require('@google-cloud/speech')({
         projectId: process.env.google_cloud_project_id,
-        credentials: {
-            client_email: process.env.google_cloud_email,
-            private_key: process.env.google_cloud_private_key
-        }
+        keyFilename: path.join(process.cwd(), 'gauth.json')
     });
 }
 
