@@ -11,7 +11,7 @@ const gcs = require('@google-cloud/storage')({
 
 const bucket = gcs.bucket('pleb-heapdumps');
 
-exports.func = (res, msg) => {
+exports.func = res => {
     return new Promise((resolve, reject) => {
         heapdump.writeSnapshot((err, filename) => {
             if(err) return reject(err);
@@ -29,7 +29,7 @@ exports.func = (res, msg) => {
                 });
             });
         });
-    })
+    });
 };
 
 exports.validator = (val, msg) => val.applyValid(msg.author.id === '116690352584392704', 'This command is owner-only.');
