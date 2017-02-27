@@ -96,7 +96,7 @@ class PlaylistOperator extends EventEmitter {
             this._start();
             res.success(`now playing \`${this.playlist.current.name}\``);
         } else {
-            res.error('Nothing available to play.');
+            res.error('Nothing currently in playlist.');
         }
     }
 
