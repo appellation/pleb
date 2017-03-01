@@ -59,32 +59,32 @@ exports.func = (response, msg, args) => {
                 let Image = Canvas.Image;
                 let icon = new Image();
                 let background = new Image();
-                icon.src = path.join(__dirname, '..', 'assets', 'images', 'weather', `${getIcon(weatherRes.currently.icon)}.png`);
-                background.src = path.join(__dirname, '..', 'data', 'images', 'weather', 'weatherbg.png');
+                icon.src = path.join(__dirname, '..', 'assets', 'images', `${getIcon(weatherRes.currently.icon)}.png`);
+                background.src = path.join(__dirname, '..', 'data', 'images', 'weatherbg.png');
 
                 let day1Time = timezone().tz(weatherRes.timezone).add(1, 'days').format('ddd');
                 let day1TempMin = convertFToC(weatherRes.daily.data[0].temperatureMin);
                 let day1TempMax = convertFToC(weatherRes.daily.data[0].temperatureMax);
                 let day1Icon = new Image();
-                day1Icon.src = path.join(__dirname, '..', 'assets', 'images', 'weather', `${getIcon(weatherRes.daily.data[0].icon)}.png`);
+                day1Icon.src = path.join(__dirname, '..', 'assets', 'images', `${getIcon(weatherRes.daily.data[0].icon)}.png`);
 
                 let day2Time = timezone().tz(weatherRes.timezone).add(2, 'days').format('ddd');
                 let day2TempMin = convertFToC(weatherRes.daily.data[1].temperatureMin);
                 let day2TempMax = convertFToC(weatherRes.daily.data[1].temperatureMax);
                 let day2Icon = new Image();
-                day2Icon.src = path.join(__dirname, '..', 'assets', 'images', 'weather', `${getIcon(weatherRes.daily.data[1].icon)}.png`);
+                day2Icon.src = path.join(__dirname, '..', 'assets', 'images', `${getIcon(weatherRes.daily.data[1].icon)}.png`);
 
                 let day3Time = timezone().tz(weatherRes.timezone).add(3, 'days').format('ddd');
                 let day3TempMin = convertFToC(weatherRes.daily.data[2].temperatureMin);
                 let day3TempMax = convertFToC(weatherRes.daily.data[2].temperatureMax);
                 let day3Icon = new Image();
-                day3Icon.src = path.join(__dirname, '..', 'assets', 'images', 'weather', `${getIcon(weatherRes.daily.data[2].icon)}.png`);
+                day3Icon.src = path.join(__dirname, '..', 'assets', 'images', `${getIcon(weatherRes.daily.data[2].icon)}.png`);
 
                 let day4Time = timezone().tz(weatherRes.timezone).add(4, 'days').format('ddd');
                 let day4TempMin = convertFToC(weatherRes.daily.data[3].temperatureMin);
                 let day4TempMax = convertFToC(weatherRes.daily.data[3].temperatureMax);
                 let day4Icon = new Image();
-                day4Icon.src = path.join(__dirname, '..', 'assets', 'images', 'weather', `${getIcon(weatherRes.daily.data[3].icon)}.png`);
+                day4Icon.src = path.join(__dirname, '..', 'assets', 'images', `${getIcon(weatherRes.daily.data[3].icon)}.png`);
 
                 ctx.drawImage(background, 0, 0);
 
@@ -160,28 +160,26 @@ exports.func = (response, msg, args) => {
     }).catch(console.log); // eslint-disable-line no-console
 };
 
-function getIcon(icon)
-{
-    if (icon === "clear-day" || icon === "partly-cloudy-day") {
-        return "clear";
-    } else if (icon === "clear-night" || icon === "partly-cloudy-night") {
-        return "night";
-    } else if (icon === "rain" || icon === "thunderstorm") {
-        return "rain";
-    } else if (icon === "snow" || icon === "sleet" || icon === "fog") {
-        return "snow";
-    } else if (icon === "wind" || icon === "tornado") {
-        return "night";
-    } else if (icon === "cloudy") {
-        return "cloudy";
+function getIcon(icon){
+    if (icon === 'clear-day' || icon === 'partly-cloudy-day') {
+        return 'clear';
+    } else if (icon === 'clear-night' || icon === 'partly-cloudy-night') {
+        return 'night';
+    } else if (icon === 'rain' || icon === 'thunderstorm') {
+        return 'rain';
+    } else if (icon === 'snow' || icon === 'sleet' || icon === 'fog') {
+        return 'snow';
+    } else if (icon === 'wind' || icon === 'tornado') {
+        return 'night';
+    } else if (icon === 'cloudy') {
+        return 'cloudy';
     } else {
-        return "night";
+        return 'night';
     }
 }
 
-function convertFToC(temp)
-{
-    return Math.round((temp - 32) * 0.5556)
+function convertFToC(temp){
+    return Math.round((temp - 32) * 0.5556);
 }
 
 exports.validator = val => val.ensureArgs();
