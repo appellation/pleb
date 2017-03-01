@@ -8,31 +8,32 @@ const path = require('path');
 const Canvas = require('canvas');
 
 exports.func = (response, msg, args) => {
-    if(args.length === 0) return 'no location specified';
+
     let geocodeOptions = {
         uri: 'https://maps.googleapis.com/maps/api/geocode/json?',
         headers: {
             'User-Agent': 'Request-Promise'
         },
         qs: {
-            address : args,
+            address : args.join(' '),
             key: process.env.youtube
         },
         json: true
     };
-    request(geocodeOptions).then((locationRes) => {
+
+    return request(geocodeOptions).then((locationRes) => {
         if(locationRes.status !== 'OK') {
             switch(locationRes.status){
             case 'ZERO_RESULTS':
-                return response.sendMessage('No results found');
+                return response.error('No results found');
             case 'REQUEST_DENIED':
-                return response.sendMessage('Request denied');
+                return response.error('Request denied');
             case 'INVALID_REQUEST':
-                return response.sendMessage('Invalid request');
+                return response.error('Invalid request');
             case 'OVER_QUERY_LIMIT':
-                return response.sendMessage('Over limit');
+                return response.error('Over limit');
             case 'UNKNOWN_ERROR':
-                return response.sendMessage('An unkown error has occured');
+                return response.error('An unnkown error has occurred');
             }
         } else {
             let city;
@@ -49,42 +50,42 @@ exports.func = (response, msg, args) => {
                     city = component.long_name;
                 }
             }
-            request(weatherOptions).then((weatherRes) => {
+            return request(weatherOptions).then((weatherRes) => {
                 
                 Canvas.registerFont(path.join(__dirname, '..', 'assets', 'fonts', 'NotoSans-Regular.ttf'), { family: 'NotoSans' });
-                Canvas.registerFont(path.join(__dirname, '..', 'data', 'fonts', 'NotoSans-Bold.ttf'), { family: 'NotoSansBold' });
+                Canvas.registerFont(path.join(__dirname, '..', 'assets', 'fonts', 'NotoSans-Bold.ttf'), { family: 'NotoSansBold' });
 
                 let canvas = new Canvas(800, 250);
                 let ctx = canvas.getContext('2d');
                 let Image = Canvas.Image;
                 let icon = new Image();
                 let background = new Image();
-                icon.src = path.join(__dirname, '..', 'assets', 'images', `${getIcon(weatherRes.currently.icon)}.png`);
-                background.src = path.join(__dirname, '..', 'data', 'images', 'weatherbg.png');
+                icon.src = path.join(__dirname, '..', 'assets', 'images', 'weather', `${getIcon(weatherRes.currently.icon)}.png`);
+                background.src = path.join(__dirname, '..', 'assets', 'images', 'weather', 'weatherbg.png');
 
                 let day1Time = timezone().tz(weatherRes.timezone).add(1, 'days').format('ddd');
                 let day1TempMin = convertFToC(weatherRes.daily.data[0].temperatureMin);
                 let day1TempMax = convertFToC(weatherRes.daily.data[0].temperatureMax);
                 let day1Icon = new Image();
-                day1Icon.src = path.join(__dirname, '..', 'assets', 'images', `${getIcon(weatherRes.daily.data[0].icon)}.png`);
+                day1Icon.src = path.join(__dirname, '..', 'assets', 'images', 'weather', `${getIcon(weatherRes.daily.data[0].icon)}.png`);
 
                 let day2Time = timezone().tz(weatherRes.timezone).add(2, 'days').format('ddd');
                 let day2TempMin = convertFToC(weatherRes.daily.data[1].temperatureMin);
                 let day2TempMax = convertFToC(weatherRes.daily.data[1].temperatureMax);
                 let day2Icon = new Image();
-                day2Icon.src = path.join(__dirname, '..', 'assets', 'images', `${getIcon(weatherRes.daily.data[1].icon)}.png`);
+                day2Icon.src = path.join(__dirname, '..', 'assets', 'images', 'weather', `${getIcon(weatherRes.daily.data[1].icon)}.png`);
 
                 let day3Time = timezone().tz(weatherRes.timezone).add(3, 'days').format('ddd');
                 let day3TempMin = convertFToC(weatherRes.daily.data[2].temperatureMin);
                 let day3TempMax = convertFToC(weatherRes.daily.data[2].temperatureMax);
                 let day3Icon = new Image();
-                day3Icon.src = path.join(__dirname, '..', 'assets', 'images', `${getIcon(weatherRes.daily.data[2].icon)}.png`);
+                day3Icon.src = path.join(__dirname, '..', 'assets', 'images', 'weather', `${getIcon(weatherRes.daily.data[2].icon)}.png`);
 
                 let day4Time = timezone().tz(weatherRes.timezone).add(4, 'days').format('ddd');
                 let day4TempMin = convertFToC(weatherRes.daily.data[3].temperatureMin);
                 let day4TempMax = convertFToC(weatherRes.daily.data[3].temperatureMax);
                 let day4Icon = new Image();
-                day4Icon.src = path.join(__dirname, '..', 'assets', 'images', `${getIcon(weatherRes.daily.data[3].icon)}.png`);
+                day4Icon.src = path.join(__dirname, '..', 'assets', 'images', 'weather', `${getIcon(weatherRes.daily.data[3].icon)}.png`);
 
                 ctx.drawImage(background, 0, 0);
 
@@ -154,13 +155,13 @@ exports.func = (response, msg, args) => {
                 ctx.drawImage(day3Icon, 670, 70, 60, 60);
                 ctx.drawImage(icon, 80, 40, 90, 90);
                 
-                return response.sendFile(canvas.toBuffer());
-            }).catch(console.log); // eslint-disable-line no-console
+                return msg.channel.sendFile(canvas.toBuffer());
+            });
         }
-    }).catch(console.log); // eslint-disable-line no-console
+    });
 };
 
-function getIcon(icon){
+function getIcon(icon) {
     if (icon === 'clear-day' || icon === 'partly-cloudy-day') {
         return 'clear';
     } else if (icon === 'clear-night' || icon === 'partly-cloudy-night') {
@@ -178,7 +179,7 @@ function getIcon(icon){
     }
 }
 
-function convertFToC(temp){
+function convertFToC(temp) {
     return Math.round((temp - 32) * 0.5556);
 }
 
