@@ -44,17 +44,11 @@ exports.func = (response, msg, args) => {
                 },
                 json: true
             };
-            /*
-            for (var i = 0; i < locationRes.results[0].address_components.length; i++) {
-                var component = locationRes.results[0].address_components[i];
-                if(component.types[0] === 'locality') {
-                    city = component.long_name;
-                }
-            }*/
-            const locality = response.results[0].address_components.find(loc => loc.types.includes('locality'));
-            const governing = response.results[0].address_components.find(gov => gov.types.includes('administrative_area_level_1'));
-            const country = response.results[0].address_components.find(cou => cou.types.includes('country'));
-            const continent = response.results[0].address_components.find(con => con.types.includes('continent'));
+            
+            const locality = locationRes.results[0].address_components.find(loc => loc.types.includes('locality'));
+            const governing = locationRes.results[0].address_components.find(gov => gov.types.includes('administrative_area_level_1'));
+            const country = locationRes.results[0].address_components.find(cou => cou.types.includes('country'));
+            const continent = locationRes.results[0].address_components.find(con => con.types.includes('continent'));
 
             city = locality || governing || country || continent || {};
 
