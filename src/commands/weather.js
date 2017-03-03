@@ -44,12 +44,20 @@ exports.func = (response, msg, args) => {
                 },
                 json: true
             };
+            /*
             for (var i = 0; i < locationRes.results[0].address_components.length; i++) {
                 var component = locationRes.results[0].address_components[i];
                 if(component.types[0] === 'locality') {
                     city = component.long_name;
                 }
-            }
+            }*/
+            const locality = response.results[0].address_components.find(loc => loc.types.includes('locality'));
+            const governing = response.results[0].address_components.find(gov => gov.types.includes('administrative_area_level_1'));
+            const country = response.results[0].address_components.find(cou => cou.types.includes('country'));
+            const continent = response.results[0].address_components.find(con => con.types.includes('continent'));
+
+            city = locality || governing || country || continent || {};
+
             return request(weatherOptions).then((weatherRes) => {
                 
                 Canvas.registerFont(path.join(__dirname, '..', 'assets', 'fonts', 'NotoSans-Regular.ttf'), { family: 'NotoSans' });
@@ -91,7 +99,7 @@ exports.func = (response, msg, args) => {
 
                 ctx.fillStyle = '#ffffff';
                 ctx.font='22px NotoSans';
-                ctx.fillText(city, 30, 40);
+                ctx.fillText(city.long_name ? city.long_name : 'Unknown', 30, 40);
                 
                 ctx.fillStyle = '#ffffff';
                 ctx.fillRect(275, 30, 1, canvas.height - 60);
