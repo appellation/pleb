@@ -6,7 +6,7 @@ const schedule = require('node-schedule');
 const moment = require('moment');
 const date = require('date.js');
 
-exports.func = (res, msg, args) => {
+exports.func = async (res, msg, args) => {
     let remIndex = args.indexOf('to');
     remIndex = remIndex === -1 ? 0 : remIndex;
 
@@ -32,5 +32,5 @@ exports.func = (res, msg, args) => {
         }
     });
 
-    return 'reminder set for ' + moment(newDate).format('dddd, MMMM Do YYYY, h:mm:ss a ZZ');
+    return res.success('reminder set for ' + moment(newDate).format('dddd, MMMM Do YYYY, h:mm:ss a ZZ'));
 };

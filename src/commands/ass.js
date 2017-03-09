@@ -4,10 +4,13 @@
 
 const rp = require('request-promise-native');
 
-exports.func = res => {
-    return rp.get('http://api.obutts.ru/butts/0/1/random').then(JSON.parse).then(ass => {
+exports.func = async res => {
+    try {
+        const ass = await rp.get('http://api.obutts.ru/butts/0/1/random').then(JSON.parse);
         return res.send('http://media.obutts.ru/' + ass[0].preview);
-    }).catch(() => 'no ass found 😭');
+    } catch (e) {
+        return res.error('no ass found 😭');
+    }
 };
 
 exports.validator = val => {

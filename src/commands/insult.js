@@ -2,7 +2,7 @@
  * Created by Will on 10/4/2016.
  */
 
-exports.func = (res, msg) => {
+exports.func = async (res, msg) => {
     return res.send(`${msg.mentions.users.find(u => !u.equals(msg.client.user)) || msg.author}, ${insults.random()}`);
 };
 

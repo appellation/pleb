@@ -15,16 +15,12 @@ class GuildSettings {
         this.data = {};
     }
 
-    init() {
-        return this._table.insert({ id: this.guild.id }, { returnChanges: 'always' }).run().then(this._updateCache.bind(this));
-    }
-
     get(key) {
         return this.data[key];
     }
 
     set(key, value) {
-        return this._table.get(this.guild.id).update({ [key]: value }, { returnChanges: 'always' }).run().then(this._updateCache.bind(this));
+        return this._table.get(this.guild.id).update(Object.assign({ id: this.guild.id }, { [key]: value }), { returnChanges: 'always' }).run().then(this._updateCache.bind(this));
     }
 
     _updateCache(data) {

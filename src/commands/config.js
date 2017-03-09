@@ -8,12 +8,11 @@ const allowedSettings = new Set([
     'prefix'
 ]);
 
-exports.func = (res, msg, args) => {
+exports.func = async (res, msg, args) => {
     if(!allowedSettings.has(args[0].toLowerCase())) return;
     const settings = storage.get(msg.guild.id);
-    return settings.set(args[0], args.slice(1).join(' ') || null).then(config => {
-        return res.success(`**${args[0]}** set to \`${config[args[0]]}\``);
-    });
+    const config = await settings.set(args[0], args.slice(1).join(' ') || null);
+    return res.success(`**${args[0]}** set to \`${config[args[0]]}\``);
 };
 
 exports.validator = val => val.ensureGuild() && val.ensureArgs();

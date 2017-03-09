@@ -4,11 +4,11 @@
 
 const storage = require('../util/storage/playlists');
 
-exports.func = (res, msg, args) => {
+exports.func = async (res, msg, args) => {
     const operator = storage.get(msg.guild.id);
     const num = parseInt(args[0]) || 1;
     for(let i = 0; i < num && operator.playlist.hasPrev(); i++) operator.playlist.prev();
-    operator.start(res);
+    return operator.start(res);
 };
 
 exports.validator = val => val.ensurePlaylist();

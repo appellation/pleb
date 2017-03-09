@@ -52,22 +52,20 @@ class PlaylistOperator extends EventEmitter {
      * Find a PlaylistOperator and ensure empty or passed playlist.
      * @param {GuildMember} member
      * @param {Playlist} [list]
-     * @return {Promise.<PlaylistOperator>}
+     * @return {PlaylistOperator}
      */
-    static init(member, list) {
+    static async init(member, list) {
         if(storage.has(member.guild.id)) {
             const op = storage.get(member.guild.id);
             op.stop();
             op.playlist = list || new Playlist();
-            return Promise.resolve(op);
+            return op;
         }
 
-        return VC.checkCurrent(member)
-            .then(conn => {
-                const op = new PlaylistOperator(conn, list);
-                storage.set(member.guild.id, op);
-                return op;
-            });
+        const conn = await VC.checkCurrent(member);
+        const op = new PlaylistOperator(conn, list);
+        storage.set(member.guild.id, op);
+        return op;
     }
 
     /**
@@ -75,17 +73,20 @@ class PlaylistOperator extends EventEmitter {
      * @param {Array} args
      * @param {Response} res
      * @param {GuildMember} member
-     * @return {Promise}
      */
-    static startNew(args, res, member) {
+    static async startNew(args, res, member) {
         const pl = new Playlist();
-        return pl.add(args).then(list => {
-            return PlaylistOperator.init(member, list).then(op => op.start(res), res.error.bind(res));
-        }, err => {
+
+        try {
+            const list = await pl.add(args);
+
+            const op = await PlaylistOperator.init(member, list);
+            op.start(res);
+        } catch (err) {
             if(err.response && err.response.statusCode === 403)
                 res.error('Unauthorized to load all or part of that resource.  It likely contains private content.');
             else res.error(err.message || err);
-        });
+        }
     }
 
     /**
@@ -152,10 +153,11 @@ class PlaylistOperator extends EventEmitter {
     /**
      * Add command arguments to a playlist.
      * @param {Array} args
-     * @return {Promise.<PlaylistOperator>}
+     * @return {PlaylistOperator}
      */
-    add(args) {
-        return this.playlist.add(args).then(() => this);
+    async add(args) {
+        await this.playlist.add(args);
+        return this;
     }
 
     /**

@@ -4,7 +4,7 @@
 
 const dicks = new Map();
 
-exports.func = (res, msg, args) => {
+exports.func = async (res, msg, args) => {
     let user = msg.author.id;
     for(const a of args) {
         const match = a.match(/<@!?([0-9]+)>/);

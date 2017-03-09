@@ -2,7 +2,7 @@
  * Created by Will on 9/24/2016.
  */
 
-exports.func = (res, msg) => {
+exports.func = async (res, msg) => {
     const mentions = msg.mentions;
     let out = [];
 

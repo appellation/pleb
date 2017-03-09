@@ -4,11 +4,11 @@
 
 const moment = require('moment');
 
-exports.func = res => {
+exports.func = async res => {
     /**Randomly chooses between XKCD and C&H**/
     if(Math.random() >= 0.5) {
         const max = 4462;
-        res.success('http://explosm.net/comics/' + (Math.floor(Math.random()* max) + 1));
+        return res.success('http://explosm.net/comics/' + (Math.floor(Math.random()* max) + 1));
     } else {
         var randVar = Math.floor(Math.random()*(1758 - 1) + 1);
 

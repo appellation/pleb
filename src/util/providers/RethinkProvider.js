@@ -25,9 +25,7 @@ class RethinkProvider {
 
     initializeGuild(guild) {
         const setting = new Settings(this, guild);
-        return setting.init().then(() => {
-            storage.set(guild.id, setting);
-        });
+        storage.set(guild.id, setting);
     }
 }
 

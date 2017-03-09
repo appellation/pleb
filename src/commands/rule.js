@@ -2,9 +2,9 @@
  * Created by Will on 1/7/2017.
  */
 
-exports.func = (res, msg, args) => {
+exports.func = async (res, msg, args) => {
     const parsed = parseInt(args[0]);
-    return msg.channel.sendMessage(`\`\`\`ldif\n${rules[parsed - 1]}\`\`\``);
+    return res.send(`\`\`\`ldif\n${rules[parsed - 1]}\`\`\``);
 };
 
 exports.validator = (val, cmd) => {
