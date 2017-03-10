@@ -78,9 +78,14 @@ class PlaylistOperator {
         return pl.add(args).then(list => {
             return PlaylistOperator.init(member, list).then(op => op.start(res), res.error.bind(res));
         }, err => {
-            if(err.response && err.response.statusCode === 403)
-                res.error('Unauthorized to load all or part of that resource.  It likely contains private content.');
-            else res.error(err.message || err);
+            if(err.response) {
+                if(err.response.statusCode === 403)
+                    res.error('Unauthorized to load all or part of that resource.  It likely contains private content.');
+                if(err.response.statusCode === 404)
+                    res.error('Couldn\'t find that resource.');
+            } else {
+                res.error(err.message || err);
+            }
         });
     }
 
