@@ -3,7 +3,6 @@
  */
 
 const storage = require('../util/storage/playlists');
-const Operator = require('../util/audio/PlaylistOperator');
 
 exports.func = (res, msg, args) => {
     const next = args[0] === 'next';
