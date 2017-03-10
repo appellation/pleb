@@ -2,14 +2,12 @@
  * Created by Will on 1/14/2017.
  */
 
-const {EventEmitter} = require('events');
-
 const Playlist = require('./Playlist');
 const VC = require('./voiceConnection');
 const storage = require('../storage/playlists');
 const settings = require('../storage/settings');
 
-class PlaylistOperator extends EventEmitter {
+class PlaylistOperator {
 
     /**
      * @constructor
@@ -17,8 +15,6 @@ class PlaylistOperator extends EventEmitter {
      * @param {Playlist} [list]
      */
     constructor(conn, list) {
-        super();
-
         if(!conn) throw new Error('No voice connection');
 
         /**
@@ -108,8 +104,6 @@ class PlaylistOperator extends EventEmitter {
         this.stop('temp');
         if(!this.playlist.current) return;
 
-        this.emit('start', this);
-
         const stream = this.playlist.current.stream();
         this.dispatcher = this.vc.playStream(stream, { volume: this._vol });
         this.dispatcher.once('end', this._end.bind(this));
@@ -131,7 +125,6 @@ class PlaylistOperator extends EventEmitter {
      * Stop the playlist.
      */
     stop(reason = 'temp') {
-        this.emit('stop', this);
         if(this.dispatcher) this.dispatcher.end(reason);
     }
 
