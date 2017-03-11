@@ -44,7 +44,7 @@ const dict = {
 };
 
 
-exports.func = (res, msg, args) => {
+exports.func = async (res, msg, args) => {
     let out = '';
     const low = args.join().toLowerCase();
 

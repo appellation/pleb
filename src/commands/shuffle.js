@@ -6,18 +6,16 @@ const Operator = require('../util/audio/PlaylistOperator');
 const Playlist = require('../util/audio/Playlist');
 const storage = require('../util/storage/playlists');
 
-exports.func = (res, msg, args) => {
+exports.func = async (res, msg, args) => {
     if(args.length > 0) {
         const pl = new Playlist();
-        return pl.add(args).then(list => Operator.init(msg.member, list))
-            .then(operator => {
-                operator.playlist.shuffle();
-                return operator.start(res);
-            });
+        const operator = await pl.add(args).then(list => Operator.init(msg.member, list));
+        operator.playlist.shuffle();
+        return operator.start(res);
     } else {
         const operator = storage.get(msg.guild.id);
         operator.playlist.shuffle();
-        operator.start(res);
+        return operator.start(res);
     }
 };
 

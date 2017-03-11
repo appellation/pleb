@@ -3,8 +3,8 @@
  */
 const storage = require('../util/storage/settings');
 
-exports.func = (res, msg) => {
-    res.success(`Current prefix is: \`${storage.get(msg.guild.id).data.prefix}\``);
+exports.func = async (res, msg) => {
+    return res.success(`Current prefix is: \`${storage.get(msg.guild.id).data.prefix}\``);
 };
 
 exports.validator = val => val.ensureGuild();

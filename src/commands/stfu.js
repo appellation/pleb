@@ -4,7 +4,7 @@
 
 const storage = require('../util/storage/playlists');
 
-exports.func = (res, msg) => {
+exports.func = async (res, msg) => {
     const operator = storage.get(msg.guild.id);
     if(operator) operator.destroy();
 

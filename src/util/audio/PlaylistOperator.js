@@ -2,12 +2,14 @@
  * Created by Will on 1/14/2017.
  */
 
+const {EventEmitter} = require('events');
+
 const Playlist = require('./Playlist');
 const VC = require('./voiceConnection');
 const storage = require('../storage/playlists');
 const settings = require('../storage/settings');
 
-class PlaylistOperator {
+class PlaylistOperator extends EventEmitter {
 
     /**
      * @constructor
@@ -15,6 +17,8 @@ class PlaylistOperator {
      * @param {Playlist} [list]
      */
     constructor(conn, list) {
+        super();
+
         if(!conn) throw new Error('No voice connection');
 
         /**
@@ -48,22 +52,20 @@ class PlaylistOperator {
      * Find a PlaylistOperator and ensure empty or passed playlist.
      * @param {GuildMember} member
      * @param {Playlist} [list]
-     * @return {Promise.<PlaylistOperator>}
+     * @return {PlaylistOperator}
      */
-    static init(member, list) {
+    static async init(member, list) {
         if(storage.has(member.guild.id)) {
             const op = storage.get(member.guild.id);
             op.stop();
             op.playlist = list || new Playlist();
-            return Promise.resolve(op);
+            return op;
         }
 
-        return VC.checkCurrent(member)
-            .then(conn => {
-                const op = new PlaylistOperator(conn, list);
-                storage.set(member.guild.id, op);
-                return op;
-            });
+        const conn = await VC.checkCurrent(member);
+        const op = new PlaylistOperator(conn, list);
+        storage.set(member.guild.id, op);
+        return op;
     }
 
     /**
@@ -71,22 +73,20 @@ class PlaylistOperator {
      * @param {Array} args
      * @param {Response} res
      * @param {GuildMember} member
-     * @return {Promise}
      */
-    static startNew(args, res, member) {
+    static async startNew(args, res, member) {
         const pl = new Playlist();
-        return pl.add(args).then(list => {
-            return PlaylistOperator.init(member, list).then(op => op.start(res), res.error.bind(res));
-        }, err => {
-            if(err.response) {
-                if(err.response.statusCode === 403)
-                    res.error('Unauthorized to load all or part of that resource.  It likely contains private content.');
-                if(err.response.statusCode === 404)
-                    res.error('Couldn\'t find that resource.');
-            } else {
-                res.error(err.message || err);
-            }
-        });
+
+        try {
+            const list = await pl.add(args);
+
+            const op = await PlaylistOperator.init(member, list);
+            op.start(res);
+        } catch (err) {
+            if(err.response && err.response.statusCode === 403)
+                res.error('Unauthorized to load all or part of that resource.  It likely contains private content.');
+            else res.error(err.message || err);
+        }
     }
 
     /**
@@ -109,6 +109,8 @@ class PlaylistOperator {
         this.stop('temp');
         if(!this.playlist.current) return;
 
+        this.emit('start', this);
+
         const stream = this.playlist.current.stream();
         this.dispatcher = this.vc.playStream(stream, { volume: this._vol });
         this.dispatcher.once('end', this._end.bind(this));
@@ -130,6 +132,7 @@ class PlaylistOperator {
      * Stop the playlist.
      */
     stop(reason = 'temp') {
+        this.emit('stop', this);
         if(this.dispatcher) this.dispatcher.end(reason);
     }
 
@@ -150,10 +153,11 @@ class PlaylistOperator {
     /**
      * Add command arguments to a playlist.
      * @param {Array} args
-     * @return {Promise.<PlaylistOperator>}
+     * @return {PlaylistOperator}
      */
-    add(args) {
-        return this.playlist.add(args).then(() => this);
+    async add(args) {
+        await this.playlist.add(args);
+        return this;
     }
 
     /**
@@ -182,7 +186,6 @@ class PlaylistOperator {
      * Destroy this playlist.
      */
     _destroy() {
-        this.vc.disconnect();
         this.dispatcher.stream.destroy();
         storage.delete(this.guild.id);
     }

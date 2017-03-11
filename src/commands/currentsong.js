@@ -6,7 +6,7 @@ const storage = require('../util/storage/playlists');
 const {RichEmbed} = require('discord.js');
 const moment = require('moment');
 
-exports.func = (res, msg) => {
+exports.func = async (res, msg) => {
     const embed = new RichEmbed();
     const operator = storage.get(msg.guild.id);
     const playlist = operator.playlist;

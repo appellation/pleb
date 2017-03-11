@@ -2,7 +2,7 @@
  * Created by Will on 9/22/2016.
  */
 
-exports.func = (res, msg) => {
+exports.func = async (res, msg) => {
     return msg.author.sendMessage(
         '**`@mention` in any channel or just type in `#pleb`.**\n\n' +
         '- **play <query, YT URL, SoundCloud URL>** - plays makes a playlist from the link\n' +

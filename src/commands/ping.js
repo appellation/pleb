@@ -4,16 +4,16 @@
 
 const httpPing = require('node-http-ping');
 
-exports.func = (res, msg, args) => {
+exports.func = async (res, msg, args) => {
     if(!args[0]) {
-        return msg.channel.sendMessage('pinging....').then(newMessage => {
-            return newMessage.edit(`\`${newMessage.createdTimestamp - msg.createdTimestamp} ms\` round-trip ⏱ | \`${Math.round(msg.client.ping)} ms\` heartbeat 💓`);
-        });
+        const newMessage = await msg.channel.sendMessage('pinging....');
+        return newMessage.edit(`\`${newMessage.createdTimestamp - msg.createdTimestamp} ms\` round-trip ⏱ | \`${Math.round(msg.client.ping)} ms\` heartbeat 💓`);
     } else {
-        return httpPing(args[0]).then(function(time) {
+        try {
+            const time = await httpPing(args[0]);
             return res.success(args[0] + ': ' + time + 'ms');
-        }).catch(function(err) {
-            res.error('error pinging ' + args[0] + ': ' + err);
-        });
+        } catch (err) {
+            return res.error('error pinging ' + args[0] + ': ' + err);
+        }
     }
 };
