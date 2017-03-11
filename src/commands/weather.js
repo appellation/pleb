@@ -86,7 +86,7 @@ exports.func = (response, msg, args) => {
 
                 ctx.fillStyle = '#ffffff';
                 ctx.font='22px NotoSans';
-                ctx.fillText(city.long_name ? city.long_name : 'Unknown', 30, 40);
+                ctx.fillText(city.long_name || 'Unknown', 30, 40);
                 
                 ctx.fillStyle = '#ffffff';
                 ctx.fillRect(275, 30, 1, canvas.height - 60);
