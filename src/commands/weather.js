@@ -33,7 +33,7 @@ exports.func = (response, msg, args) => {
             case 'OVER_QUERY_LIMIT':
                 return response.error('Over limit');
             case 'UNKNOWN_ERROR':
-                return response.error('An unnkown error has occurred');
+                return response.error('An unknown error has occurred');
             }
         } else {
             let city;
