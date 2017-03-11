@@ -7,10 +7,11 @@ exports.func = (res, msg, args) => {
     if(isNaN(num)) return;
 
     return msg.channel.fetchMessages().then(collection => {
-        let messages = collection.findAll('author', msg.client.user);
-        if(messages.length <= 1) return res.error('Unable to purge less than 2 messages.', msg.author);
+        let messages = collection.findAll('author', msg.client.user).slice(0, num);
+        if(messages.length === 1) return messages[0].delete().then(() => res.success('Purged last message.', msg.author));
+        if(messages.length === 0) return res.error('No messages found that could be purged.', msg.author);
 
-        return msg.channel.bulkDelete(messages.slice(0, num)).then(deleted => {
+        return msg.channel.bulkDelete(messages).then(deleted => {
             return res.success(`Purged last ${deleted.size} messages.`, msg.author);
         });
     });

@@ -65,29 +65,22 @@ exports.func = (response, msg, args) => {
                 icon.src = path.join(__dirname, '..', 'assets', 'images', 'weather', `${getIcon(weatherRes.currently.icon)}.png`);
                 background.src = path.join(__dirname, '..', 'assets', 'images', 'weather', 'weatherbg.png');
 
-                let day1Time = timezone().tz(weatherRes.timezone).add(1, 'days').format('ddd');
-                let day1TempMin = convertFToC(weatherRes.daily.data[0].temperatureMin);
-                let day1TempMax = convertFToC(weatherRes.daily.data[0].temperatureMax);
-                let day1Icon = new Image();
-                day1Icon.src = path.join(__dirname, '..', 'assets', 'images', 'weather', `${getIcon(weatherRes.daily.data[0].icon)}.png`);
+                const
+                    times = [],
+                    tempMaxes = [],
+                    tempMins = [],
+                    icons = [],
+                    time = timezone().tz(weatherRes.timezone);
 
-                let day2Time = timezone().tz(weatherRes.timezone).add(2, 'days').format('ddd');
-                let day2TempMin = convertFToC(weatherRes.daily.data[1].temperatureMin);
-                let day2TempMax = convertFToC(weatherRes.daily.data[1].temperatureMax);
-                let day2Icon = new Image();
-                day2Icon.src = path.join(__dirname, '..', 'assets', 'images', 'weather', `${getIcon(weatherRes.daily.data[1].icon)}.png`);
+                for(let i = 0; i < 4; i++) {
+                    times.push(time.add(i + 1, 'days').format('ddd'));
+                    tempMins.push(convertFToC(weatherRes.daily.data[i].temperatureMin));
+                    tempMaxes.push(convertFToC(weatherRes.daily.data[i].temperatureMax));
 
-                let day3Time = timezone().tz(weatherRes.timezone).add(3, 'days').format('ddd');
-                let day3TempMin = convertFToC(weatherRes.daily.data[2].temperatureMin);
-                let day3TempMax = convertFToC(weatherRes.daily.data[2].temperatureMax);
-                let day3Icon = new Image();
-                day3Icon.src = path.join(__dirname, '..', 'assets', 'images', 'weather', `${getIcon(weatherRes.daily.data[2].icon)}.png`);
-
-                let day4Time = timezone().tz(weatherRes.timezone).add(4, 'days').format('ddd');
-                let day4TempMin = convertFToC(weatherRes.daily.data[3].temperatureMin);
-                let day4TempMax = convertFToC(weatherRes.daily.data[3].temperatureMax);
-                let day4Icon = new Image();
-                day4Icon.src = path.join(__dirname, '..', 'assets', 'images', 'weather', `${getIcon(weatherRes.daily.data[3].icon)}.png`);
+                    const img = new Image();
+                    img.src = path.join(__dirname, '..', 'assets', 'images', 'weather', `${getIcon(weatherRes.daily.data[i].icon)}.png`);
+                    icons.push(img);
+                }
 
                 ctx.drawImage(background, 0, 0);
 
@@ -105,56 +98,56 @@ exports.func = (response, msg, args) => {
                 ctx.textAlign = 'center'; 
                 ctx.fillStyle = '#ffffff';
                 ctx.font='25px NotoSans';
-                ctx.fillText(day1Time, 365, 60);
+                ctx.fillText(times[0], 365, 60);
                 
                 ctx.fillStyle = '#ffffff';
                 ctx.font='25px NotoSans';
-                ctx.fillText(day2Time, 475, 60);
+                ctx.fillText(times[1], 475, 60);
 
                 ctx.fillStyle = '#ffffff';
                 ctx.font='25px NotoSans';
-                ctx.fillText(day3Time, 595, 60);
+                ctx.fillText(times[2], 595, 60);
 
                 ctx.fillStyle = '#ffffff';
                 ctx.font='25px NotoSans';
-                ctx.fillText(day4Time, 705, 60);
+                ctx.fillText(times[3], 705, 60);
 
                 ctx.fillStyle = '#ffffff';
                 ctx.font='25px NotoSans';
-                ctx.fillText(day1TempMin, 365, 170);
+                ctx.fillText(tempMins[0], 365, 170);
 
                 ctx.fillStyle = '#ffffff';
                 ctx.font='25px NotoSans';
-                ctx.fillText(day1TempMax, 365, 210);
+                ctx.fillText(tempMaxes[0], 365, 210);
 
                 ctx.fillStyle = '#ffffff';
                 ctx.font='25px NotoSans';
-                ctx.fillText(day2TempMin, 475, 170);
+                ctx.fillText(tempMins[1], 475, 170);
 
                 ctx.fillStyle = '#ffffff';
                 ctx.font='25px NotoSans';
-                ctx.fillText(day2TempMax, 475, 210);
+                ctx.fillText(tempMaxes[1], 475, 210);
 
                 ctx.fillStyle = '#ffffff';
                 ctx.font='25px NotoSans';
-                ctx.fillText(day3TempMin, 595, 170);
+                ctx.fillText(tempMins[2], 595, 170);
 
                 ctx.fillStyle = '#ffffff';
                 ctx.font='25px NotoSans';
-                ctx.fillText(day3TempMax, 595, 210);
+                ctx.fillText(tempMaxes[2], 595, 210);
 
                 ctx.fillStyle = '#ffffff';
                 ctx.font='25px NotoSans';
-                ctx.fillText(day4TempMin, 705, 170);
+                ctx.fillText(tempMins[3], 705, 170);
 
                 ctx.fillStyle = '#ffffff';
                 ctx.font='25px NotoSans';
-                ctx.fillText(day4TempMax, 705, 210);
+                ctx.fillText(tempMaxes[3], 705, 210);
                 
-                ctx.drawImage(day1Icon, 330, 70, 60, 60);
-                ctx.drawImage(day2Icon, 440, 70, 60, 60);
-                ctx.drawImage(day3Icon, 560, 70, 60, 60);
-                ctx.drawImage(day3Icon, 670, 70, 60, 60);
+                ctx.drawImage(icons[0], 330, 70, 60, 60);
+                ctx.drawImage(icons[1], 440, 70, 60, 60);
+                ctx.drawImage(icons[2], 560, 70, 60, 60);
+                ctx.drawImage(icons[3], 670, 70, 60, 60);
                 ctx.drawImage(icon, 80, 40, 90, 90);
                 
                 return msg.channel.sendFile(canvas.toBuffer());
