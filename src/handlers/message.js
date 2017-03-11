@@ -2,7 +2,7 @@
  * Created by Will on 12/6/2016.
  */
 
-const commandFunctions = require('../util/command');
+const commandFunctions = require('../util/command/util');
 const rp = require('request-promise-native');
 const ValidationProcessor = require('../util/command/ValidationProcessor');
 const Handles = require('discord-handles');

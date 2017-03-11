@@ -17,14 +17,15 @@ class RethinkProvider {
         this.client = client;
     }
 
-    initializeGuilds() {
+    async initializeGuilds() {
         const out = [];
         for(const [, g] of this.client.guilds) out.push(this.initializeGuild(g));
         return Promise.all(out);
     }
 
-    initializeGuild(guild) {
+    async initializeGuild(guild) {
         const setting = new Settings(this, guild);
+        await setting.loadCache();
         storage.set(guild.id, setting);
     }
 }
