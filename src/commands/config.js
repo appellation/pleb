@@ -10,9 +10,13 @@ const allowedSettings = new Set([
 
 exports.func = async (res, msg, args) => {
     if(!allowedSettings.has(args[0].toLowerCase())) return;
-    const settings = storage.get(msg.guild.id);
-    const config = await settings.set(args[0], args.slice(1).join(' ') || null);
-    return res.success(`**${args[0]}** set to \`${config[args[0]]}\``);
+
+    const settings = storage.get(msg.guild.id),
+        key = args[0],
+        value = args.slice(1).join(' ') || null;
+
+    await settings.set(key, value);
+    return res.success(`**${key}** set to \`${value}\``);
 };
 
 exports.validator = val => val.ensureGuild() && val.ensureArgs();
