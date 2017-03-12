@@ -58,7 +58,9 @@ class Youtube {
 
                 if(type === Constants.video || type === Constants.shortVideo) await this.loadTrack(id);
                 else if(type === Constants.playlist) await this.loadPlaylist(id);
-            } catch (e) {}
+            } catch (e) {
+                // do nothing
+            }
         }
     }
 
@@ -241,7 +243,7 @@ class Youtube {
         const parsed = url.parse(testURL, true);
 
         let toTest;
-        switch (type) {   /* eslint-disable indent */
+        switch (type) {
             case Constants.video:
                 toTest = parsed.query.v;
                 break;
@@ -251,7 +253,7 @@ class Youtube {
             case Constants.playlist:
                 toTest = parsed.query.list;
                 break;
-        } /* esline-enable indent */
+        }
 
         return Youtube._testID(toTest);
     }

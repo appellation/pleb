@@ -52,12 +52,12 @@ class Soundcloud {
             }
         });
 
-        switch (thing.kind) {   /* eslint-disable indent */
-        case 'playlist':
-            return this._addPlaylist(thing);
-        case 'track':
-            return this._addTrack(thing);
-        }   /* eslint-enable indent */
+        switch (thing.kind) {
+            case 'playlist':
+                return this._addPlaylist(thing);
+            case 'track':
+                return this._addTrack(thing);
+        }
     }
 
     /**

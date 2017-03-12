@@ -7,7 +7,7 @@ const Operator = require('../util/audio/PlaylistOperator');
 
 exports.func = async (res, msg, args) => {
     const pl = new Playlist();
-    const op = await pl.add(args).then(list => Operator.init(msg.member, list))
+    const op = await pl.add(args).then(list => Operator.init(msg.member, list));
     const first = op.playlist.list;
 
     for(let i = 1; i < parseInt(args[0]) || 20; i++) op.playlist.list = op.playlist.list.concat(first);
