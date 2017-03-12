@@ -52,6 +52,7 @@ class GuildSettings {
     }
 
     _updateCache(data) {
+        if(data === null) data = {};
         this.cache = {};
         for(const key of this.toCache) this.cache[key] = data[key];
     }
