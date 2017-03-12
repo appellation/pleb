@@ -45,7 +45,7 @@ class PlaylistOperator extends EventEmitter {
          * @type {number}
          * @private
          */
-        this._vol = settings.get(this.guild.id).get ? settings.get(this.guild.id).get('volume') || 0.2 : 0.2;
+        this._vol = 0.2;
     }
 
     /**
