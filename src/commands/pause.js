@@ -4,5 +4,5 @@
 
 const storage = require('../util/storage/playlists');
 
-exports.func = (res, msg) => storage.get(msg.guild.id).pause();
+exports.func = async (res, msg) => storage.get(msg.guild.id).pause();
 exports.validator = val => val.ensurePlaylist();

@@ -30,15 +30,12 @@ class Soundcloud {
     /**
      * Add command arguments to the playlist.
      * @param {Array} args
-     * @return {Promise.<Playlist>}
+     * @return {Playlist}
      */
-    add(args) {
+    async add(args) {
         const urls = args.filter(e => Soundcloud.isViewURL(e));
-        const resolved = [];
-        for(const resource of urls) {
-            resolved.push(this._loadResource(resource));
-        }
-        return Promise.all(resolved).then(() => this.playlist);
+        for(const resource of urls) await this._loadResource(resource);
+        return this.playlist;
     }
 
     /**
@@ -47,20 +44,20 @@ class Soundcloud {
      * @return {Promise}
      * @private
      */
-    _loadResource(url) {
-        return rp.get({
+    async _loadResource(url) {
+        const thing = await rp.get({
             uri: 'resolve',
             qs: {
                 url
             }
-        }).then(thing => {
-            switch (thing.kind) {   /* eslint-disable indent */
-                case 'playlist':
-                    return this._addPlaylist(thing);
-                case 'track':
-                    return this._addTrack(thing);
-            }   /* eslint-enable indent */
         });
+
+        switch (thing.kind) {
+            case 'playlist':
+                return this._addPlaylist(thing);
+            case 'track':
+                return this._addTrack(thing);
+        }
     }
 
     /**

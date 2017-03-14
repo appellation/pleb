@@ -147,13 +147,12 @@ class Playlist {
     /**
      * Add command arguments to the playlist.  Order is not guaranteed.
      * @param args
-     * @return {Promise.<Playlist>}
+     * @return {Playlist}
      */
-    add(args) {
-        return Promise.all([
-            this.sc.add(args),
-            this.yt.add(args)
-        ]).then(() => this);
+    async add(args) {
+        await this.sc.add(args);
+        await this.yt.add(args);
+        return this;
     }
 
     /**

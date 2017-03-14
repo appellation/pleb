@@ -5,10 +5,11 @@
 const Operator = require('../util/audio/PlaylistOperator');
 const Playlist = require('../util/audio/Playlist');
 
-exports.func = (res, msg, args) => {
+exports.func = async (res, msg, args) => {
     const pl = new Playlist();
-    return pl.yt.loadPlaylistQuery(args.join(' ')).then(() => Operator.init(msg.member, pl))
-        .then(op => op.start(res));
+    await pl.yt.loadPlaylistQuery(args.join(' '));
+    const op = await Operator.init(msg.member, pl);
+    return op.start(res);
 };
 
 exports.validator = val => val.ensureCanPlay();

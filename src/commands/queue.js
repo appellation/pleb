@@ -4,7 +4,7 @@
 
 const storage = require('../util/storage/playlists');
 
-exports.func = (res, msg, args) => {
+exports.func = async (res, msg, args) => {
     const operator = storage.get(msg.guild.id);
 
     const perPage = 5;

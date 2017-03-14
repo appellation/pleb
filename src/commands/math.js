@@ -3,7 +3,7 @@
  */
 
 const math = require('mathjs');
-exports.func = (res, msg, args) => {
+exports.func = async (res, msg, args) => {
     let out;
     try {
         out = math.eval(args.join(' '));
@@ -11,7 +11,7 @@ exports.func = (res, msg, args) => {
         return res.error(`Error: \`${e.message}\``);
     }
 
-    res.success(`**${args.join(' ')}** = \`${out}\``);
+    return res.success(`**${args.join(' ')}** = \`${out}\``);
 };
 
 exports.validator = val => val.ensureArgs();

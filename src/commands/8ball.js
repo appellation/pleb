@@ -2,7 +2,7 @@
  * Created by Will on 11/5/2016.
  */
 
-exports.func = (res) => {
+exports.func = async (res) => {
     const responses = [
         'It is certain',
         'It is decidedly so',

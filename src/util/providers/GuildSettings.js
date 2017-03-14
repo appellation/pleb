@@ -12,24 +12,49 @@ class GuildSettings {
         this.provider = thonk;
         this.guild = guild;
         this._table = this.provider.r.table('guilds');
-        this.data = {};
+
+        // data that is cached
+        this.cache = {};
+
+        // data to be cached locally
+        this.toCache = ['prefix'];
     }
 
-    init() {
-        return this._table.insert({ id: this.guild.id }, { returnChanges: 'always' }).run().then(this._updateCache.bind(this));
+    /**
+     * Gets all guild settings.
+     * @return {*}
+     */
+    async getAll() {
+        return this._table.get(this.guild.id).run();
     }
 
-    get(key) {
-        return this.data[key];
+    async loadCache() {
+        this._updateCache(await this.getAll());
     }
 
-    set(key, value) {
-        return this._table.get(this.guild.id).update({ [key]: value }, { returnChanges: 'always' }).run().then(this._updateCache.bind(this));
+    getCached(key) {
+        return this.cache[key];
+    }
+
+    async get(key) {
+        if(key in this.cache) {
+            return this.cache[key];
+        } else {
+            const data = await this._table.get(this.guild.id)(key).run();
+            this.cache[key] = data;
+            return data;
+        }
+    }
+
+    async set(key, value) {
+        const inserted = await this._table.get(this.guild.id).update(Object.assign({ id: this.guild.id }, { [key]: value }), { returnChanges: 'always' }).run();
+        if(this.toCache.includes(key)) this._updateCache(inserted.changes[0].new_val);
     }
 
     _updateCache(data) {
-        this.data = data.changes[0].new_val;
-        return this.data;
+        if(data === null) data = {};
+        this.cache = {};
+        for(const key of this.toCache) this.cache[key] = data[key];
     }
 }
 

@@ -4,7 +4,7 @@
 
 const packageJSON = require('../../package.json');
 
-exports.func = (res, msg) => {
+exports.func = async (res, msg) => {
     return msg.author.sendMessage('**Bot Info:**\n' +
         'Version: `' + packageJSON.version + '`\n' +
         'Author: `Will Nelson <appellation@topkek.pw>`\n' +

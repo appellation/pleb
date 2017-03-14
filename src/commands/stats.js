@@ -6,7 +6,7 @@ const moment = require('moment');
 const request = require('request');
 const playlistStorage = require('../util/storage/playlists');
 
-exports.func = (res, msg) => {
+exports.func = async (res, msg) => {
     const client = msg.client;
 
     if(process.env.discord_pw) {
