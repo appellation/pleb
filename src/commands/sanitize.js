@@ -7,10 +7,13 @@ exports.func = async (res, msg, args) => {
     if(isNaN(num)) return;
 
     const collection = await msg.channel.fetchMessages();
-    let messages = collection.findAll('author', msg.client.user);
-    if(messages.length <= 1) return res.error('Unable to purge less than 2 messages.', msg.author);
-
-    const deleted = await msg.channel.bulkDelete(messages.slice(0, num));
+    let messages = collection.array().filter(m => m.author.id === msg.client.id).slice(0, num);
+    if(messages.length < 1) return res.error('Unable to find any messages to purge.');
+    if(messages.length === 1) {
+        await messages[0].delete();
+        return res.success('Purged last message.', msg.author);
+    }
+    const deleted = await msg.channel.bulkDelete(messages);
     return res.success(`Purged last ${deleted.size} messages.`, msg.author);
 };
 

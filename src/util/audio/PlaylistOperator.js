@@ -15,8 +15,6 @@ class PlaylistOperator {
      * @param {Playlist} [list]
      */
     constructor(conn, list) {
-        super();
-
         if(!conn) throw new Error('No voice connection');
 
         /**
