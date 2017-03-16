@@ -181,7 +181,6 @@ class PlaylistOperator {
      */
     _destroy() {
         this.vc.disconnect();
-        this.dispatcher.stream.destroy();
         storage.delete(this.guild.id);
     }
 }
