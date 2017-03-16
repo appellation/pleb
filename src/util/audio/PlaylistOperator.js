@@ -116,6 +116,7 @@ class PlaylistOperator {
      * @private
      */
     _end(reason) {
+        this.dispatcher = null;
         if(reason === 'temp') return;
         if(reason === 'terminal' || !this.playlist.hasNext()) return this._destroy();
         this.playlist.next();
