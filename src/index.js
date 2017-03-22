@@ -6,6 +6,15 @@ require('moment-duration-format');
 require('dotenv').config({ silent: true });
 const Discord = require('discord.js');
 const Raven = require('raven');
+const winston = require('winston');
+
+global.log = new (winston.Logger)({
+    transports: [
+        new (winston.transports.Console)(),
+        new (winston.transports.File)({ filename: 'pleb.log' })
+    ],
+    level: 'debug'
+});
 
 const client = new Discord.Client({
     messageCacheLifetime: 1800,
@@ -16,14 +25,18 @@ const client = new Discord.Client({
     ]
 });
 
+log.verbose('instantiated client');
+
 if(process.env.raven) {
     Raven.config(process.env.raven, {
         captureUnhandledRejections: true
     }).install();
 
     Raven.wrap(load)();
+    log.verbose('loaded functions with raven');
 } else {
     load();
+    log.verbose('loaded functions')
 }
 
 function load() {
@@ -34,12 +47,16 @@ function load() {
     const messageHandler = require('./handlers/message');
     const voiceStateUpdateHandler = require('./handlers/voiceStateUpdate');
 
+    log.verbose('loaded event handlers');
+
     client.once('ready', () => initHandler(client));
     client.on('ready', readyHandler);
     client.on('guildCreate', guildCreateHandler);
     client.on('guildMemberSpeaking', guildMemberSpeakingHandler);
     client.on('message', messageHandler);
     client.on('voiceStateUpdate', voiceStateUpdateHandler);
+
+    log.verbose('instantiated event listeners');
 
     client.login(process.env.discord);
 }

@@ -20,6 +20,10 @@ const command = new Handles({
     ValidationProcessor
 });
 
+command.on('commandStarted', command => {
+    log.debug('command started: %s', command.resolvedContent);
+});
+
 if(process.env.ifttt) {
     command.on('commandStarted', command => {
         const guild = command.message.guild;
@@ -39,6 +43,7 @@ command.on('invalidCommand', validator => {
 });
 
 command.on('commandFailed', ({ command, err }) => {
+    log.error('command failed: %s | %s', command, err);
     command.response.error(`\`${err}\`\nYou should never receive an error like this.  Bot owner has been notified.`);
 });
 
@@ -48,6 +53,7 @@ command.on('error', (err) => {
 });
 
 function message(message, body) {
+    log.silly('message received: %s#%s | %s', message.author.username, message.author.discriminator, message.cleanContent);
     command.handle(message, body);
 }
 
