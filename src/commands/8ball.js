@@ -26,7 +26,7 @@ exports.func = async (res) => {
         'Very doubtful'
     ];
 
-    return res.send('🎱 ' + responses.random());
+    return res.send('🎱 ' + Array.random(responses));
 };
 
 exports.validator = val => {

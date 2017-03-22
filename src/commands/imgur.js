@@ -51,7 +51,7 @@ exports.func = async (response, msg, args) => {
     } else {
 
         const res = await rp.get('gallery/hot/viral/0.json');
-        const rand = res.data.random();
+        const rand = Array.random(res.data);
         return response.success(`**${rand.title}** - ${rand.account_url}\n👁 ${numeral(rand.views).format('0,0')} - 🥅 ${numeral(rand.score).format('0,0')}\n${rand.link}`);
     }
 };
