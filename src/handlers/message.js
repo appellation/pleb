@@ -25,20 +25,6 @@ command.on('commandStarted', command => {
     log.debug('command started: %s', command.resolvedContent);
 });
 
-if(process.env.ifttt) {
-    command.on('commandStarted', command => {
-        const guild = command.message.guild;
-        rp.post('https://maker.ifttt.com/trigger/pleb/with/key/' + process.env.ifttt, {
-            body: {
-                value1: command.resolvedContent,
-                value2: command.message.author.id,
-                value3: guild ? guild.id : 'dm'
-            },
-            json: true
-        });
-    });
-}
-
 command.on('invalidCommand', validator => {
     validator.command.response.error(validator.reason);
 });
