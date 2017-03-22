@@ -16,4 +16,4 @@ exports.func = async (response, msg, args, handler) => { // eslint-disable-line 
     return (inspected.length <= 6000) ? msg.channel.sendCode('js', inspected, {split: true}) : response.error('that response would be too big');
 };
 
-exports.validator = val => val.applyValid(val.message.author.id === '116690352584392704', 'This command is owner-only.') && val.ensureArgs();
+exports.validator = val => val.ensureIsOwner() && val.ensureArgs();

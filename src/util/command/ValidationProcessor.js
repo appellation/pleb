@@ -103,6 +103,10 @@ class Validate extends ValidationProcessor {
     ensureIsNumber(argNum) {
         return this.applyValid(!isNaN(this.command.args[argNum]), ERRORS.ensureIsNumber(argNum));
     }
+
+    ensureIsOwner() {
+        return this.applyValid(this.command.message.author.id === '116690352584392704', 'This command is owner-only.');
+    }
 }
 
 Object.assign(Validate, ERRORS);
