@@ -6,15 +6,7 @@ require('moment-duration-format');
 require('dotenv').config({ silent: true });
 const Discord = require('discord.js');
 const Raven = require('raven');
-const winston = require('winston');
-
-global.log = new (winston.Logger)({
-    transports: [
-        new (winston.transports.Console)(),
-        new (winston.transports.File)({ filename: 'pleb.log' })
-    ],
-    level: 'debug'
-});
+const log = require('./util/log');
 
 const client = new Discord.Client({
     messageCacheLifetime: 1800,
@@ -36,7 +28,7 @@ if(process.env.raven) {
     log.verbose('loaded functions with raven');
 } else {
     load();
-    log.verbose('loaded functions')
+    log.verbose('loaded functions');
 }
 
 function load() {

@@ -6,6 +6,7 @@ const Playlist = require('./Playlist');
 const VC = require('./voiceConnection');
 const storage = require('../storage/playlists');
 const settings = require('../storage/settings');
+const log = require('../log');
 
 class PlaylistOperator {
 

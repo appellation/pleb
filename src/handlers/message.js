@@ -5,6 +5,7 @@
 const commandFunctions = require('../util/command/util');
 const rp = require('request-promise-native');
 const ValidationProcessor = require('../util/command/ValidationProcessor');
+const log = require('../util/log');
 const Handles = require('discord-handles');
 const Raven = require('raven');
 const path = require('path');
