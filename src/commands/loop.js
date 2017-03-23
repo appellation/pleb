@@ -15,3 +15,5 @@ exports.func = async (res, msg, args) => {
 };
 
 exports.validator = (val, cmd) => val.ensureGuild() && val.applyValid(isNaN(cmd.args[0]) ? true : parseInt(cmd.args[0]) < 50, 'Cannot loop more 50 or more times.');
+
+exports.disabled = true;
