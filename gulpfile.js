@@ -9,5 +9,5 @@ gulp.task('css', () => {
     gulp.src('site/src/styles/**')
         .pipe(sass())
         .pipe(cleanCSS())
-        .pipe(gulp.dest('site/public'));
+        .pipe(gulp.dest('site/bin'));
 });
