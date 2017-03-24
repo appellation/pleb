@@ -1,1 +1,25 @@
 extends templates/main
+
+block body
+    section.hero.is-primary.is-fullheight
+        div.hero-head
+            include templates/nav
+        div.hero-body
+            div.container
+                div.level
+                    div.level-item.has-text-left
+                        div
+                            span
+                                h1.title Pleb
+                            span
+                                h2.subtitle A very low class Discord bot.
+                            div.block
+                            div.block
+                                a.button.is-primary.is-outlined.is-inverted.is-large Login
+                                span &nbsp;
+                                a.button.is-primary.is-inverted.is-large
+                                    span.icon
+                                        i.fa.fa-envelope-o
+                                    span Invite
+                    div.level-item
+                        img.image.is-square(src='/logo.svg' alt='Pleb')
