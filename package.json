@@ -5,7 +5,9 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "test": "eslint src/**"
+    "test": "eslint src/**",
+    "site": "node site/index.js",
+    "build-site": "gulp"
   },
   "engines": {
     "node": "7.6.0",
@@ -23,6 +25,7 @@
     "discord.js": "git+https://github.com/hydrabolt/discord.js.git#master",
     "dotenv": "^2.0.0",
     "erlpack": "github:hammerandchisel/erlpack#master",
+    "express": "^4.15.2",
     "fluent-ffmpeg": "^2.1.0",
     "heapdump": "^0.3.7",
     "knuth-shuffle": "^1.0.1",
@@ -34,6 +37,7 @@
     "node-opus": "^0.2.4",
     "node-schedule": "^1.2.0",
     "numeral": "^1.5.3",
+    "pug": "^2.0.0-beta11",
     "raven": "^1.1.1",
     "request": "^2.74.0",
     "request-promise-native": "^1.0.3",
@@ -46,6 +50,9 @@
     "ytdl-core": "^0.7.17"
   },
   "devDependencies": {
-    "eslint": "^3.12.2"
+    "eslint": "^3.12.2",
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^3.0.4",
+    "gulp-sass": "^3.1.0"
   }
 }

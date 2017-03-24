@@ -1,8 +1,7 @@
 /.idea
 /node_modules
 /.env
-/data
-/secure
+/site/public
 npm-debug.log
 gauth.json
 pleb.log
