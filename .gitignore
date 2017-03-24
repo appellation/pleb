@@ -2,6 +2,7 @@
 /node_modules
 /.env
 /site/bin
+/site/.env
 npm-debug.log
 gauth.json
 pleb.log

@@ -1,9 +1,9 @@
-extends templates/head
+extends ../templates/head
 
 block body
     section.hero.is-primary.is-fullheight
         div.hero-head
-            include templates/nav
+            include ../templates/nav
         div.hero-body
             div.container
                 div.level
@@ -15,7 +15,7 @@ block body
                                 h2.subtitle.is-4 A very low class Discord bot.
                             div.block
                             div.block
-                                a.button.is-primary.is-outlined.is-inverted.is-large Login
+                                a.button.is-primary.is-outlined.is-inverted.is-large(href='/auth/login') Login
                                 span &nbsp;
                                 a.button.is-primary.is-inverted.is-large
                                     span.icon

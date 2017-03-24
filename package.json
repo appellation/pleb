@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/index.js",
     "test": "eslint src/**",
-    "site": "node site/index.js",
+    "site": "node --harmony site/index.js",
     "build-site": "gulp"
   },
   "engines": {
@@ -19,14 +19,17 @@
   "dependencies": {
     "@google-cloud/speech": "^0.3.0",
     "@google-cloud/storage": "^0.7.0",
+    "body-parser": "^1.17.1",
     "bulma": "^0.4.0",
     "canvas": "automattic/node-canvas",
+    "cookie-parser": "^1.4.3",
     "date.js": "^0.3.1",
     "discord-handles": "github:appellation/handles#master",
     "discord.js": "git+https://github.com/hydrabolt/discord.js.git#master",
     "dotenv": "^2.0.0",
     "erlpack": "github:hammerandchisel/erlpack#master",
     "express": "^4.15.2",
+    "express-session": "^1.15.1",
     "fluent-ffmpeg": "^2.1.0",
     "heapdump": "^0.3.7",
     "knuth-shuffle": "^1.0.1",
@@ -38,6 +41,8 @@
     "node-opus": "^0.2.4",
     "node-schedule": "^1.2.0",
     "numeral": "^1.5.3",
+    "passport": "^0.3.2",
+    "passport-oauth": "^1.0.0",
     "pug": "^2.0.0-beta11",
     "raven": "^1.1.1",
     "request": "^2.74.0",
