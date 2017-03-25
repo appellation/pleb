@@ -3,9 +3,14 @@
  */
 require('dotenv').config();
 const {ShardingManager} = require('discord.js');
+const site = require('../site/index');
 const path = require('path');
 
 const manager = new ShardingManager(path.join(__dirname, 'index.js'), {
     token: process.env.discord
 });
-manager.spawn();
+
+(async () => {
+    await manager.spawn();
+    site(manager);
+})();

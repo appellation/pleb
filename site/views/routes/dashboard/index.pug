@@ -1,8 +1,28 @@
 extends ../../templates/main
 
 block content
-    nav.panel
-        p.panel-heading Current guilds
-        each guild in guilds
-            div.panel-block
-                span #{guild.name}
+    section.section: div.container: div.columns
+        div.is-one-quarter: aside.menu
+            p.menu-label Guilds
+            ul.menu-list
+                each guild in guilds
+                    li.guildLink(data-id=guild.id): a #{guild.name}
+        div.column.is-offset-1
+            div.guildData
+
+block hidden
+    each guild in guilds
+        div(class='guild-' + guild.id)
+            h1.title.is-1 #{guild.name}
+        if(guildsData.has(guild.id))
+            - var guildData = guildsData.get(guild.id)
+            nav.level
+                div.level-item.has-text-centered
+                    div
+                        p.heading Members
+                        p.title=guildData.memberCount
+                div.level-item.has-text-centered
+                    div
+                        p.heading Region
+                        p.title=guildData.region
+

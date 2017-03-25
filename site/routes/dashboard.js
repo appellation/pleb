@@ -9,10 +9,17 @@ router.use((req, res, next) => {
 });
 
 router.get('/', async (req, res) => {
-    // console.log(req.user);
-    // console.log(req.app.get('discord'));
+    const shard = req.app.get('shard');
+    const guilds = await req.user.request.guilds();
+
+    const memberOf = await shard.broadcastEval(`this.guilds.filter(g => g.members.has('${req.user.id}'))`);
+    const guildsData = new Map();
+    for(const g of memberOf)
+        guildsData.set(g.id, g);
+
     res.render('dashboard/index', {
-        guilds: await req.user.request.guilds()
+        guilds,
+        guildsData
     });
 });
 
