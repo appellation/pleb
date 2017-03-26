@@ -7,7 +7,7 @@ module.exports = new class extends winston.Logger {
                 new (winston.transports.Console)(),
                 new (winston.transports.File)({ filename: 'pleb.log' })
             ],
-            level: 'debug'
+            level: 'verbose'
         });
     }
 };
