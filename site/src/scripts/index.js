@@ -1,7 +1,7 @@
 import './guilds';
 
 const handler = StripeCheckout.configure({
-    key: 'pk_test_rlCDbylenoAVfNfNuXylxRxG',
+    key: 'pk_live_XsEFFrxUdziMH8esaxrzKBfx',
     image: './logo.svg',
     locale: 'auto',
     token: token => {
