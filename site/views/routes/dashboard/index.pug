@@ -20,14 +20,20 @@ block hidden
     each guild in guilds
         div(class='guild-' + guild.id)
             h1.title.is-1 #{guild.name}
-            if(guildsData.has(guild.id))
-                - var guildData = guildsData.get(guild.id)
-                nav.level
-                    div.level-item.has-text-centered
+            section.section
+                if(guildsData.has(guild.id))
+                    - var guildData = guildsData.get(guild.id)
+                    nav.level
+                        div.level-item.has-text-centered
+                            div
+                                p.heading Members
+                                p.title=guildData.memberCount
+                        div.level-item.has-text-centered
+                            div
+                                p.heading Region
+                                p.title=guildData.region
+
+                else
+                    .level: .level-item
                         div
-                            p.heading Members
-                            p.title=guildData.memberCount
-                    div.level-item.has-text-centered
-                        div
-                            p.heading Region
-                            p.title=guildData.region
+                            a.button.is-primary.is-large(href=inviteLink + '&guild_id=' + guild.id, target='_blank') Add me!

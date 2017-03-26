@@ -30,6 +30,11 @@ module.exports = (shardManager) => {
     app.set('shard', shardManager);
 
     app.use((req, res, next) => {
+        res.locals.inviteLink = 'https://discordapp.com/oauth2/authorize?permissions=3197952&scope=bot&client_id=218227587166502923';
+        next();
+    });
+
+    app.use((req, res, next) => {
         if(req.session.error) {
             res.locals.error = req.session.error;
             req.session.error = null;
