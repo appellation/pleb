@@ -48,6 +48,7 @@
     "request-promise-native": "^1.0.3",
     "rethinkdb": "^2.3.3",
     "rethinkdbdash": "^2.3.27",
+    "stripe": "^4.16.0",
     "valid-url": "^1.0.9",
     "winston": "^2.3.1",
     "xkcd": "^1.1.1",

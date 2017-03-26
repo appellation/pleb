@@ -1,0 +1,14 @@
+div.modal.donate-modal
+    div.modal-background
+    div.modal-content
+        div.box
+            form.payment-form(action='/payments', method='post')
+                div.field
+                    label.label Amount
+                    p.control.has-icon
+                        input.input(type='number', name='amount', placeholder='10.00')
+                        span.icon.is-small: i.fa.fa-usd
+                div.field
+                    div.control
+                        button.button.donate-button.is-primary Donate
+    button.modal-close

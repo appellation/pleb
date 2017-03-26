@@ -13,6 +13,7 @@ module.exports = (shardManager) => {
     app.use(express.static(path.join(__dirname, 'assets')));
     app.use(cookieParser());
     app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({extended: true}));
     app.use(session({
         resave: false,
         saveUninitialized: false,
@@ -27,8 +28,23 @@ module.exports = (shardManager) => {
     app.set('shard', shardManager);
     app.disable('view cache');
 
+    app.use((req, res, next) => {
+        if(req.session.error) {
+            res.locals.error = req.session.error;
+            req.session.error = null;
+        }
+
+        if(req.session.success) {
+            res.locals.success = req.session.success;
+            req.session.success = null;
+        }
+
+        next();
+    });
+
     app.use('/auth', require('./routes/auth'));
     app.use('/dashboard', require('./routes/dashboard'));
+    app.use('/payments', require('./routes/payments'));
 
     app.get('/', (req, res) => {
         res.render('index');
