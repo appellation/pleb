@@ -2,6 +2,7 @@ const path = require('path');
 require('dotenv').config({ path: path.join(process.cwd(), 'site', '.env') });
 
 const express = require('express');
+const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session');
@@ -10,6 +11,7 @@ const passport = require('passport');
 const app = express();
 
 module.exports = (shardManager) => {
+    app.use(helmet());
     app.use(express.static(path.join(__dirname, 'bin')));
     app.use(express.static(path.join(__dirname, 'assets')));
     app.use(cookieParser());
@@ -26,15 +28,6 @@ module.exports = (shardManager) => {
     app.set('views', path.join(__dirname, 'views/routes'));
     app.set('view engine', 'pug');
     app.set('shard', shardManager);
-
-    app.use((req, res, next) => {
-        if(process.env.NODE_ENV !== 'development') {
-            if(req.secure) next();
-            else res.redirect(`https://${req.hostname}${req.url}`);
-        } else {
-            next();
-        }
-    });
 
     app.use((req, res, next) => {
         if(req.session.error) {

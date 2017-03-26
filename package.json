@@ -31,6 +31,7 @@
     "express-session": "^1.15.1",
     "fluent-ffmpeg": "^2.1.0",
     "heapdump": "^0.3.7",
+    "helmet": "^3.5.0",
     "knuth-shuffle": "^1.0.1",
     "mathjs": "^3.9.2",
     "moment": "^2.16.0",
