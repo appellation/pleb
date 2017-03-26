@@ -11,7 +11,12 @@ nav.nav
             span.nav-item.is-unselectable Pleb
         div.nav-right.nav-menu
             a.nav-item.donate-modal Donate
-            a.nav-item(href='/auth/login') Login
+
+            if(user)
+                a.nav-item(href='/dashboard') #{user.username}##{user.discriminator}
+            else
+                a.nav-item(href='/auth/login') Login
+
             span.nav-item
                 a.button.is-primary(href='https://discordapp.com/oauth2/authorize?permissions=3197952&scope=bot&client_id=218227587166502923', target='_blank')
                     span.icon

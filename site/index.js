@@ -39,6 +39,8 @@ module.exports = (shardManager) => {
             req.session.success = null;
         }
 
+        if(req.user) res.locals.user = req.user;
+
         next();
     });
 
