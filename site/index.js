@@ -51,7 +51,7 @@ module.exports = (shardManager) => {
         res.render('index');
     });
 
-    app.listen(process.env.NODE_ENV === 'development' ? 3000 : 80, () => {
+    app.listen(process.env.NODE_ENV === 'development' ? 3000 : 80, process.env.IP || '0.0.0.0', () => {
         console.log('listening on port 3000');
     });
 };
