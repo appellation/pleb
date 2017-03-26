@@ -13,7 +13,7 @@ const globby = require('globby');
 const cleanCSS = require('gulp-clean-css');
 const gutil = require('gulp-util');
 
-gulp.task('default', ['css']);
+gulp.task('default', ['css', 'js']);
 gulp.watch('site/src/styles/**/*', ['css']);
 gulp.watch('site/src/scripts/**/*', ['js']);
 
