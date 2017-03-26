@@ -13,6 +13,7 @@ const handler = StripeCheckout.configure({
 
 $(document).ready(() => {
     $('.donate-button').click(function(e) {
+        console.log(e);
         e.preventDefault();
 
         const amount = $('input[name=\'amount\']').val();
@@ -27,8 +28,9 @@ $(document).ready(() => {
         });
     });
 
-    $('a.donate-modal').click(() => {
-        $('div.donate-modal').addClass('is-active')
+    $('.donate-modal-link').click(() => {
+        console.log('clicked');
+        $('.donate-modal').addClass('is-active');
     });
 
     $('.modal-close').click(modalClose);

@@ -1,8 +1,3 @@
-include head
-
-block body
-    include nav
-    block content
-
-div(style='display:none')
-    block hidden
+extends blank
+block prepend body
+    include modules/nav
