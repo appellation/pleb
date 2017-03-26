@@ -36,9 +36,12 @@ block hidden
                     section.section
                         p.is-2.title Config
                         form
-                            .field
-                                label.label Prefix
-                                input.input(type='text')
+                            .columns
+                                .column.is-one-half: .field
+                                    label.label Prefix
+                                    input.input(type='text')
+                                .column.is-one-hald: .field
+                                    button.button(type='submit') Save
 
             else
                 section.section: .level: .level-item
