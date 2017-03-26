@@ -10,7 +10,7 @@ router.use((req, res, next) => {
 
 router.get('/', async (req, res) => {
     const shard = req.app.get('shard');
-    const guilds = await req.user.request.guilds();
+    const guilds = (await req.user.request.guilds()).filter(g => (g.permissions & (1 << 5)) === 1 << 5);
 
     const memberOf = (await shard.broadcastEval(`this.guilds.filter(g => g.members.has('${req.user.id}')).array()`)).reduce((p, c) => p.concat(c));
     const guildsData = new Map();
