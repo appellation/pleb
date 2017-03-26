@@ -28,6 +28,15 @@ module.exports = (shardManager) => {
     app.set('shard', shardManager);
 
     app.use((req, res, next) => {
+        if(process.env.NODE_ENV !== 'development') {
+            if(req.secure) next();
+            else res.redirect(`https://${req.hostname}${req.url}`);
+        } else {
+            next();
+        }
+    });
+
+    app.use((req, res, next) => {
         if(req.session.error) {
             res.locals.error = req.session.error;
             req.session.error = null;
