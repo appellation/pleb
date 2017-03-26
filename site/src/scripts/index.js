@@ -19,6 +19,7 @@ $(document).ready(() => {
         if(!amount) return e.preventDefault();
 
         modalClose.apply(this);
+
         handler.open({
             name: 'Will Nelson',
             amount: amount * 100,
@@ -32,9 +33,8 @@ $(document).ready(() => {
         $('div.donate-modal').addClass('is-active')
     });
 
-    $('.modal-close').click(function() {
-        modalClose.apply(this);
-    });
+    $('.modal-close').click(modalClose);
+    $('.modal-background').click(modalClose);
 
     function modalClose() {
         $(this).parents('.modal').removeClass('is-active');
