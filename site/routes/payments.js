@@ -2,7 +2,7 @@ const express = require('express');
 const stripe = require('stripe')(process.env.stripe_secret);
 const router = express.Router();
 
-router.post('/', (req, res) => {
+router.post('/stripe', (req, res) => {
     stripe.charges.create({
         amount: parseFloat(req.body.amount) * 100,
         currency: 'usd',
