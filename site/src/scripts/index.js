@@ -5,9 +5,7 @@ const handler = StripeCheckout.configure({
     image: './logo.svg',
     locale: 'auto',
     token: token => {
-        console.log(token);
         const form = $('form.payment-form');
-        console.log(form);
         form.append(`<input type='hidden' name='token' value='${token.id}'>`);
         form.submit();
     }
