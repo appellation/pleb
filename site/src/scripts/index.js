@@ -21,9 +21,9 @@ $(document).ready(() => {
         modalClose.apply(this);
 
         handler.open({
-            name: 'Will Nelson',
+            name: 'Salty House of Plebs',
             amount: amount * 100,
-            description: 'Donation'
+            description: 'Donation for Discord Pleb bot'
         });
     });
 

@@ -7,7 +7,7 @@ router.post('/stripe', (req, res) => {
         amount: parseFloat(req.body.amount) * 100,
         currency: 'usd',
         source: req.body.token,
-        description: 'Donation'
+        description: 'Donation for Discord pleb bot'
     }, (err, charge) => {
         if(err) req.session.error = err.message;
         else req.session.success = `The payment was a great success!  Thanks for the $${charge.amount / 100}!`;
