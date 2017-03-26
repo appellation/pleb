@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
+
 const app = express();
 
 module.exports = (shardManager) => {
@@ -22,11 +23,9 @@ module.exports = (shardManager) => {
     app.use(passport.initialize());
     app.use(passport.session());
 
-    process.env.NODE_ENV = 'development';
     app.set('views', path.join(__dirname, 'views/routes'));
     app.set('view engine', 'pug');
     app.set('shard', shardManager);
-    app.disable('view cache');
 
     app.use((req, res, next) => {
         if(req.session.error) {
@@ -52,7 +51,7 @@ module.exports = (shardManager) => {
         res.render('index');
     });
 
-    app.listen(3000, () => {
+    app.listen(process.env.NODE_ENV === 'development' ? 3000 : 80, () => {
         console.log('listening on port 3000');
     });
 };
