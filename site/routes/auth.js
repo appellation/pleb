@@ -14,7 +14,7 @@ passport.use('discord',
         authorizationURL: `${baseURL}/authorize`,
         clientID: process.env.client_id,
         clientSecret: process.env.client_secret,
-        callbackURL: 'http://localhost:3000/auth/callback'
+        callbackURL: `${process.env.HOSTNAME}/auth/callback`
     },
     async (accessToken, refreshToken, profile, done) => {
         const discord = new Discord(accessToken);
