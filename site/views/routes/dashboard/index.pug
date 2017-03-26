@@ -20,8 +20,8 @@ block hidden
     each guild in guilds
         div(class='guild-' + guild.id)
             h1.title.is-1 #{guild.name}
-            section.section
-                if(guildsData.has(guild.id))
+            if(guildsData.has(guild.id))
+                .box
                     - var guildData = guildsData.get(guild.id)
                     nav.level
                         div.level-item.has-text-centered
@@ -33,7 +33,14 @@ block hidden
                                 p.heading Region
                                 p.title=guildData.region
 
-                else
-                    .level: .level-item
-                        div
-                            a.button.is-primary.is-large(href=inviteLink + '&guild_id=' + guild.id, target='_blank') Add me!
+                    section.section
+                        p.is-2.title Config
+                        form
+                            .field
+                                label.label Prefix
+                                input.input(type='text')
+
+            else
+                section.section: .level: .level-item
+                    div
+                        a.button.is-primary.is-large(href=inviteLink + '&guild_id=' + guild.id, target='_blank') Add me!
