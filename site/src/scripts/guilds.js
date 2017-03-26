@@ -8,7 +8,7 @@ function handleGuildChange() {
 }
 
 function toggleActive() {
-    $(this).parent('ul').find('a.is-active').removeClass('is-active');
+    $(this).parents('.menu').find('a.is-active').removeClass('is-active');
     $(this).children('a').addClass('is-active');
 }
 

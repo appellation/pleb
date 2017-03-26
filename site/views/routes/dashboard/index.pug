@@ -3,10 +3,16 @@ extends ../../templates/main
 block content
     section.section: div.container: div.columns
         div.is-one-quarter: aside.menu
-            p.menu-label Guilds
+            p.menu-label Guilds with Pleb
             ul.menu-list
                 each guild in guilds
-                    li.guildLink(data-id=guild.id): a #{guild.name}
+                    if(guildsData.has(guild.id))
+                        li.guildLink(data-id=guild.id): a #{guild.name}
+            p.menu-label Guilds without Pleb
+            ul.menu-list
+                each guild in guilds
+                    if(!guildsData.has(guild.id))
+                        li.guildLink(data-id=guild.id): a #{guild.name}
         div.column.is-offset-1
             div.guildData
 
@@ -14,15 +20,16 @@ block hidden
     each guild in guilds
         div(class='guild-' + guild.id)
             h1.title.is-1 #{guild.name}
-        if(guildsData.has(guild.id))
-            - var guildData = guildsData.get(guild.id)
-            nav.level
-                div.level-item.has-text-centered
-                    div
-                        p.heading Members
-                        p.title=guildData.memberCount
-                div.level-item.has-text-centered
-                    div
-                        p.heading Region
-                        p.title=guildData.region
+            if(guildsData.has(guild.id))
+                - var guildData = guildsData.get(guild.id)
+                nav.level
+                    div.level-item.has-text-centered
+                        div
+                            p.heading Members
+                            p.title=guildData.memberCount
+                    div.level-item.has-text-centered
+                        div
+                            p.heading Region
+                            p.title=guildData.region
 
+            else
