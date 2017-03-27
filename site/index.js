@@ -5,57 +5,30 @@ const express = require('express');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const session = require('express-session');
 const passport = require('passport');
+const cors = require('cors');
 
 const app = express();
 
 module.exports = (shardManager) => {
     app.use(helmet());
+    app.use(cors());
     app.use(express.static(path.join(__dirname, 'bin')));
     app.use(express.static(path.join(__dirname, 'assets')));
     app.use(cookieParser());
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: true}));
-    app.use(session({
-        resave: false,
-        saveUninitialized: false,
-        secret: process.env.session_secret
-    }));
     app.use(passport.initialize());
-    app.use(passport.session());
 
-    app.set('views', path.join(__dirname, 'views/routes'));
     app.set('view engine', 'pug');
     app.set('shard', shardManager);
 
-    app.use((req, res, next) => {
-        res.locals.inviteLink = 'https://discordapp.com/oauth2/authorize?permissions=3197952&scope=bot&client_id=218227587166502923';
-        next();
-    });
-
-    app.use((req, res, next) => {
-        if(req.session.error) {
-            res.locals.error = req.session.error;
-            req.session.error = null;
-        }
-
-        if(req.session.success) {
-            res.locals.success = req.session.success;
-            req.session.success = null;
-        }
-
-        if(req.user) res.locals.user = req.user;
-
-        next();
-    });
-
-    app.use('/auth', require('./routes/auth'));
     app.use('/dashboard', require('./routes/dashboard'));
+    app.use('/auth', require('./routes/auth'));
     app.use('/payments', require('./routes/payments'));
 
     app.get('/', (req, res) => {
-        res.render('index');
+        res.send('hi');
     });
 
     app.listen(process.env.PORT || 3000, process.env.IP || '0.0.0.0', () => {

@@ -1,11 +1,9 @@
 const express = require('express');
 const passport = require('passport');
+const jwt = require('jsonwebtoken');
 const {OAuth2Strategy} = require('passport-oauth');
-const Discord = require('../util/Discord');
 
 const baseURL = 'https://discordapp.com/api/oauth2';
-const users = new Map();
-
 const router = express.Router();
 
 passport.use('discord',
@@ -17,32 +15,25 @@ passport.use('discord',
         callbackURL: `${process.env.HOSTNAME}/auth/callback`
     },
     async (accessToken, refreshToken, profile, done) => {
-        const discord = new Discord(accessToken);
-
         try {
-            done(null, Object.assign(await discord.profile(), { request: discord }));
+            done(null, { accessToken, refreshToken });
         } catch (e) {
             done(e);
         }
     })
 );
 
-passport.serializeUser((user, done) => {
-    users.set(user.id, user);
-    done(null, user.id);
-});
-
-passport.deserializeUser((id, done) => {
-    done(null, users.get(id));
-});
-
 router.get('/login', passport.authenticate('discord', {
     scope: ['guilds', 'identify']
 }));
 
-router.get('/callback', passport.authenticate('discord', {
-    successRedirect: '/dashboard',
-    failureRedirect: '/'
-}));
+router.get('/callback', passport.authenticate('discord', { session: false }), (req, res) => {
+    const token = jwt.sign({
+        token: req.user.accessToken,
+        refresh: req.user.refreshToken
+    }, process.env.jwt_secret);
+
+    res.json({ token });
+});
 
 module.exports = router;

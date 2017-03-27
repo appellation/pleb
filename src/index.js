@@ -35,7 +35,6 @@ function load() {
     const initHandler = require('./handlers/init');
     const readyHandler = require('./handlers/ready');
     const guildCreateHandler = require('./handlers/guildCreate');
-    const guildMemberSpeakingHandler = require('./handlers/guildMemberSpeaking');
     const messageHandler = require('./handlers/message');
     const voiceStateUpdateHandler = require('./handlers/voiceStateUpdate');
 
@@ -44,7 +43,6 @@ function load() {
     client.once('ready', () => initHandler(client));
     client.on('ready', readyHandler);
     client.on('guildCreate', guildCreateHandler);
-    client.on('guildMemberSpeaking', guildMemberSpeakingHandler);
     client.on('message', messageHandler);
     client.on('voiceStateUpdate', voiceStateUpdateHandler);
 
