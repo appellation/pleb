@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const cors = require('cors');
+const redis = require('redis');
 
 const app = express();
 
@@ -22,6 +23,7 @@ module.exports = (shardManager) => {
 
     app.set('view engine', 'pug');
     app.set('shard', shardManager);
+    app.set('redis', redis.createClient());
 
     app.use('/dashboard', require('./routes/dashboard'));
     app.use('/auth', require('./routes/auth'));
