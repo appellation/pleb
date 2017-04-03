@@ -85,7 +85,7 @@ class Validate extends ValidationProcessor {
     }
 
     ensureNSFW() {
-        return this.applyValid(!!(this.message.channel.type === 'dm' || this.message.member.roles.find(role => role.name.toLowerCase() === 'nsfw') || this.message.channel.name.toLowerCase() === 'nsfw'), ERRORS.ensureNSFW);
+        return this.applyValid(!!(this.message.channel.type === 'dm' || this.message.member.roles.find(role => role.name.toLowerCase() === 'nsfw') || this.message.channel.name.toLowerCase().includes('nsfw')), ERRORS.ensureNSFW);
     }
 
     ensureCanPlay() {
