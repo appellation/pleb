@@ -28,7 +28,7 @@ class SQLProvider extends Base {
         const sync = [];
         for(const m in this.models)
             if(this.models.hasOwnProperty(m))
-                sync.push(this.models[m].sync({ force: true }));
+                sync.push(this.models[m].sync());
         await Promise.all(sync);
     }
 
