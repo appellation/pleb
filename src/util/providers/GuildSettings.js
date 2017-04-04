@@ -5,13 +5,12 @@
 class GuildSettings {
 
     /**
-     * @param {RethinkProvider} thonk
+     * @param {BaseProvider} provider
      * @param {Guild} guild
      */
-    constructor(thonk, guild) {
-        this.provider = thonk;
+    constructor(provider, guild) {
+        this.provider = provider;
         this.guild = guild;
-        this._table = this.provider.r.table('guilds');
 
         // data that is cached
         this.cache = {};
@@ -25,33 +24,34 @@ class GuildSettings {
      * @return {*}
      */
     async getAll() {
-        return this._table.get(this.guild.id).run();
+        const data = await this.provider.getGuild(this.guild.id);
+        this.updateCache(data);
+        return data;
     }
 
     async loadCache() {
-        this._updateCache(await this.getAll());
+        await this.getAll();
     }
 
     getCached(key) {
         return this.cache[key];
     }
 
-    async get(key) {
-        if(key in this.cache) {
+    async get(key, force = false) {
+        if(key in this.cache && !force) {
             return this.cache[key];
         } else {
-            const data = await this._table.get(this.guild.id)(key).run();
-            this.cache[key] = data;
-            return data;
+            return (await this.getAll())[key];
         }
     }
 
     async set(key, value) {
-        const inserted = await this._table.get(this.guild.id).update(Object.assign({ id: this.guild.id }, { [key]: value }), { returnChanges: 'always' }).run();
-        if(this.toCache.includes(key)) this._updateCache(inserted.changes[0].new_val);
+        const inserted = await this.provider.updateGuild(this.guild.id, { [key]: value });
+        this.updateCache(inserted);
+        return inserted;
     }
 
-    _updateCache(data) {
+    updateCache(data = {}) {
         if(data === null) data = {};
         this.cache = {};
         for(const key of this.toCache) this.cache[key] = data[key];

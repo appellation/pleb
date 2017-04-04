@@ -1,6 +1,6 @@
 const express = require('express');
-const passport = require('passport');
-const Discord = require('../util/Discord');
+// const passport = require('passport');
+// const Discord = require('../util/Discord');
 const router = express.Router();
 
 router.use((req, res, next) => {
