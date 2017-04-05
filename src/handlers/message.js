@@ -4,7 +4,6 @@
 
 const commandFunctions = require('../util/command/util');
 const ValidationProcessor = require('../util/command/ValidationProcessor');
-const log = require('../util/log');
 const Handles = require('discord-handles');
 const Raven = require('raven');
 const path = require('path');
@@ -21,7 +20,7 @@ const command = new Handles({
 });
 
 command.on('commandStarted', command => {
-    log.debug('command started: %s', command.resolvedContent);
+    command.message.client.log.debug('command started: %s', command.resolvedContent);
 });
 
 command.on('invalidCommand', validator => {
@@ -29,7 +28,7 @@ command.on('invalidCommand', validator => {
 });
 
 command.on('commandFailed', ({ command, err }) => {
-    log.error('command failed: %s | %s', command, err);
+    command.message.client.log.error('command failed: %s | %s', command, err);
     command.response.error(`\`${err}\`\nYou should never receive an error like this.  Bot owner has been notified.`);
 });
 
@@ -39,7 +38,7 @@ command.on('error', (err) => {
 });
 
 function message(message, body) {
-    log.silly('message received: %s#%s | %s', message.author.username, message.author.discriminator, message.cleanContent);
+    message.client.log.silly('message received: %s#%s | %s', message.author.username, message.author.discriminator, message.cleanContent);
     command.handle(message, body);
 }
 

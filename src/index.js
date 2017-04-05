@@ -6,47 +6,56 @@ require('moment-duration-format');
 require('dotenv').config({ silent: true });
 const Discord = require('discord.js');
 const Raven = require('raven');
-const log = require('./util/log');
+const Log = require('./util/log');
 
-const client = new Discord.Client({
-    messageCacheLifetime: 1800,
-    messageSweepInterval: 900,
-    disabledEvents: [
-        'TYPING_START',
-        'TYPING_STOP',
-    ]
-});
+new class extends Discord.Client {
+    constructor() {
+        super({
+            messageCacheLifetime: 1800,
+            messageSweepInterval: 900,
+            disabledEvents: [
+                'TYPING_START',
+                'TYPING_STOP',
+            ]
+        });
 
-log.verbose('instantiated client');
+        this.log = new Log(this);
 
-if(process.env.raven) {
-    Raven.config(process.env.raven, {
-        captureUnhandledRejections: true
-    }).install();
+        this.log.verbose('instantiated client');
 
-    Raven.wrap(load)();
-    log.verbose('loaded functions with raven');
-} else {
-    load();
-    log.verbose('loaded functions');
-}
+        if(process.env.raven) {
+            Raven.config(process.env.raven, {
+                captureUnhandledRejections: true
+            }).install();
 
-function load() {
-    const initHandler = require('./handlers/init');
-    const readyHandler = require('./handlers/ready');
-    const guildCreateHandler = require('./handlers/guildCreate');
-    const messageHandler = require('./handlers/message');
-    const voiceStateUpdateHandler = require('./handlers/voiceStateUpdate');
+            Raven.wrap(this._load)();
+            this.log.verbose('loaded functions with raven');
+        } else {
+            this._load();
+            this.log.verbose('loaded functions');
+        }
+    }
 
-    log.verbose('loaded event handlers');
+    _load() {
+        const initHandler = require('./handlers/init');
+        const readyHandler = require('./handlers/ready');
+        const disconnectHandler = require('./handlers/disconnect');
+        const guildCreateHandler = require('./handlers/guildCreate');
+        const messageHandler = require('./handlers/message');
+        const voiceStateUpdateHandler = require('./handlers/voiceStateUpdate');
 
-    client.once('ready', () => initHandler(client));
-    client.on('ready', readyHandler);
-    client.on('guildCreate', guildCreateHandler);
-    client.on('message', messageHandler);
-    client.on('voiceStateUpdate', voiceStateUpdateHandler);
+        this.log.verbose('loaded event handlers');
 
-    log.verbose('instantiated event listeners');
+        this.once('ready', () => initHandler(this));
+        this.on('ready', readyHandler);
+        this.on('disconnect', close => disconnectHandler(this, close));
+        this.on('guildCreate', guildCreateHandler);
+        this.on('message', messageHandler);
+        this.on('voiceStateUpdate', voiceStateUpdateHandler);
+        this.on('error', Raven.captureException);
 
-    client.login(process.env.discord);
-}
+        this.log.verbose('instantiated event listeners');
+
+        this.login(process.env.discord);
+    }
+};
