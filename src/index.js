@@ -52,7 +52,7 @@ new class extends Discord.Client {
         this.on('guildCreate', guildCreateHandler);
         this.on('message', messageHandler);
         this.on('voiceStateUpdate', voiceStateUpdateHandler);
-        this.on('error', Raven.captureException);
+        this.on('error', e => Raven.captureException(e));
 
         this.log.verbose('instantiated event listeners');
 

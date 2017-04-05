@@ -4,7 +4,7 @@
 
 function guildCreate(guild) {
     guild.defaultChannel.sendMessage('Sup.  Try `@Pleb help`.').catch(() => null);
-    guild.client.provider.initializeGuild(guild);
+    guild.client.provider.constructor.initializeGuild(guild);
 }
 
 module.exports = guildCreate;
