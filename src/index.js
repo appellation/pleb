@@ -28,7 +28,7 @@ new class extends Discord.Client {
                 captureUnhandledRejections: true
             }).install();
 
-            Raven.wrap(this._load)();
+            Raven.wrap(this._load.bind(this))();
             this.log.verbose('loaded functions with raven');
         } else {
             this._load();
