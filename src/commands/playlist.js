@@ -7,6 +7,7 @@ const Playlist = require('../util/audio/Playlist');
 
 exports.func = async (res, msg, args) => {
     const pl = new Playlist();
+    await res.send('adding playlist...');
     await pl.yt.loadPlaylistQuery(args.join(' '));
     const op = await Operator.init(msg.member, pl);
     return op.start(res);
