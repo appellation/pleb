@@ -10,7 +10,7 @@ module.exports = async client => {
     await provider.initializeGuilds(client);
 
     client.log.hook({
-        title: `Initialized shard ${client.shard.id}`
+        title: 'Initialized'
     });
 
     client.log.verbose('initialized guilds');

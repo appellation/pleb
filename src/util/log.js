@@ -6,7 +6,6 @@ module.exports = class extends winston.Logger {
     constructor(client) {
         super({
             transports: [
-                new (winston.transports.Console)(),
                 new (winston.transports.File)({ filename: 'pleb.log' })
             ],
             level: 'verbose'
@@ -23,6 +22,7 @@ module.exports = class extends winston.Logger {
 
     hook(data = {}) {
         const embed = new RichEmbed(data)
+            .setFooter(`Shard ${this.client.shard.id}`)
             .setTimestamp();
         return this.webhook({
             body: {
