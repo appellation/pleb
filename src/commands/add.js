@@ -8,11 +8,8 @@ exports.func = async (res, msg, args) => {
     const next = args[0] === 'next';
     if(!storage.has(msg.guild.id)) return res.error('no playlist to add to');
 
-    const operator = await storage.get(msg.guild.id).add(next ? args.slice(1) : args);
-    const pl = operator.playlist;
-
-    if(next) pl.list.splice(pl.pos, 0, pl.list.pop());
-    return res.success(`added \`${next ? pl.getNext().name : pl.getLast().name}\``);
+    const added = await storage.get(msg.guild.id).playlist.add(next ? args.slice(1) : args);
+    return res.success(`added ${added.length} song${added.length === 1 ? '' : 's'}`);
 };
 
 exports.validator = val => {

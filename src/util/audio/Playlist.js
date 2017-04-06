@@ -9,12 +9,11 @@ const shuffle = require('knuth-shuffle').knuthShuffle;
 
 /**
  * @typedef {Object} Song
- * @property {String} name
- * @property {String} url - a display URL
- * @property {String} type
- * @property {Number|String} duration
- * @property {String} thumbnail
- * @property {String} author
+ * @property {String} type Soundcloud or YouTube
+ * @property {Function} stream The audio stream.
+ * @property {String} title
+ * @property {String} trackID
+ * @property {String} playlistID
  */
 
 class Playlist {
@@ -150,19 +149,19 @@ class Playlist {
      * @return {Playlist}
      */
     async add(args) {
-        await this.sc.add(args);
-        await this.yt.add(args);
-        return this;
+        const added =
+            (await this.sc.add(args))
+            .concat(await this.yt.add(args));
+        this.addSongs(added);
+        return added;
     }
 
     /**
      * Add a song to the playlist.
-     * @param {Song} song
-     * @returns {Song}
+     * @param {Array<Song>} song
      */
-    addSong(song) {
-        this.list.push(song);
-        return song;
+    addSongs(songs) {
+        for(const s of songs) if(s) this.list.push(s);
     }
 }
 

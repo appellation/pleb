@@ -44,8 +44,6 @@ class PlaylistOperator {
          * @private
          */
         this._vol = 0.2;
-
-        this.client.log.silly('constructing new playlist');
     }
 
     /**
@@ -55,9 +53,7 @@ class PlaylistOperator {
      * @return {PlaylistOperator}
      */
     static async init(member, list) {
-        member.client.log.debug('initializing new playlist');
         if(storage.has(member.guild.id)) {
-            member.client.log.silly('found existing playlist: stopping it');
             const op = storage.get(member.guild.id);
             op.stop();
             op.playlist = list || new Playlist();
@@ -79,22 +75,25 @@ class PlaylistOperator {
     static async startNew(args, res, member) {
         const pl = new Playlist();
 
-        member.client.log.debug('starting new playlist from args');
-
-        let op;
+        let added;
         try {
-            const list = await pl.add(args);
-
-            op = await PlaylistOperator.init(member, list);
-            member.client.log.debug('playlist started');
+            added = await pl.add(args);
         } catch (err) {
-            member.client.log.error('playlist failed to start: %s', err);
             if(err.response && err.response.statusCode === 403)
                 res.error('Unauthorized to load all or part of that resource.  It likely contains private content.');
             else res.error(err.message || err);
             return;
         }
 
+        if(added.length < 1) {
+            return res.error('Unable to find that resource.');
+        } else if(added.length === 1) {
+            res.success(`added \`${added[0].title}\` to playlist`);
+        } else {
+            res.success(`added **${added.length}** songs to playlist`);
+        }
+
+        const op = await PlaylistOperator.init(member, pl);
         op.start(res);
     }
 
@@ -102,14 +101,13 @@ class PlaylistOperator {
      * Start the playlist.
      */
     start(res) {
-        this.client.log.debug('attempting to play playlist');
         if(this.playlist.length) {
             this._start();
-            this.client.log.debug('playlist now playing');
-            res.success(`now playing \`${this.playlist.current.name}\``);
+            res.success(`now playing \`${this.playlist.current.title}\``);
         } else {
-            res.error('Nothing currently in playlist.');
+            res.error('Nothing currently in playlist. This is unintended, but we don\'t know why.');
         }
+        res.responseMessage = null;
     }
 
     /**
@@ -117,14 +115,12 @@ class PlaylistOperator {
      * @private
      */
     _start() {
-        this.client.log.debug('starting a song');
         this.stop('temp');
         if(!this.playlist.current) return;
 
         const stream = this.playlist.current.stream();
         this.dispatcher = this.vc.playStream(stream, { volume: this._vol });
         this.dispatcher.once('end', this._end.bind(this));
-        this.client.log.debug('dispatcher initialized and streaming');
     }
 
     /**
@@ -133,10 +129,8 @@ class PlaylistOperator {
      * @private
      */
     _end(reason) {
-        this.client.log.debug('dispatcher ended');
         this.dispatcher.stream.destroy();
         this.dispatcher = null;
-        this.client.log.debug('dispatcher stream destroyed; dispatcher unset');
         if(reason === 'temp') return;
         if(reason === 'terminal' || !this.playlist.hasNext()) return this._destroy();
         this.playlist.next();
@@ -147,7 +141,6 @@ class PlaylistOperator {
      * Stop the playlist.
      */
     stop(reason = 'temp') {
-        this.client.log.debug(`stop called: ${reason}`);
         if(this.dispatcher) this.dispatcher.end(reason);
     }
 
@@ -155,7 +148,6 @@ class PlaylistOperator {
      * Pause the playlist.
      */
     pause() {
-        this.client.log.debug('pausing');
         if(this.dispatcher && this.dispatcher.speaking) this.dispatcher.pause();
     }
 
@@ -173,7 +165,6 @@ class PlaylistOperator {
      * @return {PlaylistOperator}
      */
     async add(args) {
-        this.client.log.debug('adding args to playlist');
         await this.playlist.add(args);
         return this;
     }
@@ -197,7 +188,6 @@ class PlaylistOperator {
     }
 
     destroy() {
-        this.client.log.debug('called for manual playlist destruction');
         this.stop('terminal');
     }
 
@@ -205,10 +195,8 @@ class PlaylistOperator {
      * Destroy this playlist.
      */
     _destroy() {
-        this.client.log.debug('destroying playlist');
         this.vc.disconnect();
         storage.delete(this.guild.id);
-        this.client.log.debug('disconnected and deleted playlist');
     }
 }
 

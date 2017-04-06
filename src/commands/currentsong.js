@@ -30,6 +30,8 @@ exports.func = async (res, msg) => {
 
 exports.validator = val => val.ensurePlaylist();
 
+exports.disabled = true;
+
 exports.triggers = [
     'current',
     'currentsong'

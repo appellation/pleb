@@ -14,7 +14,7 @@ exports.func = async (res, msg, args) => {
     const list = operator.playlist.list;
     const part = list.slice(pos, pos + perPage);
     return res.send(part.reduce((prev, song, index) => {
-        return `${prev}**${index + pos + 1}** of ${list.length} - \`${song.name}\`\n`;
+        return `${prev}**${index + pos + 1}** of ${list.length} - \`${song.title}\`\n`;
     },
         args[0] ? `Page **${Math.floor(pos/perPage) + 1}** of **${Math.ceil(list.length/perPage)}**\n` : '⭐ '
     ));

@@ -12,36 +12,24 @@ const rp = require('request-promise-native').defaults({
     },
     json: true
 });
-const moment = require('moment');
 
 class Soundcloud {
 
     /**
-     * @param {Playlist} list
-     */
-    constructor(list) {
-
-        /**
-         * @type {Playlist}
-         */
-        this.playlist = list;
-    }
-
-    /**
      * Add command arguments to the playlist.
      * @param {Array} args
-     * @return {Playlist}
+     * @return {Promise<Array<?Song>>}
      */
     async add(args) {
         const urls = args.filter(e => Soundcloud.isViewURL(e));
-        for(const resource of urls) await this._loadResource(resource);
-        return this.playlist;
+        const loaded = await Promise.all(urls.map(r => this._loadResource(r)));
+        return loaded.reduce((p, c) => p.concat(c), []);
     }
 
     /**
      * Load a SoundCloud resource.
      * @param url
-     * @return {Promise}
+     * @return {Promise<Array<?Song>>}
      * @private
      */
     async _loadResource(url) {
@@ -56,40 +44,33 @@ class Soundcloud {
             case 'playlist':
                 return this._addPlaylist(thing);
             case 'track':
-                return this._addTrack(thing);
+                return [this._addTrack(thing)];
+            default:
+                return [];
         }
     }
 
     /**
      * Add a SoundCloud playlist resource to the playlist.
      * @param resource
+     * @return {Array<?Song>}
      * @private
      */
     _addPlaylist(resource) {
-        this.playlist.info = {
-            title: resource.title,
-            description: resource.description,
-            thumbnail: resource.artwork_url,
-            displayURL: resource.permalink_url,
-            author: resource.user.username
-        };
-
-        for(const track of resource.tracks) this._addTrack(track);
+        return resource.tracks.map(t => this._addTrack(t));
     }
 
     /**
      * Add a SoundCloud track resource to the playlist.
      * @param track
+     * @return {?Song}
      * @private
      */
-    _addTrack(track) {
-        if(!track.streamable) return;
-        this.playlist.addSong({
-            name: track.title,
-            url: track.permalink_url,
+    _addTrack(track, playlistID) {
+        if(!track.streamable) return null;
+
+        return {
             type: 'soundcloud',
-            duration: moment.duration(track.duration).format('hh[h] mm[m] ss[s]'),
-            thumbnail: track.artwork_url,
             stream: () => {
                 return request.get({
                     uri: track.stream_url,
@@ -98,8 +79,10 @@ class Soundcloud {
                     encoding: null
                 });
             },
-            author: track.user.username
-        });
+            title: track.title,
+            playlistID,
+            trackID: track.id
+        };
     }
 
     /**
