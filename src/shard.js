@@ -10,7 +10,4 @@ const manager = new ShardingManager(path.join(__dirname, 'index.js'), {
     token: process.env.discord
 });
 
-(async () => {
-    await manager.spawn();
-    // site(manager);
-})();
+manager.spawn();
