@@ -5,8 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/shard.js",
-    "test": "eslint src/**",
-    "build-site": "gulp"
+    "test": "eslint src/**"
   },
   "engines": {
     "node": "7.6.0",
