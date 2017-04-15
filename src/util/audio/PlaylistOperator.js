@@ -98,7 +98,6 @@ class PlaylistOperator {
         } else {
             res.error('Nothing currently in playlist. This is unintended, but we don\'t know why.');
         }
-        res.responseMessage = null;
     }
 
     /**
