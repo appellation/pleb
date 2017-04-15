@@ -120,7 +120,7 @@ class PlaylistOperator {
      */
     _end(reason) {
         this.client.log.verbose(`ending with reason: ${reason}`);
-        this.dispatcher.stream.destroy();
+        // this.dispatcher.stream.destroy();
         this.dispatcher = null;
         if(reason === 'temp') return;
         if(reason === 'terminal' || !this.playlist.hasNext()) return this._destroy();
