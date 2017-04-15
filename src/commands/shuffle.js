@@ -9,7 +9,7 @@ const storage = require('../util/storage/playlists');
 exports.func = async (res, msg, args) => {
     if(args.length > 0) {
         const pl = new Playlist();
-        const operator = await pl.add(args).then(() => Operator.init(msg.member, pl));
+        const operator = await pl.add(res, args).then(() => Operator.init(msg.member, pl));
         // console.log(operator.playlist);
         operator.playlist.shuffle();
         return operator.start(res);
