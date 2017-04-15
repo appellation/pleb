@@ -118,7 +118,7 @@ class PlaylistOperator {
      * @param reason
      * @private
      */
-    _end(reason) {
+    _end(reason = 'temp') {
         this.client.log.verbose(`ending with reason: ${reason}`);
         // this.dispatcher.stream.destroy();
         this.dispatcher = null;
