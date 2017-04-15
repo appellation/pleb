@@ -152,7 +152,7 @@ class Playlist {
         const added =
             (await this.sc.add(args))
             .concat(await this.yt.add(args));
-        this.addSongs(added);
+        this.addSongs(added.filter(e => e));
         return added;
     }
 
