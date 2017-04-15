@@ -93,13 +93,13 @@ class Youtube {
             }
         });
 
-        songs = songs.concat(data.items.map(i => this._formatSong(i)));
+        songs.push(...data.items.map(i => this._formatSong(i)));
         if(data.nextPageToken) return this.loadPlaylist(id, data.nextPageToken, songs);
         return songs;
     }
 
     _formatSong(resource, playlistID) {
-        const id = resource.id.videoId || resource.id;
+        const id = Youtube._fetchID(resource);
         return {
             type: 'youtube',
             trackID: id,
@@ -112,6 +112,23 @@ class Youtube {
                 });
             }
         };
+    }
+
+
+    /**
+     * Fetch the video ID of a YouTube resource.
+     * @param {Object} resource
+     * @return {String}
+     */
+    static _fetchID(resource) {
+        switch(resource.kind) {
+            case 'youtube#playlistItem':
+                return resource.snippet.resourceId.videoId;
+            case 'youtube#searchResult':
+                return resource.id.videoId;
+            default:
+                return resource.id;
+        }
     }
 
     /**
