@@ -42,7 +42,7 @@ new class extends Discord.Client {
         const disconnectHandler = require('./handlers/disconnect');
         const guildCreateHandler = require('./handlers/guildCreate');
         const messageHandler = require('./handlers/message');
-        const voiceStateUpdateHandler = require('./handlers/voiceStateUpdate');
+        const guildDeleteHandler = require('./handlers/guildDelete');
 
         this.log.verbose('loaded event handlers');
 
@@ -51,7 +51,7 @@ new class extends Discord.Client {
         this.on('disconnect', close => disconnectHandler(this, close));
         this.on('guildCreate', guildCreateHandler);
         this.on('message', messageHandler);
-        this.on('voiceStateUpdate', voiceStateUpdateHandler);
+        this.on('guildDeleteHandler', guildDeleteHandler);
         this.on('error', e => Raven.captureException(e));
 
         this.log.verbose('instantiated event listeners');
