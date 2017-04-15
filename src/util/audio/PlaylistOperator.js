@@ -120,6 +120,7 @@ class PlaylistOperator {
      * @private
      */
     _end(reason) {
+        this.client.log('verbose', `ending with reason: ${reason}`);
         this.dispatcher.stream.destroy();
         this.dispatcher = null;
         if(reason === 'temp') return;
@@ -146,7 +147,6 @@ class PlaylistOperator {
      * Resume the playlist.
      */
     resume() {
-        this.client.log.debug('resuming');
         if(this.dispatcher && !this.dispatcher.speaking) this.dispatcher.resume();
     }
 
