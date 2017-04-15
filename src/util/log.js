@@ -6,7 +6,8 @@ module.exports = class extends winston.Logger {
     constructor(client) {
         super({
             transports: [
-                new (winston.transports.File)({ filename: 'pleb.log' })
+                new (winston.transports.File)({ filename: 'pleb.log' }),
+                new (winston.transports.Console)(),
             ],
             level: 'verbose'
         });
