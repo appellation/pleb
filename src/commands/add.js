@@ -8,8 +8,7 @@ exports.func = async (res, msg, args) => {
     const next = args[0] === 'next';
     if(!storage.has(msg.guild.id)) return res.error('no playlist to add to');
 
-    const added = await storage.get(msg.guild.id).playlist.add(next ? args.slice(1) : args);
-    return res.success(`added ${added.length} song${added.length === 1 ? '' : 's'}`);
+    return storage.get(msg.guild.id).playlist.add(res, next ? args.slice(1) : args);
 };
 
 exports.validator = val => {

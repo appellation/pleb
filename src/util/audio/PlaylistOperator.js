@@ -75,22 +75,13 @@ class PlaylistOperator {
     static async startNew(args, res, member) {
         const pl = new Playlist();
 
-        let added;
         try {
-            added = await pl.add(args);
+            await pl.add(res, args);
         } catch (err) {
             if(err.response && err.response.statusCode === 403)
                 res.error('Unauthorized to load all or part of that resource.  It likely contains private content.');
             else res.error(err.message || err);
             return;
-        }
-
-        if(added.length < 1) {
-            return res.error('Unable to find that resource.');
-        } else if(added.length === 1) {
-            res.success(`added \`${added[0].title}\` to playlist`);
-        } else {
-            res.success(`added **${added.length}** songs to playlist`);
         }
 
         const op = await PlaylistOperator.init(member, pl);

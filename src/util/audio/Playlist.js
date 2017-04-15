@@ -145,14 +145,27 @@ class Playlist {
 
     /**
      * Add command arguments to the playlist.  Order is not guaranteed.
-     * @param args
+     * @param {Response} res
+     * @param {Array<String>} args
      * @return {Playlist}
      */
-    async add(args) {
-        const added =
+    async add(res, args) {
+        await res.send('adding songs to playlist...');
+
+        let added =
             (await this.sc.add(args))
             .concat(await this.yt.add(args));
-        this.addSongs(added.filter(e => e));
+        added = added.filter(e => e);
+
+        if(added.length < 1) {
+            return res.error('Unable to find that resource.');
+        } else if(added.length === 1) {
+            res.success(`added \`${added[0].title}\` to playlist`);
+        } else {
+            res.success(`added **${added.length}** songs to playlist`);
+        }
+
+        this.addSongs(added);
         return added;
     }
 

@@ -46,7 +46,7 @@ class Youtube {
                 const id = Youtube.parseID(resource);
 
                 if(type === Constants.video || type === Constants.shortVideo) loaded.push(await this.loadTrack(id));
-                else if(type === Constants.playlist) loaded.concat(await this.loadPlaylist(id));
+                else if(type === Constants.playlist) loaded.push(...(await this.loadPlaylist(id)));
             } catch (e) {
                 // do nothing
             }
@@ -88,11 +88,12 @@ class Youtube {
             qs: {
                 part: 'id,snippet',
                 playlistId: id,
-                maxResults: 50
+                maxResults: 50,
+                pageToken
             }
         });
 
-        songs.concat(data.items.map(i => this._formatSong(i)));
+        songs = songs.concat(data.items.map(i => this._formatSong(i)));
         if(data.nextPageToken) return this.loadPlaylist(id, data.nextPageToken, songs);
         return songs;
     }
