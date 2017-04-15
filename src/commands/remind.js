@@ -25,11 +25,8 @@ exports.func = async (res, msg, args) => {
     }
 
     schedule.scheduleJob(newDate, () => {
-        if (args[0] == 'me') {
-            res.success(args.slice(remIndex + 1, timeIndex).join(' '));
-        } else {
-            res.success(args[0] + ', ' + args.slice(remIndex + 1, timeIndex).join(' '));
-        }
+        res.responseMessage = null;
+        res.success(args.slice(remIndex + 1, timeIndex).join(' '), args[0] === 'me' ? msg.author : args[0]);
     });
 
     return res.success('reminder set for ' + moment(newDate).format('dddd, MMMM Do YYYY, h:mm:ss a ZZ'));
