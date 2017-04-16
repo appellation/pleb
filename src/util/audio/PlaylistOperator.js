@@ -55,7 +55,7 @@ class PlaylistOperator {
     static async init(member, list) {
         if(storage.has(member.guild.id)) {
             const op = storage.get(member.guild.id);
-            op.stop();
+            op.stop('dank memes');
             op.playlist = list || new Playlist();
             return op;
         }
