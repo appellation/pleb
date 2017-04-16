@@ -119,7 +119,7 @@ class PlaylistOperator {
      * @private
      */
     _end(reason) {
-        this.client.log.verbose(`ending with reason: ${reason}`);
+        this.client.log.verbose(`ended with reason: ${reason}`);
         // this.dispatcher.stream.destroy();
         this.dispatcher = null;
         if(reason === 'temp') return;
@@ -132,7 +132,10 @@ class PlaylistOperator {
      * Stop the playlist.
      */
     stop(reason = 'temp') {
-        if(this.dispatcher) this.dispatcher.end(reason);
+        if(this.dispatcher) {
+            this.client.log.verbose(`ending with reason: ${reason}`);
+            this.dispatcher.end(reason);
+        }
     }
 
     /**
