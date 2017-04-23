@@ -3,5 +3,9 @@ module.exports = (client, close) => {
         title: 'Disconnected',
         description: `Code: ${close.code}`,
         color: 0xff5e5e
+    }).then(() => {
+        process.exit(0);
+    }).catch(() => {
+        process.exit(0);
     });
 };
