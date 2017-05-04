@@ -17,8 +17,9 @@ exports.func = async (res, msg) => {
         'const path = require(\'path\');\
         require(path.join(process.cwd(), \'src\', \'util\', \'storage\', \'playlists\')).size;'
     );
+    stats.memory = await client.shard.broadcastEval('process.memoryUsage().heapUsed');
 
-    for(const s in stats) if(stats.hasOwnProperty(s)) stats[s] = stats[s].reduce((a, b) => a + b);
+    for(const s in stats) stats[s] = stats[s].reduce((a, b) => a + b);
 
     if(process.env.discord_pw) {
         request({
@@ -34,7 +35,7 @@ exports.func = async (res, msg) => {
         });
     }
 
-    return res.send(`**Guilds:** ${stats.servers}
+    return res.send(`**Servers:** ${stats.servers}
 **Channels:** ${stats.channels}
 **Users:** ${stats.users}
 **Playlists:** ${stats.playlists}
@@ -48,6 +49,7 @@ __**Shard info:**__
 
 __**Process info:**__
 **Memory:** ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB
+**Total memory:** ${(stats.memory / 1024 / 1024).toFixed(2)} MB
 **Uptime:** ${moment.duration(client.uptime, 'ms').format('d [days] h [hrs] mm [mins] ss [secs]')}`);
 };
 
