@@ -1,6 +1,3 @@
-/**
- * Created by Will on 2/12/2017.
- */
 const Provider = require('../util/providers/SQLProvider');
 
 module.exports = async client => {
@@ -10,7 +7,8 @@ module.exports = async client => {
     await provider.initializeGuilds(client);
 
     client.log.hook({
-        title: 'Initialized'
+        title: 'Initialized',
+        color: 0x00ff93
     });
 
     client.log.verbose('initialized guilds');
