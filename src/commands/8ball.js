@@ -1,6 +1,8 @@
-const { Argument } = require('discord-handles');
+/**
+ * Created by Will on 11/5/2016.
+ */
 
-exports.exec = async (cmd) => {
+exports.func = async (res) => {
     const responses = [
         'It is certain',
         'It is decidedly so',
@@ -24,9 +26,9 @@ exports.exec = async (cmd) => {
         'Very doubtful'
     ];
 
-    return cmd.res.send('🎱 ' + Array.random(responses));
+    return res.send('🎱 ' + Array.random(responses));
 };
 
-exports.arguments = function* () {
-    yield new Argument('What would you like to know?', 'You had one job...');
+exports.validator = val => {
+    return val.ensureArgs();
 };
