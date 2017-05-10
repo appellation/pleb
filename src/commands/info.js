@@ -4,8 +4,8 @@
 
 const packageJSON = require('../../package.json');
 
-exports.func = async (res, msg) => {
-    return msg.author.sendMessage('**Bot Info:**\n' +
+exports.exec = (cmd) => {
+    return cmd.response.dm('**Bot Info:**\n' +
         'Version: `' + packageJSON.version + '`\n' +
         'Author: `Will Nelson <appellation@topkek.pw>`\n' +
         'Contributors: <https://github.com/appellation/pleb/graphs/contributors>\n' +

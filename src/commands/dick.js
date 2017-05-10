@@ -1,5 +1,4 @@
-const { Argument } = require('discord-handles');
-const { MessageMentions } = require('discord.js');
+const args = require('../util/command/arguments');
 const dicks = new Map();
 
 exports.exec = (cmd) => {
@@ -17,7 +16,5 @@ exports.exec = (cmd) => {
 };
 
 exports.arguments = function* () {
-    yield new Argument('user')
-        .setOptional()
-        .setResolver(c => MessageMentions.USERS_PATTERN.test(c) ? c.match(MessageMentions.USERS_PATTERN)[0] : null);
+    yield args.user().setOptional();
 };

@@ -1,9 +1,12 @@
-/**
- * Created by Will on 10/4/2016.
- */
+const args = require('../util/command/arguments');
 
-exports.func = async (res, msg) => {
-    return res.send(`${msg.mentions.users.find(u => !u.equals(msg.client.user)) || msg.author}, ${Array.random(insults)}`);
+exports.exec = (cmd) => {
+    const user = cmd.args.user || cmd.message.author;
+    return cmd.response.send(`${user}, ${Array.random(insults)}`);
+};
+
+exports.arguments = function* () {
+    yield args.user().setOptional();
 };
 
 const insults = [

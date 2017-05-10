@@ -1,13 +1,9 @@
-/**
- * Created by Will on 9/24/2016.
- */
-
-exports.func = async (res, msg) => {
-    const mentions = msg.mentions;
+exports.exec = async (cmd) => {
+    const mentions = cmd.message.mentions;
     let out = [];
 
     for(const [, user] of mentions.users) {
-        if(user.equals(msg.client.user)) continue;
+        if(user.equals(cmd.message.client.user)) continue;
         out.push(user + ': `' + user.id + '`');
     }
 
@@ -19,6 +15,6 @@ exports.func = async (res, msg) => {
         out.push(role + ': `' + role.id + '`');
     }
 
-    if(out.length === 0) out.push(msg.author.id);
-    return res.success(`**Requested IDs:**\n\n${out.join('\n')}`);
+    if(out.length === 0) out.push(cmd.message.author.id);
+    return cmd.response.success(`**Requested IDs:**\n\n${out.join('\n')}`);
 };
