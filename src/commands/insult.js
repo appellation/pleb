@@ -1,12 +1,13 @@
-const args = require('../util/command/arguments');
+const resolvers = require('../util/command/resolvers');
 
 exports.exec = (cmd) => {
     const user = cmd.args.user || cmd.message.author;
     return cmd.response.send(`${user}, ${Array.random(insults)}`);
 };
 
-exports.arguments = function* () {
-    yield args.user().setOptional();
+exports.arguments = function* (Argument) {
+    yield new Argument('user')
+        .setResolver(resolvers.user);
 };
 
 const insults = [

@@ -1,10 +1,6 @@
-/**
- * Created by Will on 9/23/2016.
- */
-
 const moment = require('moment');
 
-exports.func = async res => {
+exports.func = ({ response: res }) => {
     /**Randomly chooses between XKCD and C&H**/
     if(Math.random() >= 0.5) {
         const max = 4462;

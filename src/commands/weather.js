@@ -1,13 +1,9 @@
-/**
- * Created by Artful on 1/03/2017.
- */
-
 const request = require('request-promise-native');
 const timezone = require('moment-timezone');
 const path = require('path');
 const Canvas = require('canvas');
 
-exports.func = async (response, msg, args) => {
+exports.exec = async ({ response, message: msg, args }) => {
 
     let geocodeOptions = {
         uri: 'https://maps.googleapis.com/maps/api/geocode/json?',
@@ -15,7 +11,7 @@ exports.func = async (response, msg, args) => {
             'User-Agent': 'Request-Promise'
         },
         qs: {
-            address : args.join(' '),
+            address : args.location,
             key: process.env.youtube
         },
         json: true
@@ -187,4 +183,8 @@ function convertFToC(temp) {
     return Math.round((temp - 32) * 0.5556);
 }
 
-exports.validator = val => val.ensureArgs();
+exports.arguments = function* (Argument) {
+    yield new Argument('location')
+        .setPattern(/.*/)
+        .setPrompt('For where would you like to get weather information?');
+};

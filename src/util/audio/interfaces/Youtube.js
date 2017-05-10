@@ -56,17 +56,9 @@ class Youtube {
     }
 
     async loadTrackQuery(query = '') {
-        const data = await rp({
-            url: 'search',
-            qs: {
-                part: 'id,snippet',
-                q: query,
-                type: 'video',
-                maxResults: 1
-            }
-        });
+        const data = await Youtube.search(query, 'video');
         if(!data.items.length) return null;
-        return this._formatSong(data.items[0]);
+        return Youtube.formatSong(data.items[0]);
     }
 
     async loadTrack(id = '') {
@@ -79,7 +71,13 @@ class Youtube {
             }
         });
         if(!data.items.length) return null;
-        return this._formatSong(data.items[0]);
+        return Youtube.formatSong(data.items[0]);
+    }
+
+    async loadPlaylistQuery(query = '') {
+        const data = await Youtube.search(query, 'playlist');
+        if(!data.items.length) return null;
+        return Youtube.formatSong(data.items[0]);
     }
 
     async loadPlaylist(id = '', pageToken = null, songs = []) {
@@ -93,13 +91,25 @@ class Youtube {
             }
         });
 
-        songs.push(...data.items.map(i => this._formatSong(i)));
+        songs.push(...data.items.map(i => Youtube.formatSong(i)));
         if(data.nextPageToken) return this.loadPlaylist(id, data.nextPageToken, songs);
         return songs;
     }
 
-    _formatSong(resource, playlistID) {
-        const id = Youtube._fetchID(resource);
+    static search(query, type) {
+        return rp({
+            url: 'search',
+            qs: {
+                part: 'id,snippet',
+                q: query,
+                type,
+                maxResults: 1
+            }
+        });
+    }
+
+    static formatSong(resource, playlistID) {
+        const id = Youtube.fetchID(resource);
         return {
             type: 'youtube',
             trackID: id,
@@ -114,13 +124,12 @@ class Youtube {
         };
     }
 
-
     /**
      * Fetch the video ID of a YouTube resource.
      * @param {Object} resource
      * @return {String}
      */
-    static _fetchID(resource) {
+    static fetchID(resource) {
         switch(resource.kind) {
             case 'youtube#playlistItem':
                 return resource.snippet.resourceId.videoId;

@@ -1,7 +1,7 @@
 const path = require('path');
 
-exports.func = async (res, msg) => {
-    return msg.channel.sendFile(path.join(__dirname, '..', '..', 'assets', 'images', 'xd.gif'));
+exports.exec = async (cmd) => {
+    return cmd.message.channel.sendFile(path.join(__dirname, '..', '..', 'assets', 'images', 'xd.gif'));
 };
 
 exports.triggers = [

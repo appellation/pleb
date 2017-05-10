@@ -1,11 +1,14 @@
-/**
- * Created by Will on 8/25/2016.
- */
-
+const { Argument } = require('discord-handles');
 const Operator = require('../util/audio/PlaylistOperator');
 
-exports.func = async (res, msg, args) => {
-    return Operator.startNew(args, res, msg.member);
+exports.exec = (cmd) => {
+    return Operator.startNew(cmd.args.song, cmd.response, cmd.message.member);
+};
+
+exports.arguments = function* () {
+    yield new Argument('song')
+        .setPrompt('What song would you like to add?')
+        .setPattern(/.*/);
 };
 
 exports.validator = val => val.ensureCanPlay();

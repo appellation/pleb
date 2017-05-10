@@ -1,17 +1,22 @@
-/**
- * Created by Will on 2/16/2017.
- */
-
 const math = require('mathjs');
-exports.func = async (res, msg, args) => {
+const numeral = require('numeral');
+const { Argument } = require('discord-handles');
+
+exports.exec = (cmd) => {
     let out;
     try {
-        out = math.eval(args.join(' '));
+        out = math.eval(cmd.args.expression);
     } catch (e) {
-        return res.error(`Error: \`${e.message}\``);
+        return cmd.response.error(`Error: \`${e.message}\``);
     }
 
-    return res.success(`**${args.join(' ')}** = \`${out}\``);
+    return cmd.response.success(`**${cmd.args.expression}** = \`${numeral(out).format('0,0.[0000000000]')}\``);
 };
 
-exports.validator = val => val.ensureArgs();
+exports.arguments = function* () {
+    yield new Argument('expression')
+        .setPrompt('What mathematical expression would you like to evaluate?')
+        .setPattern(/.*/);
+};
+
+exports.validate = val => val.ensureArgs();

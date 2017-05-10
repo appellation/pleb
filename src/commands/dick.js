@@ -1,4 +1,4 @@
-const args = require('../util/command/arguments');
+const resolvers = require('../util/command/resolvers');
 const dicks = new Map();
 
 exports.exec = (cmd) => {
@@ -12,9 +12,10 @@ exports.exec = (cmd) => {
         dicks.set(user, count);
     }
 
-    return cmd.response.send(`${user} 8${'='.repeat(count)}D`);
+    return cmd.response.send(`8${'='.repeat(count)}D ${user}`);
 };
 
-exports.arguments = function* () {
-    yield args.user().setOptional();
+exports.arguments = function* (Argument) {
+    yield new Argument('user')
+        .setResovler(resolvers.user);
 };

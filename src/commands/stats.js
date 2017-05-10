@@ -1,12 +1,8 @@
-/**
- * Created by Will on 9/24/2016.
- */
-
 const moment = require('moment');
 const request = require('request');
 const playlistStorage = require('../util/storage/playlists');
 
-exports.func = async (res, msg) => {
+exports.exec = async ({ response: res, message: msg }) => {
     const client = msg.client;
 
     const stats = {};

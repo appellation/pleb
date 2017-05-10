@@ -27,7 +27,13 @@ class PlaylistOperator {
          */
         this.guild = conn.channel.guild;
 
-        this.client = this.guild.client;
+        Object.defineProperty(this, 'client', { value: this.guild.client });
+
+        /**
+         * Whether to loop the playlist.
+         * @type {boolean}
+         */
+        this.loop = false;
 
         /**
          * @type {Playlist}
@@ -68,15 +74,15 @@ class PlaylistOperator {
 
     /**
      * Start a new Playlist.
-     * @param {Array} args
+     * @param {String} arg
      * @param {Response} res
      * @param {GuildMember} member
      */
-    static async startNew(args, res, member) {
+    static async startNew(arg, res, member) {
         const pl = new Playlist();
 
         try {
-            await pl.add(res, args);
+            await pl.add(res, arg);
         } catch (err) {
             if(err.response && err.response.statusCode === 403)
                 res.error('Unauthorized to load all or part of that resource.  It likely contains private content.');
@@ -124,7 +130,7 @@ class PlaylistOperator {
         this.dispatcher = null;
         if(reason === 'temp') return;
         if(reason === 'terminal' || !this.playlist.hasNext()) return this._destroy();
-        this.playlist.next();
+        if(!this.loop) this.playlist.next();
         this._start();
     }
 
