@@ -1,16 +1,16 @@
-/**
- * Created by Will on 9/11/2016.
- */
-
+const { Argument } = require('discord-handles');
 const storage = require('../util/storage/playlists');
 
-exports.func = async (res, msg, args) => {
-    const next = args[0] === 'next';
-    if(!storage.has(msg.guild.id)) return res.error('no playlist to add to');
-
-    return storage.get(msg.guild.id).playlist.add(res, next ? args.slice(1) : args);
+exports.exec = async (cmd) => {
+    return storage.get(cmd.message.guild.id).playlist.add(cmd.response, cmd.args.song);
 };
 
-exports.validator = val => {
-    return val.ensureArgs();
+exports.arguments = function* () {
+    yield new Argument('song')
+        .setPrompt('What would you like to add?')
+        .setPattern(/.*/);
+};
+
+exports.validate = val => {
+    return val.ensurePlaylist();
 };

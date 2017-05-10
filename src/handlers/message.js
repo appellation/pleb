@@ -1,14 +1,10 @@
-/**
- * Created by Will on 12/6/2016.
- */
-
 const commandFunctions = require('../util/command/util');
-const ValidationProcessor = require('../util/command/ValidationProcessor');
-const Handles = require('discord-handles');
+const Validator = require('../util/command/ValidationProcessor');
+const handles = require('discord-handles');
 const Raven = require('raven');
 const path = require('path');
 
-const command = new Handles({
+const command = new handles.Client({
     directory: path.join('.', 'src', 'commands'),
     validator: message => {
         const regex = commandFunctions.fetchPrefix(message.guild);
@@ -16,7 +12,7 @@ const command = new Handles({
             return message.content.replace(regex, '');
         }
     },
-    ValidationProcessor
+    Validator
 });
 
 command.on('commandStarted', command => {
@@ -27,9 +23,9 @@ command.on('invalidCommand', validator => {
     validator.command.response.error(validator.reason);
 });
 
-command.on('commandFailed', ({ command, err }) => {
-    command.message.client.log.error('command failed: %s | %s', command, err);
-    command.response.error(`\`${err}\`\nYou should never receive an error like this.  Bot owner has been notified.`);
+command.on('commandFailed', ({ command, error }) => {
+    command.message.client.log.error('command failed: %s | %s', command, error);
+    command.response.error(`\`${error}\`\nYou should never receive an error like this.  Bot owner has been notified.`);
 });
 
 command.on('error', (err) => {

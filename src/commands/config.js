@@ -1,22 +1,26 @@
-/**
- * Created by nelso on 1/20/2017.
- *
- */
-
+const { Argument } = require('discord-handles');
 const storage = require('../util/storage/settings');
 const allowedSettings = new Set([
     'prefix'
 ]);
 
-exports.func = async (res, msg, args) => {
-    if(!allowedSettings.has(args[0].toLowerCase())) return;
+exports.exec = async (cmd) => {
+    const settings = storage.get(cmd.message.guild.id);
 
-    const settings = storage.get(msg.guild.id),
-        key = args[0],
-        value = args.slice(1).join(' ') || null;
-
-    await settings.set(key, value);
-    return res.success(`**${key}** set to \`${value}\``);
+    await settings.set(cmd.args.key, cmd.args.value);
+    return cmd.response.success(`**${cmd.args.key}** set to \`${cmd.args.key}\``);
 };
 
-exports.validator = val => val.ensureGuild() && val.ensureArgs();
+exports.arguments = function* () {
+    const settings = Array.from(allowedSettings.values()).join(', ');
+    const key = yield new Argument('key')
+        .setPrompt(`What setting would you like to modify? \`${settings}\``)
+        .setRePrompt(`That setting wasn't valid.  Please try again.  \`${settings}\``)
+        .setResolver(c => allowedSettings.has(c.toLowerCase()) ? c.toLowerCase() : null);
+
+    yield new Argument('value')
+        .setPrompt(`What would you like to set ${key} to?`)
+        .setPattern(/.*/);
+};
+
+// exports.validate = val => val.ensureGuild() && val.ensureArgs();

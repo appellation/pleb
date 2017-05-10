@@ -17,7 +17,7 @@
   "dependencies": {
     "canvas": "automattic/node-canvas",
     "date.js": "^0.3.1",
-    "discord-handles": "^2.1.0",
+    "discord-handles": "appellation/handles#v5",
     "discord.js": "git+https://github.com/hydrabolt/discord.js.git#master",
     "dotenv": "^2.0.0",
     "erlpack": "github:hammerandchisel/erlpack#master",

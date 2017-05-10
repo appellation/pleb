@@ -1,18 +1,9 @@
-/**
- * Created by Will on 9/24/2016.
- */
-
+const { Argument } = require('discord-handles');
+const { MessageMentions } = require('discord.js');
 const dicks = new Map();
 
-exports.func = async (res, msg, args) => {
-    let user = msg.author.id;
-    for(const a of args) {
-        const match = a.match(/<@!?([0-9]+)>/);
-        if(match) {
-            user = match[1];
-            break;
-        }
-    }
+exports.exec = (cmd) => {
+    let user = cmd.args.user || cmd.message.author;
 
     let count;
     if(dicks.has(user)) {
@@ -22,5 +13,11 @@ exports.func = async (res, msg, args) => {
         dicks.set(user, count);
     }
 
-    return res.send(`<@${user}> 8${'='.repeat(count)}D`);
+    return cmd.response.send(`${user} 8${'='.repeat(count)}D`);
+};
+
+exports.arguments = function* () {
+    yield new Argument('user')
+        .setOptional()
+        .setResolver(c => MessageMentions.USERS_PATTERN.test(c) ? c.match(MessageMentions.USERS_PATTERN)[0] : null);
 };
