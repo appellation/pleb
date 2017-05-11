@@ -38,7 +38,6 @@ new class extends Discord.Client {
 
     _load() {
         const initHandler = require('./handlers/init');
-        const readyHandler = require('./handlers/ready');
         const reconnectingHandler = require('./handlers/reconnecting');
         const resumeHandler = require('./handlers/resume');
         const disconnectHandler = require('./handlers/disconnect');
@@ -49,7 +48,6 @@ new class extends Discord.Client {
         this.log.verbose('loaded event handlers');
 
         this.once('ready', () => initHandler(this));
-        this.on('ready', readyHandler);
         this.on('reconnecting', () => reconnectingHandler(this));
         this.on('resume', replayed => resumeHandler(this, replayed));
         this.on('disconnect', close => disconnectHandler(this, close));
