@@ -1,4 +1,4 @@
-exports.exec = async (cmd) => {
+exports.exec = (cmd) => {
     const responses = [
         'It is certain',
         'It is decidedly so',
@@ -22,7 +22,7 @@ exports.exec = async (cmd) => {
         'Very doubtful'
     ];
 
-    return cmd.res.send('🎱 ' + Array.random(responses));
+    return cmd.response.send('🎱 ' + Array.random(responses));
 };
 
 exports.validate = val => {

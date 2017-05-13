@@ -1,7 +1,7 @@
 const { Argument } = require('discord-handles');
 const storage = require('../util/storage/playlists');
 
-exports.exec = async (cmd) => {
+exports.exec = (cmd) => {
     return storage.get(cmd.message.guild.id).playlist.add(cmd.response, cmd.args.song);
 };
 
