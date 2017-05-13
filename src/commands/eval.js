@@ -3,7 +3,7 @@ const { Argument } = require('discord-handles');
 exports.exec = async (cmd) => {
     let res;
     try {
-        res = await Promise.resolve(eval(cmd.args.code));
+        res = await eval(cmd.args.code);
     } catch (e) {
         res = e.message;
     }
