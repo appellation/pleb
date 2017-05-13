@@ -1,33 +1,30 @@
-/**
- * Created by nelso + lantern<3 on 10/25/2016.
- */
-
-const schedule = require('node-schedule');
+const resolvers = require('../util/command/resolvers');
 const moment = require('moment');
-const date = require('date.js');
+const Sherlock = require('Sherlock');
 
-exports.func = async (res, msg, args) => {
-    let remIndex = args.indexOf('to');
-    remIndex = remIndex === -1 ? 0 : remIndex;
+exports.exec = ({ response: res, args }) => {
+    setTimeout(() => {
+        res.edit = false;
+        res.success('I\'m reminding you ' + args.reminder.eventTitle, args.user);
+    }, args.reminder.startDate - Date.now());
+    return res.success('reminder set for ' + moment(args.reminder.startDate).format('dddd, MMMM Do YYYY, h:mm:ss a ZZ'));
+};
 
-    const atIndex = args.lastIndexOf('at');
-    const inIndex = args.lastIndexOf('in');
+exports.arguments = function* (Argument, cmd) {
+    const user = yield new Argument('user')
+        .setPrompt('Who would you like to remind?')
+        .setRePrompt('Please remind a valid user (`me` or a mention).')
+        .setResolver(c => {
+            if(c === 'me') return cmd.message.author.toString();
+            return resolvers.user(c);
+        });
 
-    const timeIndex = atIndex > inIndex ? args.lastIndexOf('at') : args.lastIndexOf('in');
-
-    if(timeIndex < remIndex) {
-        return 'can\'t parse that :cry:';
-    }
-
-    const newDate = date(args.slice(timeIndex + 1).join(' '));
-    if(newDate <= new Date()) {
-        return 'that date doesn\'t seem to be valid.';
-    }
-
-    schedule.scheduleJob(newDate, () => {
-        res.responseMessage = null;
-        res.success(args.slice(remIndex + 1, timeIndex).join(' '), args[0] === 'me' ? msg.author : args[0]);
-    });
-
-    return res.success('reminder set for ' + moment(newDate).format('dddd, MMMM Do YYYY, h:mm:ss a ZZ'));
+    yield new Argument('reminder')
+        .setPrompt(`What would you like ${user} to be reminded of?`)
+        .setRePrompt('Please provide a valid reminder format.')
+        .setPattern(/.*/)
+        .setResolver(c => {
+            const parsed = Sherlock.parse(c);
+            return parsed.startDate && parsed.eventTitle ? parsed : null;
+        });
 };

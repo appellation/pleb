@@ -146,12 +146,13 @@ class Playlist {
     /**
      * Add command arguments to the playlist.  Order is not guaranteed.
      * @param {Response} res
-     * @param {Array<String>} args
+     * @param {String} arg A string of content to add.
      * @return {Playlist}
      */
-    async add(res, args) {
+    async add(res, arg) {
         await res.send('adding songs to playlist...');
 
+        const args = arg.split(' ');
         let added =
             (await this.sc.add(args))
             .concat(await this.yt.add(args));

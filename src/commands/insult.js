@@ -1,9 +1,14 @@
-/**
- * Created by Will on 10/4/2016.
- */
+const resolvers = require('../util/command/resolvers');
 
-exports.func = async (res, msg) => {
-    return res.send(`${msg.mentions.users.find(u => !u.equals(msg.client.user)) || msg.author}, ${Array.random(insults)}`);
+exports.exec = (cmd) => {
+    const user = cmd.args.user || cmd.message.author;
+    return cmd.response.send(`${user}, ${Array.random(insults)}`);
+};
+
+exports.arguments = function* (Argument) {
+    yield new Argument('user')
+        .setOptional()
+        .setResolver(resolvers.user);
 };
 
 const insults = [

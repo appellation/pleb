@@ -1,8 +1,4 @@
-/**
- * Created by Will on 11/5/2016.
- */
-
-exports.func = async (res) => {
+exports.exec = (cmd) => {
     const responses = [
         'It is certain',
         'It is decidedly so',
@@ -26,9 +22,5 @@ exports.func = async (res) => {
         'Very doubtful'
     ];
 
-    return res.send('🎱 ' + Array.random(responses));
-};
-
-exports.validator = val => {
-    return val.ensureArgs();
+    return cmd.response.send('🎱 ' + Array.random(responses));
 };

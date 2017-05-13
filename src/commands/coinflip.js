@@ -1,5 +1,3 @@
-/**
- * created by Will on 11/1/2016.
- */
+const { roll } = require('../util/random');
 
-exports.func = (res, msg, args, handler) => require('./dice').func(res, msg, args, handler, {coinflip: true});
+exports.exec = (cmd) => cmd.response.success(roll(1, 2) === 1 ? 'heads' : 'tails');

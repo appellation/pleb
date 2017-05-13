@@ -1,18 +1,26 @@
-/**
- * Created by Will on 11/1/2016.
- */
+const { roll } = require('../util/random');
+const { Argument } = require('discord-handles');
 
-exports.func = (res, msg, args, handler, options = {}) => {
-    const count = parseInt(options.coinflip ? 1 : (args[0] || 2));
-    const sides = parseInt(options.coinflip ? 2 : (args[1] || 6));
+exports.exec = (cmd) => {
+    if(cmd.args.count >= 1000) return cmd.response.error('Please use less than 1,000 dice.  kthxbye.');
+    const sum = roll(cmd.args.count, cmd.args.sides);
+    return cmd.response.success(`**${sum}** 🎲`);
+};
 
-    if(count >= 1000) return res.error('Please use less than 1,000 dice.  kthxbye.');
+exports.arguments = function* () {
+    yield new Argument('count')
+        .setPrompt('How many dice would you like to roll?')
+        .setRePrompt('Please roll between 1 and 999 dice.')
+        .setResolver(c => {
+            const parsed = parseInt(c);
+            if(isNaN(parsed)) return null;
+            return parsed > 0 && parsed < 1000 ? parsed : null;
+        });
 
-    let sum = 0;
-    for(let i = 0; i < count; i++) sum += Math.floor(Math.random() * sides) + 1;
-
-    if(options.coinflip) return (sum === 1) ? 'heads' : 'tails';
-    return res.success(`**${sum}** 🎲`);
+    yield new Argument('sides')
+        .setPrompt('How many sides should these dice have?')
+        .setRePrompt('Please choose a number of sides.')
+        .setResolver(c => (!c || isNaN(c)) ? null : parseInt(c));
 };
 
 exports.triggers = [

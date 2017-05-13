@@ -1,11 +1,7 @@
-/**
- * Created by Will on 10/3/2016.
- */
-
 const rp = require('request-promise-native');
 const numeral = require('numeral');
 const moment = require('moment');
-const Validation = require('../util/command/ValidationProcessor');
+const Validation = require('../util/command/Validator');
 
 const countryMap = {
     brazil: 'BR',
@@ -13,16 +9,15 @@ const countryMap = {
     sydney: 'AU',
 };
 
-exports.func = async (response, msg, args, command) => {
-    if(args.length === 0) return;
+exports.exec = async (cmd) => {
+    const { args, message: msg, response } = cmd;
+
     const cc = countryMap[msg.guild ? msg.guild.region : null] || 'US';
-
-    const valid = new Validation(command);
-
+    const valid = new Validation(cmd);
     const res = await rp.get({
         uri: 'https://api.cognitive.microsoft.com/bing/v5.0/search',
         qs: {
-            q: args.join(' '),
+            q: args.query,
             mkt: 'en-' + cc,
             count: 1,
             safeSearch: valid.ensureNSFW() ? 'Moderate' : 'Strict'
@@ -65,6 +60,12 @@ exports.func = async (response, msg, args, command) => {
 
     const out = await ((result[first.answerType] || result.Default)());
     return out ? response.send(out) : null;
+};
+
+exports.arguments = function* (Argument) {
+    yield new Argument('query')
+        .setPattern(/.*/)
+        .setPrompt('What would you like to search for?');
 };
 
 async function shortenURL(url) {

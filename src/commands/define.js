@@ -1,21 +1,18 @@
-/**
- * Created by Will on 11/11/2016.
- */
-
 const rp = require('request-promise-native');
+const { Argument } = require('discord-handles');
 
-exports.func = async (response, msg, args) => {
+exports.exec = async (cmd) => {
     const res = await rp.get({
         uri: 'http://api.pearson.com/v2/dictionaries/ldoce5/entries',
         qs: {
-            headword: args.join(' ')
+            headword: cmd.args.word
         },
         json: true
     });
 
     let out = '';
     for(const detail of res.results) {
-        out += ':arrow_right: ';
+        out += '➡ ';
 
         if(detail.part_of_speech) {
             out += '`' + detail.part_of_speech + '` ';
@@ -44,7 +41,11 @@ exports.func = async (response, msg, args) => {
         out += '\n';
     }
 
-    return response.send(out);
+    return cmd.response.send(out);
 };
 
-exports.validator = val => val.ensureArgs();
+exports.arguments = function* () {
+    yield new Argument('word')
+        .setPattern(/.*/)
+        .setPrompt('What would you like to define?');
+};

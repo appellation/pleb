@@ -1,18 +1,8 @@
-/**
- * Created by Will on 9/24/2016.
- */
-
+const resolvers = require('../util/command/resolvers');
 const dicks = new Map();
 
-exports.func = async (res, msg, args) => {
-    let user = msg.author.id;
-    for(const a of args) {
-        const match = a.match(/<@!?([0-9]+)>/);
-        if(match) {
-            user = match[1];
-            break;
-        }
-    }
+exports.exec = (cmd) => {
+    let user = cmd.args.user || cmd.message.author;
 
     let count;
     if(dicks.has(user)) {
@@ -22,5 +12,11 @@ exports.func = async (res, msg, args) => {
         dicks.set(user, count);
     }
 
-    return res.send(`<@${user}> 8${'='.repeat(count)}D`);
+    return cmd.response.send(`8${'='.repeat(count)}D ${user}`);
+};
+
+exports.arguments = function* (Argument) {
+    yield new Argument('user')
+        .setOptional()
+        .setResolver(resolvers.user);
 };

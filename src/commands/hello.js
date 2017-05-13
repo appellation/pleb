@@ -1,8 +1,4 @@
-/**
- * Created by Will on 10/27/2016.
- */
-
-exports.func = async (res, msg) => msg.react('👋');
+exports.exec = (cmd) => cmd.message.react('👋');
 exports.triggers = [
     'hello',
     'hi',

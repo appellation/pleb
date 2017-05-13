@@ -1,14 +1,18 @@
-/**
- * Created by Will on 11/11/2016.
- */
-
+const { Argument } = require('discord-handles');
 const storage = require('../util/storage/playlists');
 
-exports.func = async (res, msg, args) => {
-    const operator = storage.get(msg.guild.id);
-    const num = parseInt(args[0]) || 1;
+exports.exec = (cmd) => {
+    const operator = storage.get(cmd.message.guild.id);
+    const num = parseInt(cmd.args.count) || 1;
     for(let i = 0; i < num && operator.playlist.hasPrev(); i++) operator.playlist.prev();
-    return operator.start(res);
+    return operator.start(cmd.response);
 };
 
-exports.validator = val => val.ensurePlaylist();
+exports.arguments = function* () {
+    yield new Argument('count')
+        .setOptional()
+        .setRePrompt('Please provide a number of songs to skip.')
+        .setResolver(c => !c || isNaN(c) ? null : parseInt(c));
+};
+
+exports.validate = val => val.ensurePlaylist();

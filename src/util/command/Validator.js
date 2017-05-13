@@ -1,7 +1,3 @@
-/**
- * Created by Will on 2/3/2017.
- */
-
 const ERRORS = {
     ensureGuild: 'This command cannot be run outside of a guild.',
     ensureClientPermissions: perm => `Cannot ${perm.split('_').join(' ').toLowerCase()}.`,
@@ -11,22 +7,22 @@ const ERRORS = {
     ensureJoinable: 'Can\'t join your voice channel.',
     ensureSpeakable: 'Can\'t speak in your voice channel.',
     ensureCurrentVoiceChannel: 'Not currently connected to a voice channel.',
-    ensurePlaylist: 'No playlist available.',
-    ensureNSFW: 'NSFW is not allowed.',
+    ensurePlaylist: 'I\'m currently not playing anything.',
+    ensureNSFW: 'This is not an NSFW channel.',
     ensureIsNumber: argNum => `Argument ${argNum + 1} must be a number.`
 };
 
 const playlistStorage = require('../storage/playlists');
-const {ValidationProcessor} = require('discord-handles');
+const { Validator } = require('discord-handles');
 
-class Validate extends ValidationProcessor {
+class Validate extends Validator {
 
     /**
      * Ensure the message is in a guild.
      * @return {*}
      */
     ensureGuild() {
-        return this.applyValid(this.message.channel.type === 'text', ERRORS.ensureGuild);
+        return super.apply(this.message.channel.type === 'text', ERRORS.ensureGuild);
     }
 
     /**
@@ -35,13 +31,13 @@ class Validate extends ValidationProcessor {
      * @return {boolean}
      */
     ensureClientPermissions(resolvable) {
-        if(this.message.channel.type === 'dm') return this.applyValid(true);
+        if(this.message.channel.type === 'dm') return super.apply(true);
 
-        return this.ensureGuild() && this.applyValid(this.message.channel.permissionsFor(this.message.guild.member(this.message.client.user)).hasPermission(resolvable), ERRORS.ensureClientPermissions(resolvable));
+        return this.ensureGuild() && super.apply(this.message.channel.permissionsFor(this.message.guild.member(this.message.client.user)).hasPermission(resolvable), ERRORS.ensureClientPermissions(resolvable));
     }
 
     ensurePlaylist() {
-        return this.ensureGuild() && (this.applyValid(playlistStorage.has(this.message.guild.id), ERRORS.ensurePlaylist) && this.ensureCurrentVoiceChannel());
+        return this.ensureGuild() && (super.apply(playlistStorage.has(this.message.guild.id), ERRORS.ensurePlaylist) && this.ensureCurrentVoiceChannel());
     }
 
     /**
@@ -49,7 +45,7 @@ class Validate extends ValidationProcessor {
      * @return {boolean}
      */
     ensureArgs() {
-        return this.applyValid(this.command.args.length > 0, ERRORS.ensureArgs);
+        return super.apply(Object.keys(this.command.args).length > 0, ERRORS.ensureArgs);
     }
 
     /**
@@ -65,7 +61,7 @@ class Validate extends ValidationProcessor {
      * @return {boolean}
      */
     ensureMemberVoice() {
-        return this.ensureGuild() && this.applyValid(this.message.member.voiceChannel, ERRORS.ensureMemberVoice);
+        return this.ensureGuild() && super.apply(this.message.member.voiceChannel, ERRORS.ensureMemberVoice);
     }
 
     /**
@@ -73,7 +69,7 @@ class Validate extends ValidationProcessor {
      * @return {boolean}
      */
     ensureJoinable() {
-        return this.ensureMemberVoice() && this.applyValid(this.message.member.voiceChannel.joinable, ERRORS.ensureJoinable);
+        return this.ensureMemberVoice() && super.apply(this.message.member.voiceChannel.joinable, ERRORS.ensureJoinable);
     }
 
     /**
@@ -81,11 +77,11 @@ class Validate extends ValidationProcessor {
      * @return {boolean}
      */
     ensureSpeakable() {
-        return this.ensureMemberVoice() && this.applyValid(this.message.member.voiceChannel.speakable, ERRORS.ensureSpeakable);
+        return this.ensureMemberVoice() && super.apply(this.message.member.voiceChannel.speakable, ERRORS.ensureSpeakable);
     }
 
     ensureNSFW() {
-        return this.applyValid(!!(this.message.channel.type === 'dm' || this.message.member.roles.find(role => role.name.toLowerCase() === 'nsfw') || this.message.channel.name.toLowerCase().includes('nsfw')), ERRORS.ensureNSFW);
+        return super.apply(this.message.channel.nsfw, ERRORS.ensureNSFW);
     }
 
     ensureCanPlay() {
@@ -97,15 +93,15 @@ class Validate extends ValidationProcessor {
      * @return {boolean}
      */
     ensureCurrentVoiceChannel() {
-        return this.ensureGuild() && this.applyValid(this.message.client.voiceConnections.has(this.message.guild.id), ERRORS.ensureCurrentVoiceChannel);
+        return this.ensureGuild() && super.apply(this.message.client.voiceConnections.has(this.message.guild.id), ERRORS.ensureCurrentVoiceChannel);
     }
 
     ensureIsNumber(argNum) {
-        return this.applyValid(!isNaN(this.command.args[argNum]), ERRORS.ensureIsNumber(argNum));
+        return super.apply(!isNaN(this.command.args[argNum]), ERRORS.ensureIsNumber(argNum));
     }
 
     ensureIsOwner() {
-        return this.applyValid(this.command.message.author.id === '116690352584392704', 'This command is owner-only.');
+        return super.apply(this.command.message.author.id === '116690352584392704', 'This command is owner-only.');
     }
 }
 

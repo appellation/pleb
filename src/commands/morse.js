@@ -1,6 +1,4 @@
-/**
- * Created by Will on 11/9/2016.
- */
+const { Argument } = require('discord-handles');
 
 const dot = '😂';
 const dash = '😑';
@@ -43,18 +41,19 @@ const dict = {
     9: dash + dash + dash + dash + dot
 };
 
+exports.arguments = function* () {
+    yield new Argument('text')
+        .setPrompt('What would you like to translate to morse?')
+        .setPattern(/.*/)
+        .setResolver(c => c ? c.toLowerCase() : null);
+};
 
-exports.func = async (res, msg, args) => {
+exports.exec = (cmd) => {
     let out = '';
-    const low = args.join().toLowerCase();
-
-    for(const char of low) {
+    for(const char of cmd.args.text) {
         if(!dict[char]) continue;
         out += dict[char] + ' ';
     }
 
-    if(msg.deletable) msg.delete();
-    return res.send(out) || res.error('no characters could be converted to morse 😭');
+    return out ? cmd.response.send(out) : cmd.response.error('no characters could be converted to morse 😭');
 };
-
-exports.validator = val => val.ensureArgs();

@@ -1,15 +1,19 @@
-/**
- * Created by Will on 1/7/2017.
- */
+const resolvers = require('../util/command/resolvers');
 
-exports.func = async (res, msg, args) => {
-    const parsed = parseInt(args[0]);
+exports.exec = ({ response: res, args }) => {
+    const parsed = parseInt(args.rule);
     return res.send(`\`\`\`ldif\n${rules[parsed - 1]}\`\`\``);
 };
 
-exports.validator = (val, cmd) => {
-    const parsed = parseInt(cmd.args[0]);
-    return val.ensureArgs() && val.applyValid(!isNaN(parsed) && parsed >= 1 && parsed <= 47, 'Must select a number between 1 and 47.');
+exports.arguments = function* (Argument) {
+    yield new Argument('rule')
+        .setPrompt('Which rule would you like to see?')
+        .setRePrompt('Please pick a rule between 1 and 47.')
+        .setResolver(c => {
+            const int = resolvers.integer(c);
+            if(int === null) return null;
+            return int > 0 && int < 48 ? int : null;
+        });
 };
 
 const rules = [

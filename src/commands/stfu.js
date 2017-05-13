@@ -1,15 +1,11 @@
-/**
- * Created by Will on 8/25/2016.
- */
-
 const storage = require('../util/storage/playlists');
 
-exports.func = async (res, msg) => {
-    const operator = storage.get(msg.guild.id);
+exports.exec = (cmd) => {
+    const operator = storage.get(cmd.message.guild.id);
     if(operator) operator.destroy();
 
-    if(msg.guild.voiceConnection) msg.guild.voiceConnection.disconnect();
-    return res.send('k 😢');
+    if(cmd.message.guild.voiceConnection) cmd.message.guild.voiceConnection.disconnect();
+    return cmd.response.send('k 😢');
 };
 
 exports.triggers = [
