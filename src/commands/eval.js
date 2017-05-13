@@ -9,12 +9,12 @@ exports.exec = async (cmd) => {
     }
 
     const inspected = require('util').inspect(res, { depth: 1 });
-    return (inspected.length <= 6000) ? cmd.message.channel.sendCode('js', inspected, { split: true }) : cmd.response.error('that response would be too big');
+    return (inspected.length <= 6000) ? cmd.message.channel.send(inspected, { split: true, code: 'js' }) : cmd.response.error('that response would be too big');
 };
 
 exports.arguments = function* () {
     yield new Argument('code')
-        .setPattern(/.*/);
+        .setInfinite();
 };
 
 exports.validator = val => val.ensureIsOwner() && val.ensureArgs();

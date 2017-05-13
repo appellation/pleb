@@ -9,6 +9,4 @@ exports.exec = async cmd => {
     }
 };
 
-exports.validator = val => {
-    return val.ensureNSFW();
-};
+exports.validate = val => val.ensureNSFW();

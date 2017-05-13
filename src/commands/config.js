@@ -8,7 +8,7 @@ exports.exec = async (cmd) => {
     const settings = storage.get(cmd.message.guild.id);
 
     await settings.set(cmd.args.key, cmd.args.value);
-    return cmd.response.success(`**${cmd.args.key}** set to \`${cmd.args.key}\``);
+    return cmd.response.success(`**${cmd.args.key}** set to \`${cmd.args.value}\``);
 };
 
 exports.arguments = function* () {

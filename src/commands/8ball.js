@@ -24,7 +24,3 @@ exports.exec = (cmd) => {
 
     return cmd.response.send('🎱 ' + Array.random(responses));
 };
-
-exports.validate = val => {
-    return val.ensureArgs();
-};

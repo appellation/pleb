@@ -1,6 +1,6 @@
 const storage = require('../util/storage/settings');
 
-exports.func = (cmd) => {
+exports.exec = (cmd) => {
     return cmd.response.success(`Current prefix is: \`${storage.get(cmd.message.guild.id).getCached('prefix')}\``);
 };
 

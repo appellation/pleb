@@ -1,6 +1,6 @@
 const moment = require('moment');
 
-exports.func = ({ response: res }) => {
+exports.exec = ({ response: res }) => {
     /**Randomly chooses between XKCD and C&H**/
     if(Math.random() >= 0.5) {
         const max = 4462;

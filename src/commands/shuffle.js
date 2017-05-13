@@ -6,4 +6,4 @@ exports.exec = (cmd) => {
     return operator.start(cmd.response);
 };
 
-exports.validator = val => val.ensurePlaylist();
+exports.validate = val => val.ensurePlaylist();

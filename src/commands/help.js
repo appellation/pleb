@@ -1,5 +1,5 @@
 exports.exec = async (cmd) => {
-    return cmd.response.dm(
+    return cmd.message.author.send(
         '**`@mention` in any channel or just type in `#pleb`.**\n\n' +
         '- **play <query, YT URL, SoundCloud URL>** - plays makes a playlist from the link\n' +
         '- **shuffle [Play params]** - shuffles existing playlist (if exists) or shuffle plays a new playlist\n' +
@@ -27,7 +27,7 @@ exports.exec = async (cmd) => {
         '- **insult [mention]** - insult a user (defaults to yourself)\n' +
         '- **remind (me|@user) to <action> (in|at) <time>** - set a reminder\n' +
         '- **sanitize [num]** - delete last **num** messages from the bot (defaults to 3)\n\n' +
-        '- **roulette** - play a game of Russian roulette' +
+        '- **roulette** - play a game of Russian roulette\n' +
         '- **info** - get info about the bot\n' +
         '- **/ay+/i** - lmao\n' +
         '- **xD|XD** - XD\n' +
@@ -40,5 +40,5 @@ exports.exec = async (cmd) => {
         '- **link** - get the invite link for the bot\n\n' +
         'NSFW commands (noted by an [NSFW] tag above) can only be given in the `#nsfw` channel or by people with the `nsfw` role.  Members with the `no-pleb` role will be unable to use commands.\n\n' +
         'For human help, check out my Discord server (<https://discord.gg/DPuaDvP>) or my GitHub repo (<https://github.com/appellation/pleb>)'
-        , {split: true});
+        , { split: true });
 };

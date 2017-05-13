@@ -17,5 +17,6 @@ exports.exec = (cmd) => {
 
 exports.arguments = function* (Argument) {
     yield new Argument('user')
-        .setResovler(resolvers.user);
+        .setOptional()
+        .setResolver(resolvers.user);
 };

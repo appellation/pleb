@@ -1,7 +1,7 @@
 const resolvers = require('../util/command/resolvers');
 
-exports.exec = (res, msg, args) => {
-    const parsed = parseInt(args[0]);
+exports.exec = ({ response: res, args }) => {
+    const parsed = parseInt(args.rule);
     return res.send(`\`\`\`ldif\n${rules[parsed - 1]}\`\`\``);
 };
 

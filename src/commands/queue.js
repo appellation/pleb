@@ -22,4 +22,4 @@ exports.arguments = function* (Argument) {
         .setResolver(c => !c || isNaN(c) ? null : parseInt(c));
 };
 
-exports.validator = val => val.ensurePlaylist();
+exports.validate = val => val.ensurePlaylist();

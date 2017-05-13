@@ -1,5 +1,5 @@
 const commandFunctions = require('../util/command/util');
-const Validator = require('../util/command/ValidationProcessor');
+const Validator = require('../util/command/Validator');
 const handles = require('discord-handles');
 const Raven = require('raven');
 const path = require('path');

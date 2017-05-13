@@ -129,7 +129,7 @@ class PlaylistOperator {
         // this.dispatcher.stream.destroy();
         this.dispatcher = null;
         if(reason === 'temp') return;
-        if(reason === 'terminal' || !this.playlist.hasNext()) return this._destroy();
+        if(reason === 'terminal' || (!this.playlist.hasNext() && !this.loop)) return this._destroy();
         if(!this.loop) this.playlist.next();
         this._start();
     }

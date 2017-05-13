@@ -1,7 +1,3 @@
-/**
- * Created by Will on 2/3/2017.
- */
-
 const ERRORS = {
     ensureGuild: 'This command cannot be run outside of a guild.',
     ensureClientPermissions: perm => `Cannot ${perm.split('_').join(' ').toLowerCase()}.`,

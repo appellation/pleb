@@ -55,6 +55,5 @@ exports.exec = (cmd) => {
         out += dict[char] + ' ';
     }
 
-    if(cmd.message.deletable) cmd.message.delete();
     return out ? cmd.response.send(out) : cmd.response.error('no characters could be converted to morse 😭');
 };

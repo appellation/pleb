@@ -1,4 +1,4 @@
-exports.exec = async (cmd) => cmd.message.react('👋');
+exports.exec = (cmd) => cmd.message.react('👋');
 exports.triggers = [
     'hello',
     'hi',

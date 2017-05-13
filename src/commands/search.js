@@ -1,7 +1,7 @@
 const rp = require('request-promise-native');
 const numeral = require('numeral');
 const moment = require('moment');
-const Validation = require('../util/command/ValidationProcessor');
+const Validation = require('../util/command/Validator');
 
 const countryMap = {
     brazil: 'BR',

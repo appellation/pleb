@@ -18,5 +18,3 @@ exports.arguments = function* () {
         .setPrompt('What mathematical expression would you like to evaluate?')
         .setPattern(/.*/);
 };
-
-exports.validate = val => val.ensureArgs();
