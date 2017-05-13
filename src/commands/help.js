@@ -39,6 +39,6 @@ exports.exec = async (cmd) => {
         '- **define <word>** - get the dictionary definition for a given word\n' +
         '- **link** - get the invite link for the bot\n\n' +
         'NSFW commands (noted by an [NSFW] tag above) can only be given in the `#nsfw` channel or by people with the `nsfw` role.  Members with the `no-pleb` role will be unable to use commands.\n\n' +
-        'For human help, check out my Discord server (<https://discord.gg/DPuaDvP>) or my GitHub repo (<https://github.com/appellation/pleb>)'
+        'For human help, check out my Discord server (<https://discord.gg/DPuaDvP>).'
         , { split: true });
 };
