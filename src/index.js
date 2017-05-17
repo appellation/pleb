@@ -5,6 +5,7 @@ require('./util/extensions');
 require('moment-duration-format');
 require('dotenv').config({ silent: true });
 const Discord = require('discord.js');
+const spectacles = require('spectacles.js');
 const Raven = require('raven');
 const Log = require('./util/log');
 
@@ -19,8 +20,8 @@ new class extends Discord.Client {
             ]
         });
 
+        spectacles('discord.js', this, { host: 'redis' });
         this.log = new Log(this);
-
         this.log.verbose('instantiated client');
 
         if(process.env.raven) {

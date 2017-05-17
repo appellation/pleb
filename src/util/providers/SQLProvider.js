@@ -5,8 +5,9 @@ class SQLProvider extends Base {
     constructor() {
         super();
         const sq = new Sequelize({
-            storage: './db.sqlite',
-            dialect: 'sqlite'
+            host: 'postgres',
+            username: 'postgres',
+            dialect: 'postgres'
         });
 
         this.models = {
