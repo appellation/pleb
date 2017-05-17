@@ -125,8 +125,8 @@ class PlaylistOperator {
      * @private
      */
     _end(reason) {
-        this.client.log.verbose(`ended with reason: ${reason}`);
-        // this.dispatcher.stream.destroy();
+        console.trace(`ended with reason: ${reason}`);
+        this.dispatcher.stream.destroy();
         this.dispatcher = null;
         if(reason === 'temp') return;
         if(reason === 'terminal' || (!this.playlist.hasNext() && !this.loop)) return this._destroy();
@@ -139,7 +139,7 @@ class PlaylistOperator {
      */
     stop(reason = 'temp') {
         if(this.dispatcher) {
-            this.client.log.verbose(`ending with reason: ${reason}`);
+            console.trace(`ending with reason: ${reason}`);
             this.dispatcher.end(reason);
         }
     }
