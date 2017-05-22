@@ -1,9 +1,15 @@
-const storage = require('../util/storage/playlists');
+module.exports = class {
+    constructor({ bot }) {
+        this.bot = bot;
+    }
 
-exports.exec = (cmd) => {
-    const operator = storage.get(cmd.message.guild.id);
-    operator.playlist.shuffle();
-    return operator.start(cmd.response);
+    exec(cmd) {
+        const operator = this.bot.playlists.get(cmd.message.guild.id);
+        operator.playlist.shuffle();
+        return operator.start(cmd.response);
+    }
+
+    validate(val) {
+        return val.ensurePlaylist();
+    }
 };
-
-exports.validate = val => val.ensurePlaylist();

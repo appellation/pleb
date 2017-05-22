@@ -1,29 +1,32 @@
-/**
- * Created by Will on 1/14/2017.
- */
-
 const url = require('url');
 const request = require('request');
-const rp = require('request-promise-native').defaults({
-    baseUrl: 'https://api.soundcloud.com',
-    followAllRedirects: true,
-    qs: {
-        client_id: process.env.soundcloud
-    },
-    json: true
-});
+const rp = require('request-promise-native');
 
-class Soundcloud {
+class SoundCloud {
+    constructor() {
+        this.request = rp.defaults({
+            baseUrl: 'https://api.soundcloud.com',
+            followAllRedirects: true,
+            qs: {
+                client_id: process.env.soundcloud
+            },
+            json: true
+        });
+    }
 
     /**
      * Add command arguments to the playlist.
      * @param {Array} args
-     * @return {Promise<Array<?Song>>}
+     * @return {Promise<Array<Song>>}
      */
-    async add(args) {
-        const urls = args.filter(e => Soundcloud.isViewURL(e));
+    async get(args) {
+        const urls = args.filter((e, i) => {
+            const is = SoundCloud.isViewURL(e);
+            if (is) args.splice(i, 1);
+            return is;
+        });
         const loaded = await Promise.all(urls.map(r => this._loadResource(r)));
-        return loaded.reduce((p, c) => p.concat(c), []);
+        return loaded.reduce((p, c) => p.concat(c.filter(r => r)), []);
     }
 
     /**
@@ -33,12 +36,16 @@ class Soundcloud {
      * @private
      */
     async _loadResource(url) {
-        const thing = await rp.get({
-            uri: 'resolve',
-            qs: {
-                url
-            }
-        });
+        let thing;
+        try {
+            thing = await this.request.get({
+                uri: 'resolve',
+                qs: { url }
+            });
+        } catch (e) {
+            return [];
+        }
+
 
         switch (thing.kind) {
             case 'playlist':
@@ -67,7 +74,7 @@ class Soundcloud {
      * @private
      */
     _addTrack(track, playlistID) {
-        if(!track.streamable) return null;
+        if (!track.streamable) return null;
 
         return {
             type: 'soundcloud',
@@ -92,10 +99,10 @@ class Soundcloud {
      */
     static isViewURL(testURL) {
         const parsed = url.parse(testURL);
-        if(!parsed.pathname || !parsed.hostname) return false;
+        if (!parsed.pathname || !parsed.hostname) return false;
         const parts = parsed.pathname.split('/');
         return (parsed.hostname === 'soundcloud.com' || parsed.hostname === 'www.soundcloud.com') && parts.length >= 2;
     }
 }
 
-module.exports = Soundcloud;
+module.exports = SoundCloud;

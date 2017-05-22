@@ -1,208 +1,54 @@
-/**
- * Created by Will on 1/14/2017.
- */
-
-const url = require('url');
-const rp = require('request-promise-native').defaults({
-    baseUrl: 'https://www.googleapis.com/youtube/v3',
-    json: true,
-    qs: {
-        key: process.env.youtube
-    }
-});
+const YouTubeAPI = require('simple-youtube-api');
 const ytdl = require('ytdl-core');
 
-const Soundcloud = require('./Soundcloud');
-const Constants = {
-    video: 'video',
-    playlist: 'playlist',
-    shortVideo: 'short video'
-};
-
-class Youtube {
+class YouTube {
+    constructor() {
+        this.api = new YouTubeAPI(process.env.youtube);
+    }
 
     /**
      * Add command arguments to a playlists.  Automatically adds any non-url arguments and a query.
-     * @param {Array} args
-     * @return {Promise}
+     * @param {string} content
+     * @return {Promise<Array>}
      */
-    async add(args) {
-        const urls = [];
-        const query = args.filter(e => {
-            if(Soundcloud.isViewURL(e)) return false;
-            if(Youtube.isViewURL(e)) {
-                urls.push(e);
-                return false;
+    async get(args) {
+        const loaded = [], query = [];
+
+        for (const elem of args) {
+            const parsed = YouTubeAPI.util.parseURL(elem);
+            if (!parsed) {
+                query.push(elem);
+            } else if (parsed.type === 'video') {
+                const resource = await this.api.getVideo(elem);
+                if (resource) loaded.push(YouTube.formatSong(resource));
+            } else if (parsed.type === 'playlist') {
+                const resource = await this.api.getPlaylist(elem);
+                loaded.push(...resource.map(r => YouTube.formatSong(r)));
             }
-            return true;
-        }).join(' ');
+        }
 
-        const loaded = [];
-
-        if(query) loaded.push(await this.loadTrackQuery(query));
-        for(const resource of urls) {
-            try {
-                const type = Youtube.getType(resource);
-                const id = Youtube.parseID(resource);
-
-                if(type === Constants.video || type === Constants.shortVideo) loaded.push(await this.loadTrack(id));
-                else if(type === Constants.playlist) loaded.push(...(await this.loadPlaylist(id)));
-            } catch (e) {
-                // do nothing
-            }
+        if (query.length) {
+            const resource = await this.api.searchVideos(query.join(' '), 1);
+            if (resource.length) loaded.push(resource[0]);
         }
 
         return loaded;
     }
 
-    async loadTrackQuery(query = '') {
-        const data = await Youtube.search(query, 'video');
-        if(!data.items.length) return null;
-        return Youtube.formatSong(data.items[0]);
-    }
-
-    async loadTrack(id = '') {
-        const data = await rp({
-            url: 'videos',
-            qs: {
-                part: 'id,snippet',
-                id,
-                maxResults: 1
-            }
-        });
-        if(!data.items.length) return null;
-        return Youtube.formatSong(data.items[0]);
-    }
-
-    async loadPlaylistQuery(query = '') {
-        const data = await Youtube.search(query, 'playlist');
-        if(!data.items.length) return null;
-        return Youtube.formatSong(data.items[0]);
-    }
-
-    async loadPlaylist(id = '', pageToken = null, songs = []) {
-        const data = await rp({
-            url: 'playlistItems',
-            qs: {
-                part: 'id,snippet',
-                playlistId: id,
-                maxResults: 50,
-                pageToken
-            }
-        });
-
-        songs.push(...data.items.map(i => Youtube.formatSong(i)));
-        if(data.nextPageToken) return this.loadPlaylist(id, data.nextPageToken, songs);
-        return songs;
-    }
-
-    static search(query, type) {
-        return rp({
-            url: 'search',
-            qs: {
-                part: 'id,snippet',
-                q: query,
-                type,
-                maxResults: 1
-            }
-        });
-    }
-
-    static formatSong(resource, playlistID) {
-        const id = Youtube.fetchID(resource);
+    static formatSong(video, playlistID) {
         return {
             type: 'youtube',
-            trackID: id,
+            trackID: video.id,
             playlistID,
-            title: resource.snippet.title,
+            title: video.title,
             stream: () => {
-                return ytdl(`https://www.youtube.com/watch?v=${id}`, {
+                return ytdl(video.url, {
                     filter: 'audioonly',
                     quality: 'lowest'
                 });
             }
         };
     }
-
-    /**
-     * Fetch the video ID of a YouTube resource.
-     * @param {Object} resource
-     * @return {String}
-     */
-    static fetchID(resource) {
-        switch(resource.kind) {
-            case 'youtube#playlistItem':
-                return resource.snippet.resourceId.videoId;
-            case 'youtube#searchResult':
-                return resource.id.videoId;
-            default:
-                return resource.id;
-        }
-    }
-
-    /**
-     * Get the type of the URL.
-     * @param {string} testURL
-     * @return {?string}
-     */
-    static getType(testURL) {
-        const parsed = url.parse(testURL, true);
-
-        if(parsed.hostname === 'www.youtube.com' || parsed.hostname === 'youtube.com') {
-            if(parsed.pathname === '/watch' && !!parsed.query.v) return Constants.video;
-            else if(parsed.pathname === '/playlist' && !!parsed.query.list) return Constants.playlist;
-
-            return null;
-        } else if(parsed.hostname === 'www.youtu.be' || parsed.hostname === 'youtu.be') {
-            return Constants.shortVideo;
-        }
-        return null;
-    }
-
-    /**
-     * Find the ID of any YouTube URL.
-     * @param testURL
-     * @return {string|null}
-     */
-    static parseID(testURL) {
-        const type = Youtube.getType(testURL);
-        const parsed = url.parse(testURL, true);
-
-        let toTest;
-        switch (type) {
-            case Constants.video:
-                toTest = parsed.query.v;
-                break;
-            case Constants.shortVideo:
-                toTest = parsed.pathname.substring(1);
-                break;
-            case Constants.playlist:
-                toTest = parsed.query.list;
-                break;
-        }
-
-        return Youtube._testID(toTest);
-    }
-
-    /**
-     * Whether the YouTube link is a front-end URL.
-     * @param testURL
-     * @return {boolean}
-     */
-    static isViewURL(testURL) {
-        return !!Youtube.parseID(testURL);
-    }
-
-    /**
-     * Test a string whether it contains a YouTube ID pattern.
-     * @param {string} string
-     * @return {null|string}
-     * @private
-     */
-    static _testID(string) {
-        const idRegex = /[A-Za-z0-9_-]+/;
-        return idRegex.test(string) ? string : null;
-    }
 }
 
-module.exports = Youtube;
+module.exports = YouTube;

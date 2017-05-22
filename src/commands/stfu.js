@@ -1,15 +1,18 @@
-const storage = require('../util/storage/playlists');
+module.exports = class {
+    constructor({ bot }) {
+        this.bot = bot;
+        this.triggers = [
+            'stfu',
+            'stop',
+            'leave'
+        ];
+    }
 
-exports.exec = (cmd) => {
-    const operator = storage.get(cmd.message.guild.id);
-    if(operator) operator.destroy();
+    exec(cmd) {
+        const operator = this.bot.playlists.get(cmd.message.guild.id);
+        if (operator) operator.destroy();
 
-    if(cmd.message.guild.voiceConnection) cmd.message.guild.voiceConnection.disconnect();
-    return cmd.response.send('k 😢');
+        if (cmd.message.guild.voiceConnection) cmd.message.guild.voiceConnection.disconnect();
+        return cmd.response.send('k 😢');
+    }
 };
-
-exports.triggers = [
-    'stfu',
-    'stop',
-    'leave'
-];
