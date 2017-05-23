@@ -1,9 +1,4 @@
-/**
- * Created by Will on 1/18/2017.
- */
-
 class GuildSettings {
-
     /**
      * @param {BaseProvider} provider
      * @param {Guild} guild
@@ -19,18 +14,37 @@ class GuildSettings {
         this.toCache = ['prefix'];
     }
 
+    get model() {
+        return this.provider.models.Guild;
+    }
+
+    async _fetch(options = {}) {
+        if (options.where) options.where.id = this.guild.id;
+        else options = Object.assign(options, { where: { id: this.guild.id } });
+
+        const model = await this.model.findOne(options);
+        const data = model ? model.toJSON() : null;
+        this.updateCache(data, Object.keys(options).length === 0);
+        return data;
+    }
+
+    _save(data = {}, options = {}) {
+        data = Object.assign(data, { id: this.guild.id });
+        this.updateCache(data);
+        return this.model.upsert(data, options);
+    }
+
     /**
      * Gets all guild settings.
      * @return {*}
      */
-    async getAll() {
-        const data = await this.provider.getGuild(this.guild.id);
-        this.updateCache(data);
-        return data;
+    getAll() {
+        return this._fetch();
     }
 
-    async loadCache() {
-        await this.getAll();
+    async loadCache(data = null) {
+        if (data) this.updateCache(data, true);
+        else await this.getAll();
     }
 
     getCached(key) {
@@ -38,23 +52,31 @@ class GuildSettings {
     }
 
     async get(key, force = false) {
-        if(key in this.cache && !force) {
+        if (key in this.cache && !force) {
             return this.cache[key];
         } else {
-            return (await this.getAll())[key];
+            return (await this._fetch({ attributes: [key] }))[key];
         }
     }
 
-    async set(key, value) {
-        const inserted = await this.provider.updateGuild(this.guild.id, { [key]: value });
-        this.updateCache(inserted);
-        return inserted;
+    set(key, value) {
+        return this._save({ [key]: value });
     }
 
-    updateCache(data = {}) {
-        if(data === null) data = {};
-        this.cache = {};
-        for(const key of this.toCache) this.cache[key] = data[key];
+    updateCache(data = {}, clear = false) {
+        if (data === null) data = {};
+        if (clear) this.cache = {};
+        for (const key of this.toCache) {
+            if (key === 'prefix') {
+                if (typeof data[key] === 'string' && data[key].length) {
+                    this.cache[key] = new RegExp(`^(${RegExp.escape(data[key])}|<@!?${process.env.discord_client_id}>)\\s*`);
+                } else {
+                    this.cache[key] = new RegExp(`^<@!?${process.env.discord_client_id}>\\s*`);
+                }
+            } else {
+                this.cache[key] = data[key];
+            }
+        }
     }
 }
 

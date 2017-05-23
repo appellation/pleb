@@ -1,9 +1,8 @@
 const Sequelize = require('sequelize');
-const Base = require('./BaseProvider');
+const Settings = require('./GuildSettings');
 
-class SQLProvider extends Base {
+class SQLProvider {
     constructor() {
-        super();
         const sq = new Sequelize({
             host: 'postgres',
             username: 'postgres',
@@ -25,35 +24,25 @@ class SQLProvider extends Base {
         };
     }
 
-    async initialize() {
-        const sync = [];
-        for(const m in this.models)
-            if(this.models.hasOwnProperty(m))
-                sync.push(this.models[m].sync());
-        await Promise.all(sync);
+    initialize() {
+        return Object.values(this.models).map(model => model.sync());
     }
 
-    async getGuild(guildID) {
-        const instance = await this.models.Guild.findOne({
-            where: { id: guildID }
-        });
-
-        return instance ? instance.toJSON() : {};
-    }
-
-    async updateGuild(guildID, data = {}) {
-        await this.models.Guild.upsert(Object.assign(data, { id: guildID }));
-        return this.getGuild(guildID);
-    }
-
-    async initializeGuilds(client) {
-        const guilds = await this.models.Guild.findAll();
-        const guildMap = new Map(guilds.map(g => [g.get('id'), g]));
-
-        for(const g of client.guilds.values()) {
-            const data = guildMap.has(g.id) ? guildMap.get(g.id).toJSON() : {};
-            this.constructor.initializeGuild(g, data);
+    async initializeGuilds(bot) {
+        const stored = new Map();
+        for (const instance of await this.models.Guild.findAll()) {
+            if (bot.client.guilds.has(instance.get('id'))) stored.set(instance.get('id'), instance.toJSON());
         }
+
+        const settings = await Promise.all(bot.client.guilds.map(g => this.initializeGuild(g, stored.get(g.id) || {})));
+        for (const s of settings) bot.guildSettings.set(s.guild.id, s);
+        return settings;
+    }
+
+    async initializeGuild(guild, cached) {
+        const settings = new Settings(this, guild);
+        await settings.loadCache(cached);
+        return settings;
     }
 }
 

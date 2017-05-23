@@ -21,7 +21,7 @@ module.exports = class extends winston.Logger {
         });
     }
 
-    async hook(data = {}) {
+    hook(data = {}) {
         const embed = new RichEmbed(data)
             .setFooter(`Shard ${this.client.shard.id}`)
             .setTimestamp();

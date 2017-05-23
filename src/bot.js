@@ -22,6 +22,7 @@ module.exports = new class {
 
         this.log = new Log(this.client);
         this.playlists = new Map();
+        this.guildSettings = new Map();
         this.provider = new Provider();
         this.handler = new Handler(this);
 
@@ -35,7 +36,7 @@ module.exports = new class {
             Raven.wrap(this._load.bind(this))();
             this.log.verbose('loaded with raven');
         } else {
-            process.on('unhandledRejection', console.error);
+            process.on('unhandledRejection', console.error); // eslint-disable-line no-console
             this._load();
         }
     }
@@ -97,7 +98,7 @@ module.exports = new class {
 
     onGuildCreate(guild) {
         guild.defaultChannel.send('Sup.  Try `@Pleb help`.').catch(() => null);
-        Provider.initializeGuild(guild);
+        this.provider.initializeGuild(guild);
     }
 
     onMessage(message) {
