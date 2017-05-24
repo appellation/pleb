@@ -1,4 +1,3 @@
-const bot = require('../../bot');
 const SoundCloud = require('./interfaces/Soundcloud');
 const YouTube = require('./interfaces/Youtube');
 
@@ -21,7 +20,10 @@ class Playlist {
     /**
      * @constructor
      */
-    constructor() {
+    constructor(bot, guild) {
+        this.bot = bot;
+
+        this.guild = guild;
 
         /**
          * The array of songs.
@@ -35,6 +37,8 @@ class Playlist {
          * @private
          */
         this._pos = 0;
+
+        this.loop = false;
     }
 
     /**
@@ -59,6 +63,11 @@ class Playlist {
      */
     get current() {
         return this.list[this._pos];
+    }
+
+    reset() {
+        this.list = [];
+        this._post = 0;
     }
 
     /**
@@ -119,19 +128,31 @@ class Playlist {
         this._pos = 0;
     }
 
+    toggleLoop() {
+        this.loop = !this.loop;
+        return this.loop;
+    }
+
     /**
      * Add command arguments to the playlist.
      * @param {Response} res
-     * @param {String} arg A string of content to add.
+     * @param {String} content A string of content to add.
+     * @param {String} type One of `normal`, `playlist`
      * @return {Playlist}
      */
-    async add(res, arg) {
+    async add(res, content, type = 'normal') {
         await res.send('adding songs to playlist...');
 
-        const args = arg.split(' ');
-        let added =
-            (await sc.get(args))
-            .concat(await yt.get(args));
+        let added;
+        if (type === 'normal') {
+            const args = content.split(' ');
+            added = (await sc.get(args))
+                .concat(await yt.get(args));
+            added = added.filter(e => e);
+        } else if (type === 'playlist') {
+            added = await yt.getPlaylistQuery(content);
+        }
+
         added = added.filter(e => e);
 
         if (added.length < 1) {
@@ -146,12 +167,84 @@ class Playlist {
         return added;
     }
 
+    async addPlaylist() {}
+
     /**
      * Add a song to the playlist.
      * @param {Array<?Song>} song
      */
     addSongs(songs) {
         this.list.push(...songs.filter(s => s));
+    }
+
+    get dispatcher() {
+        return this.guild.voiceConnection ? this.guild.voiceConnection.dispatcher : null;
+    }
+
+    async start(response) {
+        if (!this.current) return response.error('There is no song currently available to play.');
+
+        try {
+            await this.ensureVoiceConnection(response.message.member);
+        } catch (e) {
+            response.error(e);
+            return;
+        }
+
+        if (this.bot.playlists.has(this.guild.id)) {
+            this.bot.playlists.get(this.guild.id).stop('temp');
+            this.bot.playlists.set(this.guild.id, this);
+        }
+
+        this._start();
+        response.success(`now playing \`${this.current.title}\``);
+    }
+
+    stop(reason = 'temp') {
+        if (this.dispatcher) this.dispatcher.end(reason);
+    }
+
+    destroy() {
+        this.stop('terminal');
+    }
+
+    pause() {
+        if (this.dispatcher && this.dispatcher.speaking) this.dispatcher.pause();
+    }
+
+    resume() {
+        if (this.dispatcher && !this.dispatcher.speaking) this.dispatcher.resume();
+    }
+
+    _start() {
+        if (!this.current || !this.guild.voiceConnection) return;
+        this.stop();
+        const dispatcher = this.guild.voiceConnection.playStream(this.current.stream(), { volume: 0.2 });
+        dispatcher.once('end', (reason) => {
+            if (reason === 'temp') return;
+            if (reason === 'terminal' || (!this.hasNext() && !this.loop)) return this._destroy();
+            if (!this.loop) this.next();
+            this._start();
+        });
+    }
+
+    _destroy() {
+        if (this.guild.voiceConnection) this.guild.voiceConnection.disconnect();
+        this.bot.playlists.delete(this.guild.id);
+    }
+
+    ensureVoiceConnection(member) {
+        if (member.guild.voiceConnection) return member.guild.voiceConnection;
+
+        const channel = member.voiceChannel;
+        if (!channel) throw new Error('You\'re not in a voice channel.');
+        if (!channel.joinable) throw new Error('I can\'t join your voice channel.');
+        if (!channel.speakable) throw new Error('I can\'t speak in your voice channel.');
+        return channel.join();
+    }
+
+    static get(bot, guild) {
+        return bot.playlists.has(guild.id) ? bot.playlists.get(guild.id) : new Playlist(bot, guild);
     }
 }
 

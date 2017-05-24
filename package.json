@@ -36,6 +36,7 @@
     "request": "^2.74.0",
     "request-promise-native": "^1.0.3",
     "sequelize": "^3.30.4",
+    "simple-youtube-api": "github:hypercoder2975/simple-youtube-api#appel-wip",
     "spectacles.js": "git+https://github.com/spec-tacles/spectacles.js.git",
     "valid-url": "^1.0.9",
     "winston": "^2.3.1",

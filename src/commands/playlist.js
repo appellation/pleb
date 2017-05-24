@@ -1,21 +1,25 @@
-const { Argument } = require('discord-handles');
-const Operator = require('../util/audio/PlaylistOperator');
 const Playlist = require('../util/audio/Playlist');
 
-exports.exec = async ({ response: res, message: msg, args}) => {
-    const pl = new Playlist();
-    await res.send('adding playlist...');
-    await pl.yt.loadPlaylistQuery(args.list);
-    const op = await Operator.init(msg.member, pl);
-    return op.start(res);
+module.exports = class {
+    constructor({ bot }) {
+        this.bot = bot;
+    }
+
+    async exec(cmd) {
+        const list = Playlist.get(this.bot, cmd.message.guild);
+        list.stop();
+        list.reset();
+        await list.add(cmd.response, cmd.args.list, 'playlist');
+        return list.start(cmd.response);
+    }
+
+    * arguments(Argument) {
+        yield new Argument('list')
+            .setPrompt('What playlist would you like to search for?')
+            .setPattern(/.*/);
+    }
+
+    validator(val) {
+        return val.ensureCanPlay();
+    }
 };
-
-exports.arguments = function* () {
-    yield new Argument('list')
-        .setPrompt('What playlist would you like to search for?')
-        .setPattern(/.*/);
-};
-
-exports.disabled = true;
-
-exports.validator = val => val.ensureCanPlay();

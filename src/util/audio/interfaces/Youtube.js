@@ -9,7 +9,7 @@ class YouTube {
     /**
      * Add command arguments to a playlists.  Automatically adds any non-url arguments and a query.
      * @param {string} content
-     * @return {Promise<Array>}
+     * @return {Promise<Array<Song>>}
      */
     async get(args) {
         const loaded = [], query = [];
@@ -19,20 +19,26 @@ class YouTube {
             if (!parsed) {
                 query.push(elem);
             } else if (parsed.type === 'video') {
-                const resource = await this.api.getVideo(elem);
-                if (resource) loaded.push(YouTube.formatSong(resource));
+                const video = await this.api.getVideo(elem);
+                if (video) loaded.push(YouTube.formatSong(video));
             } else if (parsed.type === 'playlist') {
-                const resource = await this.api.getPlaylist(elem);
-                loaded.push(...resource.map(r => YouTube.formatSong(r)));
+                const videos = await this.api.getPlaylist(elem);
+                loaded.push(...videos.map(v => YouTube.formatSong(v)));
             }
         }
 
         if (query.length) {
             const resource = await this.api.searchVideos(query.join(' '), 1);
-            if (resource.length) loaded.push(resource[0]);
+            if (resource.length) loaded.push(YouTube.formatSong(resource[0]));
         }
 
         return loaded;
+    }
+
+    async getPlaylistQuery(query) {
+        const playlists = await this.api.searchPlaylists(query, 1);
+        const videos = await playlists[0].getVideos();
+        return videos.map(v => YouTube.formatSong(v));
     }
 
     static formatSong(video, playlistID) {
