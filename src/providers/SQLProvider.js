@@ -25,7 +25,7 @@ class SQLProvider {
     }
 
     initialize() {
-        return Object.values(this.models).map(model => model.sync());
+        return Promise.all(Object.values(this.models).map(model => model.sync()));
     }
 
     async initializeGuilds(bot) {

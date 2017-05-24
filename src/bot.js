@@ -7,9 +7,9 @@ const Raven = require('raven');
 
 const Log = require('./util/Log');
 const Handler = require('./util/command/Handler');
-const Provider = require('./util/providers/SQLProvider');
+const Provider = require('./providers/SQLProvider');
 
-module.exports = new class {
+new class {
     constructor() {
         this.client = new discord.Client({
             messageCacheLifetime: 1800,
