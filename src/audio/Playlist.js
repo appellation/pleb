@@ -29,7 +29,7 @@ class Playlist {
          * The array of songs.
          * @type {Array.<Song>}
          */
-        this.list = [];
+        this.songs = [];
 
         /**
          * The array pointer.
@@ -46,7 +46,7 @@ class Playlist {
      * @return {Number}
      */
     get length() {
-        return this.list.length;
+        return this.songs.length;
     }
 
     /**
@@ -62,11 +62,11 @@ class Playlist {
      * @return {Song}
      */
     get current() {
-        return this.list[this._pos];
+        return this.songs[this._pos];
     }
 
     reset() {
-        this.list = [];
+        this.songs = [];
         this._post = 0;
     }
 
@@ -101,7 +101,7 @@ class Playlist {
      * @return {boolean}
      */
     hasNext() {
-        return (this._pos + 1) <= this.list.length - 1;
+        return (this._pos + 1) <= this.songs.length - 1;
     }
 
     /**
@@ -109,7 +109,7 @@ class Playlist {
      * @return {Song}
      */
     getNext() {
-        return this.list[this._pos + 1];
+        return this.songs[this._pos + 1];
     }
 
     /**
@@ -117,14 +117,14 @@ class Playlist {
      * @return {Song|*}
      */
     getLast() {
-        return this.list[this.list.length - 1];
+        return this.songs[this.songs.length - 1];
     }
 
     /**
      * Shuffle the playlist.
      */
     shuffle() {
-        this.list = shuffle(this.list);
+        this.songs = shuffle(this.songs);
         this._pos = 0;
     }
 
@@ -174,7 +174,7 @@ class Playlist {
      * @param {Array<?Song>} song
      */
     addSongs(songs) {
-        this.list.push(...songs.filter(s => s));
+        this.songs.push(...songs.filter(s => s));
     }
 
     get dispatcher() {

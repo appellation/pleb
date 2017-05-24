@@ -1,10 +1,14 @@
+const Playlist = require('../audio/Playlist');
+
 module.exports = class {
     constructor({ bot }) {
         this.bot = bot;
     }
 
-    exec(cmd) {
-        return this.bot.playlists.get(cmd.message.guild.id).playlist.add(cmd.response, cmd.args.song);
+    async exec(cmd) {
+        const list = Playlist.get(this.bot, cmd.message.guild);
+        await list.add(cmd.response, cmd.args.song);
+        return list.start(cmd.response);
     }
 
     * arguments(Argument) {
@@ -14,6 +18,6 @@ module.exports = class {
     }
 
     validate(val) {
-        return val.ensurePlaylist();
+        return val.ensureCanPlay();
     }
 };

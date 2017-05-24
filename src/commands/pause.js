@@ -1,4 +1,15 @@
-const storage = require('../util/storage/playlists');
+const Playlist = require('../audio/Playlist');
 
-exports.exec = (cmd) => storage.get(cmd.message.guild.id).pause();
-exports.validate = val => val.ensurePlaylist();
+module.exports = class {
+    constructor({ bot }) {
+        this.bot = bot;
+    }
+
+    exec(cmd) {
+        return Playlist.get(this.bot, cmd.message.guild).pause();
+    }
+
+    validate(val) {
+        return val.ensurePlaylist(this.bot);
+    }
+};

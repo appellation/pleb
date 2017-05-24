@@ -5,7 +5,7 @@ require('dotenv').config({ silent: true });
 const discord = require('discord.js');
 const Raven = require('raven');
 
-const Log = require('./util/log');
+const Log = require('./util/Log');
 const Handler = require('./util/command/Handler');
 const Provider = require('./util/providers/SQLProvider');
 

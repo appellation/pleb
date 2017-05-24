@@ -4,7 +4,7 @@
   "description": "A very low class Discord bot.",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/shard.js",
+    "start": "node src/index.js",
     "test": "eslint src/**"
   },
   "engines": {

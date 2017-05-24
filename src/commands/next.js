@@ -1,18 +1,24 @@
-const { Argument } = require('discord-handles');
-const storage = require('../util/storage/playlists');
+const Playlist = require('../audio/Playlist');
 
-exports.exec = (cmd) => {
-    const operator = storage.get(cmd.message.guild.id);
-    for(let i = 0; i < (cmd.args.count || 1) && operator.playlist.hasNext(); i++) operator.playlist.next();
-    operator.start(cmd.response);
+module.exports = class {
+    constructor({ bot }) {
+        this.bot = bot;
+        this.triggers = ['next', 'skip'];
+    }
+
+    exec(cmd) {
+        const list = Playlist.get(this.bot, cmd.message.guild);
+        for (let i = 0; i < (cmd.args.count || 1) && list.hasNext(); i++) list.next();
+        return list.start(cmd.response);
+    }
+
+    * arguments(Argument) {
+        yield new Argument('count')
+            .setOptional()
+            .setResolver(c => isNaN(c) ? null : parseInt(c));
+    }
+
+    validate(val) {
+        return val.ensurePlaylist(this.bot);
+    }
 };
-
-exports.validate = val => val.ensurePlaylist();
-
-exports.arguments = function* () {
-    yield new Argument('count')
-        .setOptional()
-        .setResolver(c => isNaN(c) ? null : parseInt(c));
-};
-
-exports.triggers = ['next', 'skip'];
