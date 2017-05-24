@@ -158,9 +158,9 @@ class Playlist {
         if (added.length < 1) {
             return res.error('Unable to find that resource.');
         } else if (added.length === 1) {
-            res.success(`added \`${added[0].title}\` to playlist`);
+            await res.success(`added \`${added[0].title}\` to playlist`);
         } else {
-            res.success(`added **${added.length}** songs to playlist`);
+            await res.success(`added **${added.length}** songs to playlist`);
         }
 
         this.addSongs(added);
@@ -197,7 +197,7 @@ class Playlist {
         }
 
         this._start();
-        response.success(`now playing \`${this.current.title}\``);
+        await response.success(`now playing \`${this.current.title}\``);
     }
 
     stop(reason = 'temp') {
