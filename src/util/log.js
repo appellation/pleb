@@ -13,22 +13,25 @@ module.exports = class extends winston.Logger {
         });
 
         this.client = client;
-
-        this.webhook = request.defaults({
-            uri: process.env.webhook_url,
-            json: true,
-            method: 'post'
-        });
     }
 
     hook(data = {}) {
         const embed = new RichEmbed(data)
             .setFooter(`Shard ${this.client.shard.id}`)
             .setTimestamp();
-        return this.webhook({
+        return this._webhook({
             body: {
                 embeds: [embed]
             }
         });
+    }
+
+    _webhook(data) {
+        if (!process.env.webhook_url) return Promise.resolve();
+        return request(Object.assign(data, {
+            uri: process.env.webhook_url,
+            json: true,
+            method: 'post'
+        }));
     }
 };

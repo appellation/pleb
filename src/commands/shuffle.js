@@ -4,9 +4,9 @@ module.exports = class {
     }
 
     exec(cmd) {
-        const operator = this.bot.playlists.get(cmd.message.guild.id);
-        operator.playlist.shuffle();
-        return operator.start(cmd.response);
+        const list = this.bot.playlists.get(cmd.message.guild.id);
+        list.shuffle();
+        return list.start(cmd.response);
     }
 
     validate(val) {

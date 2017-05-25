@@ -5,10 +5,9 @@ module.exports = class {
         this.bot = bot;
     }
 
-    async exec(cmd) {
+    exec(cmd) {
         const list = Playlist.get(this.bot, cmd.message.guild);
-        await list.add(cmd.response, cmd.args.song);
-        return list.start(cmd.response);
+        return list.add(cmd.response, cmd.args.song);
     }
 
     * arguments(Argument) {

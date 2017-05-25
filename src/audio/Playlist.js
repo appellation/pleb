@@ -193,6 +193,7 @@ class Playlist {
 
         if (this.bot.playlists.has(this.guild.id)) {
             this.bot.playlists.get(this.guild.id).stop('temp');
+        } else {
             this.bot.playlists.set(this.guild.id, this);
         }
 
