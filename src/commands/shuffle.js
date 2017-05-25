@@ -10,6 +10,6 @@ module.exports = class {
     }
 
     validate(val) {
-        return val.ensurePlaylist();
+        return val.ensurePlaylist(this.bot);
     }
 };

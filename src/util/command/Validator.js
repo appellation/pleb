@@ -84,7 +84,7 @@ class Validate extends Validator {
     }
 
     ensureCanPlay() {
-        return this.ensurePlaylist() || (this.ensureJoinable() && this.ensureSpeakable());
+        return this.ensureJoinable() && this.ensureSpeakable();
     }
 
     /**

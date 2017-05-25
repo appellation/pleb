@@ -11,4 +11,4 @@ WORKDIR /usr/src/bot
 COPY . /usr/src/bot
 
 RUN npm install
-CMD ["node", "src/shard.js"]
+CMD ["node", "src/index.js"]
