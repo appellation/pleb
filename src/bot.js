@@ -7,6 +7,7 @@ const Raven = require('raven');
 
 const Log = require('./util/Log');
 const Handler = require('./util/command/Handler');
+const Spectacles = require('./util/Spectacles');
 const Provider = require('./providers/SQLProvider');
 
 new class {
@@ -23,10 +24,12 @@ new class {
         Object.defineProperty(this.client, 'bot', { value: this });
 
         this.log = new Log(this.client);
-        this.playlists = new Map();
-        this.guildSettings = new Map();
         this.provider = new Provider();
         this.handler = new Handler(this);
+        this.spectacles = new Spectacles(this);
+
+        this.playlists = new Map();
+        this.guildSettings = new Map();
 
         this.log.verbose('instantiated client');
 
