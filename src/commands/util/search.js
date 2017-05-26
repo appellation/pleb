@@ -1,7 +1,7 @@
 const rp = require('request-promise-native');
 const numeral = require('numeral');
 const moment = require('moment');
-const Validation = require('../util/command/Validator');
+const Validation = require('../../util/command/Validator');
 
 const countryMap = {
     brazil: 'BR',
@@ -18,7 +18,7 @@ exports.exec = async (cmd) => {
         uri: 'https://api.cognitive.microsoft.com/bing/v5.0/search',
         qs: {
             q: args.query,
-            mkt: 'en-' + cc,
+            mkt: `en-${cc}`,
             count: 1,
             safeSearch: valid.ensureNSFW() ? 'Moderate' : 'Strict'
         },
@@ -29,12 +29,12 @@ exports.exec = async (cmd) => {
         json: true
     });
 
-    if(typeof res.rankingResponse !== 'object' || Object.keys(res.rankingResponse).length === 0) return response.error('No results found.');
+    if (typeof res.rankingResponse !== 'object' || Object.keys(res.rankingResponse).length === 0) return response.error('No results found.');
 
     // format response
     const first = res.rankingResponse.mainline.items[0];
     let item;
-    let result = {
+    const result = {
         'News': async () => {
             item = res.news.value[0];
             const url = await shortenURL(item.url);
@@ -64,7 +64,7 @@ exports.exec = async (cmd) => {
 
 exports.arguments = function* (Argument) {
     yield new Argument('query')
-        .setPattern(/.*/)
+        .setInfinite()
         .setPrompt('What would you like to search for?');
 };
 

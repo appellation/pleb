@@ -1,4 +1,4 @@
-const resolvers = require('../util/command/resolvers');
+const resolvers = require('../../util/command/resolvers');
 
 exports.exec = (cmd) => {
     const user = cmd.args.user || cmd.message.author;

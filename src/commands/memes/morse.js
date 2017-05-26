@@ -1,5 +1,3 @@
-const { Argument } = require('discord-handles');
-
 const dot = '😂';
 const dash = '😑';
 const dict = {
@@ -41,7 +39,7 @@ const dict = {
     9: dash + dash + dash + dash + dot
 };
 
-exports.arguments = function* () {
+exports.arguments = function* (Argument) {
     yield new Argument('text')
         .setPrompt('What would you like to translate to morse?')
         .setPattern(/.*/)
@@ -50,9 +48,9 @@ exports.arguments = function* () {
 
 exports.exec = (cmd) => {
     let out = '';
-    for(const char of cmd.args.text) {
-        if(!dict[char]) continue;
-        out += dict[char] + ' ';
+    for (const char of cmd.args.text) {
+        if (!dict[char]) continue;
+        out += `${dict[char]} `;
     }
 
     return out ? cmd.response.send(out) : cmd.response.error('no characters could be converted to morse 😭');

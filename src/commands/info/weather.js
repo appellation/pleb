@@ -5,7 +5,7 @@ const Canvas = require('canvas');
 
 exports.exec = async ({ response, message: msg, args }) => {
 
-    let geocodeOptions = {
+    const geocodeOptions = {
         uri: 'https://maps.googleapis.com/maps/api/geocode/json?',
         headers: {
             'User-Agent': 'Request-Promise'
@@ -19,7 +19,7 @@ exports.exec = async ({ response, message: msg, args }) => {
 
     const locationRes = await request(geocodeOptions);
 
-    if(locationRes.status !== 'OK') {
+    if (locationRes.status !== 'OK') {
         switch (locationRes.status) {
             case 'ZERO_RESULTS':
                 return response.error('No results found');
@@ -36,8 +36,7 @@ exports.exec = async ({ response, message: msg, args }) => {
         }
     }
 
-    let city;
-    let weatherOptions = {
+    const weatherOptions = {
         uri: `https://api.darksky.net/forecast/${process.env.darksky}/${locationRes.results[0].geometry.location.lat},${locationRes.results[0].geometry.location.lng}`,
         headers: {
             'User-Agent': 'Request-Promise'
@@ -50,7 +49,7 @@ exports.exec = async ({ response, message: msg, args }) => {
     const country = locationRes.results[0].address_components.find(cou => cou.types.includes('country'));
     const continent = locationRes.results[0].address_components.find(con => con.types.includes('continent'));
 
-    city = locality || governing || country || continent || {};
+    const city = locality || governing || country || continent || {};
 
     const weatherRes = await request(weatherOptions);
     Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'fonts', 'NotoSans-Regular.ttf'), { family: 'NotoSans' });
@@ -58,36 +57,36 @@ exports.exec = async ({ response, message: msg, args }) => {
 
     const images = path.join(__dirname, '..', '..', 'assets', 'images', 'weather');
 
-    let canvas = new Canvas(800, 250);
-    let ctx = canvas.getContext('2d');
-    let Image = Canvas.Image;
-    let icon = new Image();
-    let background = new Image();
+    const canvas = new Canvas(800, 250);
+    const ctx = canvas.getContext('2d');
+    const Image = Canvas.Image;
+    const icon = new Image();
+    const background = new Image();
     icon.src = path.resolve(images, `${getIcon(weatherRes.currently.icon)}.png`);
     background.src = path.resolve(images, 'weatherbg.png');
 
-    let day1Time = timezone().tz(weatherRes.timezone).add(1, 'days').format('ddd');
-    let day1TempMin = convertFToC(weatherRes.daily.data[0].temperatureMin);
-    let day1TempMax = convertFToC(weatherRes.daily.data[0].temperatureMax);
-    let day1Icon = new Image();
+    const day1Time = timezone().tz(weatherRes.timezone).add(1, 'days').format('ddd');
+    const day1TempMin = convertFToC(weatherRes.daily.data[0].temperatureMin);
+    const day1TempMax = convertFToC(weatherRes.daily.data[0].temperatureMax);
+    const day1Icon = new Image();
     day1Icon.src = path.resolve(images, `${getIcon(weatherRes.daily.data[0].icon)}.png`);
 
-    let day2Time = timezone().tz(weatherRes.timezone).add(2, 'days').format('ddd');
-    let day2TempMin = convertFToC(weatherRes.daily.data[1].temperatureMin);
-    let day2TempMax = convertFToC(weatherRes.daily.data[1].temperatureMax);
-    let day2Icon = new Image();
+    const day2Time = timezone().tz(weatherRes.timezone).add(2, 'days').format('ddd');
+    const day2TempMin = convertFToC(weatherRes.daily.data[1].temperatureMin);
+    const day2TempMax = convertFToC(weatherRes.daily.data[1].temperatureMax);
+    const day2Icon = new Image();
     day2Icon.src = path.resolve(images, `${getIcon(weatherRes.daily.data[1].icon)}.png`);
 
-    let day3Time = timezone().tz(weatherRes.timezone).add(3, 'days').format('ddd');
-    let day3TempMin = convertFToC(weatherRes.daily.data[2].temperatureMin);
-    let day3TempMax = convertFToC(weatherRes.daily.data[2].temperatureMax);
-    let day3Icon = new Image();
+    const day3Time = timezone().tz(weatherRes.timezone).add(3, 'days').format('ddd');
+    const day3TempMin = convertFToC(weatherRes.daily.data[2].temperatureMin);
+    const day3TempMax = convertFToC(weatherRes.daily.data[2].temperatureMax);
+    const day3Icon = new Image();
     day3Icon.src = path.resolve(images, `${getIcon(weatherRes.daily.data[2].icon)}.png`);
 
-    let day4Time = timezone().tz(weatherRes.timezone).add(4, 'days').format('ddd');
-    let day4TempMin = convertFToC(weatherRes.daily.data[3].temperatureMin);
-    let day4TempMax = convertFToC(weatherRes.daily.data[3].temperatureMax);
-    let day4Icon = new Image();
+    const day4Time = timezone().tz(weatherRes.timezone).add(4, 'days').format('ddd');
+    const day4TempMin = convertFToC(weatherRes.daily.data[3].temperatureMin);
+    const day4TempMax = convertFToC(weatherRes.daily.data[3].temperatureMax);
+    const day4Icon = new Image();
     day4Icon.src = path.resolve(images, `${getIcon(weatherRes.daily.data[3].icon)}.png`);
 
     ctx.drawImage(background, 0, 0);

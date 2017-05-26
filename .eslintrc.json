@@ -23,6 +23,7 @@
         "block-spacing": ["error", "always"],
         "prefer-const": ["warn", { "destructuring": "any" }],
         "keyword-spacing": "error",
-        "object-curly-spacing": ["error", "always"]
+        "object-curly-spacing": ["error", "always"],
+        "prefer-template": "warn"
     }
 }

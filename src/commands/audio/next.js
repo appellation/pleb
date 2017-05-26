@@ -1,5 +1,3 @@
-const Playlist = require('../audio/Playlist');
-
 module.exports = class {
     constructor({ bot }) {
         this.bot = bot;
@@ -7,7 +5,7 @@ module.exports = class {
     }
 
     exec(cmd) {
-        const list = Playlist.get(this.bot, cmd.message.guild);
+        const list = this.bot.playlists.get(cmd.message.guild.id);
         for (let i = 0; i < (cmd.args.count || 1) && list.hasNext(); i++) list.next();
         return list.start(cmd.response);
     }

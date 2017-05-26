@@ -1,9 +1,14 @@
-const storage = require('../util/storage/playlists');
+module.exports = class {
+    constructor({ bot }) {
+        this.bot = bot;
+    }
 
-exports.exec = (cmd) => {
-    const pl = storage.get(cmd.message.guild.id);
-    pl.loop = !pl.loop;
-    cmd.response.success(`${pl.loop ? 'Started' : 'Stopped'} looping current song.`);
+    exec(cmd) {
+        const loop = this.bot.playlists.get(cmd.message.guild.id).toggleLoop();
+        return cmd.response.success(`${loop ? 'Started' : 'Stopped'} looping current song.`);
+    }
+
+    validate(val) {
+        return val.ensurePlaylist();
+    }
 };
-
-exports.validate = (val) => val.ensurePlaylist();

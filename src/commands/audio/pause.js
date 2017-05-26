@@ -1,12 +1,10 @@
-const Playlist = require('../audio/Playlist');
-
 module.exports = class {
     constructor({ bot }) {
         this.bot = bot;
     }
 
     exec(cmd) {
-        return Playlist.get(this.bot, cmd.message.guild).pause();
+        return this.bot.playlists.get(cmd.message.guild.id).pause();
     }
 
     validate(val) {

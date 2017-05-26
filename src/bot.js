@@ -20,6 +20,8 @@ new class {
             ]
         });
 
+        Object.defineProperty(this.client, 'bot', { value: this });
+
         this.log = new Log(this.client);
         this.playlists = new Map();
         this.guildSettings = new Map();

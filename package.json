@@ -13,7 +13,6 @@
   },
   "repository": "appellation/pleb",
   "author": "Will Nelson <appellation@topkek.pw>",
-  "license": "ISC",
   "dependencies": {
     "Sherlock": "github:neilgupta/Sherlock",
     "canvas": "automattic/node-canvas",

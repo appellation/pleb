@@ -1,10 +1,10 @@
 exports.exec = async ({ response: res, message: msg }) => {
-    if(!msg.channel.permissionsFor(msg.client.user).hasPermission('MANAGE_CHANNELS'))
+    if (!msg.channel.permissionsFor(msg.client.user).hasPermission('MANAGE_CHANNELS'))
         return res.error('I don\'t have perms to ~~brutally murder~~ mute you if you lose.');
-    if(msg.member.hasPermission('ADMINISTRATOR') || msg.member.id === msg.guild.ownerID)
+    if (msg.member.hasPermission('ADMINISTRATOR') || msg.member.id === msg.guild.ownerID)
         return res.error('awwww, admin is cheating.');
 
-    if(Math.random() < 0.5) return res.send(`${msg.author} lives!`);
+    if (Math.random() < 0.5) return res.send(`${msg.author} lives!`);
     try {
         await msg.channel.overwritePermissions(msg.author, { SEND_MESSAGES: false });
         setTimeout(() => {

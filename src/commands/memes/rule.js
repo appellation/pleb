@@ -1,8 +1,7 @@
-const resolvers = require('../util/command/resolvers');
+const resolvers = require('../../util/command/resolvers');
 
 exports.exec = ({ response: res, args }) => {
-    const parsed = parseInt(args.rule);
-    return res.send(`\`\`\`ldif\n${rules[parsed - 1]}\`\`\``);
+    return res.send(rules[args.rule - 1], { code: 'ldif' });
 };
 
 exports.arguments = function* (Argument) {
@@ -11,8 +10,8 @@ exports.arguments = function* (Argument) {
         .setRePrompt('Please pick a rule between 1 and 47.')
         .setResolver(c => {
             const int = resolvers.integer(c);
-            if(int === null) return null;
-            return int > 0 && int < 48 ? int : null;
+            if (int === null) return null;
+            return int >= 1 && int <= rules.length ? int : null;
         });
 };
 

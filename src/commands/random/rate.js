@@ -1,5 +1,7 @@
-exports.exec = async cmd => {
-    const num = Math.floor(Math.random() * 12) + 1;
+const random = require('../../util/random');
+
+exports.exec = cmd => {
+    const num = random.number(12);
     return cmd.response.success(`👌 **${num}/${num === 9 ? 11 : 10}**`);
 };
 
