@@ -4,7 +4,7 @@ module.exports = class {
     }
 
     exec(cmd) {
-        const list = this.bot.playlists.get(cmd.message.guild);
+        const list = this.bot.playlists.get(cmd.message.guild.id);
         for (let i = 0; i < (cmd.args.count || 1) && list.hasPrev(); i++) list.prev();
         return list.start(cmd.response);
     }

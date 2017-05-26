@@ -22,7 +22,8 @@ class YouTube {
                 const video = await this.api.getVideo(elem);
                 if (video) loaded.push(YouTube.formatSong(video));
             } else if (parsed.type === 'playlist') {
-                const videos = await this.api.getPlaylist(elem);
+                const playlist = await this.api.getPlaylist(elem);
+                const videos = await playlist.getVideos();
                 loaded.push(...videos.map(v => YouTube.formatSong(v)));
             }
         }

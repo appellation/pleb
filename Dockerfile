@@ -8,7 +8,7 @@ RUN apt-get install -y ffmpeg
 
 RUN mkdir -p /usr/src/bot
 WORKDIR /usr/src/bot
-COPY . /usr/src/bot
+COPY . .
 
 RUN npm install
 CMD ["node", "src/index.js"]
