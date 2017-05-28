@@ -24,3 +24,7 @@ const responses = [
 ];
 
 exports.exec = (cmd) => cmd.response.send(`🎱 ${element(responses)}`);
+exports.arguments = function* (Argument) {
+    yield new Argument('question')
+        .setPrompt('What would you like to ask?');
+};
