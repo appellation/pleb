@@ -7,7 +7,8 @@ module.exports = class {
 
     async exec(cmd) {
         const list = Playlist.get(this.bot, cmd.message.guild);
-        cmd.args.query ? await list.add(cmd.args.query) : null;
+        if (cmd.args.query) await list.add(cmd.args.query);
+        list.stop();
         list.shuffle();
         return list.start(cmd.response);
     }

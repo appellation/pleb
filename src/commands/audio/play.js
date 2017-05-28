@@ -13,10 +13,11 @@ module.exports = class {
         return list.start(cmd.response);
     }
 
-    * arguments(Argument) {
-        yield new Argument('song')
-            .setPrompt('What song would you like to add?')
-            .setPattern(/.*/);
+    * arguments(Argument, cmd) {
+        if (!this.bot.playlists.has(cmd.message.guild.id))
+            yield new Argument('song')
+                .setPrompt('What song would you like to add?')
+                .setPattern(/.*/);
     }
 
     validate(val) {

@@ -39,6 +39,8 @@ class Playlist {
         this._pos = 0;
 
         this.loop = false;
+
+        this.playing = false;
     }
 
     /**
@@ -134,7 +136,7 @@ class Playlist {
     }
 
     /**
-     * Add command arguments to the playlist.
+     * Add content to the playlist.
      * @param {Response} res
      * @param {String} content A string of content to add.
      * @param {String} type One of `normal`, `playlist`
@@ -148,7 +150,6 @@ class Playlist {
             const args = content.split(' ');
             added = (await sc.get(args))
                 .concat(await yt.get(args));
-            added = added.filter(e => e);
         } else if (type === 'playlist') {
             added = await yt.getPlaylistQuery(content);
         }
@@ -166,8 +167,6 @@ class Playlist {
         this.addSongs(added);
         return added;
     }
-
-    async addPlaylist() {}
 
     /**
      * Add a song to the playlist.
@@ -221,7 +220,9 @@ class Playlist {
         if (!this.current || !this.guild.voiceConnection) return;
         this.stop();
         const dispatcher = this.guild.voiceConnection.playStream(this.current.stream(), { volume: 0.2 });
+        this.playing = true;
         dispatcher.once('end', (reason) => {
+            this.playing = false;
             if (reason === 'temp') return;
             if (reason === 'terminal' || (!this.hasNext() && !this.loop)) return this._destroy();
             if (!this.loop) this.next();

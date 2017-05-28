@@ -4,7 +4,7 @@ module.exports = class {
     }
 
     exec(cmd) {
-        return this.bot.playlists.get(this.bot, cmd.message.guild).resume();
+        return this.bot.playlists.get(cmd.message.guild.id).resume();
     }
 
     validate(val) {
