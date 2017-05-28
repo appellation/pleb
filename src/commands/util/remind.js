@@ -20,7 +20,7 @@ exports.arguments = function* (Argument, cmd) {
         });
 
     yield new Argument('reminder')
-        .setPrompt(`What would you like **${user.tag}** to be reminded of?`)
+        .setPrompt(`What would you like **${user.tag}** to be reminded of? (Also include when you'd like them to be reminded.)`)
         .setRePrompt('Please provide a valid reminder format.')
         .setPattern(/.*/)
         .setResolver(c => {

@@ -46,7 +46,6 @@ class SoundCloud {
             return [];
         }
 
-
         switch (thing.kind) {
             case 'playlist':
                 return this._addPlaylist(thing);
