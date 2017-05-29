@@ -30,7 +30,7 @@ exports.exec = async ({ response, message: msg, args }) => {
             case 'OVER_QUERY_LIMIT':
                 return response.error('Over limit');
             case 'UNKNOWN_ERROR':
-                return response.error('An unnkown error has occurred');
+                return response.error('An unkown error has occurred');
             default:
                 return response.error('I got no fucking clue what just happened, but it borke.');
         }
@@ -52,10 +52,10 @@ exports.exec = async ({ response, message: msg, args }) => {
     const city = locality || governing || country || continent || {};
 
     const weatherRes = await request(weatherOptions);
-    Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'fonts', 'NotoSans-Regular.ttf'), { family: 'NotoSans' });
-    Canvas.registerFont(path.join(__dirname, '..', '..', 'assets', 'fonts', 'NotoSans-Bold.ttf'), { family: 'NotoSansBold' });
+    Canvas.registerFont(path.join(__dirname, '..', '..', '..', 'assets', 'fonts', 'NotoSans-Regular.ttf'), { family: 'NotoSans' });
+    Canvas.registerFont(path.join(__dirname, '..', '..', '..', 'assets', 'fonts', 'NotoSans-Bold.ttf'), { family: 'NotoSansBold' });
 
-    const images = path.join(__dirname, '..', '..', 'assets', 'images', 'weather');
+    const images = path.join(__dirname, '..', '..', '..', 'assets', 'images', 'weather');
 
     const canvas = new Canvas(800, 250);
     const ctx = canvas.getContext('2d');
