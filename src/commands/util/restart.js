@@ -6,7 +6,7 @@ module.exports = class {
     }
 
     async exec(cmd) {
-        await cmd.response.success(`restarting ${cmd.args.shard ? 'all shards' : `shard **${cmd.args.shard}**`}`);
+        await cmd.response.success(`restarting ${cmd.args.shard ? `shard **${cmd.args.shard}**` : 'all shards'}`);
         if (cmd.args.shard) await this.bot.client.shard.broadcastEval(`if (this.shard.id === ${cmd.args.shard}) process.exit(0)`);
         else await this.bot.client.shard.broadcastEval('process.exit(0)');
     }
