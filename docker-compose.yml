@@ -6,7 +6,7 @@ services:
       - redis
       - postgres
   redis:
-    image: redis
+    image: redis:3.0-alpine
   web:
     build: https://github.com/spec-tacles/spectacles.git
     links:
@@ -14,4 +14,4 @@ services:
     ports:
       - 8080:8080
   postgres:
-    image: postgres
+    image: postgres:9-alpine
