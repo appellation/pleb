@@ -51,9 +51,6 @@ new class {
         this.client.on('reconnecting', this.onReconnecting.bind(this));
         this.client.on('resume', this.onResume.bind(this));
         this.client.on('disconnect', this.onDisconnect.bind(this));
-        this.client.on('guildCreate', this.onGuildCreate.bind(this));
-        this.client.on('message', this.onMessage.bind(this));
-        this.client.on('guildDeleteHandler', this.onGuildDelete.bind(this));
         this.client.on('error', e => Raven.captureException(e));
 
         this.log.verbose('instantiated event listeners');
@@ -65,6 +62,10 @@ new class {
         this.log.info('client is ready: %s#%s', this.client.user.username, this.client.user.discriminator);
         await this.provider.initialize();
         await this.provider.initializeGuilds(this);
+
+        this.client.on('guildCreate', this.onGuildCreate.bind(this));
+        this.client.on('guildDelete', this.onGuildDelete.bind(this));
+        this.client.on('message', this.onMessage.bind(this));
 
         this.log.hook({
             title: 'Initialized',
