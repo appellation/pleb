@@ -1,7 +1,7 @@
 FROM alpine:3.6
 
 WORKDIR /usr/src/pleb
-COPY package.json yarn.lock ./
+COPY package.json ./
 
 RUN apk add --update \
     && apk add --no-cache ffmpeg opus cairo giflib nodejs-current nodejs-npm \
