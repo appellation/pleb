@@ -14,6 +14,16 @@
         "quotes": ["error", "single"],
         "semi": ["error", "always"],
         "brace-style": ["error", "1tbs"],
-        "no-multi-spaces": "error"
+        "no-multi-spaces": "error",
+        "no-unused-vars": "warn",
+        "no-console": "warn",
+        "eqeqeq": ["warn", "always"],
+        "no-invalid-this": "warn",
+        "require-await": "error",
+        "block-spacing": ["error", "always"],
+        "prefer-const": ["warn", { "destructuring": "any" }],
+        "keyword-spacing": "error",
+        "object-curly-spacing": ["error", "always"],
+        "prefer-template": "warn"
     }
 }

@@ -1,3 +1,5 @@
+const { Validator } = require('discord-handles');
+
 const ERRORS = {
     ensureGuild: 'This command cannot be run outside of a guild.',
     ensureClientPermissions: perm => `Cannot ${perm.split('_').join(' ').toLowerCase()}.`,
@@ -11,9 +13,6 @@ const ERRORS = {
     ensureNSFW: 'This is not an NSFW channel.',
     ensureIsNumber: argNum => `Argument ${argNum + 1} must be a number.`
 };
-
-const playlistStorage = require('../storage/playlists');
-const { Validator } = require('discord-handles');
 
 class Validate extends Validator {
 
@@ -31,13 +30,13 @@ class Validate extends Validator {
      * @return {boolean}
      */
     ensureClientPermissions(resolvable) {
-        if(this.message.channel.type === 'dm') return super.apply(true);
+        if (this.message.channel.type === 'dm') return super.apply(true);
 
         return this.ensureGuild() && super.apply(this.message.channel.permissionsFor(this.message.guild.member(this.message.client.user)).hasPermission(resolvable), ERRORS.ensureClientPermissions(resolvable));
     }
 
-    ensurePlaylist() {
-        return this.ensureGuild() && (super.apply(playlistStorage.has(this.message.guild.id), ERRORS.ensurePlaylist) && this.ensureCurrentVoiceChannel());
+    ensurePlaylist(bot) {
+        return this.ensureGuild() && (super.apply(bot.playlists.has(this.message.guild.id), ERRORS.ensurePlaylist) && this.ensureCurrentVoiceChannel());
     }
 
     /**
@@ -85,7 +84,7 @@ class Validate extends Validator {
     }
 
     ensureCanPlay() {
-        return this.ensurePlaylist() || (this.ensureJoinable() && this.ensureSpeakable());
+        return this.ensureJoinable() && this.ensureSpeakable();
     }
 
     /**
