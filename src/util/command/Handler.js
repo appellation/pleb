@@ -5,16 +5,18 @@ const Raven = require('raven');
 const Validator = require('./Validator');
 module.exports = class extends (handles.Client) {
     constructor(bot) {
+        const baseRegex = new RegExp(`<@!?${process.env.discord_client_id}>\\s*`);
         super({
             directory: path.join('.', 'src', 'commands'),
             validator: message => {
-                if (message.channel.type === 'dm') {
-                    return message.content;
-                } else {
-                    const regex = bot.guildSettings.get(message.guild.id).getCached('prefix');
-                    if (message.channel.name === 'pleb' || regex.test(message.content)) {
-                        return message.content.replace(regex, '');
-                    }
+                if (message.channel.type === 'dm') return message.content.replace(baseRegex, '');
+
+                const regex = bot.guildSettings.has(message.guild.id) ?
+                    bot.guildSettings.get(message.guild.id).getCached('prefix') :
+                    baseRegex;
+
+                if (message.channel.name === 'pleb' || regex.test(message.content)) {
+                    return message.content.replace(regex, '');
                 }
             },
             commandParams: { bot },
