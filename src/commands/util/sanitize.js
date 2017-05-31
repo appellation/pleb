@@ -8,7 +8,7 @@ exports.exec = async ({ response: res, message: msg, args }) => {
         await messages[0].delete();
         return res.success('Purged last message.', msg.author);
     }
-    if (!msg.channel.permissionsFor(msg.client.user).hasPermission('MANAGE_MESSAGES')) return res.error('I need `Manage Messages` permissions to sanitize.');
+    if (!msg.channel.permissionsFor(msg.client.user).has('MANAGE_MESSAGES')) return res.error('I need `Manage Messages` permissions to sanitize.');
     const deleted = await msg.channel.bulkDelete(messages);
     return res.success(`Purged last ${deleted.size} messages.`, msg.author);
 };
