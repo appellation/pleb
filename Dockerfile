@@ -4,11 +4,14 @@ WORKDIR /usr/src/pleb
 COPY package.json ./
 
 RUN apk add --update \
-    && apk add --no-cache ffmpeg opus pango pixman cairo giflib nodejs-current nodejs-npm \
-    && apk add --no-cache --virtual .build pixman-dev git curl libjpeg-turbo-dev cairo-dev giflib-dev g++ make python autoconf \
-    && npm install \
-    && apk del .build
+    && apk add --no-cache --virtual .deps nodejs-current nodejs-npm curl \
+	&& apk add --no-cache --virtual .build-deps git build-base g++ \
+	&& apk add --no-cache --virtual .npm-deps pango pangomm-dev pangomm \
+       cairo-dev libjpeg-turbo-dev pango opus ffmpeg pixman
 
 COPY . .
+
+RUN npm install \
+    && apk del .build-deps
 
 CMD [ "node", "src/index.js" ]
