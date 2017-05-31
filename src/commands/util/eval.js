@@ -16,4 +16,4 @@ exports.arguments = function* (Argument) {
         .setInfinite();
 };
 
-exports.validator = val => val.ensureIsOwner() && val.ensureArgs();
+exports.validate = val => val.ensureIsOwner() && val.ensureArgs();
