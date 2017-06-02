@@ -1,18 +1,9 @@
 const url = require('url');
-const request = require('request');
-const rp = require('request-promise-native');
+const request = require('axios');
+
+request.defaults.params = { client_id: process.env.soundcloud };
 
 class SoundCloud {
-    constructor() {
-        this.request = rp.defaults({
-            baseUrl: 'https://api.soundcloud.com',
-            followAllRedirects: true,
-            qs: {
-                client_id: process.env.soundcloud
-            },
-            json: true
-        });
-    }
 
     /**
      * Add command arguments to the playlist.
@@ -38,10 +29,10 @@ class SoundCloud {
     async _loadResource(url) {
         let thing;
         try {
-            thing = await this.request.get({
-                uri: 'resolve',
-                qs: { url }
-            });
+            thing = (await request.get({
+                url: 'https://api.soundcloud.com/resolve',
+                params: { url }
+            })).data;
         } catch (e) {
             return [];
         }
@@ -79,9 +70,8 @@ class SoundCloud {
             type: 'soundcloud',
             stream: () => {
                 return request.get({
-                    uri: track.stream_url,
-                    followAllRedirects: true,
-                    qs: { client_id: process.env.soundcloud },
+                    url: track.stream_url,
+                    query: { client_id: process.env.soundcloud },
                     encoding: null
                 });
             },

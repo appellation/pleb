@@ -15,6 +15,7 @@
   "author": "Will Nelson <appellation@topkek.pw>",
   "dependencies": {
     "Sherlock": "github:neilgupta/Sherlock",
+    "axios": "^0.16.1",
     "canvas": "automattic/node-canvas",
     "date.js": "^0.3.1",
     "discord-handles": "appellation/handles#v5",
@@ -32,8 +33,6 @@
     "numeral": "^1.5.3",
     "pg": "^6.2.2",
     "raven": "^1.1.1",
-    "request": "^2.74.0",
-    "request-promise-native": "^1.0.3",
     "sequelize": "^3.30.4",
     "simple-youtube-api": "github:hypercoder2975/simple-youtube-api#appel-wip",
     "spectacles.js": "git+https://github.com/spec-tacles/spectacles.js.git#refactor",
@@ -44,5 +43,6 @@
   },
   "devDependencies": {
     "eslint": "^3.19.0"
-  }
+  },
+  "false": {}
 }

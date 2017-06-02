@@ -1,4 +1,4 @@
-const request = require('request-promise-native');
+const request = require('axios');
 const timezone = require('moment-timezone');
 const path = require('path');
 const Canvas = require('canvas');
@@ -6,18 +6,14 @@ const Canvas = require('canvas');
 exports.exec = async ({ response, message: msg, args }) => {
 
     const geocodeOptions = {
-        uri: 'https://maps.googleapis.com/maps/api/geocode/json?',
-        headers: {
-            'User-Agent': 'Request-Promise'
-        },
-        qs: {
+        url: 'https://maps.googleapis.com/maps/api/geocode/json',
+        params: {
             address : args.location,
             key: process.env.youtube
-        },
-        json: true
+        }
     };
 
-    const locationRes = await request(geocodeOptions);
+    const locationRes = (await request(geocodeOptions)).data;
 
     if (locationRes.status !== 'OK') {
         switch (locationRes.status) {
@@ -37,11 +33,7 @@ exports.exec = async ({ response, message: msg, args }) => {
     }
 
     const weatherOptions = {
-        uri: `https://api.darksky.net/forecast/${process.env.darksky}/${locationRes.results[0].geometry.location.lat},${locationRes.results[0].geometry.location.lng}`,
-        headers: {
-            'User-Agent': 'Request-Promise'
-        },
-        json: true
+        url: `https://api.darksky.net/forecast/${process.env.darksky}/${locationRes.results[0].geometry.location.lat},${locationRes.results[0].geometry.location.lng}`
     };
 
     const locality = locationRes.results[0].address_components.find(loc => loc.types.includes('locality'));
@@ -51,7 +43,7 @@ exports.exec = async ({ response, message: msg, args }) => {
 
     const city = locality || governing || country || continent || {};
 
-    const weatherRes = await request(weatherOptions);
+    const weatherRes = (await request(weatherOptions)).data;
     Canvas.registerFont(path.join(__dirname, '..', '..', '..', 'assets', 'fonts', 'NotoSans-Regular.ttf'), { family: 'NotoSans' });
     Canvas.registerFont(path.join(__dirname, '..', '..', '..', 'assets', 'fonts', 'NotoSans-Bold.ttf'), { family: 'NotoSansBold' });
 
@@ -157,7 +149,7 @@ exports.exec = async ({ response, message: msg, args }) => {
     ctx.drawImage(day3Icon, 670, 70, 60, 60);
     ctx.drawImage(icon, 80, 40, 90, 90);
 
-    return msg.channel.sendFile(canvas.toBuffer());
+    return msg.channel.send(void 0, { files: [{ attachment: canvas.toBuffer() }] });
 };
 
 function getIcon(icon) {

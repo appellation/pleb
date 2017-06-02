@@ -1,16 +1,14 @@
-const rp = require('request-promise-native');
+const request = require('axios');
 
 exports.exec = async (cmd) => {
-    const res = await rp.get({
-        uri: 'http://api.pearson.com/v2/dictionaries/ldoce5/entries',
-        qs: {
+    const res = await request.get('http://api.pearson.com/v2/dictionaries/ldoce5/entries', {
+        params: {
             headword: cmd.args.word
-        },
-        json: true
+        }
     });
 
     let out = '';
-    for (const detail of res.results) {
+    for (const detail of res.data.results) {
         out += '➡ ';
 
         if (detail.part_of_speech) {

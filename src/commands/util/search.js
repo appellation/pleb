@@ -1,4 +1,4 @@
-const rp = require('request-promise-native');
+const request = require('axios');
 const numeral = require('numeral');
 const moment = require('moment');
 const Validation = require('../../util/command/Validator');
@@ -14,9 +14,9 @@ exports.exec = async (cmd) => {
 
     const cc = countryMap[msg.guild ? msg.guild.region : null] || 'US';
     const valid = new Validation(cmd);
-    const res = await rp.get({
-        uri: 'https://api.cognitive.microsoft.com/bing/v5.0/search',
-        qs: {
+    const res = (await request.get({
+        url: 'https://api.cognitive.microsoft.com/bing/v5.0/search',
+        params: {
             q: args.query,
             mkt: `en-${cc}`,
             count: 1,
@@ -25,9 +25,8 @@ exports.exec = async (cmd) => {
         headers: {
             'Ocp-Apim-Subscription-Key': process.env.bing,
             'X-MSEdge-ClientID': msg.author.id
-        },
-        json: true
-    });
+        }
+    })).data;
 
     if (typeof res.rankingResponse !== 'object' || Object.keys(res.rankingResponse).length === 0) return response.error('No results found.');
 
@@ -69,15 +68,14 @@ exports.arguments = function* (Argument) {
 };
 
 async function shortenURL(url) {
-    const res = await rp.post({
-        uri: 'https://www.googleapis.com/urlshortener/v1/url',
-        qs: {
+    const res = await request.post({
+        url: 'https://www.googleapis.com/urlshortener/v1/url',
+        params: {
             key: process.env.youtube
         },
-        json: true,
         body: {
             longUrl: url
         }
     });
-    return res.id;
+    return res.data.id;
 }

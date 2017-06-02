@@ -1,9 +1,9 @@
-const rp = require('request-promise-native');
+const request = require('axios');
 
 exports.exec = async cmd => {
     try {
-        const boobs = await rp.get('http://api.oboobs.ru/boobs/0/1/random').then(JSON.parse);
-        return cmd.response.send(`http://media.oboobs.ru/${boobs[0].preview}`);
+        const res = await request.get('http://api.oboobs.ru/boobs/0/1/random');
+        return cmd.response.send(`http://media.oboobs.ru/${res.data[0].preview}`);
     } catch (e) {
         return cmd.response.error('no boobs found 😭');
     }
