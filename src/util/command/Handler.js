@@ -32,6 +32,10 @@ module.exports = class extends (handles.Client) {
             command.response.error(`\`${error}\`\nYou should never receive an error like this.  Bot owner has been notified.`);
         });
 
+        this.once('commandsLoaded', () => {
+            bot.log.info(`commands loaded in ${process.uptime()}s`);
+        });
+
         this.on('error', (err) => {
             if (process.env.raven) Raven.captureException(err);
             else console.error(err); // eslint-disable-line no-console
