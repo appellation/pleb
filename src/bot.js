@@ -4,6 +4,7 @@ require('dotenv').config({ silent: true });
 
 const discord = require('discord.js');
 const Raven = require('raven');
+const containerized = require('containerized');
 
 const Log = require('./util/Log');
 const Handler = require('./util/command/Handler');
@@ -26,7 +27,7 @@ new class {
         this.log = new Log(this.client);
         this.provider = new Provider();
         this.handler = new Handler(this);
-        this.spectacles = new Spectacles(this);
+        if (containerized()) this.spectacles = new Spectacles(this);
 
         this.playlists = new Map();
         this.guildSettings = new Map();
@@ -64,8 +65,11 @@ new class {
 
     async onInit() {
         this.log.info('client is ready: %s#%s', this.client.user.username, this.client.user.discriminator);
-        await this.provider.initialize();
-        await this.provider.initializeGuilds(this);
+
+        if (containerized()) {
+            await this.provider.initialize();
+            await this.provider.initializeGuilds(this);
+        }
 
         this.log.hook({
             title: 'Initialized',
