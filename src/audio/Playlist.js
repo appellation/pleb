@@ -196,6 +196,8 @@ class Playlist {
             this.bot.playlists.set(this.guild.id, this);
         }
 
+        await new Promise(r => setTimeout(r, 150));
+
         this._start();
         await response.success(`now playing \`${this.current.title}\``);
     }
