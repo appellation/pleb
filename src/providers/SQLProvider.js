@@ -31,8 +31,8 @@ class SQLProvider {
             await this.db.authenticate();
         } catch (e) {
             this.bot.log.warn('database failed to authenticate.  retrying in 10 seconds....');
-            setTimeout(this.initialize.bind(this), 10000);
-            return;
+            await new Promise(r => setTimeout(r, 10000));
+            return this.initialize();
         }
 
         await this.db.sync();
