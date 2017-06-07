@@ -16,4 +16,4 @@ exports.exec = async ({ response: res, message: msg }) => {
     }
 };
 
-exports.validator = val => val.ensureGuild();
+exports.validate = val => val.ensureGuild();
