@@ -2,15 +2,17 @@ const Sequelize = require('sequelize');
 const Settings = require('./GuildSettings');
 
 class SQLProvider {
-    constructor() {
-        const sq = new Sequelize({
+    constructor(bot) {
+        this.bot = bot;
+
+        this.db = new Sequelize({
             host: 'postgres',
             username: 'postgres',
             dialect: 'postgres'
         });
 
         this.models = {
-            Guild: sq.define('guild', {
+            Guild: this.db.define('guild', {
                 id: {
                     type: Sequelize.STRING,
                     primaryKey: true
@@ -24,18 +26,27 @@ class SQLProvider {
         };
     }
 
-    initialize() {
-        return Promise.all(Object.values(this.models).map(model => model.sync()));
-    }
-
-    async initializeGuilds(bot) {
-        const stored = new Map();
-        for (const instance of await this.models.Guild.findAll()) {
-            if (bot.client.guilds.has(instance.get('id'))) stored.set(instance.get('id'), instance.toJSON());
+    async initialize() {
+        try {
+            await this.db.authenticate();
+        } catch (e) {
+            this.bot.log.warn('database failed to authenticate.  retrying in 10 seconds....');
+            setTimeout(this.initialize.bind(this), 10000);
+            return;
         }
 
-        const settings = await Promise.all(bot.client.guilds.map(g => this.initializeGuild(g, stored.get(g.id) || {})));
-        for (const s of settings) bot.guildSettings.set(s.guild.id, s);
+        await this.db.sync();
+        this.bot.log.verbose('database initialized');
+    }
+
+    async initializeGuilds() {
+        const stored = new Map();
+        for (const instance of await this.models.Guild.findAll()) {
+            if (this.bot.client.guilds.has(instance.get('id'))) stored.set(instance.get('id'), instance.toJSON());
+        }
+
+        const settings = await Promise.all(this.bot.client.guilds.map(g => this.initializeGuild(g, stored.get(g.id) || {})));
+        for (const s of settings) this.bot.guildSettings.set(s.guild.id, s);
         return settings;
     }
 

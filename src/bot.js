@@ -25,7 +25,7 @@ new class {
         Object.defineProperty(this.client, 'bot', { value: this });
 
         this.log = new Log(this.client);
-        this.provider = new Provider();
+        this.provider = new Provider(this);
         this.handler = new Handler(this);
         if (containerized()) this.spectacles = new Spectacles(this);
 
@@ -68,7 +68,7 @@ new class {
 
         if (containerized()) {
             await this.provider.initialize();
-            await this.provider.initializeGuilds(this);
+            await this.provider.initializeGuilds();
         }
 
         this.log.hook({
