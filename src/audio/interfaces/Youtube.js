@@ -38,6 +38,8 @@ class YouTube {
 
     async getPlaylistQuery(query) {
         const playlists = await this.api.searchPlaylists(query, 1);
+        if (!playlists.length) return [];
+
         const videos = await playlists[0].getVideos();
         return videos.map(v => YouTube.formatSong(v));
     }
