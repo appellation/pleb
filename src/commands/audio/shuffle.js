@@ -14,7 +14,7 @@ module.exports = class {
     }
 
     validate(val) {
-        return val.ensurePlaylist(this.bot);
+        return val.ensureCanPlay(this.bot);
     }
 
     * arguments(Argument) {
