@@ -164,7 +164,7 @@ class Playlist {
             await res.success(`added **${added.length}** songs to playlist`);
         }
 
-        this.songs.push(added);
+        this.songs.push(...added);
         return added;
     }
 
