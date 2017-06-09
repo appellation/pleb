@@ -1,4 +1,3 @@
-const { Argument } = require('discord-handles');
 const httpPing = require('node-http-ping');
 
 exports.exec = async ({ response: res, args, message: msg }) => {
@@ -15,6 +14,6 @@ exports.exec = async ({ response: res, args, message: msg }) => {
     }
 };
 
-exports.arguments = function* () {
+exports.arguments = function* (Argument) {
     yield new Argument('site').setOptional();
 };

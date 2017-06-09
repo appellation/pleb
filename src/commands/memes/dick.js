@@ -1,4 +1,4 @@
-const resolvers = require('../../util/command/resolvers');
+const resolvers = require('../../util/resolvers');
 const dicks = new Map();
 
 exports.exec = (cmd) => {

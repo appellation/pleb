@@ -1,6 +1,6 @@
-const rp = require('request-promise-native');
+const request = require('axios');
 
 exports.exec = async (cmd) => {
-    const doge = await rp.get('http://shibe.online/api/shibes?count=1&httpsurls=true').then(JSON.parse);
+    const doge = await request.get('http://shibe.online/api/shibes?count=1&httpsurls=true');
     return cmd.response.success('', { file: doge[0] });
 };

@@ -1,7 +1,7 @@
 const request = require('axios');
 const numeral = require('numeral');
 const moment = require('moment');
-const Validation = require('../../util/command/Validator');
+const Validation = require('../../core/Validator');
 
 const countryMap = {
     brazil: 'BR',

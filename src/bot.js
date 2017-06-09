@@ -6,10 +6,10 @@ const discord = require('discord.js');
 const Raven = require('raven');
 const containerized = require('containerized');
 
-const Log = require('./util/Log');
-const Handler = require('./util/command/Handler');
-const Spectacles = require('./util/Spectacles');
-const Provider = require('./providers/SQLProvider');
+const Log = require('./core/Log');
+const Handler = require('./core/Handler');
+const Spectacles = require('./core/Spectacles');
+const Provider = require('./core/SQLProvider');
 
 new class {
     constructor() {

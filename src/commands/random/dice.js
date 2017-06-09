@@ -1,5 +1,5 @@
 const { roll } = require('../../util/random');
-const resolvers = require('../../util/command/resolvers');
+const resolvers = require('../../util/resolvers');
 
 exports.exec = (cmd) => {
     if (cmd.args.count >= 1000) return cmd.response.error('Please use less than 1,000 dice.  kthxbye.');

@@ -1,4 +1,4 @@
-const resolvers = require('../../util/command/resolvers');
+const resolvers = require('../../util/resolvers');
 
 exports.exec = async ({ response: res, message: msg, args }) => {
     const collection = await msg.channel.fetchMessages();

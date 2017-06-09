@@ -1,4 +1,4 @@
-const resolvers = require('../../util/command/resolvers');
+const resolvers = require('../../util/resolvers');
 const moment = require('moment');
 const Sherlock = require('Sherlock');
 

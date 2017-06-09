@@ -3,6 +3,7 @@ const handles = require('discord-handles');
 const Raven = require('raven');
 
 const Validator = require('./Validator');
+
 module.exports = class extends (handles.Client) {
     constructor(bot) {
         const baseRegex = new RegExp(`<@!?${process.env.discord_client_id}>\\s*`);

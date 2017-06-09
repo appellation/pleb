@@ -1,4 +1,4 @@
-const resolvers = require('../../util/command/resolvers');
+const resolvers = require('../../util/resolvers');
 
 exports.exec = ({ response: res, args }) => {
     return res.send(rules[args.rule - 1], { code: 'ldif' });

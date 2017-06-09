@@ -1,4 +1,4 @@
-const Playlist = require('../../audio/Playlist');
+const Playlist = require('../../core/audio/Playlist');
 
 module.exports = class {
     constructor({ bot }) {
