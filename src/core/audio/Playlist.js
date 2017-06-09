@@ -164,16 +164,8 @@ class Playlist {
             await res.success(`added **${added.length}** songs to playlist`);
         }
 
-        this.addSongs(added);
+        this.songs.push(added);
         return added;
-    }
-
-    /**
-     * Add a song to the playlist.
-     * @param {Array<?Song>} song
-     */
-    addSongs(songs) {
-        this.songs.push(...songs.filter(s => s));
     }
 
     get dispatcher() {
