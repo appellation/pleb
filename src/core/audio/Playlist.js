@@ -173,8 +173,6 @@ class Playlist {
     }
 
     async start(response) {
-        if (!this.current) return response.error('There is no song currently available to play.');
-
         try {
             await this.ensureVoiceConnection(response.message.member);
         } catch (e) {
@@ -190,6 +188,7 @@ class Playlist {
 
         await new Promise(r => setTimeout(r, 150));
 
+        if (!this.current) return response.error('There is no song currently available to play.');
         this._start();
         await response.success(`now playing \`${this.current.title}\``);
     }
