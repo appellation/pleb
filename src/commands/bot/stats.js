@@ -41,7 +41,7 @@ module.exports = class {
 
 __**Shard info:**__
 **Shard:** ${client.shard.id + 1} / ${client.shard.count}
-**Guilds:** ${client.guilds.size}
+**Servers:** ${client.guilds.size}
 **Channels:** ${client.channels.size}
 **Users:** ${client.guilds.reduce((p, c) => p + c.memberCount, 0)}
 **Playlists:** ${this.bot.playlists.size}
