@@ -2,7 +2,16 @@ const Spectacles = require('spectacles.js')('discord.js');
 
 class SpectaclesIntegration extends Spectacles {
     constructor(bot) {
-        super(bot.client, { host: 'redis' });
+        super(bot.client, {
+            host: 'redis',
+            retry_strategy: (options) => {
+                if (options.total_retry_time > 1000 * 60 * 60) {
+                    return new Error('Retry time exhausted.');
+                }
+
+                return Math.min(options.attempt * 100, 3000);
+            }
+        });
         this.bot = bot;
     }
 
