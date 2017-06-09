@@ -9,6 +9,7 @@ module.exports = class {
 
     async exec(cmd) {
         const settings = this.bot.guildSettings.get(cmd.message.guild.id);
+        if (!settings) await this.bot.provider.initializeGuild(cmd.guild);
         await settings.set(cmd.args.key, cmd.args.value);
         return cmd.response.success(`**${cmd.args.key}** set to \`${cmd.args.value}\``);
     }
