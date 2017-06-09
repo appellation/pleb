@@ -13,4 +13,8 @@ module.exports = class {
         if (cmd.message.guild.voiceConnection) cmd.message.guild.voiceConnection.disconnect();
         return cmd.response.send('k 😢');
     }
+
+    validate(val) {
+        return val.ensureGuild();
+    }
 };
