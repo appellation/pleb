@@ -10,11 +10,16 @@ services:
       - postgres
   redis:
     image: redis:alpine
-  web:
+  web_backend:
     build: https://github.com/spec-tacles/spectacles.git
     links:
       - redis
     ports:
       - 8080:8080
+      - 8081:8081
+  web_frontend:
+    build: https://github.com/appellation/pleb-site.git
+    ports:
+      - 8079:8079
   postgres:
     image: postgres:alpine
