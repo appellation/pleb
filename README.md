@@ -1,5 +1,5 @@
 # Pleb
-[![Build Status](https://travis-ci.org/appellation/pleb.svg?branch=master)](https://travis-ci.org/appellation/pleb)
+[![Build Status](https://travis-ci.com/appellation/pleb.svg?token=CVtVu2NbGWxUo9ResHL2&branch=master)](https://travis-ci.com/appellation/pleb)
 
 A simple Discord bot available for free.  [Click here](https://discordapp.com/oauth2/authorize?permissions=3197952&scope=bot&client_id=218227587166502923) to add me.
 
