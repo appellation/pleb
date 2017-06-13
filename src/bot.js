@@ -12,111 +12,111 @@ const Spectacles = require('./core/Spectacles');
 const Provider = require('./core/SQLProvider');
 
 new class {
-    constructor() {
-        this.client = new discord.Client({
-            messageCacheLifetime: 1800,
-            messageSweepInterval: 900,
-            disabledEvents: [
-                'TYPING_START',
-                'TYPING_STOP',
-            ]
-        });
+  constructor() {
+    this.client = new discord.Client({
+      messageCacheLifetime: 1800,
+      messageSweepInterval: 900,
+      disabledEvents: [
+        'TYPING_START',
+        'TYPING_STOP',
+      ]
+    });
 
-        Object.defineProperty(this.client, 'bot', { value: this });
+    Object.defineProperty(this.client, 'bot', { value: this });
 
-        this.log = new Log(this.client);
-        this.provider = new Provider(this);
-        this.handler = new Handler(this);
-        if (containerized()) this.spectacles = new Spectacles(this);
+    this.log = new Log(this.client);
+    this.provider = new Provider(this);
+    this.handler = new Handler(this);
+    if (containerized()) this.spectacles = new Spectacles(this);
 
-        this.playlists = new Map();
-        this.guildSettings = new Map();
+    this.playlists = new Map();
+    this.guildSettings = new Map();
 
-        this.log.verbose('instantiated client');
+    this.log.verbose('instantiated client');
 
-        if (process.env.raven) {
-            Raven.config(process.env.raven, {
-                captureUnhandledRejections: true
-            }).install();
+    if (process.env.raven) {
+      Raven.config(process.env.raven, {
+        captureUnhandledRejections: true
+      }).install();
 
-            Raven.wrap(this._load.bind(this))();
-            this.log.verbose('loaded with raven');
-        } else {
-            process.on('unhandledRejection', console.error); // eslint-disable-line no-console
-            this._load();
-        }
+      Raven.wrap(this._load.bind(this))();
+      this.log.verbose('loaded with raven');
+    } else {
+      process.on('unhandledRejection', console.error); // eslint-disable-line no-console
+      this._load();
+    }
+  }
+
+  _load() {
+    this.client.once('ready', this.onInit.bind(this));
+    this.client.on('reconnecting', this.onReconnecting.bind(this));
+    this.client.on('resume', this.onResume.bind(this));
+    this.client.on('disconnect', this.onDisconnect.bind(this));
+    this.client.on('error', e => Raven.captureException(e));
+
+    this.client.on('guildCreate', this.onGuildCreate.bind(this));
+    this.client.on('guildDelete', this.onGuildDelete.bind(this));
+    this.client.on('message', this.onMessage.bind(this));
+
+    this.log.verbose('instantiated event listeners');
+
+    this.client.login(process.env.discord);
+  }
+
+  async onInit() {
+    this.log.info('client is ready: %s#%s', this.client.user.username, this.client.user.discriminator);
+
+    if (containerized()) {
+      await this.provider.initialize();
+      await this.provider.initializeGuilds();
     }
 
-    _load() {
-        this.client.once('ready', this.onInit.bind(this));
-        this.client.on('reconnecting', this.onReconnecting.bind(this));
-        this.client.on('resume', this.onResume.bind(this));
-        this.client.on('disconnect', this.onDisconnect.bind(this));
-        this.client.on('error', e => Raven.captureException(e));
+    this.log.hook({
+      title: 'Initialized',
+      color: 0x00ff93
+    });
 
-        this.client.on('guildCreate', this.onGuildCreate.bind(this));
-        this.client.on('guildDelete', this.onGuildDelete.bind(this));
-        this.client.on('message', this.onMessage.bind(this));
+    this.log.verbose('initialized guilds');
+  }
 
-        this.log.verbose('instantiated event listeners');
+  onReconnecting() {
+    this.log.hook({
+      title: 'Reconnecting',
+      color: 0xf4f141
+    });
+  }
 
-        this.client.login(process.env.discord);
-    }
+  onResume(replayed) {
+    for (const [, p] of this.playlists) p.stop('continue');
 
-    async onInit() {
-        this.log.info('client is ready: %s#%s', this.client.user.username, this.client.user.discriminator);
+    this.log.hook({
+      title: 'Resumed',
+      description: `Replayed **${replayed}** events.`,
+      color: 0x9bffd5
+    });
+  }
 
-        if (containerized()) {
-            await this.provider.initialize();
-            await this.provider.initializeGuilds();
-        }
+  onDisconnect(close) {
+    for (const [, p] of this.playlists) p.stop('continue');
 
-        this.log.hook({
-            title: 'Initialized',
-            color: 0x00ff93
-        });
+    this.log.hook({
+      title: 'Disconnected',
+      description: `Code: ${close.code}`,
+      color: 0xff5e5e
+    });
+  }
 
-        this.log.verbose('initialized guilds');
-    }
+  onGuildCreate(guild) {
+    guild.defaultChannel.send('Sup.  Try `@Pleb help`.').catch(() => null);
+    this.provider.initializeGuild(guild);
+  }
 
-    onReconnecting() {
-        this.log.hook({
-            title: 'Reconnecting',
-            color: 0xf4f141
-        });
-    }
+  onMessage(message) {
+    this.log.silly('message received: %s#%s | %s', message.author.username, message.author.discriminator, message.cleanContent);
+    this.handler.handle(message);
+  }
 
-    onResume(replayed) {
-        for (const [, p] of this.playlists) p.stop('continue');
-
-        this.log.hook({
-            title: 'Resumed',
-            description: `Replayed **${replayed}** events.`,
-            color: 0x9bffd5
-        });
-    }
-
-    onDisconnect(close) {
-        for (const [, p] of this.playlists) p.stop('continue');
-
-        this.log.hook({
-            title: 'Disconnected',
-            description: `Code: ${close.code}`,
-            color: 0xff5e5e
-        });
-    }
-
-    onGuildCreate(guild) {
-        guild.defaultChannel.send('Sup.  Try `@Pleb help`.').catch(() => null);
-        this.provider.initializeGuild(guild);
-    }
-
-    onMessage(message) {
-        this.log.silly('message received: %s#%s | %s', message.author.username, message.author.discriminator, message.cleanContent);
-        this.handler.handle(message);
-    }
-
-    onGuildDelete(guild) {
-        if (this.playlists.has(guild.id)) this.playlists.get(guild.id).destroy();
-    }
+  onGuildDelete(guild) {
+    if (this.playlists.has(guild.id)) this.playlists.get(guild.id).destroy();
+  }
 };

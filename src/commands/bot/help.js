@@ -1,6 +1,6 @@
 exports.exec = (cmd) => {
-    return cmd.response.dm(
-        '**`@mention` in any channel or just type in `#pleb`.**\n\n' +
+  return cmd.response.dm(
+    '**`@mention` in any channel or just type in `#pleb`.**\n\n' +
         '- **play <query, YT URL, SoundCloud URL>** - plays makes a playlist from the link\n' +
         '- **shuffle [Play params]** - shuffles existing playlist (if exists) or shuffle plays a new playlist\n' +
         '- **add (next)? <Play params>** - adds stuff to the playlist\n' +
@@ -40,5 +40,5 @@ exports.exec = (cmd) => {
         '- **link** - get the invite link for the bot\n\n' +
         'NSFW commands (noted by an [NSFW] tag above) can only be given in the `#nsfw` channel or by people with the `nsfw` role.  Members with the `no-pleb` role will be unable to use commands.\n\n' +
         'For human help, check out my Discord server (<https://discord.gg/DPuaDvP>).'
-        , { split: true });
+    , { split: true });
 };
