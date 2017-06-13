@@ -32,7 +32,7 @@ class Validate extends Validator {
     ensureClientPermissions(resolvable) {
         if (this.message.channel.type === 'dm') return super.apply(true);
 
-        return this.ensureGuild() && super.apply(this.message.channel.permissionsFor(this.message.guild.member(this.message.client.user)).hasPermission(resolvable), ERRORS.ensureClientPermissions(resolvable));
+        return this.ensureGuild() && super.apply(this.message.channel.permissionsFor(this.message.guild.me).has(resolvable), ERRORS.ensureClientPermissions(resolvable));
     }
 
     ensurePlaylist(bot) {
