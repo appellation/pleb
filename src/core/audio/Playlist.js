@@ -18,24 +18,24 @@ const { knuthShuffle: shuffle } = require('knuth-shuffle');
 class Playlist {
 
   /**
-     * @constructor
-     */
+   * @constructor
+   */
   constructor(bot, guild) {
     this.bot = bot;
 
     this.guild = guild;
 
     /**
-         * The array of songs.
-         * @type {Array.<Song>}
-         */
+     * The array of songs.
+     * @type {Array.<Song>}
+     */
     this.songs = [];
 
     /**
-         * The array pointer.
-         * @type {number}
-         * @private
-         */
+     * The array pointer.
+     * @type {number}
+     * @private
+     */
     this._pos = 0;
 
     this.loop = false;
@@ -44,25 +44,25 @@ class Playlist {
   }
 
   /**
-     * Get the length of the playlist.
-     * @return {Number}
-     */
+   * Get the length of the playlist.
+   * @return {Number}
+   */
   get length() {
     return this.songs.length;
   }
 
   /**
-     * Get the current position of the playlist (starting at 1).
-     * @return {number}
-     */
+   * Get the current position of the playlist (starting at 1).
+   * @return {number}
+   */
   get pos() {
     return this._pos + 1;
   }
 
   /**
-     * Get the current playlist item.
-     * @return {Song}
-     */
+   * Get the current playlist item.
+   * @return {Song}
+   */
   get current() {
     return this.songs[this._pos];
   }
@@ -73,58 +73,58 @@ class Playlist {
   }
 
   /**
-     * Send the playlist back one song.
-     * @return {number}
-     */
+   * Send the playlist back one song.
+   * @return {number}
+   */
   prev() {
     if (this.hasPrev()) this._pos--;
     return this.pos;
   }
 
   /**
-     * Whether there is a previous song.
-     * @return {boolean}
-     */
+   * Whether there is a previous song.
+   * @return {boolean}
+   */
   hasPrev() {
     return (this._pos - 1) >= 0;
   }
 
   /**
-     * Advance to the next song.
-     * @return {number}
-     */
+   * Advance to the next song.
+   * @return {number}
+   */
   next() {
     if (this.hasNext()) this._pos++;
     return this.pos;
   }
 
   /**
-     * Whether there is a next song.
-     * @return {boolean}
-     */
+   * Whether there is a next song.
+   * @return {boolean}
+   */
   hasNext() {
     return (this._pos + 1) <= this.songs.length - 1;
   }
 
   /**
-     * Get the next song.
-     * @return {Song}
-     */
+   * Get the next song.
+   * @return {Song}
+   */
   getNext() {
     return this.songs[this._pos + 1];
   }
 
   /**
-     * Get the last song.
-     * @return {Song|*}
-     */
+   * Get the last song.
+   * @return {Song|*}
+   */
   getLast() {
     return this.songs[this.songs.length - 1];
   }
 
   /**
-     * Shuffle the playlist.
-     */
+   * Shuffle the playlist.
+   */
   shuffle() {
     this.songs = shuffle(this.songs);
     this._pos = 0;
@@ -136,12 +136,12 @@ class Playlist {
   }
 
   /**
-     * Add content to the playlist.
-     * @param {Response} res
-     * @param {String} content A string of content to add.
-     * @param {String} type One of `normal`, `playlist`
-     * @return {Playlist}
-     */
+   * Add content to the playlist.
+   * @param {Response} res
+   * @param {String} content A string of content to add.
+   * @param {String} type One of `normal`, `playlist`
+   * @return {Playlist}
+   */
   async add(res, content, type = 'normal') {
     await res.send('adding songs to playlist...');
 
