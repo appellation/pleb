@@ -7,9 +7,17 @@ module.exports = class {
 
   async exec(cmd) {
     const list = Playlist.get(this.bot, cmd.message.guild);
+
     list.stop();
     list.reset();
-    await list.add(cmd.response, cmd.args.song);
+
+    try {
+      await list.add(cmd.response, cmd.args.song);
+    } catch (e) {
+      await cmd.response.error(e.message || e);
+      return;
+    }
+
     return list.start(cmd.response);
   }
 

@@ -7,7 +7,16 @@ module.exports = class {
 
   async exec(cmd) {
     const list = Playlist.get(this.bot, cmd.message.guild);
-    if (cmd.args.query) await list.add(cmd.response, cmd.args.query);
+
+    if (cmd.args.query) {
+      try {
+        await list.add(cmd.response, cmd.args.query);
+      } catch (e) {
+        await cmd.response.error(e.message || e);
+        return;
+      }
+    }
+
     list.stop();
     list.shuffle();
     return list.start(cmd.response);

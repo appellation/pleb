@@ -1,8 +1,6 @@
 const url = require('url');
 const request = require('axios');
 
-request.defaults.params = { client_id: process.env.soundcloud };
-
 class SoundCloud {
 
   /**
@@ -22,16 +20,15 @@ class SoundCloud {
 
   /**
      * Load a SoundCloud resource.
-     * @param url
+     * @param resource
      * @return {Promise<Array<?Song>>}
      * @private
      */
-  async _loadResource(url) {
+  async _loadResource(resource) {
     let thing;
     try {
-      thing = (await request.get({
-        url: 'https://api.soundcloud.com/resolve',
-        params: { url }
+      thing = (await request.get('https://api.soundcloud.com/resolve', {
+        params: { url: resource, client_id: process.env.soundcloud }
       })).data;
     } catch (e) {
       return [];
@@ -68,12 +65,11 @@ class SoundCloud {
 
     return {
       type: 'soundcloud',
-      stream: () => {
-        return request.get({
-          url: track.stream_url,
-          query: { client_id: process.env.soundcloud },
-          encoding: null
-        });
+      stream: async () => {
+        return (await request.get(track.stream_url, {
+          params: { client_id: process.env.soundcloud },
+          responseType: 'stream'
+        })).data;
       },
       title: track.title,
       playlistID,

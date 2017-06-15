@@ -139,10 +139,11 @@ class Playlist {
    * Add content to the playlist.
    * @param {Response} res
    * @param {String} content A string of content to add.
-   * @param {String} type One of `normal`, `playlist`
+   * @param {number} [position=Infinity] The position at which to add the song(s).
+   * @param {String} [type='normal'] One of `normal`, `playlist`
    * @return {Playlist}
    */
-  async add(res, content, type = 'normal') {
+  async add(res, content, position = Infinity, type = 'normal') {
     await res.send('adding songs to playlist...');
 
     let added;
@@ -157,14 +158,14 @@ class Playlist {
     added = added.filter(e => e);
 
     if (added.length < 1) {
-      return res.error('Unable to find that resource.');
+      throw new Error('Unable to find that resource.');
     } else if (added.length === 1) {
       await res.success(`added \`${added[0].title}\` to playlist`);
     } else {
       await res.success(`added **${added.length}** songs to playlist`);
     }
 
-    this.songs.push(...added);
+    this.songs.splice(position, 0, ...added);
     return added;
   }
 
@@ -189,7 +190,7 @@ class Playlist {
     await new Promise(r => setTimeout(r, 150));
 
     if (!this.current) return response.error('There is no song currently available to play.');
-    this._start();
+    await this._start();
     await response.success(`now playing \`${this.current.title}\``);
   }
 
@@ -209,10 +210,10 @@ class Playlist {
     if (this.dispatcher && !this.dispatcher.speaking) this.dispatcher.resume();
   }
 
-  _start() {
+  async _start() {
     if (!this.current || !this.guild.voiceConnection) return;
     this.stop();
-    const dispatcher = this.guild.voiceConnection.playStream(this.current.stream(), { volume: 0.2 });
+    const dispatcher = this.guild.voiceConnection.playStream(await this.current.stream(), { volume: 0.2 });
     this.playing = true;
     dispatcher.once('end', (reason) => {
       this.playing = false;
