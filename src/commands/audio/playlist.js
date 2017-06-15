@@ -27,7 +27,7 @@ module.exports = class {
       .setPattern(/.*/);
   }
 
-  validator(val) {
+  validate(val) {
     return val.ensureCanPlay();
   }
 };
