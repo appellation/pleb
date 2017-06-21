@@ -24,17 +24,20 @@ module.exports = class extends (handles.Client) {
       Validator
     });
 
+    this.bot = bot;
+
     this.on('commandStarted', command => {
-      bot.log.debug('command started: %s', command.resolvedContent);
+      this.bot.log.debug('command started: %s', command.resolvedContent);
+      this.bot.stats.collect(command.trigger);
     });
 
     this.on('commandFailed', ({ command, error }) => {
-      bot.log.error('command failed: %s | %s', command, error);
+      this.bot.log.error('command failed: %s | %s', command, error);
       command.response.error(`\`${error}\`\nYou should never receive an error like this.  Bot owner has been notified.`);
     });
 
     this.once('commandsLoaded', () => {
-      bot.log.info(`commands loaded in ${process.uptime()}s`);
+      this.bot.log.info(`commands loaded in ${process.uptime()}s`);
     });
 
     this.on('error', (err) => {

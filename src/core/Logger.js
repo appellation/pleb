@@ -2,7 +2,7 @@ const winston = require('winston');
 const request = require('request-promise-native');
 const { RichEmbed } = require('discord.js');
 
-module.exports = class extends winston.Logger {
+module.exports = class Logger extends winston.Logger {
   constructor(client) {
     super({
       transports: [

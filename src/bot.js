@@ -6,8 +6,9 @@ const discord = require('discord.js');
 const Raven = require('raven');
 const containerized = require('containerized');
 
-const Log = require('./core/Log');
+const Logger = require('./core/Logger');
 const Handler = require('./core/Handler');
+const Stats = require('./core/Stats');
 const Spectacles = require('./core/Spectacles');
 const Provider = require('./core/SQLProvider');
 
@@ -24,9 +25,10 @@ new class {
 
     Object.defineProperty(this.client, 'bot', { value: this });
 
-    this.log = new Log(this.client);
+    this.log = new Logger(this.client);
     this.provider = new Provider(this);
     this.handler = new Handler(this);
+    this.stats = new Stats(this);
     if (containerized()) this.spectacles = new Spectacles(this);
 
     this.playlists = new Map();
