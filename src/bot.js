@@ -8,9 +8,9 @@ const containerized = require('containerized');
 
 const Logger = require('./core/Logger');
 const Handler = require('./core/Handler');
-const Stats = require('./core/Stats');
-const Spectacles = require('./core/Spectacles');
-const Provider = require('./core/SQLProvider');
+const Usage = require('./core/data/Usage');
+const Spectacles = require('./core/data/Spectacles');
+const Provider = require('./core/data/SQLProvider');
 
 new class {
   constructor() {
@@ -28,7 +28,7 @@ new class {
     this.log = new Logger(this.client);
     this.provider = new Provider(this);
     this.handler = new Handler(this);
-    this.stats = new Stats(this);
+    this.usage = new Usage(this);
     if (containerized()) this.spectacles = new Spectacles(this);
 
     this.playlists = new Map();

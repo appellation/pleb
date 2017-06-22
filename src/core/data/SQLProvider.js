@@ -22,6 +22,18 @@ class SQLProvider {
           allowNull: true,
           defaultValue: null
         }
+      }),
+      Usage: this.db.define('usage', {
+        name: {
+          type: Sequelize.STRING,
+          allowNull: false
+        },
+        userID: {
+          type: Sequelize.STRING
+        },
+        guildID: {
+          type: Sequelize.STRING
+        }
       })
     };
   }

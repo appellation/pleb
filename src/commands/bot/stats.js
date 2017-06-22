@@ -1,5 +1,5 @@
 const moment = require('moment');
-const request = require('request');
+const request = require('axios');
 
 module.exports = class {
   constructor({ bot }) {
@@ -21,16 +21,14 @@ module.exports = class {
     for (const s in stats) stats[s] = stats[s].reduce((a, b) => a + b);
 
     if (process.env.discord_pw) {
-      request({
-        uri: `https://bots.discord.pw/api/bots/${process.env.discord_client_id}/stats`,
+      request(`https://bots.discord.pw/api/bots/${process.env.discord_client_id}/stats`, {
         method: 'post',
         body: {
           server_count: stats.servers
         },
         headers: {
           Authorization: process.env.discord_pw
-        },
-        json: true
+        }
       });
     }
 
