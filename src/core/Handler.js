@@ -28,7 +28,7 @@ module.exports = class extends (handles.Client) {
 
     this.on('commandStarted', command => {
       this.bot.log.debug('command started: %s', command.resolvedContent);
-      this.bot.stats.collect(command.trigger);
+      this.bot.usage.add(command);
     });
 
     this.on('commandFailed', ({ command, error }) => {
