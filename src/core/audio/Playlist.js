@@ -69,7 +69,7 @@ class Playlist {
 
   reset() {
     this.songs = [];
-    this._post = 0;
+    this._pos = 0;
   }
 
   /**
