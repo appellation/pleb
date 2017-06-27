@@ -68,8 +68,7 @@ exports.middleware = function* () {
 };
 
 async function shortenURL(url) {
-  const res = await request.post({
-    url: 'https://www.googleapis.com/urlshortener/v1/url',
+  const res = await request.post('https://www.googleapis.com/urlshortener/v1/url', {
     params: {
       key: process.env.youtube
     },
