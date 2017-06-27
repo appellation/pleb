@@ -13,7 +13,7 @@ exports.exec = (cmd) => {
 };
 
 exports.middleware = function* (cmd) {
-  yield new Validator(cmd).ensurePlaylist();
+  yield new Validator(cmd).ensurePlaylist(cmd.client.bot);
   yield new Argument('page')
     .setOptional()
     .setResolver(c => !c || isNaN(c) ? null : parseInt(c));

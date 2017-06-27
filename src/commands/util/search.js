@@ -15,8 +15,7 @@ exports.exec = async (cmd) => {
 
   const cc = countryMap[msg.guild ? msg.guild.region : null] || 'US';
   const valid = new Validation(cmd);
-  const res = (await request.get({
-    url: 'https://api.cognitive.microsoft.com/bing/v5.0/search',
+  const res = (await request.get('https://api.cognitive.microsoft.com/bing/v5.0/search', {
     params: {
       q: args.query,
       mkt: `en-${cc}`,

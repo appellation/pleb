@@ -32,7 +32,7 @@ module.exports = class extends (handles.Client) {
     });
 
     this.on('commandError', ({ command, error }) => {
-      this.bot.log.error('command failed: %s | %s', command, error);
+      this.bot.log.error('command failed: %s', command.trigger, error);
       command.response.error(`\`${error}\`\nYou should never receive an error like this.  Bot owner has been notified.`);
     });
 

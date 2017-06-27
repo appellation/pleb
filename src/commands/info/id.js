@@ -15,6 +15,6 @@ exports.exec = (cmd) => {
     out.push(`${role}: \`${role.id}\``);
   }
 
-  if (out.length === 0) out.push(`${cmd.message.author}: \`${cmd.message.author.id}`);
+  if (out.length === 0) out.push(`${cmd.message.author}: \`${cmd.message.author.id}\``);
   return cmd.response.success(`**Requested IDs:**\n\n${out.join('\n')}`);
 };
