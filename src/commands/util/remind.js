@@ -1,6 +1,7 @@
 const resolvers = require('../../util/resolvers');
 const moment = require('moment');
 const Sherlock = require('Sherlock');
+const { Argument } = require('discord-handles');
 
 exports.exec = ({ response: res, args }) => {
   setTimeout(() => {
@@ -10,7 +11,7 @@ exports.exec = ({ response: res, args }) => {
   return res.success(`reminder set for ${moment(args.reminder.startDate).format('dddd, MMMM Do YYYY, h:mm:ss a ZZ')}`);
 };
 
-exports.arguments = function* (Argument, cmd) {
+exports.middleware = function* (cmd) {
   const user = yield new Argument('user')
     .setPrompt('Who would you like to remind?')
     .setRePrompt('Please remind a valid user (`me` or a mention).')

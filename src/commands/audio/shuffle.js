@@ -1,34 +1,27 @@
 const Playlist = require('../../core/audio/Playlist');
+const { Argument } = require('discord-handles');
+const Validator = require('../../core/Validator');
 
-module.exports = class {
-  constructor({ bot }) {
-    this.bot = bot;
-  }
+exports.exec = async (cmd) => {
+  const list = Playlist.get(cmd.client.bot, cmd.message.guild);
 
-  async exec(cmd) {
-    const list = Playlist.get(this.bot, cmd.message.guild);
-
-    if (cmd.args.query) {
-      try {
-        await list.add(cmd.response, cmd.args.query);
-      } catch (e) {
-        await cmd.response.error(e.message || e);
-        return;
-      }
+  if (cmd.args.query) {
+    try {
+      await list.add(cmd.response, cmd.args.query);
+    } catch (e) {
+      await cmd.response.error(e.message || e);
+      return;
     }
-
-    list.stop();
-    list.shuffle();
-    return list.start(cmd.response);
   }
 
-  validate(val) {
-    return val.ensureCanPlay(this.bot);
-  }
+  list.stop();
+  list.shuffle();
+  return list.start(cmd.response);
+};
 
-  * arguments(Argument) {
-    yield new Argument('query')
-      .setOptional()
-      .setInfinite();
-  }
+exports.middleware = function* (cmd) {
+  yield new Validator(cmd).ensureCanPlay(cmd.client.bot);
+  yield new Argument('query')
+    .setOptional()
+    .setInfinite();
 };

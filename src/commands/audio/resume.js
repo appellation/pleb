@@ -1,13 +1,9 @@
-module.exports = class {
-  constructor({ bot }) {
-    this.bot = bot;
-  }
+const Validator = require('../../core/Validator');
 
-  exec(cmd) {
-    return this.bot.playlists.get(cmd.message.guild.id).resume();
-  }
+exports.exec = (cmd) => {
+  return cmd.client.bot.playlists.get(cmd.message.guild.id).resume();
+};
 
-  validate(val) {
-    return val.ensurePlaylist(this.bot);
-  }
+exports.middleware = function* (cmd) {
+  yield new Validator(cmd).ensurePlaylist(this.bot);
 };

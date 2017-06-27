@@ -1,20 +1,18 @@
-module.exports = class {
-  constructor({ bot }) {
-    this.bot = bot;
-    this.triggers = [
-      'stfu',
-      'stop',
-      'leave'
-    ];
-  }
+const Validator = require('../../core/Validator');
 
-  exec(cmd) {
-    if (this.bot.playlists.has(cmd.message.guild.id)) this.bot.playlists.get(cmd.message.guild.id).destroy();
-    if (cmd.message.guild.voiceConnection) cmd.message.guild.voiceConnection.disconnect();
-    return cmd.response.send('k 😢');
-  }
+exports.triggers = [
+  'stfu',
+  'stop',
+  'leave'
+];
 
-  validate(val) {
-    return val.ensureGuild();
-  }
+exports.exec = (cmd) => {
+  const pl = cmd.client.bot.playlists;
+  if (pl.has(cmd.guild.id)) pl.get(cmd.guild.id).destroy();
+  if (cmd.guild.voiceConnection) cmd.guild.voiceConnection.disconnect();
+  return cmd.response.send('k 😢');
+};
+
+exports.middleware = function* (cmd) {
+  yield new Validator(cmd).ensureGuild();
 };

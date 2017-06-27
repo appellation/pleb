@@ -1,4 +1,5 @@
 const { element } = require('../../util/random');
+const { Argument } = require('discord-handles');
 
 const responses = [
   'It is certain',
@@ -24,7 +25,7 @@ const responses = [
 ];
 
 exports.exec = (cmd) => cmd.response.send(`🎱 ${element(responses)}`);
-exports.arguments = function* (Argument) {
+exports.middleware = function* () {
   yield new Argument('question')
     .setPrompt('What would you like to ask?');
 };

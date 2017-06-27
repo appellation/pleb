@@ -2,6 +2,7 @@ const request = require('axios');
 const timezone = require('moment-timezone');
 const path = require('path');
 const Canvas = require('canvas');
+const { Argument } = require('discord-handles');
 
 exports.exec = async ({ response, message: msg, args }) => {
 
@@ -77,11 +78,8 @@ exports.exec = async ({ response, message: msg, args }) => {
   ctx.drawImage(icon, 80, 40, 90, 90);
 
   const timePlacements = [[365, 60], [475, 60], [595, 60], [705, 60]];
-
   const minPlacements = [[365, 170], [475, 170], [595, 170], [705, 170]];
-
   const maxPlacements = [[365, 210], [475, 210], [595, 210], [705, 210]];
-
   const imagePlacements = [[330, 70], [440, 70], [560, 70], [670, 70]];
 
   for (let i = 0; i < 4; i++) {
@@ -132,7 +130,7 @@ function convertFToC(temp) {
   return Math.round((temp - 32) * 0.5556);
 }
 
-exports.arguments = function* (Argument) {
+exports.middleware = function* () {
   yield new Argument('location')
     .setPattern(/.*/)
     .setPrompt('For where would you like to get weather information?');

@@ -1,11 +1,12 @@
 const resolvers = require('../../util/resolvers');
+const { Argument } = require('discord-handles');
 
 exports.exec = (cmd) => {
   const user = cmd.args.user || cmd.message.author;
   return cmd.response.send(`${user}, ${Array.random(insults)}`);
 };
 
-exports.arguments = function* (Argument) {
+exports.middleware = function* () {
   yield new Argument('user')
     .setOptional()
     .setResolver(resolvers.user);

@@ -1,10 +1,11 @@
 const resolvers = require('../../util/resolvers');
+const { Argument } = require('discord-handles');
 
 exports.exec = ({ response: res, args }) => {
   return res.send(rules[args.rule - 1], { code: 'ldif' });
 };
 
-exports.arguments = function* (Argument) {
+exports.middleware = function* () {
   yield new Argument('rule')
     .setPrompt('Which rule would you like to see?')
     .setRePrompt('Please pick a rule between 1 and 47.')

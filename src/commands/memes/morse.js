@@ -1,3 +1,5 @@
+const { Argument } = require('discord-handles');
+
 const dot = '😂';
 const dash = '😑';
 const dict = {
@@ -39,7 +41,7 @@ const dict = {
   9: dash + dash + dash + dash + dot
 };
 
-exports.arguments = function* (Argument) {
+exports.middleware = function* () {
   yield new Argument('text')
     .setPrompt('What would you like to translate to morse?')
     .setPattern(/.*/)

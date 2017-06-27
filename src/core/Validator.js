@@ -16,91 +16,103 @@ const ERRORS = {
 
 class Validate extends Validator {
 
-  /**
-     * Ensure the message is in a guild.
-     * @return {*}
-     */
-  ensureGuild() {
-    return super.apply(this.message.channel.type === 'text', ERRORS.ensureGuild);
+  constructor(command) {
+    super();
+    this.command = command;
+    this.message = this.command.message;
+    this.guild = this.command.guild;
+    this.channel = this.message.channel;
   }
 
   /**
-     * Ensure that the client has a permission resolvable.
-     * @param resolvable
-     * @return {boolean}
-     */
-  ensureClientPermissions(resolvable) {
-    if (this.message.channel.type === 'dm') return super.apply(true);
+   * Ensure the message is in a guild.
+   * @return {*}
+   */
+  ensureGuild() {
+    return super.apply(() => this.channel.type === 'text', ERRORS.ensureGuild);
+  }
 
-    return this.ensureGuild() && super.apply(this.message.channel.permissionsFor(this.message.guild.me).has(resolvable), ERRORS.ensureClientPermissions(resolvable));
+  /**
+   * Ensure that the client has a permission resolvable.
+   * @param resolvable
+   * @return {boolean}
+   */
+  ensureClientPermissions(resolvable) {
+    if (this.channel.type === 'dm') return super.apply(true);
+    this.ensureGuild();
+    return super.apply(() => this.channel.permissionsFor(this.guild.me).has(resolvable), ERRORS.ensureClientPermissions(resolvable));
   }
 
   ensurePlaylist(bot) {
-    return this.ensureGuild() && (super.apply(bot.playlists.has(this.message.guild.id), ERRORS.ensurePlaylist) && this.ensureCurrentVoiceChannel());
+    this.ensureGuild();
+    return super.apply(() => bot.playlists.has(this.guild.id), ERRORS.ensurePlaylist) && this.ensureCurrentVoiceChannel();
   }
 
   /**
-     * Ensure that some arguments exist.
-     * @return {boolean}
-     */
+   * Ensure that some arguments exist.
+   * @return {boolean}
+   */
   ensureArgs() {
-    return super.apply(Object.keys(this.command.args).length > 0, ERRORS.ensureArgs);
+    return super.apply(() => this.command.args && Object.keys(this.command.args).length > 0, ERRORS.ensureArgs);
   }
 
   /**
-     * Ensure that the client can send a text response.
-     * @return {boolean}
-     */
+   * Ensure that the client can send a text response.
+   * @return {boolean}
+   */
   ensureReplyable() {
     return this.ensureClientPermissions('SEND_MESSAGES');
   }
 
   /**
-     * Ensure that the author is in a voice channel.
-     * @return {boolean}
-     */
+   * Ensure that the author is in a voice channel.
+   * @return {boolean}
+   */
   ensureMemberVoice() {
-    return this.ensureGuild() && super.apply(this.message.member.voiceChannel, ERRORS.ensureMemberVoice);
+    this.ensureGuild();
+    return super.apply(() => this.message.member.voiceChannel, ERRORS.ensureMemberVoice);
   }
 
   /**
-     * Ensure that the client can join the author's voice channel.
-     * @return {boolean}
-     */
+   * Ensure that the client can join the author's voice channel.
+   * @return {boolean}
+   */
   ensureJoinable() {
-    return this.ensureMemberVoice() && super.apply(this.message.member.voiceChannel.joinable, ERRORS.ensureJoinable);
+    return super.apply(() => this.message.member.voiceChannel.joinable, ERRORS.ensureJoinable);
   }
 
   /**
-     * Ensure that the client can speak in the author's voice channel.
-     * @return {boolean}
-     */
+   * Ensure that the client can speak in the author's voice channel.
+   * @return {boolean}
+   */
   ensureSpeakable() {
-    return this.ensureMemberVoice() && super.apply(this.message.member.voiceChannel.speakable, ERRORS.ensureSpeakable);
+    this.ensureMemberVoice();
+    return super.apply(() => this.message.member.voiceChannel.speakable, ERRORS.ensureSpeakable);
   }
 
   ensureNSFW() {
-    return super.apply(this.message.channel.nsfw, ERRORS.ensureNSFW);
+    return super.apply(() => this.channel.nsfw, ERRORS.ensureNSFW);
   }
 
   ensureCanPlay() {
-    return this.ensureJoinable() && this.ensureSpeakable();
+    return this.ensureSpeakable();
   }
 
   /**
-     * Ensure that the client is currently connected to a voice channel.
-     * @return {boolean}
-     */
+   * Ensure that the client is currently connected to a voice channel.
+   * @return {boolean}
+   */
   ensureCurrentVoiceChannel() {
-    return this.ensureGuild() && super.apply(this.message.client.voiceConnections.has(this.message.guild.id), ERRORS.ensureCurrentVoiceChannel);
+    this.ensureGuild();
+    return super.apply(() => this.command.client.voiceConnections.has(this.guild.id), ERRORS.ensureCurrentVoiceChannel);
   }
 
   ensureIsNumber(argNum) {
-    return super.apply(!isNaN(this.command.args[argNum]), ERRORS.ensureIsNumber(argNum));
+    return super.apply(() => !isNaN(this.command.args[argNum]), ERRORS.ensureIsNumber(argNum));
   }
 
   ensureIsOwner() {
-    return super.apply(this.command.message.author.id === '116690352584392704', 'This command is owner-only.');
+    return super.apply(() => this.message.author.id === '116690352584392704', 'This command is owner-only.');
   }
 }
 

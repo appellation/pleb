@@ -1,13 +1,9 @@
-module.exports = class {
-  constructor({ bot }) {
-    this.bot = bot;
-  }
+const Validator = require('../../core/Validator');
 
-  exec(cmd) {
-    return cmd.response.success(`Current prefix is: \`${this.bot.guildSettings.get(cmd.message.guild.id).getCached('prefix')}\``);
-  }
+exports.exec = (cmd) => {
+  return cmd.response.success(`Current prefix is: \`${cmd.client.bot.guildSettings.get(cmd.message.guild.id).getCached('prefix')}\``);
+};
 
-  validate(val) {
-    return val.ensureGuild();
-  }
+exports.middleware = function* (cmd) {
+  yield new Validator(cmd).ensureGuild();
 };

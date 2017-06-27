@@ -1,33 +1,26 @@
 const Playlist = require('../../core/audio/Playlist');
+const Validator = require('../../core/Validator');
+const { Argument } = require('discord-handles');
 
-module.exports = class {
-  constructor({ bot }) {
-    this.bot = bot;
+exports.exec = async (cmd) => {
+  const list = Playlist.get(cmd.client.bot, cmd.message.guild);
+
+  list.stop();
+  list.reset();
+
+  try {
+    await list.add(cmd.response, cmd.args.list, undefined, 'playlist');
+  } catch (e) {
+    await cmd.response.error(e.message || e);
+    return;
   }
 
-  async exec(cmd) {
-    const list = Playlist.get(this.bot, cmd.message.guild);
+  return list.start(cmd.response);
+};
 
-    list.stop();
-    list.reset();
-
-    try {
-      await list.add(cmd.response, cmd.args.list, undefined, 'playlist');
-    } catch (e) {
-      await cmd.response.error(e.message || e);
-      return;
-    }
-
-    return list.start(cmd.response);
-  }
-
-  * arguments(Argument) {
-    yield new Argument('list')
-      .setPrompt('What playlist would you like to search for?')
-      .setPattern(/.*/);
-  }
-
-  validate(val) {
-    return val.ensureCanPlay();
-  }
+exports.middleware = function* (cmd) {
+  yield new Validator(cmd).ensureCanPlay();
+  yield new Argument('list')
+    .setPrompt('What playlist would you like to search for?')
+    .setPattern(/.*/);
 };

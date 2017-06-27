@@ -1,3 +1,6 @@
+const { Argument } = require('discord-handles');
+const Validator = require('../../core/Validator');
+
 exports.exec = async (cmd) => {
   let res;
   try {
@@ -10,10 +13,9 @@ exports.exec = async (cmd) => {
   return (inspected.length <= 6000) ? cmd.message.channel.send(inspected, { split: true, code: 'js' }) : cmd.response.error('that response would be too big');
 };
 
-exports.arguments = function* (Argument) {
+exports.middleware = function* (cmd) {
+  yield new Validator(cmd).ensureIsOwner();
   yield new Argument('code')
     .setPrompt('What code would you like to eval?')
     .setInfinite();
 };
-
-exports.validate = val => val.ensureIsOwner();

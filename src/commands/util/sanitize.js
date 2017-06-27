@@ -1,4 +1,5 @@
 const resolvers = require('../../util/resolvers');
+const { Argument } = require('discord-handles');
 
 exports.exec = async ({ response: res, message: msg, args }) => {
   const collection = await msg.channel.fetchMessages();
@@ -13,7 +14,7 @@ exports.exec = async ({ response: res, message: msg, args }) => {
   return res.success(`Purged last ${deleted.size} messages.`, msg.author);
 };
 
-exports.arguments = function* (Argument) {
+exports.middleware = function* () {
   yield new Argument('count')
     .setRePrompt('Please provide a valid number of messages to sanitize.')
     .setOptional()

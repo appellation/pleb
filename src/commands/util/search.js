@@ -2,6 +2,7 @@ const request = require('axios');
 const numeral = require('numeral');
 const moment = require('moment');
 const Validation = require('../../core/Validator');
+const { Argument } = require('discord-handles');
 
 const countryMap = {
   brazil: 'BR',
@@ -61,7 +62,7 @@ exports.exec = async (cmd) => {
   return out ? response.send(out) : null;
 };
 
-exports.arguments = function* (Argument) {
+exports.middleware = function* () {
   yield new Argument('query')
     .setInfinite()
     .setPrompt('What would you like to search for?');

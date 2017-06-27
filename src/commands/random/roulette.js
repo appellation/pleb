@@ -1,3 +1,5 @@
+const Validator = require('../../core/Validator');
+
 exports.exec = async ({ response: res, message: msg }) => {
   if (!msg.channel.permissionsFor(msg.client.user).hasPermission('MANAGE_CHANNELS'))
     return res.error('I don\'t have perms to ~~brutally murder~~ mute you if you lose.');
@@ -16,4 +18,6 @@ exports.exec = async ({ response: res, message: msg }) => {
   }
 };
 
-exports.validate = val => val.ensureGuild();
+exports.middleware = function* (cmd) {
+  yield new Validator(cmd).ensureGuild();
+};

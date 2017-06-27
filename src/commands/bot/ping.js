@@ -1,4 +1,5 @@
 const httpPing = require('node-http-ping');
+const { Argument } = require('discord-handles');
 
 exports.exec = async ({ response: res, args, message: msg }) => {
   if (args.site) {
@@ -14,6 +15,6 @@ exports.exec = async ({ response: res, args, message: msg }) => {
   }
 };
 
-exports.arguments = function* (Argument) {
+exports.middleware = function* () {
   yield new Argument('site').setOptional();
 };

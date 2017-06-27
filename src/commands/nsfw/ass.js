@@ -1,4 +1,5 @@
 const request = require('axios');
+const Validator = require('../../core/Validator');
 
 exports.exec = async cmd => {
   try {
@@ -10,4 +11,6 @@ exports.exec = async cmd => {
   }
 };
 
-exports.validate = val => val.ensureNSFW();
+exports.middleware = function* (cmd) {
+  yield new Validator(cmd).ensureNSFW();
+};

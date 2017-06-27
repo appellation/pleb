@@ -1,4 +1,5 @@
 const request = require('axios');
+const { Argument } = require('discord-handles');
 
 exports.exec = async (cmd) => {
   const res = await request.get('http://api.pearson.com/v2/dictionaries/ldoce5/entries', {
@@ -41,7 +42,7 @@ exports.exec = async (cmd) => {
   return cmd.response.send(out);
 };
 
-exports.arguments = function* (Argument) {
+exports.middleware = function* () {
   yield new Argument('word')
     .setPattern(/.*/)
     .setPrompt('What would you like to define?');

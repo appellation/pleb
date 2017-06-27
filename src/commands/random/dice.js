@@ -1,5 +1,6 @@
 const { roll } = require('../../util/random');
 const resolvers = require('../../util/resolvers');
+const { Argument } = require('discord-handles');
 
 exports.exec = (cmd) => {
   if (cmd.args.count >= 1000) return cmd.response.error('Please use less than 1,000 dice.  kthxbye.');
@@ -7,7 +8,7 @@ exports.exec = (cmd) => {
   return cmd.response.success(`**${sum}** 🎲`);
 };
 
-exports.arguments = function* (Argument) {
+exports.middleware = function* () {
   yield new Argument('count')
     .setPrompt('How many dice would you like to roll?')
     .setRePrompt('Please roll between 1 and 999 dice.')

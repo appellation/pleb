@@ -1,22 +1,17 @@
-module.exports = class {
-  constructor({ bot }) {
-    this.bot = bot;
-    this.triggers = ['next', 'skip'];
-  }
+const { Argument } = require('discord-handles');
+const Validator = require('../../core/Validator');
 
-  exec(cmd) {
-    const list = this.bot.playlists.get(cmd.message.guild.id);
-    for (let i = 0; i < (cmd.args.count || 1) && list.hasNext(); i++) list.next();
-    return list.start(cmd.response);
-  }
+exports.triggers = ['next', 'skip'];
 
-  * arguments(Argument) {
-    yield new Argument('count')
-      .setOptional()
-      .setResolver(c => isNaN(c) ? null : parseInt(c));
-  }
+exports.exec = (cmd) => {
+  const list = cmd.client.bot.playlists.get(cmd.message.guild.id);
+  for (let i = 0; i < (cmd.args.count || 1) && list.hasNext(); i++) list.next();
+  return list.start(cmd.response);
+};
 
-  validate(val) {
-    return val.ensurePlaylist(this.bot);
-  }
+exports.middleware = function* (cmd) {
+  yield new Validator(cmd).ensurePlaylist(cmd.client.bot);
+  yield new Argument('count')
+    .setOptional()
+    .setResolver(c => isNaN(c) ? null : parseInt(c));
 };
