@@ -33,7 +33,7 @@
     "node-opus": "^0.2.5",
     "numeral": "^1.5.3",
     "pg": "^6.3.1",
-    "raven": "^1.1.1",
+    "raven": "^1.2.1",
     "sequelize": "^3.30.4",
     "simple-youtube-api": "github:hypercoder2975/simple-youtube-api#appel-wip",
     "spectacles.js": "git+https://github.com/spec-tacles/spectacles.js.git#refactor",

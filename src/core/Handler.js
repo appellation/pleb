@@ -1,4 +1,5 @@
 const path = require('path');
+const util = require('util');
 const handles = require('discord-handles');
 const Raven = require('raven');
 
@@ -31,18 +32,21 @@ module.exports = class extends (handles.Client) {
       this.bot.usage.add(command);
     });
 
-    this.on('commandError', ({ command, error }) => {
-      this.bot.log.error('command failed: %s', command.trigger, error);
-      command.response.error(`\`${error}\`\nYou should never receive an error like this.  Bot owner has been notified.`);
+    this.on('commandError', async ({ command, error }) => {
+      if (process.env.raven) Raven.captureException(error);
+      else console.error(error); // eslint-disable-line no-console
+
+      try {
+        this.bot.log.error('command failed: %s', command.trigger, error);
+        await command.response.error(`\`${error}\`\nYou should never receive an error like this.  Bot owner has been notified.`);
+      } catch (e) {
+        this.bot.log.error(util.inspect(error));
+        command.response.error('Error could not be displayed; needless to say, it borke.  Bot owner has been notified.');
+      }
     });
 
     this.once('commandsLoaded', () => {
       this.bot.log.info(`commands loaded in ${process.uptime()}s`);
-    });
-
-    this.on('error', (err) => {
-      if (process.env.raven) Raven.captureException(err);
-      else console.error(err); // eslint-disable-line no-console
     });
   }
 };
