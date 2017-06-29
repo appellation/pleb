@@ -1,4 +1,5 @@
 const resolvers = require('../../util/resolvers');
+const { Argument } = require('discord-handles');
 const dicks = new Map();
 
 exports.exec = (cmd) => {
@@ -15,7 +16,7 @@ exports.exec = (cmd) => {
   return cmd.response.send(`8${'='.repeat(count)}D ${user}`);
 };
 
-exports.middleware = function* (Argument) {
+exports.middleware = function* () {
   yield new Argument('user')
     .setOptional()
     .setResolver(resolvers.user);
