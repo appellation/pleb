@@ -12,6 +12,7 @@ module.exports = class extends (handles.Client) {
       directory: path.join('.', 'src', 'commands'),
       validator: message => {
         if (message.channel.type === 'dm') return message.content.replace(baseRegex, '');
+        if (message.member.roles.exists('name', 'no-pleb')) return;
 
         const regex = bot.guildSettings.has(message.guild.id) ?
           bot.guildSettings.get(message.guild.id).getCached('prefix') :
