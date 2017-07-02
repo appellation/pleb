@@ -5,5 +5,5 @@ exports.exec = (cmd) => {
 };
 
 exports.middleware = function* (cmd) {
-  yield new Validator(cmd).ensurePlaylist(this.bot);
+  yield new Validator(cmd).ensurePlaylist(cmd.client.bot);
 };
