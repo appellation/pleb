@@ -11,6 +11,7 @@ exports.exec = async ({ response: res, args, message: msg }) => {
     }
   } else {
     const newMessage = await res.send('pinging....');
+    if (!newMessage) return;
     return res.success(`\`${newMessage.createdTimestamp - msg.createdTimestamp} ms\` round-trip ⏱ | \`${Math.round(msg.client.ping)} ms\` heartbeat 💓`);
   }
 };
