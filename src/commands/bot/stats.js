@@ -16,18 +16,6 @@ exports.exec = async (cmd) => {
 
   for (const s in stats) stats[s] = stats[s].reduce((a, b) => a + b);
 
-  if (process.env.discord_pw) {
-    request(`https://bots.discord.pw/api/bots/${process.env.discord_client_id}/stats`, {
-      method: 'post',
-      body: {
-        server_count: stats.servers
-      },
-      headers: {
-        Authorization: process.env.discord_pw
-      }
-    });
-  }
-
   return cmd.response.send(`**Servers:** ${stats.servers}
 **Channels:** ${stats.channels}
 **Users:** ${stats.users}

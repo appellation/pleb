@@ -2,6 +2,7 @@ require('./util/extensions');
 require('moment-duration-format');
 require('dotenv').config({ silent: true });
 
+const axios = require('axios');
 const discord = require('discord.js');
 const Raven = require('raven');
 const containerized = require('containerized');
@@ -111,6 +112,7 @@ new class {
   onGuildCreate(guild) {
     guild.defaultChannel.send('Sup.  Try `@Pleb help`.').catch(() => null);
     this.provider.initializeGuild(guild);
+    this.updateStats();
   }
 
   onMessage(message) {
@@ -120,5 +122,18 @@ new class {
 
   onGuildDelete(guild) {
     if (this.playlists.has(guild.id)) this.playlists.get(guild.id).destroy();
+    this.updateStats();
+  }
+
+  async updateStats() {
+    if (process.env.discord_pw) {
+      await axios.post(`https://bots.discord.pw/api/bots/${this.client.user.id}/stats`, {
+        shard_id: this.client.shard.id,
+        shard_count: this.client.shard.count,
+        server_count: this.client.guilds.size
+      }, {
+        headers: { Authorization: process.env.discord_pw }
+      });
+    }
   }
 };
