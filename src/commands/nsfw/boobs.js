@@ -1,5 +1,5 @@
 const request = require('axios');
-const Validator = require('../../core/Validator');
+const Validator = require('../../core/commands/Validator');
 
 exports.exec = async cmd => {
   try {

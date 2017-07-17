@@ -1,4 +1,4 @@
-const Validator = require('../../core/Validator');
+const Validator = require('../../core/commands/Validator');
 
 exports.exec = (cmd) => {
   const loop = cmd.client.bot.playlists.get(cmd.message.guild.id).toggleLoop();

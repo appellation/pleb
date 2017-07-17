@@ -1,5 +1,4 @@
 const moment = require('moment');
-const request = require('axios');
 
 exports.triggers = ['stats', 'status'];
 

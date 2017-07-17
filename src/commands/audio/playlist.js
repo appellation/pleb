@@ -1,5 +1,5 @@
 const Playlist = require('../../core/audio/Playlist');
-const Validator = require('../../core/Validator');
+const Validator = require('../../core/commands/Validator');
 const { Argument } = require('discord-handles');
 
 exports.exec = async (cmd) => {

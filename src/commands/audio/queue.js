@@ -1,5 +1,5 @@
 const { Argument } = require('discord-handles');
-const Validator = require('../../core/Validator');
+const Validator = require('../../core/commands/Validator');
 
 exports.exec = (cmd) => {
   const list = cmd.client.bot.playlists.get(cmd.message.guild.id),

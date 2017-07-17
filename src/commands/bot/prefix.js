@@ -1,4 +1,4 @@
-const Validator = require('../../core/Validator');
+const Validator = require('../../core/commands/Validator');
 
 exports.exec = (cmd) => {
   return cmd.response.success(`Current prefix is: \`${cmd.client.bot.guildSettings.get(cmd.message.guild.id).getCached('prefix')}\``);

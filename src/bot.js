@@ -7,8 +7,8 @@ const discord = require('discord.js');
 const Raven = require('raven');
 const containerized = require('containerized');
 
-const Logger = require('./core/Logger');
-const Handler = require('./core/Handler');
+const Logger = require('./core/data/Logger');
+const Handler = require('./core/commands/Handler');
 const Usage = require('./core/data/Usage');
 const Spectacles = require('./core/data/Spectacles');
 const Provider = require('./core/data/SQLProvider');
@@ -42,7 +42,7 @@ new class {
         captureUnhandledRejections: true
       }).install();
 
-      Raven.wrap(this._load.bind(this))();
+      Raven.context(this._load.bind(this));
       this.log.verbose('loaded with raven');
     } else {
       process.on('unhandledRejection', console.error); // eslint-disable-line no-console

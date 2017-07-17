@@ -1,5 +1,5 @@
 const { Argument } = require('discord-handles');
-const Validator = require('../../core/Validator');
+const Validator = require('../../core/commands/Validator');
 
 exports.triggers = ['next', 'skip'];
 

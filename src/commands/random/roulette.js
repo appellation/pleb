@@ -1,4 +1,4 @@
-const Validator = require('../../core/Validator');
+const Validator = require('../../core/commands/Validator');
 
 exports.exec = async ({ response: res, message: msg }) => {
   if (!msg.channel.permissionsFor(msg.client.user).hasPermission('MANAGE_CHANNELS'))

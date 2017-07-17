@@ -1,7 +1,7 @@
 const request = require('axios');
 const numeral = require('numeral');
 const moment = require('moment');
-const Validation = require('../../core/Validator');
+const Validation = require('../../core/commands/Validator');
 const { Argument } = require('discord-handles');
 
 const countryMap = {

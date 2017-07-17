@@ -14,7 +14,6 @@
   "repository": "appellation/pleb",
   "author": "Will Nelson <appellation@topkek.pw>",
   "dependencies": {
-    "Sherlock": "github:neilgupta/Sherlock",
     "axios": "^0.16.2",
     "canvas": "github:automattic/node-canvas",
     "containerized": "^1.0.2",
@@ -35,6 +34,7 @@
     "pg": "^6.3.1",
     "raven": "^1.2.1",
     "sequelize": "^3.30.4",
+    "sherlockjs": "github:neilgupta/Sherlock",
     "simple-youtube-api": "github:hypercoder2975/simple-youtube-api#appel-wip",
     "spectacles.js": "git+https://github.com/spec-tacles/spectacles.js.git#master",
     "valid-url": "^1.0.9",
@@ -43,7 +43,8 @@
     "ytdl-core": "^0.7.17"
   },
   "devDependencies": {
-    "eslint": "^3.19.0"
+    "eslint": "^3.19.0",
+    "eslint-plugin-import": "^2.7.0"
   },
   "false": {}
 }

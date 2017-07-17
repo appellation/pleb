@@ -1,6 +1,6 @@
 const Playlist = require('../../core/audio/Playlist');
 const { Argument } = require('discord-handles');
-const Validator = require('../../core/Validator');
+const Validator = require('../../core/commands/Validator');
 
 exports.exec = async (cmd) => {
   const list = Playlist.get(cmd.client.bot, cmd.message.guild);

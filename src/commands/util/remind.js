@@ -1,6 +1,6 @@
 const resolvers = require('../../util/resolvers');
 const moment = require('moment');
-const Sherlock = require('Sherlock');
+const Sherlock = require('sherlockjs');
 const { Argument } = require('discord-handles');
 
 exports.exec = ({ response: res, args }) => {
