@@ -32,7 +32,7 @@
     "node-opus": "^0.2.5",
     "numeral": "^1.5.3",
     "pg": "^6.3.1",
-    "raven": "^1.2.1",
+    "raven": "^2.1.0",
     "sequelize": "^3.30.4",
     "sherlockjs": "github:neilgupta/Sherlock",
     "simple-youtube-api": "github:hypercoder2975/simple-youtube-api#appel-wip",
