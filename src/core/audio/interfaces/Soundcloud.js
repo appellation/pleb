@@ -4,10 +4,10 @@ const request = require('axios');
 class SoundCloud {
 
   /**
-     * Add command arguments to the playlist.
-     * @param {Array} args
-     * @return {Promise<Array<Song>>}
-     */
+   * Add command arguments to the playlist.
+   * @param {Array} args
+   * @return {Promise<Array<Song>>}
+   */
   async get(args) {
     const urls = args.filter((e, i) => {
       const is = SoundCloud.isViewURL(e);
@@ -19,11 +19,11 @@ class SoundCloud {
   }
 
   /**
-     * Load a SoundCloud resource.
-     * @param resource
-     * @return {Promise<Array<?Song>>}
-     * @private
-     */
+   * Load a SoundCloud resource.
+   * @param resource
+   * @return {Promise<Array<?Song>>}
+   * @private
+   */
   async _loadResource(resource) {
     let thing;
     try {
@@ -45,21 +45,21 @@ class SoundCloud {
   }
 
   /**
-     * Add a SoundCloud playlist resource to the playlist.
-     * @param resource
-     * @return {Array<?Song>}
-     * @private
-     */
+   * Add a SoundCloud playlist resource to the playlist.
+   * @param resource
+   * @return {Array<?Song>}
+   * @private
+   */
   _addPlaylist(resource) {
     return resource.tracks.map(t => this._addTrack(t));
   }
 
   /**
-     * Add a SoundCloud track resource to the playlist.
-     * @param track
-     * @return {?Song}
-     * @private
-     */
+   * Add a SoundCloud track resource to the playlist.
+   * @param track
+   * @return {?Song}
+   * @private
+   */
   _addTrack(track, playlistID) {
     if (!track.streamable) return null;
 
@@ -78,10 +78,10 @@ class SoundCloud {
   }
 
   /**
-     * Whether the given string is a valid URL form for resolving.
-     * @param {String} testURL
-     * @return {boolean}
-     */
+   * Whether the given string is a valid URL form for resolving.
+   * @param {String} testURL
+   * @return {boolean}
+   */
   static isViewURL(testURL) {
     const parsed = url.parse(testURL);
     if (!parsed.pathname || !parsed.hostname) return false;
