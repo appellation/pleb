@@ -38,19 +38,12 @@ new class {
     this.log.verbose('instantiated client');
 
     if (process.env.raven) {
-      Raven.config(process.env.raven, {
-        captureUnhandledRejections: true
-      }).install();
-
-      Raven.context(this._load.bind(this));
-      this.log.verbose('loaded with raven');
+      Raven.config(process.env.raven).install();
+      this.log.verbose('loaded raven');
     } else {
-      process.on('unhandledRejection', console.error); // eslint-disable-line no-console
-      this._load();
+      process.on('unhandledRejection', this.log.error); // eslint-disable-line no-console
     }
-  }
 
-  _load() {
     this.client.once('ready', this.onInit.bind(this));
     this.client.on('reconnecting', this.onReconnecting.bind(this));
     this.client.on('resume', this.onResume.bind(this));
