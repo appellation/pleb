@@ -1,5 +1,6 @@
 const path = require('path');
 const util = require('util');
+const containerized = require('containerized');
 const handles = require('discord-handles');
 const Raven = require('raven');
 
@@ -30,7 +31,7 @@ module.exports = class extends (handles.Client) {
 
     this.on('commandStarted', command => {
       this.bot.log.debug('command started: %s', command.resolvedContent);
-      this.bot.usage.add(command);
+      if (containerized()) this.bot.usage.add(command);
     });
 
     this.on('commandError', async ({ command, error }) => {
