@@ -15,7 +15,7 @@
   "author": "Will Nelson <appellation@topkek.pw>",
   "dependencies": {
     "axios": "^0.16.2",
-    "canvas": "github:automattic/node-canvas",
+    "canvas": "^2.0.0-alpha.2",
     "containerized": "^1.0.2",
     "date.js": "^0.3.1",
     "discord-handles": "^5.0.0",
