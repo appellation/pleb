@@ -3,6 +3,7 @@ require('moment-duration-format');
 require('dotenv').config({ silent: true });
 
 const axios = require('axios');
+const cassette = require('cassette');
 const discord = require('discord.js');
 const Raven = require('raven');
 const containerized = require('containerized');
@@ -30,9 +31,9 @@ new class {
     this.provider = new Provider(this);
     this.handler = new Handler(this);
     this.usage = new Usage(this);
+    this.cassette = new cassette.Client([new cassette.YouTubeService(process.env.youtube)]);
     if (containerized()) this.spectacles = new Spectacles(this);
 
-    this.playlists = new Map();
     this.guildSettings = new Map();
 
     this.log.verbose('instantiated client');
