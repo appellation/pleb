@@ -9,7 +9,7 @@ exports.exec = async (cmd) => {
   list.reset();
 
   try {
-    await list.add(cmd.response, cmd.args.list, undefined, 'playlist');
+    await list.add(cmd.args.list, undefined, 'playlist');
   } catch (e) {
     await cmd.response.error(e.message || e);
     return;
@@ -17,6 +17,8 @@ exports.exec = async (cmd) => {
 
   return list.start(cmd.response);
 };
+
+exports.disabled = true;
 
 exports.middleware = function* (cmd) {
   yield new Validator(cmd).ensureCanPlay();

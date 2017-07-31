@@ -2,7 +2,7 @@ const { Argument } = require('discord-handles');
 const Validator = require('../../core/commands/Validator');
 
 exports.exec = (cmd) => {
-  const list = cmd.client.bot.playlists.get(cmd.message.guild.id),
+  const list = cmd.client.bot.cassette.playlists.get(cmd.message.guild.id),
     perPage = 5,
     pos = cmd.args.page ? ((cmd.args.page - 1) * perPage) : (list.pos - 1),
     part = list.songs.slice(pos, pos + perPage);

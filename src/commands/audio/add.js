@@ -5,14 +5,25 @@ const { DiscordPlaylist } = require('cassette');
 exports.exec = async (cmd) => {
   const list = DiscordPlaylist.get(cmd.client.bot.cassette, cmd.message.guild);
 
+  let added;
   try {
-    await list.add(cmd.args.song, cmd.args.next ? list.pos : undefined);
+    added = await list.add(cmd.args.song, cmd.args.next ? list.pos : undefined);
   } catch (e) {
-    await cmd.response.error(e.message || e);
-    return;
+    return cmd.response.error(e.message || e);
   }
 
-  if (!list.playing) list.start(cmd.message.member);
+  if (added.length === 0) {
+    return cmd.response.error('Could not add anything to the playlist.');
+  } else if (added.length === 1) {
+    cmd.response.success(`Successfully added \`${added[0].title}\` to playlist.`);
+  } else {
+    cmd.response.success(`Successfully added **${added.length}** songs to playlist.`);
+  }
+
+  if (!list.playing) {
+    await list.start(cmd.message.member);
+    return cmd.response.success(`Now playing \`${list.current.title}\``);
+  }
 };
 
 exports.middleware = function* (cmd) {
