@@ -35,8 +35,47 @@ module.exports = class extends (handles.Client) {
     });
 
     this.on('commandError', async ({ command, error }) => {
-      if (process.env.raven) Raven.captureException(error);
-      else console.error(error); // eslint-disable-line no-console
+
+      if (process.env.raven) {
+        const extra = {
+          message: {
+            content: command.message.content,
+            id: command.message.id,
+            type: command.message.type,
+          },
+          channel: {
+            id: command.message.channel.id,
+            type: command.message.channel.type,
+          },
+          guild: {},
+          client: {
+            shard: command.client.shard ? command.client.shard.id : null,
+            ping: command.client.ping,
+            status: command.client.status,
+          },
+        };
+
+        if (command.message.channel.type === 'text') {
+          extra.guild = {
+            id: command.guild.id,
+            name: command.guild.name,
+            owner: command.guild.ownerID,
+          };
+
+          const perms = command.message.channel.permissionsFor(command.guild.me);
+          extra.channel.permissions = perms ? perms.serialize() : null;
+        }
+
+        Raven.captureException(error, {
+          user: {
+            id: command.message.author.id,
+            username: command.message.author.tag,
+          },
+          extra,
+        });
+      } else {
+        console.error(error); // eslint-disable-line no-console
+      }
 
       try {
         this.bot.log.error('command failed: %s', command.trigger, error);
