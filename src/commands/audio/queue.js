@@ -4,7 +4,7 @@ const Validator = require('../../core/commands/Validator');
 exports.exec = (cmd) => {
   const list = cmd.client.bot.cassette.playlists.get(cmd.message.guild.id),
     perPage = 5,
-    pos = cmd.args.page ? ((cmd.args.page - 1) * perPage) : (list.pos - 1),
+    pos = cmd.args.page ? ((cmd.args.page - 1) * perPage) : list.pos,
     part = list.songs.slice(pos, pos + perPage);
 
   return cmd.response.send(part.reduce((prev, song, index) => {

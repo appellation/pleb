@@ -1,7 +1,7 @@
 const Validator = require('../../core/commands/Validator');
 
 exports.exec = (cmd) => {
-  return cmd.client.bot.playlists.get(cmd.message.guild.id).pause();
+  return cmd.client.bot.cassette.playlists.get(cmd.message.guild.id).pause();
 };
 
 exports.middleware = function* (cmd) {
