@@ -19,7 +19,7 @@
     "cassette": "file:..\\playlists",
     "containerized": "^1.0.2",
     "date.js": "^0.3.1",
-    "discord-handles": "^5.0.0",
+    "discord-handles": "^5.2.0",
     "discord.js": "git+https://github.com/hydrabolt/discord.js.git#11.1-dev",
     "dotenv": "^2.0.0",
     "erlpack": "github:hammerandchisel/erlpack#master",

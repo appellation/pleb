@@ -1,4 +1,4 @@
-const { DiscordPlaylist } = require('cassette');
+const DiscordPlaylist = require('../../core/audio/Playlist');
 const { Argument } = require('discord-handles');
 const Validator = require('../../core/commands/Validator');
 
@@ -8,23 +8,8 @@ exports.exec = async (cmd) => {
   list.stop();
   list.reset();
 
-  let added;
-  try {
-    added = await list.add(cmd.args.song);
-  } catch (e) {
-    await cmd.response.error(e.message || e);
-    return;
-  }
-
-  if (added.length === 0) {
-    return cmd.response.error('Could not add anything to the playlist.');
-  } else if (added.length === 1) {
-    cmd.response.success(`Successfully added \`${added[0].title}\` to playlist.`);
-  } else {
-    cmd.response.success(`Successfully added **${added.length}** songs to playlist.`);
-  }
-
-  return list.start(cmd.message.member);
+  const added = await list.add(cmd.response, cmd.args.song);
+  if (added) return list.start(cmd.response);
 };
 
 exports.middleware = function* (cmd) {

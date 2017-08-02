@@ -1,24 +1,19 @@
-const Playlist = require('../../core/audio/Playlist');
+const DiscordPlaylist = require('../../core/audio/Playlist');
 const Validator = require('../../core/commands/Validator');
 const { Argument } = require('discord-handles');
 
 exports.exec = async (cmd) => {
-  const list = Playlist.get(cmd.client.bot, cmd.message.guild);
+  const list = DiscordPlaylist.get(cmd.client.bot.cassette, cmd.guild);
 
   list.stop();
   list.reset();
 
-  try {
-    await list.add(cmd.args.list, undefined, 'playlist');
-  } catch (e) {
-    await cmd.response.error(e.message || e);
-    return;
-  }
+  const added = await list.add(cmd.response, cmd.args.list, {
+    searchType: 'playlist',
+  });
 
-  return list.start(cmd.response);
+  if (added) return list.start(cmd.response);
 };
-
-exports.disabled = true;
 
 exports.middleware = function* (cmd) {
   yield new Validator(cmd).ensureCanPlay();
