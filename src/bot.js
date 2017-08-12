@@ -103,7 +103,13 @@ new class {
   }
 
   onGuildCreate(guild) {
-    guild.defaultChannel.send('Sup.  Try `@Pleb help`.').catch(() => null);
+    const channels = guild.channels.filter(c => {
+      const perms = c.permissionsFor(c.guild.me);
+      return c.type === 'text' && perms && perms.has(discord.Permissions.FLAGS.SEND_MESSAGES);
+    });
+
+    if (channels.size) channels.first().send('Sup.  Try `@Pleb help`.').catch(() => null);
+
     this.provider.initializeGuild(guild);
     this.updateStats();
   }
