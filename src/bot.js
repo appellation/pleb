@@ -103,12 +103,13 @@ new class {
   }
 
   onGuildCreate(guild) {
-    const channels = guild.channels.filter(c => {
-      const perms = c.permissionsFor(c.guild.me);
-      return c.type === 'text' && perms && perms.has(discord.Permissions.FLAGS.SEND_MESSAGES);
-    });
-
-    if (channels.size) channels.first().send('Sup.  Try `@Pleb help`.').catch(() => null);
+    for (const channel of guild.channels.values()) {
+      const perms = channel.permissionsFor(guild.me);
+      if (channel.type === 'text' && perms && perms.has(discord.Permissions.FLAGS.SEND_MESSAGES)) {
+        channel.send('Sup.  Try `@Pleb help`.');
+        break;
+      }
+    }
 
     this.provider.initializeGuild(guild);
     this.updateStats();
