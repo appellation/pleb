@@ -11,7 +11,6 @@ const containerized = require('containerized');
 const Logger = require('./core/data/Logger');
 const Handler = require('./core/commands/Handler');
 const Usage = require('./core/data/Usage');
-const Spectacles = require('./core/data/Spectacles');
 const Provider = require('./core/data/SQLProvider');
 
 new class {
@@ -31,8 +30,10 @@ new class {
     this.provider = new Provider(this);
     this.handler = new Handler(this);
     this.usage = new Usage(this);
-    this.cassette = new cassette.Client([new cassette.YouTubeService(process.env.youtube)]);
-    if (containerized()) this.spectacles = new Spectacles(this);
+    this.cassette = new cassette.Client([
+      new cassette.YouTubeService(process.env.youtube),
+      new cassette.SoundcloudService(process.env.soundcloud)
+    ]);
 
     this.guildSettings = new Map();
 
