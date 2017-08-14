@@ -43,9 +43,9 @@ class Validate extends Validator {
     return super.apply(() => this.channel.permissionsFor(this.guild.me).has(resolvable), ERRORS.ensureClientPermissions(resolvable));
   }
 
-  ensurePlaylist(bot) {
+  ensurePlaylist(cassette) {
     this.ensureGuild();
-    return super.apply(() => bot.playlists.has(this.guild.id), ERRORS.ensurePlaylist) && this.ensureCurrentVoiceChannel();
+    return super.apply(() => cassette.playlists.has(this.guild.id), ERRORS.ensurePlaylist) && this.ensureCurrentVoiceChannel();
   }
 
   /**
