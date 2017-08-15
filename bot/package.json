@@ -1,0 +1,46 @@
+{
+  "name": "pleb",
+  "version": "5.0.0",
+  "description": "A very low class Discord bot.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "eslint src/**"
+  },
+  "engines": {
+    "node": "7.6.0",
+    "npm": "3.10.7"
+  },
+  "repository": "appellation/pleb",
+  "author": "Will Nelson <appellation@topkek.pw>",
+  "dependencies": {
+    "axios": "^0.16.2",
+    "canvas": "^2.0.0-alpha.2",
+    "containerized": "^1.0.2",
+    "date.js": "^0.3.1",
+    "discord-handles": "^5.0.0",
+    "discord.js": "git+https://github.com/hydrabolt/discord.js.git#11.1-dev",
+    "dotenv": "^2.0.0",
+    "erlpack": "github:hammerandchisel/erlpack#master",
+    "fluent-ffmpeg": "^2.1.0",
+    "knuth-shuffle": "^1.0.1",
+    "mathjs": "^3.13.3",
+    "moment": "^2.16.0",
+    "moment-duration-format": "^1.3.0",
+    "moment-timezone": "^0.5.11",
+    "node-http-ping": "^0.2.2",
+    "node-opus": "^0.2.5",
+    "numeral": "^1.5.3",
+    "pg": "^6.3.1",
+    "raven": "^2.1.0",
+    "sequelize": "^3.30.4",
+    "sherlockjs": "github:neilgupta/Sherlock",
+    "simple-youtube-api": "github:hypercoder2975/simple-youtube-api#appel-wip",
+    "spectacles.js": "git+https://github.com/spec-tacles/spectacles.js.git#9458a9b68f504b0b46444f925f1e19d34c74cff3",
+    "valid-url": "^1.0.9",
+    "winston": "^2.3.1",
+    "xkcd": "^1.1.1",
+    "ytdl-core": "^0.7.17"
+  },
+  "false": {}
+}

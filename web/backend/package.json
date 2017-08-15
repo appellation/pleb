@@ -1,0 +1,24 @@
+{
+  "name": "pleb-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.16.2",
+    "jsonwebtoken": "^7.4.2",
+    "restify": "^5.1.0",
+    "restify-errors": "^5.0.0",
+    "rethinkdbdash": "^2.3.31"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^3.0.2",
+    "utf-8-validate": "^3.0.3"
+  },
+  "false": {}
+}
