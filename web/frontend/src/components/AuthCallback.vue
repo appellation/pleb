@@ -7,7 +7,6 @@ import * as types from '@/store/types';
 
 export default {
   beforeMount: function() {
-    console.log(this.$route.query);
     this.$store.commit(types.LOGIN, this.$route.query);
     this.$router.replace('/');
   }
