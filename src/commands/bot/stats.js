@@ -9,7 +9,7 @@ exports.exec = async (cmd) => {
     servers: await client.shard.broadcastEval('this.guilds.size'),
     channels: await client.shard.broadcastEval('this.channels.size'),
     users: await client.shard.broadcastEval('this.guilds.reduce((p, c) => p + c.memberCount, 0)'),
-    playlists: await client.shard.broadcastEval('this.bot.playlists.size'),
+    playlists: await client.shard.broadcastEval('this.bot.cassette.playlists.size'),
     memory: await client.shard.broadcastEval('process.memoryUsage().heapUsed')
   };
 
@@ -25,7 +25,7 @@ __**Shard info:**__
 **Servers:** ${client.guilds.size}
 **Channels:** ${client.channels.size}
 **Users:** ${client.guilds.reduce((p, c) => p + c.memberCount, 0)}
-**Playlists:** ${cmd.client.bot.playlists.size}
+**Playlists:** ${cmd.client.bot.cassette.playlists.size}
 
 __**Process info:**__
 **Memory:** ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB
