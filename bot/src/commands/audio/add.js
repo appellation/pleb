@@ -1,15 +1,18 @@
 const { Argument } = require('discord-handles');
 const Validator = require('../../core/commands/Validator');
-const DiscordPlaylist = require('../../core/audio/Playlist');
+const Playlist = require('../../core/audio/Playlist');
 
 exports.exec = async (cmd) => {
-  const list = DiscordPlaylist.get(cmd.client.bot.cassette, cmd.message.guild);
+  const list = Playlist.get(cmd.client.bot, cmd.message.guild);
 
-  const added = await list.add(cmd.response, cmd.args.song, {
-    position: cmd.args.next ? list.pos + 1 : Infinity,
-  });
+  try {
+    await list.add(cmd.response, cmd.args.song, cmd.args.next ? list.pos : undefined);
+  } catch (e) {
+    await cmd.response.error(e.message || e);
+    return;
+  }
 
-  if (added && !list.playing) await list.start(cmd.response);
+  if (!list.playing) list.start(cmd.response);
 };
 
 exports.middleware = function* (cmd) {
@@ -20,5 +23,5 @@ exports.middleware = function* (cmd) {
 
   yield new Argument('song')
     .setPrompt('What would you like to add?')
-    .setInfinite();
+    .setPattern(/.*/);
 };

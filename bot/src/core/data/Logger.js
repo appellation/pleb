@@ -1,5 +1,5 @@
 const winston = require('winston');
-const request = require('axios');
+const request = require('request-promise-native');
 const { RichEmbed } = require('discord.js');
 
 module.exports = class Logger extends winston.Logger {
@@ -9,7 +9,7 @@ module.exports = class Logger extends winston.Logger {
         new (winston.transports.File)({ filename: 'pleb.log' }),
         new (winston.transports.Console)(),
       ],
-      level: process.env.log_level || 'verbose'
+      level: 'verbose'
     });
 
     this.client = client;
@@ -19,16 +19,19 @@ module.exports = class Logger extends winston.Logger {
     const embed = new RichEmbed(data)
       .setFooter(`Shard ${this.client.shard.id}`)
       .setTimestamp();
-
-    return this._send({
+    return this._webhook({
       body: {
         embeds: [embed]
       }
     });
   }
 
-  _send(data) {
+  _webhook(data) {
     if (!process.env.webhook_url) return Promise.resolve();
-    return request.post(process.env.webhook_url, data);
+    return request(Object.assign(data, {
+      uri: process.env.webhook_url,
+      json: true,
+      method: 'post'
+    }));
   }
 };
