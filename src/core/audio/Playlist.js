@@ -37,7 +37,12 @@ class Playlist extends DiscordPlaylist {
   async start(response) {
     if (!this.current) return response.error('There is no song currently available to play.');
 
-    await super.start(response.message.member.voiceChannel);
+    try {
+      await super.start(response.message.member.voiceChannel);
+    } catch (e) {
+      response.error(e);
+      return;
+    }
     response.success(`now playing \`${this.current.title}\``);
   }
 }
