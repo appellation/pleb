@@ -7,8 +7,8 @@ exports.triggers = [
 ];
 
 exports.exec = (cmd) => {
-  const pl = cmd.client.bot.playlists;
-  if (pl.has(cmd.guild.id)) pl.get(cmd.guild.id).destroy();
+  const pl = cmd.client.bot.cassette.playlists.get(cmd.guild.id);
+  if (pl) pl.destroy();
   if (cmd.guild.voiceConnection) cmd.guild.voiceConnection.disconnect();
   return cmd.response.send('k 😢');
 };

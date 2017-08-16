@@ -8,7 +8,8 @@ class SQLProvider {
     this.db = new Sequelize({
       host: 'postgres',
       username: 'postgres',
-      dialect: 'postgres'
+      dialect: 'postgres',
+      logging: m => this.bot.log.debug(m)
     });
 
     this.models = {

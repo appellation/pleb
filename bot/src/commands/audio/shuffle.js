@@ -1,18 +1,11 @@
-const Playlist = require('../../core/audio/Playlist');
+const DiscordPlaylist = require('../../core/audio/Playlist');
 const { Argument } = require('discord-handles');
 const Validator = require('../../core/commands/Validator');
 
 exports.exec = async (cmd) => {
-  const list = Playlist.get(cmd.client.bot, cmd.message.guild);
+  const list = DiscordPlaylist.get(cmd.client.bot.cassette, cmd.message.guild);
 
-  if (cmd.args.query) {
-    try {
-      await list.add(cmd.response, cmd.args.query);
-    } catch (e) {
-      await cmd.response.error(e.message || e);
-      return;
-    }
-  }
+  if (cmd.args.query) await list.add(cmd.response, cmd.args.query);
 
   list.stop();
   list.shuffle();

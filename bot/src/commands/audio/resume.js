@@ -1,9 +1,9 @@
 const Validator = require('../../core/commands/Validator');
 
 exports.exec = (cmd) => {
-  return cmd.client.bot.playlists.get(cmd.message.guild.id).resume();
+  return cmd.client.bot.cassette.playlists.get(cmd.message.guild.id).resume();
 };
 
 exports.middleware = function* (cmd) {
-  yield new Validator(cmd).ensurePlaylist(cmd.client.bot);
+  yield new Validator(cmd).ensurePlaylist(cmd.client.bot.cassette);
 };
