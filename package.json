@@ -35,11 +35,9 @@
     "raven": "^2.1.0",
     "sequelize": "^3.30.4",
     "sherlockjs": "github:neilgupta/Sherlock",
-    "simple-youtube-api": "github:hypercoder2975/simple-youtube-api#appel-wip",
     "valid-url": "^1.0.9",
     "winston": "^2.3.1",
-    "xkcd": "^1.1.1",
-    "ytdl-core": "^0.7.17"
+    "xkcd": "^1.1.1"
   },
   "devDependencies": {
     "eslint": "^3.19.0",
