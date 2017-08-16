@@ -85,9 +85,5 @@ module.exports = class extends (handles.Client) {
         command.response.error('Error could not be displayed; needless to say, it borke.  Bot owner has been notified.');
       }
     });
-
-    this.once('commandsLoaded', () => {
-      this.bot.log.info(`commands loaded in ${process.uptime()}s`);
-    });
   }
 };

@@ -1,11 +1,13 @@
 require('./util/extensions');
 require('moment-duration-format');
-require('dotenv').config({ silent: true });
 
 const axios = require('axios');
 const discord = require('discord.js');
+const dotenv = require('dotenv');
 const Raven = require('raven');
 const containerized = require('containerized');
+
+if (!containerized()) dotenv.config({ silent: true });
 
 const Logger = require('./core/data/Logger');
 const Handler = require('./core/commands/Handler');
@@ -38,7 +40,9 @@ new class {
     this.log.verbose('instantiated client');
 
     if (process.env.raven) {
-      Raven.config(process.env.raven).install();
+      Raven.config(process.env.raven, {
+        captureUnhandledRejections: true
+      }).install();
       this.log.verbose('loaded raven');
     } else {
       process.on('unhandledRejection', this.log.error); // eslint-disable-line no-console
@@ -67,6 +71,10 @@ new class {
       await this.provider.initializeGuilds();
     }
 
+    const start = Date.now();
+    await this.handler.loader.loadCommands();
+    this.log.info(`loaded ${this.handler.loader.commands.size} commands in ${Date.now() - start}ms`);
+
     this.log.hook({
       title: 'Initialized',
       color: 0x00ff93
@@ -83,7 +91,7 @@ new class {
   }
 
   onResume(replayed) {
-    for (const [, p] of this.playlists) p.stop('continue');
+    for (const [, p] of this.cassette.playlists) p.stop('continue');
 
     this.log.hook({
       title: 'Resumed',
@@ -93,7 +101,7 @@ new class {
   }
 
   onDisconnect(close) {
-    for (const [, p] of this.playlists) p.stop('continue');
+    for (const [, p] of this.cassette.playlists) p.stop('continue');
 
     this.log.hook({
       title: 'Disconnected',
@@ -121,7 +129,8 @@ new class {
   }
 
   onGuildDelete(guild) {
-    if (this.playlists.has(guild.id)) this.playlists.get(guild.id).destroy();
+    const playlist = this.cassette.playlists.get(guild.id);
+    if (playlist) playlist.destroy();
     this.updateStats();
   }
 
