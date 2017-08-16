@@ -15,6 +15,29 @@ const server = restify.createServer();
 
 server.use(restify.plugins.queryParser());
 
+server.get('/guilds/:guildID/playlists',
+  (req, res, next) => {
+    if (!req.headers.authorization) return next(new errs.UnauthorizedError('no authorization header'));
+
+    const header = req.headers.authorization.match(/^JWT (\S+)$/);
+    if (!header) return next(new errs.UnauthorizedError('invalid authorization header format'));
+
+    const token = header[1];
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.secret);
+    } catch (e) {
+      return next(new errs.UnauthorizedError(e.message));
+    }
+
+    req.authorization = decoded;
+    next();
+  },
+  async (req, res) => {
+    const lists = await rethink.db('pleb').table('playlists').filter({ guildID: req.params.guildID });
+    res.json(lists);
+  });
+
 server.get('/auth/callback', async (req, res, next) => {
   const { code } = req.query;
   if (!code) return next(new errs.MissingParameterError('no code provided'));
@@ -40,10 +63,6 @@ server.get('/auth/callback', async (req, res, next) => {
   });
 
   await rethink.db('pleb').table('users').insert(user.data, {
-    conflict: 'update',
-  });
-
-  await rethink.db('pleb').table('auth').insert(Object.assign({ id: user.data.id, updated: new Date() }, token.data), {
     conflict: 'update',
   });
 
