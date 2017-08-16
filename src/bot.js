@@ -93,7 +93,7 @@ new class {
   }
 
   onResume(replayed) {
-    for (const [, p] of this.playlists) p.stop('continue');
+    for (const [, p] of this.cassette.playlists) p.stop('continue');
 
     this.log.hook({
       title: 'Resumed',
@@ -103,7 +103,7 @@ new class {
   }
 
   onDisconnect(close) {
-    for (const [, p] of this.playlists) p.stop('continue');
+    for (const [, p] of this.cassette.playlists) p.stop('continue');
 
     this.log.hook({
       title: 'Disconnected',
@@ -131,7 +131,8 @@ new class {
   }
 
   onGuildDelete(guild) {
-    if (this.playlists.has(guild.id)) this.playlists.get(guild.id).destroy();
+    const playlist = this.cassette.playlists.get(guild.id);
+    if (playlist) playlist.destroy();
     this.updateStats();
   }
 
