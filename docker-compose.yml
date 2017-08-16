@@ -8,6 +8,7 @@ services:
     depends_on:
       - redis
       - postgres
+    env_file: .env
   redis:
     image: redis:alpine
   postgres:

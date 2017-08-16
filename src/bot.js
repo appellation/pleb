@@ -1,12 +1,14 @@
 require('./util/extensions');
 require('moment-duration-format');
-require('dotenv').config({ silent: true });
 
 const axios = require('axios');
 const cassette = require('cassette');
 const discord = require('discord.js');
+const dotenv = require('dotenv');
 const Raven = require('raven');
 const containerized = require('containerized');
+
+if (!containerized()) dotenv.config({ silent: true });
 
 const Logger = require('./core/data/Logger');
 const Handler = require('./core/commands/Handler');
@@ -40,7 +42,9 @@ new class {
     this.log.verbose('instantiated client');
 
     if (process.env.raven) {
-      Raven.config(process.env.raven).install();
+      Raven.config(process.env.raven, {
+        captureUnhandledRejections: true
+      }).install();
       this.log.verbose('loaded raven');
     } else {
       process.on('unhandledRejection', this.log.error); // eslint-disable-line no-console
@@ -68,6 +72,10 @@ new class {
       await this.provider.initialize();
       await this.provider.initializeGuilds();
     }
+
+    const start = Date.now();
+    await this.handler.loader.loadCommands();
+    this.log.info(`loaded ${this.handler.loader.commands.size} commands in ${Date.now() - start}ms`);
 
     this.log.hook({
       title: 'Initialized',
