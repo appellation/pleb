@@ -21,9 +21,7 @@ module.exports = class Logger extends winston.Logger {
       .setTimestamp();
 
     return this._send({
-      body: {
-        embeds: [embed]
-      }
+      embeds: [embed]
     });
   }
 

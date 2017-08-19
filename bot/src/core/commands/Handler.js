@@ -1,41 +1,40 @@
 const path = require('path');
 const util = require('util');
-const containerized = require('containerized');
 const handles = require('discord-handles');
 const Raven = require('raven');
-
-const Validator = require('./Validator');
 
 module.exports = class extends (handles.Client) {
   constructor(bot) {
     const baseRegex = new RegExp(`<@!?${process.env.discord_client_id}>\\s*`);
-    super({
+
+    super(bot.client, {
       directory: path.join('.', 'src', 'commands'),
-      validator: message => {
+      validator: async message => {
         if (message.channel.type === 'dm') return message.content.replace(baseRegex, '');
         if (message.member && message.member.roles.exists('name', 'no-pleb')) return;
+        
+        let prefix = null;
+        const settings = bot.db.settings[message.guild.id];
+        if (settings) prefix = await settings.get('prefix');
 
-        const regex = bot.guildSettings.has(message.guild.id) ?
-          bot.guildSettings.get(message.guild.id).getCached('prefix') :
-          baseRegex;
-
-        if (message.channel.name === 'pleb' || regex.test(message.content)) {
-          return message.content.replace(regex, '');
+        const prefixed = prefix && message.content.startsWith(prefix);
+        if (message.channel.name === 'pleb' || baseRegex.test(message.content) || prefixed) {
+          let m;
+          if (prefixed) m = message.content.substr(prefix.length);
+          else m = message.content.replace(baseRegex, '');
+          return m.trim();
         }
       },
-      commandParams: { bot },
-      Validator
     });
 
     this.bot = bot;
 
-    this.on('commandStarted', command => {
+    this.on('commandStarted', async command => {
       this.bot.log.debug('command started: %s', command.resolvedContent);
-      if (containerized()) this.bot.usage.add(command);
+      await this.bot.db.usage.add(command);
     });
 
     this.on('commandError', async ({ command, error }) => {
-
       if (process.env.raven) {
         const extra = {
           message: {

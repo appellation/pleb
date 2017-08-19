@@ -6,8 +6,9 @@ const allowedSettings = new Set([
 ]);
 
 exports.exec = async (cmd) => {
-  let settings = cmd.client.bot.guildSettings.get(cmd.guild.id);
-  if (!settings) settings = await cmd.client.bot.provider.initializeGuild(cmd.guild);
+  const settings = cmd.client.bot.db.settings[cmd.guild.id];
+  if (!settings) return cmd.response.error('your guild doesn\'t seem to exist... 👀');
+
   await settings.set(cmd.args.key, cmd.args.value);
   return cmd.response.success(`**${cmd.args.key}** set to \`${cmd.args.value}\``);
 };

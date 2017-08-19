@@ -1,6 +1,6 @@
 FROM alpine:3.6
 
-WORKDIR /usr/src/pleb
+WORKDIR /usr/src/bot
 COPY package.json ./
 
 RUN apk add --update \

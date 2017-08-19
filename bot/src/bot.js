@@ -4,40 +4,32 @@ require('moment-duration-format');
 const axios = require('axios');
 const cassette = require('cassette');
 const discord = require('discord.js');
-const dotenv = require('dotenv');
+const Constants = require('discord.js/src/util/Constants');
 const Raven = require('raven');
-const containerized = require('containerized');
-
-if (!containerized()) dotenv.config({ silent: true });
 
 const Logger = require('./core/data/Logger');
 const Handler = require('./core/commands/Handler');
 const Usage = require('./core/data/Usage');
-const Provider = require('./core/data/SQLProvider');
+const Provider = require('./core/data/rethink/Provider');
 
 new class {
   constructor() {
     this.client = new discord.Client({
       messageCacheLifetime: 1800,
       messageSweepInterval: 900,
-      disabledEvents: [
-        'TYPING_START',
-        'TYPING_STOP',
-      ]
+      disabledEvents: [Constants.Events.TYPING_START]
     });
 
     Object.defineProperty(this.client, 'bot', { value: this });
 
     this.log = new Logger(this.client);
-    this.provider = new Provider(this);
+    this.db = new Provider(this);
     this.handler = new Handler(this);
     this.usage = new Usage(this);
     this.cassette = new cassette.Client([
       new cassette.YouTubeService(process.env.youtube),
       new cassette.SoundcloudService(process.env.soundcloud)
     ]);
-
-    this.guildSettings = new Map();
 
     this.log.verbose('instantiated client');
 
@@ -68,14 +60,11 @@ new class {
   async onInit() {
     this.log.info('client is ready: %s#%s', this.client.user.username, this.client.user.discriminator);
 
-    if (containerized()) {
-      await this.provider.initialize();
-      await this.provider.initializeGuilds();
-    }
+    await this.db.initialize();
 
     const start = Date.now();
-    await this.handler.loader.loadCommands();
-    this.log.info(`loaded ${this.handler.loader.commands.size} commands in ${Date.now() - start}ms`);
+    await this.handler.registry.load();
+    this.log.info(`loaded ${this.handler.registry.size} commands in ${Date.now() - start}ms`);
 
     this.log.hook({
       title: 'Initialized',

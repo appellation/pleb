@@ -1,27 +1,15 @@
-const Sequelize = require('sequelize');
-
 exports.exec = async cmd => {
-  const model = cmd.client.bot.provider.models.Usage;
+  const r = cmd.client.bot.db.r;
+  const table = r.table('usage');
 
   const totals = {
-    allTime: await model.count(),
-    lastHour: await model.count({ where: { createdAt: { $gt: Date.now() - 3.6e6 } } })
+    allTime: await table.count(),
+    lastHour: await table.filter(r.row('timestamp').gt(r.now().sub(60*60))).count()
   };
 
   const data = {
-    allTime: await model.findAll({
-      limit: 10,
-      order: [['count', 'DESC']],
-      attributes: [[Sequelize.fn('COUNT', Sequelize.col('name')), 'count'], 'name'],
-      group: ['name']
-    }),
-    lastHour: await model.findAll({
-      where: { createdAt: { $gt: Date.now() - 3.6e6 } },
-      limit: 10,
-      order: [['count', 'DESC']],
-      attributes: [[Sequelize.fn('COUNT', Sequelize.col('name')), 'count'], 'name'],
-      group: ['name']
-    })
+    allTime: await table.group('name').count().ungroup().orderBy(r.desc(r.row('reduction'))).limit(10),
+    lastHour: await table.filter(r.row('timestamp').gt(r.now().sub(60*60))).group('name').count().ungroup().orderBy(r.desc(r.row('reduction'))).limit(10),
   };
 
   return cmd.response.send(`__**Usage information**__
@@ -30,9 +18,9 @@ exports.exec = async cmd => {
 **Last hour:** \`${totals.lastHour}\`
 
 __Commands (all-time)__
-${data.allTime.map(instance => `${instance.get('name')}: ${instance.get('count')}`).join('\n')}
+${data.allTime.map(d => `${d.group}: ${d.reduction}`).join('\n')}
 
 __Commands (last hour)__
-${data.lastHour.map(instance => `${instance.get('name')}: ${instance.get('count')}`).join('\n')}
+${data.lastHour.map(d => `${d.group}: ${d.reduction}`).join('\n')}
 `);
 };
