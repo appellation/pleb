@@ -10,6 +10,8 @@ const countryMap = {
   sydney: 'AU',
 };
 
+exports.disabled = true;
+
 exports.exec = async (cmd) => {
   const { args, message: msg, response } = cmd;
 
