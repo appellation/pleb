@@ -21,7 +21,7 @@
     </ul>
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link" v-bind:href="OAuth.AUTH_URL" target="_blank">Login</a>
+        <a class="nav-link" v-bind:href="OAuth.AUTH_URL">Login</a>
       </li>
     </ul>
   </div>

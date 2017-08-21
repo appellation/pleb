@@ -18,7 +18,7 @@
     "canvas": "^2.0.0-alpha.2",
     "cassette": "^2.0.1",
     "date.js": "^0.3.1",
-    "discord-handles": "^6.1.1",
+    "discord-handles": "^6.2.0",
     "discord.js": "git+https://github.com/hydrabolt/discord.js.git#11.1-dev",
     "erlpack": "github:hammerandchisel/erlpack#master",
     "knuth-shuffle": "^1.0.1",

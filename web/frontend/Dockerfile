@@ -1,6 +1,6 @@
-FROM alpine:edge
+FROM alpine:3.6
 
-WORKDIR /usr/src/pleb/web/backend
+WORKDIR /usr/src/web/frontend
 COPY package.json ./
 
 RUN apk add --update \
@@ -8,7 +8,4 @@ RUN apk add --update \
     && yarn install
 
 COPY . .
-
-EXPOSE 8080:8080
-
-CMD [ "node", "src/index.js" ]
+CMD ["yarn", "run", "start"]

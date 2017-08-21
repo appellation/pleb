@@ -16,6 +16,11 @@ services:
     ports:
       - 3000:8080
     env_file: .env
+  frontend:
+    build: ./web/frontend
+    ports:
+      - 4000:8080
+    env_file: .env
   rethink:
     image: rethinkdb:latest
     ports:

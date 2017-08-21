@@ -6,3 +6,5 @@ export const OAuth = {
   REDIRECT_URI,
   AUTH_URL: `https://discordapp.com/api/oauth2/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=identify`
 };
+
+export const Api = 'http://localhost:3000';

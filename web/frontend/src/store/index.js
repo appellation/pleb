@@ -15,6 +15,9 @@ export default new Vuex.Store({
     [types.LOGOUT](state) {
       state.auth = null;
     },
+    [types.PLAYLISTS_SET](state, data) {
+      state.playlists = data;
+    }
   },
   actions: {
     [types.LOGIN]({ commit, state }, data) {

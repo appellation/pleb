@@ -13,6 +13,7 @@
     "axios": "^0.16.2",
     "jsonwebtoken": "^7.4.2",
     "restify": "^5.1.0",
+    "restify-cors-middleware": "^1.0.1",
     "restify-errors": "^5.0.0",
     "rethinkdbdash": "^2.3.31"
   },
