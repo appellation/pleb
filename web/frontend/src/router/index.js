@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Cookie from 'vue-cookie';
 import Hello from '@/components/Hello'
-import AuthCallback from '@/components/AuthCallback';
 import Playlists from '@/components/Playlists';
 
 Vue.use(Router);
+Vue.use(Cookie);
 
 export default new Router({
   routes: [
@@ -12,11 +13,6 @@ export default new Router({
       path: '/',
       name: 'Hello',
       component: Hello
-    },
-    {
-      path: '/auth/callback',
-      name: 'AuthCallback',
-      component: AuthCallback
     },
     {
       path: '/users/:userID/playlists',

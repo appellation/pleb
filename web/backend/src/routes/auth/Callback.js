@@ -42,9 +42,16 @@ class AuthCallbackRoute extends Route {
     const signed = jwt.sign({
       token: token.data.access_token,
       userID: user.data.id,
-    }, process.env.secret);
+    }, process.env.secret, {
+      expiresIn: token.data.expires_in,
+    });
 
-    res.redirect(302, `http://localhost:4000/#/auth/callback?token=${signed}`, next);
+    res.setCookie('token', signed, {
+      maxAge: token.data.expires_in,
+      path: '/'
+    });
+
+    res.redirect(302, 'http://localhost:4000/', next);
   }
 }
 

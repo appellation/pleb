@@ -7,6 +7,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     auth: null,
+    playlists: [],
   },
   mutations: {
     [types.LOGIN](state, data) {

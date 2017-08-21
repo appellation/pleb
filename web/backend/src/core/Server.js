@@ -1,5 +1,6 @@
 const restify = require('restify');
 const rethinkdb = require('rethinkdbdash');
+const cookies = require('restify-cookies');
 const corsMiddleware = require('restify-cors-middleware');
 
 const Router = require('./Router');
@@ -18,6 +19,7 @@ class Server {
 
     this.rest.use(restify.plugins.bodyParser());
     this.rest.use(restify.plugins.queryParser());
+    this.rest.use(cookies.parse);
 
     this.db = rethinkdb({ servers: [{ host: 'rethink' }], db: 'pleb' });
 

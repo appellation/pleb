@@ -11,18 +11,17 @@ import { Api } from '../util/Constants';
 export default {
   name: 'playlists',
   props: ['userID'],
-  data() {
-    return {
-      playlists: this.$store.state.playlists,
+  computed: {
+    playlists() {
+      return this.$store.state.playlists;
     }
   },
   async mounted() {
-    const auth = this.$store.state.auth;
+    const token = this.$cookie.get('token');
     const result = await axios.get(`${Api}/users/${this.userID}/playlists`, {
-      headers: { Authorization: `JWT ${auth ? auth.token : ''}` }
+      headers: { Authorization: `JWT ${token}` }
     });
-    this.playlists = result.data;
-    // this.$store.commit(types.PLAYLISTS_SET, result.data);
+    this.$store.commit(types.PLAYLISTS_SET, result.data);
   },
 }
 </script>
