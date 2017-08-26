@@ -22,6 +22,7 @@ class Rest {
     this.http.use(cookies.parse);
 
     this.router = new Router(this);
+    this.router.register();
 
     this.http.listen(8080, () => console.log('listening on port 8080'));
   }

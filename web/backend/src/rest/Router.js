@@ -1,7 +1,7 @@
 const path = require('path');
 const { loadDirectory } = require('../util');
 
-const DIRECTORY = path.resolve(__dirname, '..', '..', 'routes');
+const DIRECTORY = path.resolve(__dirname, 'routes');
 
 class Router {
   constructor(rest) {

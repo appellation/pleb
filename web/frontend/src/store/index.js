@@ -6,7 +6,12 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    auth: null,
+    ws: {
+      id: null,
+      ready: false,
+    },
+    user: null,
+    token: null,
     playlists: [],
     info: {
       guilds: 0,
@@ -15,8 +20,13 @@ export default new Vuex.Store({
     },
   },
   mutations: {
-    [types.LOGIN](state, data) {
-      state.auth = data;
+    [types.WS_CONNECTED](state, id) {
+      state.ws = { ...state.ws, id };
+      state.ws.ready = true;
+    },
+    [types.LOGIN](state, { token, user }) {
+      state.token = token;
+      state.user = user;
     },
     [types.LOGOUT](state) {
       state.auth = null;

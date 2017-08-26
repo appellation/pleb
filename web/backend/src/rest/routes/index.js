@@ -1,4 +1,4 @@
-const Route = require('../core/Route');
+const Route = require('../Route');
 
 class IndexRoute extends Route {
   constructor(router) {

@@ -3,7 +3,9 @@ const axios = require('axios');
 const url = require('url');
 const jwt = require('jsonwebtoken');
 const errs = require('restify-errors');
-const Route = require('../../core/Route');
+
+const Route = require('../../Route');
+const constants = require('../../../util/constants');
 
 class AuthCallbackRoute extends Route {
   constructor(router) {
@@ -12,7 +14,8 @@ class AuthCallbackRoute extends Route {
   }
 
   async get(req, res, next) {
-    const { code } = req.query;
+    const { code, state, error } = req.query;
+    if (error) return next(new errs.BadRequestError(`authorization failed: ${error}`));
     if (!code) return next(new errs.MissingParameterError('no code provided'));
 
     const requestURL = url.format({
@@ -35,7 +38,7 @@ class AuthCallbackRoute extends Route {
       }
     });
 
-    await this.router.server.db.table('users').insert(user.data, {
+    await this.router.rest.server.db.r.table('users').insert(user.data, {
       conflict: 'update',
     });
 
@@ -46,12 +49,16 @@ class AuthCallbackRoute extends Route {
       expiresIn: token.data.expires_in,
     });
 
-    res.setCookie('token', signed, {
-      maxAge: token.data.expires_in,
-      path: '/'
+    const connection = Array.from(this.router.rest.server.socket.connections).find(conn => conn.id === state);
+    if (!connection) return next(new errs.BadRequestError('no websocket to authenticate'));
+
+    await connection.send(constants.op.IDENTIFY, {
+      token: signed,
+      user: user.data,
     });
 
-    res.redirect(302, 'http://localhost:4000/', next);
+    res.header('content-type', 'text/html');
+    res.sendRaw(200, '<script>window.close()</script>');
   }
 }
 

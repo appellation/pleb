@@ -1,5 +1,5 @@
-const Route = require('../../core/Route');
-const middleware = require('../../util/middleware');
+const Route = require('../../Route');
+const middleware = require('../../middleware');
 
 class PlaylistsRoute extends Route {
   constructor(router) {

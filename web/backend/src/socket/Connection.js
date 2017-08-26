@@ -13,19 +13,16 @@ class Connection extends EventEmitter {
   }
 
   async ready() {
-    this.id = await randomBytes(128);
+    this.id = (await randomBytes(128)).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 
-    return this.send({
-      op: constants.op.READY,
-      d: {
-        id: this.id.toString(),
-        info: await this.socket.server.db.getInfo()
-      },
+    return this.send(constants.op.READY,{
+      id: this.id,
+      info: await this.socket.server.db.getInfo()
     });
   }
 
-  send(data) {
-    return this.connection.send(JSON.stringify(data));
+  send(op, data) {
+    return this.connection.send(JSON.stringify({ op, d: data }));
   }
 }
 

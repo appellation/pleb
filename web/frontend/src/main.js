@@ -12,7 +12,7 @@ import * as filters from './filters';
 
 Vue.config.productionTip = false;
 Vue.use(WS, { store });
-Vue.use(Auth, { store, ws: socket });
+// Vue.use(Auth, { store, ws: socket });
 
 window.app = new Vue({
   el: '#app',
