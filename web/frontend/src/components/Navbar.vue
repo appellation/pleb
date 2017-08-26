@@ -21,6 +21,7 @@
     </ul>
     <ul class="navbar-nav">
       <li class="nav-item">
+        <!-- <a class="nav-link" @click="auth.logout()">Logout</a> -->
         <a class="nav-link" v-bind:href="OAuth.AUTH_URL">Login</a>
       </li>
     </ul>
@@ -36,6 +37,6 @@ export default {
     return {
       OAuth
     };
-  },
+  }
 }
 </script>

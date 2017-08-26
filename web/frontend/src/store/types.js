@@ -1,3 +1,4 @@
 export const LOGIN = 'login';
 export const LOGOUT = 'logout';
-export const PLAYLISTS_SET = 'playlist set';
+export const PLAYLISTS_SET = 'playlists set';
+export const INFO_SET = 'info set';

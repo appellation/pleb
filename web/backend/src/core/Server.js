@@ -1,32 +1,12 @@
-const restify = require('restify');
-const rethinkdb = require('rethinkdbdash');
-const cookies = require('restify-cookies');
-const corsMiddleware = require('restify-cors-middleware');
-
-const Router = require('./Router');
+const Rest = require('./Rest');
+const Socket = require('./Socket');
+const Provider = require('../data/Provider');
 
 class Server {
   constructor() {
-    this.rest = restify.createServer();
-
-    const cors = corsMiddleware({
-      origins: ['*'],
-      allowHeaders: ['Authorization']
-    });
-
-    this.rest.pre(cors.preflight);
-    this.rest.use(cors.actual);
-
-    this.rest.use(restify.plugins.bodyParser());
-    this.rest.use(restify.plugins.queryParser());
-    this.rest.use(cookies.parse);
-
-    this.db = rethinkdb({ servers: [{ host: 'rethink' }], db: 'pleb' });
-
-    this.router = new Router(this);
-    this.router.register();
-
-    this.rest.listen(8080, () => console.log('listening to port 8080'));
+    this.db = new Provider(this);
+    this.rest = new Rest(this);
+    this.socket = new Socket(this);
   }
 }
 

@@ -39,7 +39,7 @@ new class {
       }).install();
       this.log.verbose('loaded raven');
     } else {
-      process.on('unhandledRejection', this.log.error); // eslint-disable-line no-console
+      process.on('unhandledRejection', this.log.error);
     }
 
     this.client.once('ready', this.onInit.bind(this));
@@ -72,6 +72,7 @@ new class {
     });
 
     this.log.verbose('initialized guilds');
+    await this.updateStats();
   }
 
   onReconnecting() {
@@ -126,6 +127,7 @@ new class {
   }
 
   async updateStats() {
+    await this.db.info.update();
     if (process.env.discord_pw) {
       await axios.post(`https://bots.discord.pw/api/bots/${this.client.user.id}/stats`, {
         shard_id: this.client.shard.id,

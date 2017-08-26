@@ -1,11 +1,11 @@
 const path = require('path');
 const { loadDirectory } = require('../util');
 
-const DIRECTORY = path.resolve(__dirname, '..', 'routes');
+const DIRECTORY = path.resolve(__dirname, '..', '..', 'routes');
 
 class Router {
-  constructor(server) {
-    this.server = server;
+  constructor(rest) {
+    this.rest = rest;
   }
 
   async register() {
@@ -15,7 +15,7 @@ class Router {
       const route = new (require(loc))(this);
       for (const method of ['get', 'post', 'update', 'delete'])
         if (method in route)
-          this.server.rest[method](route.path, ...route.middleware, route[method].bind(route));
+          this.rest.http[method](route.path, ...route.middleware, route[method].bind(route));
     }
   }
 }

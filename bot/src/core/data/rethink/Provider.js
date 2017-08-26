@@ -1,6 +1,7 @@
 const rethinkdb = require('rethinkdbdash');
 const Settings = require('./Settings');
 const Usage = require('./Usage.js');
+const Info = require('./Info');
 
 const DB_NAME = 'pleb';
 const TABLE_NAMES = [
@@ -13,6 +14,7 @@ class RethinkProvider {
     this.bot = bot;
     this.r = rethinkdb({ db: DB_NAME, servers: [{ host: 'rethink' }] });
     this.usage = new Usage(this);
+    this.info = new Info(this);
 
     this.settings = new Proxy({}, {
       get: (target, property) => {

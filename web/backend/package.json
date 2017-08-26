@@ -16,7 +16,8 @@
     "restify-cookies": "^0.2.2",
     "restify-cors-middleware": "^1.0.1",
     "restify-errors": "^5.0.0",
-    "rethinkdbdash": "^2.3.31"
+    "rethinkdbdash": "^2.3.31",
+    "ws": "^3.1.0"
   },
   "optionalDependencies": {
     "bufferutil": "^3.0.2",

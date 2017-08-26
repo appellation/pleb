@@ -5,12 +5,14 @@
 </template>
 <script>
 import axios from 'axios';
+import { auth } from '../router/middleware';
 import * as types from '../store/types';
 import { Api } from '../util/Constants';
 
 export default {
   name: 'playlists',
   props: ['userID'],
+  beforeEnter: auth,
   computed: {
     playlists() {
       return this.$store.state.playlists;
