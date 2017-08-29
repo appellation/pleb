@@ -18,6 +18,9 @@
       <router-link tag="li" to="/" exact class="nav-item" active-class="active">
         <a class="nav-link">Home</a>
       </router-link>
+      <router-link v-if="user" tag="li" to="/dashboard/playlists" class="nav-item" active-class="active">
+        <a class="nav-link">Playlists</a>
+      </router-link>
     </ul>
     <ul class="navbar-nav">
       <span class="navbar-text" v-if="user">{{ user.username }}#{{ user.discriminator }}</span>
@@ -36,7 +39,7 @@ import { OAuth } from '@/util/Constants';
 export default {
   computed: {
     authURL() {
-      return OAuth.AUTH_URL(this.$store.state.ws.id);
+      return OAuth.AUTH_URL(this.$store.state.session);
     },
     user() {
       return this.$store.state.user;

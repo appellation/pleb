@@ -8,7 +8,7 @@ class PlaylistsRoute extends Route {
   }
 
   async get(req, res) {
-    const lists = await this.router.server.db.table('playlists').filter({ userID: req.params.userID });
+    const lists = await this.router.rest.server.db.r.table('playlists').filter({ userID: req.params.userID });
     res.json(lists);
   }
 }

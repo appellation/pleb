@@ -6,10 +6,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    ws: {
-      id: null,
-      ready: false,
-    },
+    session: null,
     user: null,
     token: null,
     playlists: [],
@@ -21,15 +18,15 @@ export default new Vuex.Store({
   },
   mutations: {
     [types.WS_CONNECTED](state, id) {
-      state.ws = { ...state.ws, id };
-      state.ws.ready = true;
+      state.session = id;
     },
     [types.LOGIN](state, { token, user }) {
       state.token = token;
       state.user = user;
     },
     [types.LOGOUT](state) {
-      state.auth = null;
+      state.token = null;
+      state.user = null;
     },
     [types.PLAYLISTS_SET](state, data) {
       state.playlists = data;
@@ -38,9 +35,4 @@ export default new Vuex.Store({
       state.info = data;
     }
   },
-  actions: {
-    [types.LOGIN]({ commit, state }, data) {
-      //
-    }
-  }
 });

@@ -2,7 +2,9 @@
   <div id="app">
     <navbar></navbar>
     <!-- <img src="./assets/logo.png"> -->
-    <router-view></router-view>
+    <div class="my-3">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 

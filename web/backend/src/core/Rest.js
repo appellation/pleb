@@ -11,7 +11,7 @@ class Rest {
 
     const cors = corsMiddleware({
       origins: ['*'],
-      allowHeaders: ['Authorization']
+      allowHeaders: ['Authorization', 'x-session']
     });
 
     this.http.pre(cors.preflight);

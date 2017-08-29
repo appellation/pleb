@@ -29,7 +29,7 @@ class MiddlewareRegistry {
   socket(req, res, next) {
     if (!req.session) return next();
 
-    const socket = this.router.server.socket.connections.get(req.session);
+    const socket = this.router.rest.server.socket.connections.get(req.session);
     if (socket) {
       req.socket = socket;
       return next();

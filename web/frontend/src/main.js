@@ -4,7 +4,7 @@ import Vue from 'vue'
 import * as App from './App'
 
 import WS, { socket } from './plugins/WS';
-import Auth from './plugins/Auth';
+// import Auth from './plugins/Auth';
 
 import router from './router'
 import store from './store';

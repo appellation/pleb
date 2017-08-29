@@ -25,7 +25,7 @@ export default {
       return this.$store.state.info;
     },
     authURL() {
-      return OAuth.AUTH_URL(this.$store.state.ws.id);
+      return OAuth.AUTH_URL(this.$store.state.session);
     },
   }
 }
