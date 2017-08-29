@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const errs = require('restify-errors');
 
 const Route = require('../../Route');
-const constants = require('../../../util/constants');
+const util = require('../../util');
 
 class AuthCallbackRoute extends Route {
   constructor(router) {
@@ -49,16 +49,16 @@ class AuthCallbackRoute extends Route {
       expiresIn: token.data.expires_in,
     });
 
-    const connection = Array.from(this.router.rest.server.socket.connections).find(conn => conn.id === state);
-    if (!connection) return next(new errs.BadRequestError('no websocket to authenticate'));
-
-    await connection.send(constants.op.IDENTIFY, {
-      token: signed,
-      user: user.data,
+    res.setCookie('token', signed, {
+      httpOnly: true,
+      path: '/',
     });
 
-    res.header('content-type', 'text/html');
-    res.sendRaw(200, '<script>window.close()</script>');
+    const connection = this.router.rest.server.socket.connections.get(state);
+    if (!connection) return next(new errs.BadRequestError('no websocket to authenticate'));
+
+    await connection.identify(signed);
+    util.closeWindow(res);
   }
 }
 

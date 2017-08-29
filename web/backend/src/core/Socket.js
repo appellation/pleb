@@ -1,4 +1,6 @@
 const ws = require('ws');
+const randomBytes = require('util').promisify(require('crypto').randomBytes);
+
 const Connection = require('../socket/Connection');
 
 class Socket {
@@ -11,8 +13,11 @@ class Socket {
 
     this.ws.once('listening', () => console.log('websocket listening'));
 
-    this.connections = new Set();
-    this.ws.on('connection', connection => this.connections.add(new Connection(this, connection)));
+    this.connections = new Map();
+    this.ws.on('connection', async (connection, request) => {
+      const id = (await randomBytes(128)).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+      this.connections.set(id, new Connection(this, id, connection, request));
+    });
   }
 }
 

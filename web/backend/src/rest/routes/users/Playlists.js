@@ -1,10 +1,9 @@
 const Route = require('../../Route');
-const middleware = require('../../middleware');
 
 class PlaylistsRoute extends Route {
   constructor(router) {
     super(router);
-    this.middleware.push(middleware.authorization);
+    this.middleware.push(this.router.middleware.authorization);
     this.path = '/users/:userID/playlists';
   }
 

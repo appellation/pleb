@@ -9,6 +9,10 @@ class RethinkProvider {
   getInfo() {
     return this.r.table('info').get(process.env.discord_client_id);
   }
+
+  getUser(id) {
+    return this.r.table('users').get(id);
+  }
 }
 
 module.exports = RethinkProvider;

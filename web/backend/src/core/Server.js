@@ -1,10 +1,10 @@
 const Rest = require('./Rest');
 const Socket = require('./Socket');
-const Provider = require('../data/Provider');
+const DB = require('./DB');
 
 class Server {
   constructor() {
-    this.db = new Provider(this);
+    this.db = new DB(this);
     this.rest = new Rest(this);
     this.socket = new Socket(this);
   }

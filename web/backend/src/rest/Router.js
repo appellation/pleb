@@ -1,4 +1,5 @@
 const path = require('path');
+const Middleware = require('./Middleware');
 const { loadDirectory } = require('../util');
 
 const DIRECTORY = path.resolve(__dirname, 'routes');
@@ -6,6 +7,7 @@ const DIRECTORY = path.resolve(__dirname, 'routes');
 class Router {
   constructor(rest) {
     this.rest = rest;
+    this.middleware = new Middleware(this);
   }
 
   async register() {

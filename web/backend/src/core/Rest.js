@@ -24,6 +24,8 @@ class Rest {
     this.router = new Router(this);
     this.router.register();
 
+    this.http.use(...this.router.middleware.global);
+
     this.http.listen(8080, () => console.log('listening on port 8080'));
   }
 }
