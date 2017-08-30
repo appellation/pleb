@@ -54,11 +54,7 @@ class AuthCallbackRoute extends Route {
       path: '/',
     });
 
-    const connection = this.router.rest.server.socket.connections.get(state);
-    if (!connection) return next(new errs.BadRequestError('no websocket to authenticate'));
-
-    await connection.identify(signed);
-    util.closeWindow(res);
+    res.redirect('http://localhost:4000', next);
   }
 }
 

@@ -5,7 +5,7 @@
         <h1 class="display-3">Pleb</h1>
         <p class="lead">A very low-class Discord bot.</p>
         <p class="lead">
-          <a class="btn btn-primary btn-lg" :href="`${authURL}&add=true`" target="_blank" role="button">Join {{ info.guilds }} other server{{ info.guilds === 1 ? '' : 's' }}</a>
+          <a class="btn btn-primary btn-lg" :href="`${authURL}&add=true`" role="button">Join {{ info.guilds }} other server{{ info.guilds === 1 ? '' : 's' }}</a>
         </p>
       </div>
       <div class="col-6">
