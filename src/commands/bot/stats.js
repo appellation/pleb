@@ -8,7 +8,7 @@ exports.exec = async (cmd) => {
   const stats = {
     servers: await client.shard.broadcastEval('this.guilds.size'),
     channels: await client.shard.broadcastEval('this.channels.size'),
-    users: await client.shard.broadcastEval('this.guilds.size'),
+    users: await client.shard.broadcastEval('this.users.size'),
     playlists: await client.shard.broadcastEval('this.bot.cassette.playlists.size'),
     memory: await client.shard.broadcastEval('process.memoryUsage().heapUsed')
   };
