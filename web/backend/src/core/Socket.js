@@ -1,10 +1,14 @@
 const ws = require('ws');
+const EventEmitter = require('events');
 const randomBytes = require('util').promisify(require('crypto').randomBytes);
 
 const Connection = require('../socket/Connection');
 
-class Socket {
+class Socket extends EventEmitter {
   constructor(server) {
+    super();
+    this.setMaxListeners(Infinity);
+
     this.server = server;
 
     this.ws = new ws.Server({

@@ -11,7 +11,7 @@ class Connection extends EventEmitter {
     this.connection = connection;
     this.request = request;
 
-    this.socket.server.db.on('change', this.send.bind(this));
+    this.socket.on('broadcast', this.send.bind(this));
     this.connection.on('message', m => this.emit('message', JSON.parse(m)));
     this.ready();
   }
@@ -44,8 +44,16 @@ class Connection extends EventEmitter {
     return this.send(constants.op.DATA, d);
   }
 
-  send(op, data) {
-    return this.connection.send(JSON.stringify({ op, d: data }));
+  /**
+   * Send something over the websocket.
+   * Every OP except DATA (4) should not use extra. OP 4 should send an object of type { t, a }, where
+   * `t` is the type of data, and `a` is the action (add, delete, etc)
+   * @param {number} op The op code to send
+   * @param {*} data data to send
+   * @param {object} extra extra params to send
+   */
+  send(op, data, extra = {}) {
+    return this.connection.send(JSON.stringify(Object.assign(extra, { op, d: data })));
   }
 }
 

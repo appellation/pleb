@@ -1,14 +1,12 @@
 const rethinkdb = require('rethinkdbdash');
-const EventEmitter = require('events');
 
 const Info = require('../data/Info');
 const Users = require('../data/Users');
 const Guilds = require('../data/Guilds');
 const Playlists = require('../data/Playlists');
 
-class RethinkProvider extends EventEmitter {
+class RethinkProvider {
   constructor(server) {
-    super();
     this.server = server;
     this.r = rethinkdb({ servers: [{ host: 'rethink' }], db: 'pleb' });
 

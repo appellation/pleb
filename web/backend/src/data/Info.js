@@ -37,7 +37,7 @@ class Info extends EventEmitter {
 
       const data = await this.get();
       this.emit('change', data);
-      this.db.emit('change', constants.op.INFO, data);
+      this.db.server.socket.emit('broadcast', constants.op.INFO, data);
     });
   }
 }
