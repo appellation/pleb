@@ -19,7 +19,7 @@ export default class Socket {
     const data = JSON.parse(event.data);
     if (data.op === OP.READY) {
       this.store.commit(types.WS_CONNECTED, data.d.id);
-      this.store.commit(types.INFO_SET, data.d.info);
+      // this.store.commit(types.INFO_SET, data.d.info);
     } else if (data.op === OP.IDENTIFY) {
       this.store.commit(types.LOGIN, data.d);
     }
