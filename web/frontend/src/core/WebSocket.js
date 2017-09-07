@@ -3,6 +3,7 @@ import * as types from '../store/types';
 export const OP = {
   IDENTIFY: 1,
   READY: 2,
+  INFO: 3,
 };
 
 export default class Socket {
@@ -16,12 +17,18 @@ export default class Socket {
 
   listener(event) {
     console.log(event);
+
     const data = JSON.parse(event.data);
-    if (data.op === OP.READY) {
-      this.store.commit(types.WS_CONNECTED, data.d.id);
-      // this.store.commit(types.INFO_SET, data.d.info);
-    } else if (data.op === OP.IDENTIFY) {
-      this.store.commit(types.LOGIN, data.d);
+    switch (data.op) {
+      case OP.READY:
+        this.store.commit(types.WS_CONNECTED, data.d);
+        break;
+      case OP.IDENTIFY:
+        this.store.commit(types.LOGIN, data.d);
+        break;
+      case OP.INFO:
+        this.store.commit(types.INFO_SET, data.d);
+        break;
     }
   }
 }

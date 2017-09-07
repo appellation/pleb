@@ -17,9 +17,8 @@ class Connection extends EventEmitter {
   }
 
   async ready() {
-    await this.send(constants.op.READY, {
-      id: this.id,
-    });
+    await this.send(constants.op.READY, this.id);
+    await this.info();
 
     const cookies = {};
     this.request.headers.cookie.split('; ').map(pair => pair.split('=')).forEach(cookie => cookies[cookie[0]] = cookie[1]);
