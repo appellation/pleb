@@ -12,7 +12,7 @@ module.exports = class extends (handles.Client) {
       validator: async message => {
         if (message.channel.type === 'dm') return message.content.replace(baseRegex, '');
         if (message.member && message.member.roles.exists('name', 'no-pleb')) return;
-        
+
         let prefix = null;
         const settings = bot.db.settings[message.guild.id];
         if (settings) prefix = await settings.get('prefix');

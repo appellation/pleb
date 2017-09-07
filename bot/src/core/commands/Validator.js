@@ -11,11 +11,10 @@ const ERRORS = {
   ensureCurrentVoiceChannel: 'Not currently connected to a voice channel.',
   ensurePlaylist: 'I\'m currently not playing anything.',
   ensureNSFW: 'This is not an NSFW channel.',
-  ensureIsNumber: argNum => `Argument ${argNum + 1} must be a number.`
+  ensureIsNumber: key => `Argument ${key} must be a number.`
 };
 
 class Validate extends Validator {
-
   constructor(command) {
     super();
     this.command = command;
@@ -107,8 +106,8 @@ class Validate extends Validator {
     return super.apply(() => this.command.client.voiceConnections.has(this.guild.id), ERRORS.ensureCurrentVoiceChannel);
   }
 
-  ensureIsNumber(argNum) {
-    return super.apply(() => !isNaN(this.command.args[argNum]), ERRORS.ensureIsNumber(argNum));
+  ensureIsNumber(key) {
+    return super.apply(() => !isNaN(this.command.args[key]), ERRORS.ensureIsNumber(key));
   }
 
   ensureIsOwner() {

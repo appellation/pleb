@@ -4,9 +4,10 @@ const Validator = require('../../core/commands/Validator');
 exports.exec = async (cmd) => {
   const bot = cmd.client.bot;
   await bot.db.r.table('playlists').insert({
-    id: [cmd.args.name, cmd.message.author.id],
+    id: [cmd.args.name, cmd.message.author.id, cmd.guild.id],
     name: cmd.args.name,
     userID: cmd.message.author.id,
+    guildID: cmd.guild.id,
     songs: Array.from(bot.cassette.playlists.get(cmd.guild.id))
   }, { conflict: 'update' });
   return cmd.response.success(`successfully saved current playlist to your library as \`${cmd.args.name}\``);
@@ -18,8 +19,8 @@ exports.middleware = function* (cmd) {
   const name = yield new Argument('name')
     .setPrompt('What would you like to name this playlist?')
     .setRePrompt('You provided an invalid name.');
-    
-  const existing = yield () => cmd.client.bot.db.r.table('playlists').get([name, cmd.message.author.id]);
+
+  const existing = yield () => cmd.client.bot.db.r.table('playlists').get([name, cmd.message.author.id, cmd.guild.id]);
 
   if (existing) {
     yield new Argument('confirmation')

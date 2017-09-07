@@ -11,6 +11,7 @@ class Connection extends EventEmitter {
     this.connection = connection;
     this.request = request;
 
+    this.socket.server.db.on('change', this.send.bind(this));
     this.connection.on('message', m => this.emit('message', JSON.parse(m)));
     this.ready();
   }
@@ -18,7 +19,6 @@ class Connection extends EventEmitter {
   async ready() {
     await this.send(constants.op.READY, {
       id: this.id,
-      info: await this.socket.server.db.getInfo()
     });
 
     const cookies = {};
@@ -26,15 +26,23 @@ class Connection extends EventEmitter {
     if (cookies.token) await this.identify(cookies.token);
   }
 
-  async identify(token) {
+  async info() {
+    await this.send(constants.op.INFO, await this.socket.server.db.info.get());
+  }
+
+  async identify(token, user) {
     const decoded = jwt.decode(token);
     if (!decoded) return;
 
-    const user = await this.socket.server.db.getUser(decoded.userID);
+    if (!user) user = await this.socket.server.db.users.get(decoded.userID);
     if (!user) return;
 
     this.user = new User(this.socket.server, token, user);
     return this.send(constants.op.IDENTIFY, { token, user });
+  }
+
+  data(d) {
+    return this.send(constants.op.DATA, d);
   }
 
   send(op, data) {

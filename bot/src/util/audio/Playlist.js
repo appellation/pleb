@@ -1,15 +1,13 @@
-const { DiscordPlaylist } = require('cassette');
+const { Playlist: DiscordPlaylist } = require('discord.js-music');
 
-/**
- * @typedef {Object} Song
- * @property {String} type Soundcloud or YouTube
- * @property {Function} stream The audio stream.
- * @property {String} title
- * @property {String} trackID
- * @property {String} playlistID
- */
+class Playlist {
+  static applyToClass(target) {
+    for (const prop of [
+      'add',
+      'start',
+    ]) Object.defineProperty(target.prototype, prop, Object.getOwnPropertyDescriptor(this.prototype, prop));
+  }
 
-class Playlist extends DiscordPlaylist {
   /**
    * Add content to the playlist.
    * @param {Response} res
@@ -42,4 +40,4 @@ class Playlist extends DiscordPlaylist {
   }
 }
 
-module.exports = Playlist;
+Playlist.applyToClass(DiscordPlaylist);

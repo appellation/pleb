@@ -38,12 +38,18 @@ class AuthCallbackRoute extends Route {
       }
     });
 
-    await this.router.rest.server.db.r.table('users').insert(user.data, {
-      conflict: 'update',
-    });
+    await this.router.rest.server.db.r.table('users')
+      .insert({
+        id: user.data.id,
+        token: token.data.access_token,
+        refreshToken: token.data.refresh_token,
+      }, {
+        conflict: 'update',
+      });
 
     const signed = jwt.sign({
       token: token.data.access_token,
+      refreshToken: token.data.refresh_token,
       userID: user.data.id,
     }, process.env.secret, {
       expiresIn: token.data.expires_in,

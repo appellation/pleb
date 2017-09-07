@@ -1,10 +1,8 @@
 const { Argument } = require('discord-handles');
 const Validator = require('../../core/commands/Validator');
-const DiscordPlaylist = require('../../core/audio/Playlist');
 
 exports.exec = async (cmd) => {
-  const list = DiscordPlaylist.get(cmd.client.bot.cassette, cmd.message.guild);
-
+  const list = cmd.guild.playlist;
   const added = await list.add(cmd.response, cmd.args.song, {
     position: cmd.args.next ? list.pos + 1 : Infinity,
   });

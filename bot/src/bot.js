@@ -1,16 +1,15 @@
 require('./util/extensions');
+require('./util/audio/Playlist');
 require('moment-duration-format');
 
 const axios = require('axios');
-const cassette = require('cassette');
 const discord = require('discord.js');
 const Constants = require('discord.js/src/util/Constants');
 const Raven = require('raven');
 
-const Logger = require('./core/data/Logger');
+const Logger = require('./core/Logger');
 const Handler = require('./core/commands/Handler');
-const Usage = require('./core/data/Usage');
-const Provider = require('./core/data/rethink/Provider');
+const Provider = require('./core/Provider');
 
 new class {
   constructor() {
@@ -25,11 +24,6 @@ new class {
     this.log = new Logger(this.client);
     this.db = new Provider(this);
     this.handler = new Handler(this);
-    this.usage = new Usage(this);
-    this.cassette = new cassette.Client([
-      new cassette.YouTubeService(process.env.youtube),
-      new cassette.SoundcloudService(process.env.soundcloud)
-    ]);
 
     this.log.verbose('instantiated client');
 
@@ -59,19 +53,14 @@ new class {
 
   async onInit() {
     this.log.info('client is ready: %s#%s', this.client.user.username, this.client.user.discriminator);
-
     await this.db.initialize();
-
-    const start = Date.now();
-    await this.handler.registry.load();
-    this.log.info(`loaded ${this.handler.registry.size} commands in ${Date.now() - start}ms`);
 
     this.log.hook({
       title: 'Initialized',
       color: 0x00ff93
     });
 
-    this.log.verbose('initialized guilds');
+    this.log.verbose('initialized database');
     await this.updateStats();
   }
 
@@ -83,7 +72,7 @@ new class {
   }
 
   onResume(replayed) {
-    for (const [, p] of this.cassette.playlists) p.stop('continue');
+    for (const p of this.cassette.playlists.values()) p.stop('continue');
 
     this.log.hook({
       title: 'Resumed',
@@ -93,7 +82,7 @@ new class {
   }
 
   onDisconnect(close) {
-    for (const [, p] of this.cassette.playlists) p.stop('continue');
+    for (const p of this.cassette.playlists.values()) p.stop('continue');
 
     this.log.hook({
       title: 'Disconnected',
@@ -103,15 +92,12 @@ new class {
   }
 
   onGuildCreate(guild) {
-    for (const channel of guild.channels.values()) {
-      const perms = channel.permissionsFor(guild.me);
-      if (channel.type === 'text' && perms && perms.has(discord.Permissions.FLAGS.SEND_MESSAGES)) {
-        channel.send('Sup.  Try `@Pleb help`.');
-        break;
-      }
-    }
+    const channel = this.client.channels.find(c => {
+      const perms = c.permissionsFor(guild.me);
+      return c.type === 'text' && perms && perms.has(discord.Permissions.FLAGS.SEND_MESSAGES);
+    });
 
-    this.provider.initializeGuild(guild);
+    if (channel) channel.send('Sup.  Try `@Pleb help`.');
     this.updateStats();
   }
 

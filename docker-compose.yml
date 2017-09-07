@@ -25,3 +25,4 @@ services:
     image: rethinkdb:latest
     ports:
       - 5000:8080
+      - 5001:28015
