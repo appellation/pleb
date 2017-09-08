@@ -19,13 +19,13 @@ class Table extends EventEmitter {
     this.name = name;
   }
 
-  async watch() {
-    const cursor = await this.table.filter().changes({ includeTypes: true, includeInitial: true }).run();
+  async watch(connection, filter = {}) {
+    const cursor = await this.table.filter(filter).changes({ includeTypes: true, includeInitial: true }).run();
     cursor.each((err, data) => {
       if (err) throw err;
-      this.emit(data.type, data.new_val, data.old_val);
-      this.db.server.socket.emit('broadcast', constants.op.DATA, { new: data.new_val, old: data.old_val }, { t: this.name, a: data.type });
+      connection.send(constants.op.DATA, { new: data.new_val, old: data.old_val }, { t: this.name, a: data.type });
     });
+    return cursor;
   }
 
   get r() {

@@ -11,9 +11,15 @@ class Connection extends EventEmitter {
     this.connection = connection;
     this.request = request;
 
+    this.watchers = [];
+
     this.socket.on('broadcast', this.send.bind(this));
     this.connection.on('message', m => this.emit('message', JSON.parse(m)));
     this.ready();
+  }
+
+  get db() {
+    return this.socket.server.db;
   }
 
   async ready() {
@@ -26,17 +32,23 @@ class Connection extends EventEmitter {
   }
 
   async info() {
-    await this.send(constants.op.INFO, await this.socket.server.db.info.get());
+    await this.send(constants.op.INFO, await this.db.info.get());
   }
 
   async identify(token, user) {
     const decoded = jwt.decode(token);
     if (!decoded) return;
 
-    if (!user) user = await this.socket.server.db.users.get(decoded.userID);
+    if (!user) user = await this.db.users.get(decoded.userID);
     if (!user) return;
 
     this.user = new User(this.socket.server, token, user);
+    this.watchers.push(
+      this.db.guilds.watch(this, this.db.r.row('members').contains(this.user.id)),
+      this.db.playlists.watch(this, { userID: this.user.id }),
+      this.db.users.watch(this, { id: this.user.id }),
+    );
+
     return this.send(constants.op.IDENTIFY, { token, user });
   }
 
