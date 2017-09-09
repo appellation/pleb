@@ -1,6 +1,7 @@
 const rethinkdb = require('rethinkdbdash');
 const containerized = require('containerized');
 
+const Guilds = require('./data/Guilds');
 const Settings = require('./data/Settings');
 const Usage = require('./data/Usage');
 const Info = require('./data/Info');
@@ -17,8 +18,9 @@ const TABLE_NAMES = [
 class RethinkProvider {
   constructor(bot) {
     this.bot = bot;
-    this.r = rethinkdb({ db: DB_NAME, servers: [containerized() ? { host: 'rethink' } : { host: 'localhost' }] });
+    this.r = rethinkdb({ db: DB_NAME, servers: [{ host: containerized() ? 'rethink' : 'localhost' }] });
 
+    this.guilds = new Guilds(this);
     this.usage = new Usage(this);
     this.info = new Info(this);
     this.settings = new Proxy({}, {

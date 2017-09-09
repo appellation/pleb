@@ -1,5 +1,4 @@
 const EventEmitter = require('events');
-const constants = require('../../util/constants');
 
 class Table extends EventEmitter {
   static get actions() {
@@ -23,7 +22,7 @@ class Table extends EventEmitter {
     const cursor = await this.table.filter(filter).changes({ includeTypes: true, includeInitial: true }).run();
     cursor.each((err, data) => {
       if (err) throw err;
-      connection.send(constants.op.DATA, { new: data.new_val, old: data.old_val }, { t: this.name, a: data.type });
+      connection.data({ new: data.new_val, old: data.old_val }, this.name, data.type);
     });
     return cursor;
   }

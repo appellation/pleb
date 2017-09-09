@@ -1,10 +1,13 @@
-module.exports = class Usage {
+const Table = require('./base');
+
+module.exports = class Usage extends Table {
   constructor(provider) {
+    super(provider, 'usage');
     this.provider = provider;
   }
 
   add(command) {
-    return this.provider.r.table('usage').insert({
+    return this.insert({
       name: command.trigger,
       userID: command.message.author.id,
       guildID: command.guild ? command.guild.id : null,

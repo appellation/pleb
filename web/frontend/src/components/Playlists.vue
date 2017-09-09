@@ -18,7 +18,6 @@
 
 <script>
 import axios from 'axios';
-import * as types from '../store/types';
 import { Api } from '../util/Constants';
 
 export default {
@@ -27,13 +26,6 @@ export default {
     playlists() {
       return this.$store.state.playlists;
     }
-  },
-  async mounted() {
-    const token = this.$store.state.token;
-    const result = await axios.get(`${Api}/users/${this.$store.state.user.id}/playlists`, {
-      headers: { Authorization: `JWT ${token}`, 'x-session': this.$store.state.session }
-    });
-    this.$store.commit(types.PLAYLISTS_SET, result.data);
   },
 }
 </script>

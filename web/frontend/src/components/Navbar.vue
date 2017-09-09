@@ -39,7 +39,7 @@ import { OAuth } from '@/util/Constants';
 export default {
   computed: {
     authURL() {
-      return OAuth.AUTH_URL(this.$store.state.session);
+      return OAuth.AUTH_URL;
     },
     user() {
       return this.$store.state.user;

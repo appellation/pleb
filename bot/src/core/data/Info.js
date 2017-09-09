@@ -21,7 +21,7 @@ class Info {
           region: g.region,
         };
       }),
-      { conflict: 'update' }
+      { conflict: 'replace' }
     );
 
     await this.provider.r.table('users').insert(
@@ -34,7 +34,7 @@ class Info {
           avatarURL: u.displayAvatarURL,
         };
       }),
-      { conflict: 'update' }
+      { conflict: 'replace' }
     );
   }
 }

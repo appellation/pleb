@@ -20,16 +20,18 @@ export default new Vuex.Store({
     [types.WS_CONNECTED](state, id) {
       state.session = id;
     },
-    [types.LOGIN](state, { token, user }) {
+    [types.LOGIN](state, token) {
       state.token = token;
-      state.user = user;
     },
     [types.LOGOUT](state) {
       state.token = null;
       state.user = null;
     },
-    [types.PLAYLISTS_SET](state, data) {
-      state.playlists = data;
+    [types.PLAYLISTS_INITIAL](state, data) {
+      state.playlists = data.new;
+    },
+    [types.USERS_INITIAL](state, data) {
+      state.user = data.new;
     },
     [types.INFO_SET](state, data) {
       state.info = data;

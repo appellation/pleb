@@ -4,6 +4,7 @@ export const OP = {
   IDENTIFY: 1,
   READY: 2,
   INFO: 3,
+  DATA: 4,
 };
 
 export default class Socket {
@@ -28,6 +29,9 @@ export default class Socket {
         break;
       case OP.INFO:
         this.store.commit(types.INFO_SET, data.d);
+        break;
+      case OP.DATA:
+        this.store.commit(types[`${data.t.toUpperCase()}_${data.a.toUpperCase()}`], data.d);
         break;
     }
   }

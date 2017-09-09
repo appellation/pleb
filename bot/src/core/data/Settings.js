@@ -1,20 +1,18 @@
-class RethinkGuildSettings {
+const Table = require('./base');
+
+class GuildSettings extends Table {
   constructor(provider, guild) {
-    this.provider = provider;
+    super(provider, 'settings');
     this.guild = guild;
   }
 
-  getAll() {
-    return this.provider.r.table('settings').get(this.guild.id);
-  }
-
   async get(key) {
-    const settings = await this.getAll();
-    return settings && settings.data[key];
+    const settings = await super.get(this.guild.id);
+    return settings ? null : settings.data[key];
   }
 
   set(key, value) {
-    return this.provider.r.table('settings').insert({
+    return this.insert({
       id: this.guild.id,
       data: {
         [key]: value
@@ -23,4 +21,4 @@ class RethinkGuildSettings {
   }
 }
 
-module.exports = RethinkGuildSettings;
+module.exports = GuildSettings;
