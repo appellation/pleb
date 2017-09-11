@@ -61,7 +61,9 @@ new class {
     });
 
     this.log.verbose('initialized database');
+    await this.db.guilds.sync();
     await this.updateStats();
+    this.log.verbose('synchronized stats');
   }
 
   onReconnecting() {
@@ -98,7 +100,7 @@ new class {
     });
 
     if (channel) channel.send('Sup.  Try `@Pleb help`.');
-    this.updateStats();
+    this.db.guilds.insert(guild);
   }
 
   onMessage(message) {
@@ -109,11 +111,10 @@ new class {
   onGuildDelete(guild) {
     const playlist = this.cassette.playlists.get(guild.id);
     if (playlist) playlist.destroy();
-    this.updateStats();
+    this.db.guilds.delete(guild);
   }
 
   async updateStats() {
-    await this.db.info.update();
     if (process.env.discord_pw) {
       await axios.post(`https://bots.discord.pw/api/bots/${this.client.user.id}/stats`, {
         shard_id: this.client.shard.id,
