@@ -12,17 +12,17 @@ const Logger = require('./core/Logger');
 const Handler = require('./core/commands/Handler');
 const Provider = require('./core/Provider');
 
-new class {
+module.exports = new class extends discord.Client {
   constructor() {
-    this.client = new discord.Client({
+    super({
       messageCacheLifetime: 1800,
       messageSweepInterval: 900,
       disabledEvents: [Constants.Events.TYPING_START]
     });
 
-    Object.defineProperty(this.client, 'bot', { value: this });
+    Object.defineProperty(this, 'bot', { value: this });
 
-    this.log = new Logger(this.client);
+    this.log = new Logger(this);
     this.db = new Provider(this);
     this.handler = new Handler(this);
 
@@ -37,22 +37,21 @@ new class {
       process.on('unhandledRejection', this.log.error);
     }
 
-    this.client.once('ready', this.onInit.bind(this));
-    this.client.on('reconnecting', this.onReconnecting.bind(this));
-    this.client.on('resume', this.onResume.bind(this));
-    this.client.on('disconnect', this.onDisconnect.bind(this));
-    this.client.on('error', e => Raven.captureException(e));
+    this.once('ready', this.onInit.bind(this));
+    this.on('reconnecting', this.onReconnecting.bind(this));
+    this.on('resume', this.onResume.bind(this));
+    this.on('disconnect', this.onDisconnect.bind(this));
+    this.on('error', e => Raven.captureException(e));
 
-    this.client.on('guildCreate', this.onGuildCreate.bind(this));
-    this.client.on('guildDelete', this.onGuildDelete.bind(this));
+    this.on('guildCreate', this.onGuildCreate.bind(this));
+    this.on('guildDelete', this.onGuildDelete.bind(this));
 
     this.log.verbose('instantiated event listeners');
-
-    this.client.login(process.env.discord);
+    this.login(process.env.discord);
   }
 
   async onInit() {
-    this.log.info('client is ready: %s#%s', this.client.user.username, this.client.user.discriminator);
+    this.log.info('client is ready: %s#%s', this.user.username, this.user.discriminator);
     await this.db.initialize();
 
     this.log.hook({
@@ -74,7 +73,7 @@ new class {
   }
 
   onResume(replayed) {
-    for (const p of this.cassette.playlists.values()) p.stop('continue');
+    for (const guild of this.guilds.values()) guild.playlist.stop('continue');
 
     this.log.hook({
       title: 'Resumed',
@@ -84,7 +83,7 @@ new class {
   }
 
   onDisconnect(close) {
-    for (const p of this.cassette.playlists.values()) p.stop('continue');
+    for (const guild of this.guilds.values()) guild.playlist.stop();
 
     this.log.hook({
       title: 'Disconnected',
@@ -104,17 +103,17 @@ new class {
   }
 
   onGuildDelete(guild) {
-    const playlist = this.cassette.playlists.get(guild.id);
+    const playlist = this.guilds.playlist;
     if (playlist) playlist.destroy();
     this.db.guilds.delete(guild);
   }
 
   async updateStats() {
     if (process.env.discord_pw) {
-      await axios.post(`https://bots.discord.pw/api/bots/${this.client.user.id}/stats`, {
-        shard_id: this.client.shard.id,
-        shard_count: this.client.shard.count,
-        server_count: this.client.guilds.size
+      await axios.post(`https://bots.discord.pw/api/bots/${this.user.id}/stats`, {
+        shard_id: this.shard.id,
+        shard_count: this.shard.count,
+        server_count: this.guilds.size
       }, {
         headers: { Authorization: process.env.discord_pw }
       });

@@ -4,17 +4,17 @@ const handles = require('discord-handles');
 const Raven = require('raven');
 
 module.exports = class extends (handles.Client) {
-  constructor(bot) {
+  constructor(client) {
     const baseRegex = new RegExp(`<@!?${process.env.discord_client_id}>\\s*`);
 
-    super(bot.client, {
+    super(client, {
       directory: path.join('.', 'src', 'commands'),
       validator: async message => {
         if (message.channel.type === 'dm') return message.content.replace(baseRegex, '');
         if (message.member && message.member.roles.exists('name', 'no-pleb')) return;
 
         let prefix = null;
-        const settings = bot.db.settings[message.guild.id];
+        const settings = client.db.settings[message.guild.id];
         if (settings) prefix = await settings.get('prefix');
 
         const prefixed = prefix && message.content.startsWith(prefix);
@@ -27,7 +27,7 @@ module.exports = class extends (handles.Client) {
       },
     });
 
-    this.bot = bot;
+    this.client = client;
 
     this.on('commandStarted', async command => {
       this.bot.log.debug('command started: %s', command.resolvedContent);
@@ -77,10 +77,10 @@ module.exports = class extends (handles.Client) {
       }
 
       try {
-        this.bot.log.error('command failed: %s', command.trigger, error);
+        this.client.log.error('command failed: %s', command.trigger, error);
         await command.response.error(`\`${error}\`\nYou should never receive an error like this.  Bot owner has been notified.`);
       } catch (e) {
-        this.bot.log.error(util.inspect(error));
+        this.client.log.error(util.inspect(error));
         command.response.error('Error could not be displayed; needless to say, it borke.  Bot owner has been notified.');
       }
     });

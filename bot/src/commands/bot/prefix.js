@@ -6,7 +6,7 @@ module.exports = class extends Command {
   }
 
   async exec() {
-    const settings = this.client.bot.db.settings[this.guild.id];
+    const settings = this.guild.settings;
     if (!settings) return this.response.error('your guild doesn\'t seem to exist... 👀');
     return this.response.success(`Current prefix is: \`${await settings.get('prefix')}\``);
   }

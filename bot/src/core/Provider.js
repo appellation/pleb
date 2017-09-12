@@ -1,5 +1,5 @@
 const rethinkdb = require('rethinkdbdash');
-const containerized = require('containerized');
+const { Guild } = require('discord.js');
 
 const Guilds = require('./data/Guilds');
 const Settings = require('./data/Settings');
@@ -16,33 +16,14 @@ const TABLE_NAMES = [
 ];
 
 class RethinkProvider {
-  constructor(bot) {
-    this.bot = bot;
-    this.r = rethinkdb({ db: DB_NAME, servers: [{ host: containerized() ? 'rethink' : 'localhost' }] });
+  constructor(client) {
+    this.client = client;
+    this.r = rethinkdb({ db: DB_NAME, servers: [{ host: process.env.rethink }] });
 
     this.guilds = new Guilds(this);
     this.usage = new Usage(this);
     this.info = new Info(this);
-    this.settings = new Proxy({}, {
-      get: (target, property) => {
-        if (property in target) return target[property];
-
-        const guild = this.bot.client.guilds.get(property);
-        if (!guild) return;
-
-        const settings = new Settings(this, guild);
-        target[property] = settings;
-        return settings;
-      },
-      set: (target, property, value) => {
-        if (value instanceof Settings) {
-          target[property] = value;
-          return true;
-        }
-
-        return false;
-      }
-    });
+    Guild.prototype.settings = new Settings(this, Guild.prototype);
   }
 
   async initialize() {

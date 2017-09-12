@@ -9,7 +9,7 @@ class Table {
   }
 
   get client() {
-    return this.provider.bot.client;
+    return this.provider.client;
   }
 
   get table() {

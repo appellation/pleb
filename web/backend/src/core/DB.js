@@ -8,7 +8,7 @@ const Playlists = require('../data/Playlists');
 class RethinkProvider {
   constructor(server) {
     this.server = server;
-    this.r = rethinkdb({ servers: [{ host: 'rethink' }], db: 'pleb' });
+    this.r = rethinkdb({ servers: [{ host: process.env.rethink }], db: 'pleb' });
 
     this.users = new Users(this);
     this.guilds = new Guilds(this);

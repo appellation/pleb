@@ -2,13 +2,13 @@ const { Argument, Command, Validator } = require('discord-handles');
 
 module.exports = class extends Command {
   async pre() {
-    await new Validator(this).ensurePlaylist(this.client.bot.cassette);
+    await new Validator(this).ensurePlaylist();
 
     const name = await new Argument(this, 'name')
       .setPrompt('What would you like to name this playlist?')
       .setRePrompt('You provided an invalid name.');
 
-    const existing = await this.client.bot.db.r.table('playlists').get([name, this.message.author.id, this.guild.id]).run();
+    const existing = await this.client.db.r.table('playlists').get([name, this.author.id, this.guild.id]).run();
 
     if (existing) {
       await new Argument(this, 'confirmation')
@@ -19,10 +19,10 @@ module.exports = class extends Command {
   }
 
   exec() {
-    return this.client.bot.db.r.table('playlists').insert({
-      id: [this.args.name, this.message.author.id, this.guild.id],
+    return this.client.db.r.table('playlists').insert({
+      id: [this.args.name, this.author.id, this.guild.id],
       name: this.args.name,
-      userID: this.message.author.id,
+      userID: this.author.id,
       guildID: this.guild.id,
       songs: Array.from(this.guild.playlist)
     }, { conflict: 'update' });

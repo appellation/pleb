@@ -7,6 +7,6 @@ module.exports = class extends Command {
   }
 
   exec() {
-    return this.response.send(undefined, undefined, { files: [path.join(__dirname, '..', '..', '..', 'assets', 'images', 'xd.gif')] });
+    return this.response.send(undefined, { files: [path.join(__dirname, '..', '..', '..', 'assets', 'images', 'xd.gif')] });
   }
 };

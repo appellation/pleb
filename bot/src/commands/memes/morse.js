@@ -45,7 +45,7 @@ module.exports = class extends Command {
   async pre() {
     await new Argument(this, 'text')
       .setPrompt('What would you like to translate to morse?')
-      .setPattern(/.*/)
+      .setInfinite()
       .setResolver(c => c ? c.toLowerCase() : null);
   }
 
