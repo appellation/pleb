@@ -1,9 +1,11 @@
-const Validator = require('../../core/commands/Validator');
+const { Command, Validator } = require('discord-handles');
 
-exports.exec = (cmd) => {
-  return cmd.client.bot.cassette.playlists.get(cmd.message.guild.id).pause();
-};
+module.exports = class extends Command {
+  async pre() {
+    await new Validator(this).ensurePlaylist();
+  }
 
-exports.middleware = function* (cmd) {
-  yield new Validator(cmd).ensurePlaylist(cmd.client.bot.cassette);
+  exec() {
+    return this.guild.playlist.pause();
+  }
 };

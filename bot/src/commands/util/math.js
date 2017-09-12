@@ -1,20 +1,23 @@
 const math = require('mathjs');
 const numeral = require('numeral');
-const { Argument } = require('discord-handles');
+const { Argument, Command } = require('discord-handles');
 
-exports.exec = (cmd) => {
-  let out;
-  try {
-    out = math.eval(cmd.args.expression);
-  } catch (e) {
-    return cmd.response.error(`Error: \`${e.message}\``);
+module.exports = class extends Command {
+  async pre() {
+    await new Argument(this, 'expression')
+      .setResolver(c => c || null)
+      .setPrompt('What mathematical expression would you like to evaluate?')
+      .setInfinite();
   }
 
-  return cmd.response.success(`**${cmd.args.expression}** = \`${numeral(out).format('0,0.[0000000000]')}\``);
-};
+  exec() {
+    let out;
+    try {
+      out = math.eval(this.args.expression);
+    } catch (e) {
+      return this.response.error(`Error: \`${e.message}\``);
+    }
 
-exports.middleware = function* () {
-  yield new Argument('expression')
-    .setPrompt('What mathematical expression would you like to evaluate?')
-    .setInfinite();
+    return this.response.success(`**${this.args.expression}** = \`${numeral(out).format('0,0.[0000000000]')}\``);
+  }
 };

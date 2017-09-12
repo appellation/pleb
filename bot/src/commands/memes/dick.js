@@ -1,23 +1,24 @@
 const resolvers = require('../../util/resolvers');
-const { Argument } = require('discord-handles');
-const dicks = new Map();
+const { Argument, Command } = require('discord-handles');
 
-exports.exec = (cmd) => {
-  const user = cmd.args.user || cmd.message.author;
-
-  let count;
-  if (dicks.has(user)) {
-    count = dicks.get(user);
-  } else {
-    count = Math.floor(Math.random() * 25) + 1;
-    dicks.set(user, count);
+module.exports = class extends Command {
+  async pre() {
+    await new Argument(this, 'user')
+      .setOptional()
+      .setResolver(resolvers.user);
   }
 
-  return cmd.response.send(`8${'='.repeat(count)}D ${user}`);
-};
+  exec() {
+    const user = this.args.user || this.message.author;
+    let count;
 
-exports.middleware = function* () {
-  yield new Argument('user')
-    .setOptional()
-    .setResolver(resolvers.user);
+    if ('dick' in user) {
+      count = user.dick;
+    } else {
+      count = Math.floor(Math.random() * 69) + 1;
+      user.dick = count;
+    }
+
+    return this.response.send(`8${'='.repeat(count)}D ${user}`);
+  }
 };

@@ -1,22 +1,24 @@
-const { Argument } = require('discord-handles');
-const Validator = require('../../core/commands/Validator');
+const { Argument, Command, Validator } = require('discord-handles');
 
-exports.exec = async (cmd) => {
-  const list = cmd.guild.playlist;
-  const added = await list.add(cmd.response, cmd.args.song, {
-    position: cmd.args.next ? list.pos + 1 : Infinity,
-  });
+module.exports = class extends Command {
+  async pre() {
+    await new Validator(this).ensureCanPlay();
 
-  if (added && !list.playing) await list.start(cmd.response);
-};
+    await new Argument(this, 'next')
+      .setPattern(/next/i)
+      .setOptional();
 
-exports.middleware = function* (cmd) {
-  yield new Validator(cmd).ensureCanPlay();
-  yield new Argument('next')
-    .setPattern(/next/i)
-    .setOptional();
+    await new Argument(this, 'song')
+      .setPrompt('What would you like to add?')
+      .setInfinite();
+  }
 
-  yield new Argument('song')
-    .setPrompt('What would you like to add?')
-    .setInfinite();
+  async exec() {
+    const list = this.guild.playlist;
+    const added = await list.add(this.response, this.args.song, {
+      position: this.args.next ? list.pos + 1 : Infinity,
+    });
+
+    if (added && !list.playing) await list.start(this.response);
+  }
 };

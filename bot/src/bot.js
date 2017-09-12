@@ -1,5 +1,6 @@
 require('./util/extensions');
-require('./util/audio/Playlist');
+require('./util/extensions/Playlist');
+require('./util/extensions/Validator');
 require('moment-duration-format');
 
 const axios = require('axios');
@@ -44,7 +45,6 @@ new class {
 
     this.client.on('guildCreate', this.onGuildCreate.bind(this));
     this.client.on('guildDelete', this.onGuildDelete.bind(this));
-    this.client.on('message', this.onMessage.bind(this));
 
     this.log.verbose('instantiated event listeners');
 
@@ -101,11 +101,6 @@ new class {
 
     if (channel) channel.send('Sup.  Try `@Pleb help`.');
     this.db.guilds.insert(guild);
-  }
-
-  onMessage(message) {
-    this.log.silly('message received: %s#%s | %s', message.author.username, message.author.discriminator, message.cleanContent);
-    this.handler.handle(message);
   }
 
   onGuildDelete(guild) {

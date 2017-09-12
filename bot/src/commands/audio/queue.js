@@ -1,20 +1,21 @@
-const { Argument } = require('discord-handles');
-const Validator = require('../../core/commands/Validator');
+const { Argument, Command, Validator } = require('discord-handles');
 
-exports.exec = (cmd) => {
-  const list = cmd.client.bot.cassette.playlists.get(cmd.message.guild.id),
-    perPage = 5,
-    pos = cmd.args.page ? ((cmd.args.page - 1) * perPage) : list.pos,
-    part = list.songs.slice(pos, pos + perPage);
+module.exports = class extends Command {
+  async pre() {
+    await new Validator(this).ensurePlaylist();
+    await new Argument(this, 'page')
+      .setOptional()
+      .setResolver(c => !c || isNaN(c) ? null : parseInt(c));
+  }
 
-  return cmd.response.send(part.reduce((prev, song, index) => {
-    return `${prev}**${index + pos + 1}** of ${list.length} - \`${song.title}\`\n`;
-  }, cmd.args.page ? `Page **${Math.floor(pos/perPage) + 1}** of **${Math.ceil(list.length/perPage)}**\n` : '⭐ '));
-};
+  exec() {
+    const list = this.guild.playlist,
+      perPage = 5,
+      pos = this.args.page ? ((this.args.page - 1) * perPage) : list.pos,
+      part = list.slice(pos, pos + perPage);
 
-exports.middleware = function* (cmd) {
-  yield new Validator(cmd).ensurePlaylist(cmd.client.bot.cassette);
-  yield new Argument('page')
-    .setOptional()
-    .setResolver(c => !c || isNaN(c) ? null : parseInt(c));
+    return this.response.send(part.reduce((prev, song, index) => {
+      return `${prev}**${index + pos + 1}** of ${list.length} - \`${song.title}\`\n`;
+    }, this.args.page ? `Page **${Math.floor(pos/perPage) + 1}** of **${Math.ceil(list.length/perPage)}**\n` : '➡ '));
+  }
 };

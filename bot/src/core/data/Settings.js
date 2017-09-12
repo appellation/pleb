@@ -7,8 +7,8 @@ class GuildSettings extends Table {
   }
 
   async get(key) {
-    const settings = await super.get(this.guild.id);
-    return settings ? null : settings.data[key];
+    const settings = await super.table.get(this.guild.id);
+    return settings ? settings.data[key] : null;
   }
 
   set(key, value) {

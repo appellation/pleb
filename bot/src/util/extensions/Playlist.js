@@ -1,11 +1,20 @@
 const { Playlist: DiscordPlaylist } = require('discord.js-music');
+const cassette = require('cassette');
+
+const services = [
+  new cassette.YouTubeService(process.env.youtube),
+  new cassette.SoundcloudService(process.env.soundcloud),
+];
 
 class Playlist {
   static applyToClass(target) {
     for (const prop of [
       'add',
       'start',
-    ]) Object.defineProperty(target.prototype, prop, Object.getOwnPropertyDescriptor(this.prototype, prop));
+    ]) {
+      target.prototype[`__${prop}`] = target.prototype[prop];
+      Object.defineProperty(target.prototype, prop, Object.getOwnPropertyDescriptor(this.prototype, prop));
+    }
   }
 
   /**
@@ -19,7 +28,8 @@ class Playlist {
   async add(res, content, options) {
     res.send('adding songs to playlist...');
 
-    const added = await super.add(content, options);
+    const added = await this.__add(content, services, options);
+
     if (added.length < 1) {
       res.error('Unable to find that resource.');
       return false;
@@ -35,7 +45,7 @@ class Playlist {
   async start(response) {
     if (!this.current) return response.error('There is no song currently available to play.');
 
-    await super.start(response.message.member.voiceChannel);
+    await this.__start(response.message.member.voiceChannel);
     response.success(`now playing \`${this.current.title}\``);
   }
 }

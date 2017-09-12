@@ -1,28 +1,28 @@
 const resolvers = require('../../util/resolvers');
-const { Argument } = require('discord-handles');
+const { Argument, Command } = require('discord-handles');
 
-exports.exec = async ({ response: res, message: msg, args }) => {
-  const collection = await msg.channel.fetchMessages();
-  const messages = collection.array().filter(m => m.author.id === msg.client.user.id).slice(0, args.count || 3);
-  if (messages.length < 1) return res.error('Unable to find any messages to purge.');
-  if (messages.length === 1) {
-    await messages[0].delete();
-    return res.success('Purged last message.', msg.author);
+module.exports = class extends Command {
+  static get triggers() {
+    return ['sanitize', 'purge', 'clean'];
   }
-  if (!msg.channel.permissionsFor(msg.client.user).has('MANAGE_MESSAGES')) return res.error('I need `Manage Messages` permissions to sanitize.');
-  const deleted = await msg.channel.bulkDelete(messages);
-  return res.success(`Purged last ${deleted.size} messages.`, msg.author);
-};
 
-exports.middleware = function* () {
-  yield new Argument('count')
-    .setRePrompt('Please provide a valid number of messages to sanitize.')
-    .setOptional()
-    .setResolver(resolvers.integer);
-};
+  async pre() {
+    await new Argument(this, 'count')
+      .setRePrompt('Please provide a valid number of messages to sanitize.')
+      .setOptional()
+      .setResolver(resolvers.integer);
+  }
 
-exports.triggers = [
-  'sanitize',
-  'purge',
-  'clean'
-];
+  async exec() {
+    const collection = await this.channel.fetchMessages();
+    const messages = collection.array().filter(m => m.author.id === this.client.user.id).slice(0, this.args.count || 3);
+    if (messages.length < 1) return this.response.error('Unable to find any messages to purge.');
+    if (messages.length === 1) {
+      await messages[0].delete();
+      return this.response.success('Purged last message.', this.author);
+    }
+    if (!this.channel.permissionsFor(this.client.user).has('MANAGE_MESSAGES')) return this.response.error('I need `Manage Messages` permissions to sanitize.');
+    const deleted = await this.channel.bulkDelete(messages);
+    return this.response.success(`Purged last ${deleted.size} messages.`, this.author);
+  }
+};

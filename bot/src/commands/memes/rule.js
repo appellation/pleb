@@ -1,19 +1,21 @@
 const resolvers = require('../../util/resolvers');
-const { Argument } = require('discord-handles');
+const { Argument, Command } = require('discord-handles');
 
-exports.exec = ({ response: res, args }) => {
-  return res.send(rules[args.rule - 1], { code: 'ldif' });
-};
+module.exports = class extends Command {
+  async pre() {
+    await new Argument(this, 'rule')
+      .setPrompt('Which rule would you like to see?')
+      .setRePrompt('Please pick a rule between 1 and 47.')
+      .setResolver(c => {
+        const int = resolvers.integer(c);
+        if (int === null) return null;
+        return int >= 1 && int <= rules.length ? int : null;
+      });
+  }
 
-exports.middleware = function* () {
-  yield new Argument('rule')
-    .setPrompt('Which rule would you like to see?')
-    .setRePrompt('Please pick a rule between 1 and 47.')
-    .setResolver(c => {
-      const int = resolvers.integer(c);
-      if (int === null) return null;
-      return int >= 1 && int <= rules.length ? int : null;
-    });
+  exec() {
+    return this.response.send(rules[this.args.rule - 1], undefined, { code: 'ldif' });
+  }
 };
 
 const rules = [

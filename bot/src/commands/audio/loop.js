@@ -1,10 +1,12 @@
-const Validator = require('../../core/commands/Validator');
+const { Command, Validator } = require('discord-handles');
 
-exports.exec = (cmd) => {
-  const loop = cmd.client.bot.cassette.playlists.get(cmd.message.guild.id).current.toggleLoop();
-  return cmd.response.success(`${loop ? 'Started' : 'Stopped'} looping current song.`);
-};
+module.exports = class extends Command {
+  async pre() {
+    await new Validator(this).ensurePlaylist(this.client.bot.cassette);
+  }
 
-exports.middleware = function* (cmd) {
-  yield new Validator(cmd).ensurePlaylist(cmd.client.bot.cassette);
+  exec() {
+    const loop = this.guild.playlist.current.toggleLoop();
+    return this.response.success(`${loop ? 'Started' : 'Stopped'} looping current song.`);
+  }
 };

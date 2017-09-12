@@ -1,15 +1,16 @@
 const resolvers = require('../../util/resolvers');
-const { Argument } = require('discord-handles');
+const { Argument, Command } = require('discord-handles');
 
-exports.exec = (cmd) => {
-  const user = cmd.args.user || cmd.message.author;
-  return cmd.response.send(`${user}, ${Array.random(insults)}`);
-};
+module.exports = class extends Command {
+  async pre() {
+    await new Argument(this, 'user')
+      .setResolver(resolvers.user)
+      .setOptional();
+  }
 
-exports.middleware = function* () {
-  yield new Argument('user')
-    .setOptional()
-    .setResolver(resolvers.user);
+  exec() {
+    return this.response.send(`${this.args.user || this.message.author}, ${Array.random(insults)}`);
+  }
 };
 
 const insults = [

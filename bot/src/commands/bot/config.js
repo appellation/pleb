@@ -1,27 +1,29 @@
-const Validator = require('../../core/commands/Validator');
-const { Argument } = require('discord-handles');
+const { Argument, Command, Validator } = require('discord-handles');
 
 const allowedSettings = new Set([
   'prefix'
 ]);
 
-exports.exec = async (cmd) => {
-  const settings = cmd.client.bot.db.settings[cmd.guild.id];
-  if (!settings) return cmd.response.error('your guild doesn\'t seem to exist... 👀');
+module.exports = class extends Command {
+  async pre() {
+    await new Validator(this).ensureGuild();
 
-  await settings.set(cmd.args.key, cmd.args.value);
-  return cmd.response.success(`**${cmd.args.key}** set to \`${cmd.args.value}\``);
-};
+    const settings = Array.from(allowedSettings.values()).join(', ');
+    const key = await new Argument(this, 'key')
+      .setPrompt(`What setting would you like to modify? \`${settings}\``)
+      .setRePrompt(`That setting wasn't valid.  Please try again.  \`${settings}\``)
+      .setResolver(c => allowedSettings.has(c.toLowerCase()) ? c.toLowerCase() : null);
 
-exports.middleware = function* (cmd) {
-  yield new Validator(cmd).ensureGuild();
-  const settings = Array.from(allowedSettings.values()).join(', ');
-  const key = yield new Argument('key')
-    .setPrompt(`What setting would you like to modify? \`${settings}\``)
-    .setRePrompt(`That setting wasn't valid.  Please try again.  \`${settings}\``)
-    .setResolver(c => allowedSettings.has(c.toLowerCase()) ? c.toLowerCase() : null);
+    await new Argument(this, 'value')
+      .setPrompt(`What would you like to set ${key} to?`)
+      .setInfinite();
+  }
 
-  yield new Argument('value')
-    .setPrompt(`What would you like to set ${key} to?`)
-    .setPattern(/.*/);
+  async exec() {
+    const settings = this.client.bot.db.settings[this.guild.id];
+    if (!settings) return this.response.error('your guild doesn\'t seem to exist... 👀');
+
+    await settings.set(this.args.key, this.args.value);
+    return this.response.success(`**${this.args.key}** set to \`${this.args.value}\``);
+  }
 };

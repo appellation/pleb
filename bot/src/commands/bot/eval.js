@@ -1,21 +1,22 @@
-const { Argument } = require('discord-handles');
-const Validator = require('../../core/commands/Validator');
+const { Argument, Command, Validator } = require('discord-handles');
 
-exports.exec = async (cmd) => {
-  let res;
-  try {
-    res = await eval(cmd.args.code);
-  } catch (e) {
-    res = e.message;
+module.exports = class extends Command {
+  async pre() {
+    await new Validator(this).ensureIsOwner();
+    await new Argument(this, 'code')
+      .setPrompt('What code would you like to eval?')
+      .setInfinite();
   }
 
-  const inspected = require('util').inspect(res, { depth: 1 });
-  return (inspected.length <= 6000) ? cmd.message.channel.send(inspected, { split: true, code: 'js' }) : cmd.response.error('that response would be too big');
-};
+  async exec() {
+    let res;
+    try {
+      res = await eval(this.args.code);
+    } catch (e) {
+      res = e.message;
+    }
 
-exports.middleware = function* (cmd) {
-  yield new Validator(cmd).ensureIsOwner();
-  yield new Argument('code')
-    .setPrompt('What code would you like to eval?')
-    .setInfinite();
+    const inspected = require('util').inspect(res, { depth: 1 });
+    return (inspected.length <= 6000) ? this.response.send(inspected, undefined, { split: true, code: 'js' }) : this.response.error('that response would be too big');
+  }
 };

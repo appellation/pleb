@@ -1,23 +1,23 @@
-const Validator = require('../../core/commands/Validator');
+const { Command, Validator } = require('discord-handles');
 
-exports.exec = async ({ response: res, message: msg }) => {
-  if (!msg.channel.permissionsFor(msg.client.user).hasPermission('MANAGE_CHANNELS'))
-    return res.error('I don\'t have perms to ~~brutally murder~~ mute you if you lose.');
-  if (msg.member.hasPermission('ADMINISTRATOR') || msg.member.id === msg.guild.ownerID)
-    return res.error('awwww, admin is cheating.');
-
-  if (Math.random() < 0.5) return res.send(`${msg.author} lives!`);
-  try {
-    await msg.channel.overwritePermissions(msg.author, { SEND_MESSAGES: false });
-    setTimeout(() => {
-      msg.channel.overwritePermissions(msg.author, { SEND_MESSAGES: null });
-    }, 30000);
-    return res.send(`${msg.author} lies dead in chat.`);
-  } catch (e) {
-    return res.error('WHO LOADED THE GUN WITH BLANKS⁉ (I couldn\'t mute for some reason)');
+module.exports = class extends Command {
+  async pre() {
+    await new Validator(this)
+      .ensureGuild()
+      .ensureClientPermissions('MANAGE_CHANNELS')
+      .apply(this.message.member.hasPermission('ADMINISTRATOR') || this.author.id === this.guild.ownerID, 'aww, admin is cheating.');
   }
-};
 
-exports.middleware = function* (cmd) {
-  yield new Validator(cmd).ensureGuild();
+  async exec() {
+    if (Math.random() < 0.5) return this.response.send(`${this.author} lives!`);
+    try {
+      await this.channel.overwritePermissions(this.author, { SEND_MESSAGES: false });
+      setTimeout(() => {
+        this.channel.overwritePermissions(this.author, { SEND_MESSAGES: null });
+      }, 30000);
+      return this.response.send(`${this.author} lies dead in chat.`);
+    } catch (e) {
+      return this.response.error('WHO LOADED THE GUN WITH BLANKS⁉ (I couldn\'t mute for some reason)');
+    }
+  }
 };

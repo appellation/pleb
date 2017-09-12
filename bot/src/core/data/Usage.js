@@ -7,7 +7,7 @@ module.exports = class Usage extends Table {
   }
 
   add(command) {
-    return this.insert({
+    return this.table.insert({
       name: command.trigger,
       userID: command.message.author.id,
       guildID: command.guild ? command.guild.id : null,

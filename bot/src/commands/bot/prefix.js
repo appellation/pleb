@@ -1,11 +1,13 @@
-const Validator = require('../../core/commands/Validator');
+const { Command, Validator } = require('discord-handles');
 
-exports.exec = async (cmd) => {
-  const settings = cmd.client.bot.db.settings[cmd.message.guild.id];
-  if (!settings) return cmd.response.error('your guild doesn\'t seem to exist... 👀');
-  return cmd.response.success(`Current prefix is: \`${await settings.get('prefix')}\``);
-};
+module.exports = class extends Command {
+  async pre() {
+    await new Validator(this).ensureGuild();
+  }
 
-exports.middleware = function* (cmd) {
-  yield new Validator(cmd).ensureGuild();
+  async exec() {
+    const settings = this.client.bot.db.settings[this.guild.id];
+    if (!settings) return this.response.error('your guild doesn\'t seem to exist... 👀');
+    return this.response.success(`Current prefix is: \`${await settings.get('prefix')}\``);
+  }
 };

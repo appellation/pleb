@@ -1,15 +1,14 @@
 const request = require('axios');
+const { Command } = require('discord-handles');
 
-exports.exec = async (command) => {
-  try {
+module.exports = class extends Command {
+  async exec() {
     const response = await request('https://icanhazdadjoke.com/', {
       headers: {
         Accept: 'application/json'
       }
     });
 
-    return command.response.send(response.data.joke);
-  } catch (error) {
-    return command.response.error('No dad-jokes right now 😭');
+    return this.response.send(response.data.joke);
   }
 };

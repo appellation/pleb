@@ -1,18 +1,21 @@
-const { Argument } = require('discord-handles');
-const Validator = require('../../core/commands/Validator');
+const { Argument, Command, Validator } = require('discord-handles');
 
-exports.triggers = ['next', 'skip'];
+module.exports = class extends Command {
+  static get triggers() {
+    return ['next', 'skip'];
+  }
 
-exports.exec = async (cmd) => {
-  const list = cmd.client.bot.cassette.playlists.get(cmd.message.guild.id);
-  let next = true;
-  for (let i = 0; i < (cmd.args.count || 1) && next; i++) next = await list.next();
-  return list.start(cmd.response);
-};
+  async pre() {
+    await new Validator(this).ensurePlaylist();
+    await new Argument(this, 'count')
+      .setOptional()
+      .setResolver(c => isNaN(c) ? null : parseInt(c));
+  }
 
-exports.middleware = function* (cmd) {
-  yield new Validator(cmd).ensurePlaylist(cmd.client.bot.cassette);
-  yield new Argument('count')
-    .setOptional()
-    .setResolver(c => isNaN(c) ? null : parseInt(c));
+  async exec() {
+    const list = this.guild.playlist;
+    let next = true;
+    for (let i = 0; i < (this.args.count || 1) && next; i++) next = await list.next();
+    return list.start(this.response);
+  }
 };

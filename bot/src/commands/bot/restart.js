@@ -1,17 +1,18 @@
 const resolvers = require('../../util/resolvers');
-const Validator = require('../../core/commands/Validator');
-const { Argument } = require('discord-handles');
+const { Argument, Command, Validator } = require('discord-handles');
 
-exports.exec = async (cmd) => {
-  await cmd.response.success(`restarting ${cmd.args.shard === null ? 'all shards' : `shard **${cmd.args.shard}**`}`);
-  if (cmd.args.shard === null) await cmd.client.bot.client.shard.broadcastEval('process.exit(0)');
-  else await cmd.client.bot.client.shard.broadcastEval(`if (this.shard.id === ${cmd.args.shard}) process.exit(0)`);
-};
+module.exports = class extends Command {
+  async pre() {
+    await new Validator(this).ensureIsOwner();
+    await new Argument(this, 'shard')
+      .setRePrompt('Please provide a valid shard number to restart.')
+      .setResolver(resolvers.integer)
+      .setOptional();
+  }
 
-exports.middleware = function* (cmd) {
-  yield new Validator(cmd).ensureIsOwner();
-  yield new Argument('shard')
-    .setRePrompt('Please provide a valid shard number to restart.')
-    .setResolver(resolvers.integer)
-    .setOptional();
+  async exec() {
+    await this.response.success(`restarting ${this.args.shard === null ? 'all shards' : `shard **${this.args.shard}**`}`);
+    if (this.args.shard === null) await this.client.shard.broadcastEval('process.exit(0)');
+    else await this.client.shard.broadcastEval(`if (this.shard.id === ${this.args.shard}) process.exit(0)`);
+  }
 };

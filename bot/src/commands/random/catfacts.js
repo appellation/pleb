@@ -1,6 +1,9 @@
 const request = require('axios');
+const { Command } = require('discord-handles');
 
-exports.exec = async (cmd) => {
-  const res = await request.get('https://catfact.ninja/fact');
-  return cmd.response.success(res.data.fact);
+module.exports = class extends Command {
+  async exec() {
+    const res = await request.get('https://catfact.ninja/fact');
+    return this.response.success(res.data.fact);
+  }
 };

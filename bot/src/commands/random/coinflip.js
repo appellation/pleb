@@ -1,3 +1,8 @@
 const { roll } = require('../../util/random');
+const { Command } = require('discord-handles');
 
-exports.exec = (cmd) => cmd.response.success(roll(1, 2) === 1 ? 'heads' : 'tails');
+module.exports = class extends Command {
+  exec() {
+    return this.response.success(roll(1, 2) === 1 ? 'heads' : 'tails');
+  }
+};

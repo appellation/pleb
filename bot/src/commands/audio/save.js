@@ -1,31 +1,34 @@
-const { Argument } = require('discord-handles');
-const Validator = require('../../core/commands/Validator');
+const { Argument, Command, Validator } = require('discord-handles');
 
-exports.exec = async (cmd) => {
-  const bot = cmd.client.bot;
-  await bot.db.r.table('playlists').insert({
-    id: [cmd.args.name, cmd.message.author.id, cmd.guild.id],
-    name: cmd.args.name,
-    userID: cmd.message.author.id,
-    guildID: cmd.guild.id,
-    songs: Array.from(bot.cassette.playlists.get(cmd.guild.id))
-  }, { conflict: 'update' });
-  return cmd.response.success(`successfully saved current playlist to your library as \`${cmd.args.name}\``);
-};
+module.exports = class extends Command {
+  async pre() {
+    await new Validator(this).ensurePlaylist(this.client.bot.cassette);
 
-exports.middleware = function* (cmd) {
-  yield new Validator(cmd).ensurePlaylist(cmd.client.bot.cassette);
+    const name = await new Argument(this, 'name')
+      .setPrompt('What would you like to name this playlist?')
+      .setRePrompt('You provided an invalid name.');
 
-  const name = yield new Argument('name')
-    .setPrompt('What would you like to name this playlist?')
-    .setRePrompt('You provided an invalid name.');
+    const existing = await this.client.bot.db.r.table('playlists').get([name, this.message.author.id, this.guild.id]).run();
 
-  const existing = yield () => cmd.client.bot.db.r.table('playlists').get([name, cmd.message.author.id, cmd.guild.id]);
+    if (existing) {
+      await new Argument(this, 'confirmation')
+        .setPrompt('That playlist already exists.  Would you like to overwrite it?')
+        .setRePrompt('Please say either `yes` or `no`.')
+        .setResolver(c => c === 'yes' ? true : c === 'no' ? false : null);
+    }
+  }
 
-  if (existing) {
-    yield new Argument('confirmation')
-      .setPrompt('That playlist already exists.  Would you like to overwrite it?')
-      .setRePrompt('Please say either `yes` or `no`.')
-      .setResolver(c => c === 'yes' ? true : c === 'no' ? false : null);
+  exec() {
+    return this.client.bot.db.r.table('playlists').insert({
+      id: [this.args.name, this.message.author.id, this.guild.id],
+      name: this.args.name,
+      userID: this.message.author.id,
+      guildID: this.guild.id,
+      songs: Array.from(this.guild.playlist)
+    }, { conflict: 'update' });
+  }
+
+  post() {
+    return this.response.success(`successfully saved current playlist to your library as \`${this.args.name}\``);
   }
 };

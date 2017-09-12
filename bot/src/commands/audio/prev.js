@@ -1,17 +1,18 @@
-const Validator = require('../../core/commands/Validator');
-const { Argument } = require('discord-handles');
+const { Argument, Command, Validator } = require('discord-handles');
 
-exports.exec = (cmd) => {
-  const list = cmd.client.bot.cassette.playlists.get(cmd.message.guild.id);
-  let prev = true;
-  for (let i = 0; i < (cmd.args.count || 1) && prev; i++) prev = list.prev();
-  return list.start(cmd.response);
-};
+module.exports = class extends Command {
+  async pre() {
+    await new Validator(this).ensurePlaylist();
+    await new Argument(this, 'count')
+      .setOptional()
+      .setRePrompt('Please provide a number of songs to skip.')
+      .setResolver(c => !c || isNaN(c) ? null : parseInt(c));
+  }
 
-exports.middleware = function* (cmd) {
-  yield new Validator(cmd).ensurePlaylist(cmd.client.bot.cassette);
-  yield new Argument('count')
-    .setOptional()
-    .setRePrompt('Please provide a number of songs to skip.')
-    .setResolver(c => !c || isNaN(c) ? null : parseInt(c));
+  exec() {
+    const list = this.guild.playlist;
+    let prev = true;
+    for (let i = 0; i < (this.args.count || 1) && prev; i++) prev = list.prev();
+    return list.start(this.response);
+  }
 };

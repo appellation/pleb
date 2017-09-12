@@ -1,6 +1,8 @@
 const moment = require('moment');
+const { Command } = require('discord-handles');
 
-exports.exec = (cmd) => {
-  const date = cmd.message.author.createdTimestamp;
-  return cmd.response.success(`you were born on ${moment(date).format('MMMM Do, YYYY [at] h:mm:ss a')}`, cmd.message.author);
+module.exports = class extends Command {
+  exec() {
+    return this.response.success(`${this.message.author} you were born on ${moment(this.message.author.createdTimestamp).format('MMMM Do, YYYY [at] h:mm:ss a')}`);
+  }
 };

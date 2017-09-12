@@ -1,5 +1,5 @@
 const { element } = require('../../util/random');
-const { Argument } = require('discord-handles');
+const { Argument, Command } = require('discord-handles');
 
 const responses = [
   'It is certain',
@@ -24,8 +24,16 @@ const responses = [
   'Very doubtful'
 ];
 
-exports.exec = (cmd) => cmd.response.send(`🎱 ${element(responses)}`);
-exports.middleware = function* () {
-  yield new Argument('question')
-    .setPrompt('What would you like to ask?');
+module.exports = class extends Command {
+  async pre() {
+    await new Argument(this, 'question')
+      .setPrompt('What would you like to ask?')
+      .setRePrompt('That\'s not a valid question.')
+      .setInfinite()
+      .setResolver(c => c || null);
+  }
+
+  exec() {
+    return this.response.send(`🎱 ${element(responses)}`);
+  }
 };

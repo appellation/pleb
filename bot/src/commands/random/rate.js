@@ -1,11 +1,15 @@
 const random = require('../../util/random');
-const { Argument } = require('discord-handles');
+const { Argument, Command } = require('discord-handles');
 
-exports.exec = cmd => {
-  const num = random.number(12);
-  return cmd.response.success(`👌 **${num}/${num === 9 ? 11 : 10}**`);
-};
+module.exports = class extends Command {
+  async pre() {
+    await new Argument(this, 'text')
+      .setPrompt('What would you like to rate?')
+      .setResolver(c => c || null);
+  }
 
-exports.middleware = function* () {
-  yield new Argument('text').setPrompt('What would you like to rate?');
+  exec() {
+    const num = random.number(12);
+    return this.response.success(`👌 **${num}/${num === 9 ? 11 : 10}**`);
+  }
 };

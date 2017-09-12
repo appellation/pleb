@@ -1,23 +1,24 @@
-const DiscordPlaylist = require('../../core/audio/Playlist');
-const Validator = require('../../core/commands/Validator');
-const { Argument } = require('discord-handles');
+const { Argument, Command, Validator } = require('discord-handles');
 
-exports.exec = async (cmd) => {
-  const list = DiscordPlaylist.get(cmd.client.bot.cassette, cmd.guild);
+module.exports = class extends Command {
+  async pre() {
+    await new Validator(this).ensureCanPlay();
+    await new Argument(this, 'list')
+      .setResolver(c => c || null)
+      .setPrompt('What playlist would you like to search for?')
+      .setInfinite();
+  }
 
-  list.stop();
-  list.reset();
+  async exec() {
+    const list = this.guild.playlist;
 
-  const added = await list.add(cmd.response, cmd.args.list, {
-    searchType: 'playlist',
-  });
+    list.stop();
+    list.reset();
 
-  if (added) return list.start(cmd.response);
-};
+    const added = await list.add(this.response, this.args.list, {
+      searchType: 'playlist',
+    });
 
-exports.middleware = function* (cmd) {
-  yield new Validator(cmd).ensureCanPlay();
-  yield new Argument('list')
-    .setPrompt('What playlist would you like to search for?')
-    .setPattern(/.*/);
+    if (added) return list.start(this.response);
+  }
 };
