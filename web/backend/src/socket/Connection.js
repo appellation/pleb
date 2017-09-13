@@ -49,6 +49,7 @@ class Connection extends EventEmitter {
       this.db.users.watch(this, { id: this.user.id }),
     );
 
+    this.data({ new: user }, 'users', 'initial');
     return this.send(constants.op.IDENTIFY, token);
   }
 

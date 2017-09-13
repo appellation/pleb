@@ -12,7 +12,7 @@ class GuildSettings extends Table {
   }
 
   set(key, value) {
-    return this.insert({
+    return this.table.insert({
       id: this.guild.id,
       data: {
         [key]: value

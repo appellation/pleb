@@ -14,7 +14,7 @@ module.exports = class extends (handles.Client) {
         if (message.member && message.member.roles.exists('name', 'no-pleb')) return;
 
         let prefix = null;
-        const settings = client.db.settings[message.guild.id];
+        const settings = message.guild.settings;
         if (settings) prefix = await settings.get('prefix');
 
         const prefixed = prefix && message.content.startsWith(prefix);
@@ -30,8 +30,8 @@ module.exports = class extends (handles.Client) {
     this.client = client;
 
     this.on('commandStarted', async command => {
-      this.bot.log.debug('command started: %s', command.resolvedContent);
-      await this.bot.db.usage.add(command);
+      this.client.log.debug('command started: %s', command.resolvedContent);
+      await this.client.db.usage.add(command);
     });
 
     this.on('commandError', async ({ command, error }) => {
@@ -73,7 +73,7 @@ module.exports = class extends (handles.Client) {
           extra,
         });
       } else {
-        console.error(error); // eslint-disable-line no-console
+        // console.error(error); // eslint-disable-line no-console
       }
 
       try {

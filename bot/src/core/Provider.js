@@ -23,7 +23,14 @@ class RethinkProvider {
     this.guilds = new Guilds(this);
     this.usage = new Usage(this);
     this.info = new Info(this);
-    Guild.prototype.settings = new Settings(this, Guild.prototype);
+
+    const self = this;
+    Object.defineProperty(Guild.prototype, 'settings', {
+      get() {
+        if (this._settings) return this._settings;
+        return this._settings = new Settings(self, this);
+      }
+    });
   }
 
   async initialize() {

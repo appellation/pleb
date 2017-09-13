@@ -19,7 +19,7 @@ class Table extends EventEmitter {
   }
 
   async watch(connection, filter = {}) {
-    const cursor = await this.table.filter(filter).changes({ includeTypes: true, includeInitial: true }).run();
+    const cursor = await this.table.filter(filter).changes({ includeTypes: true, squash: 0.2 }).run();
     cursor.each((err, data) => {
       if (err) throw err;
       connection.data({ new: data.new_val, old: data.old_val }, this.name, data.type);

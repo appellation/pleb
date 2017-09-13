@@ -16,6 +16,7 @@ module.exports = class extends Command {
 
     await new Argument(this, 'value')
       .setPrompt(`What would you like to set ${key} to?`)
+      .setResolver(c => c || null)
       .setInfinite();
   }
 
