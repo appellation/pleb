@@ -10,7 +10,8 @@ const Raven = require('raven');
 
 const Logger = require('./core/Logger');
 const Handler = require('./core/commands/Handler');
-const Provider = require('./core/Provider');
+const DB = require('./core/DB');
+const Cache = require('./core/Cache');
 
 module.exports = new class extends discord.Client {
   constructor() {
@@ -20,11 +21,10 @@ module.exports = new class extends discord.Client {
       disabledEvents: [Constants.Events.TYPING_START]
     });
 
-    Object.defineProperty(this, 'bot', { value: this });
-
     this.log = new Logger(this);
-    this.db = new Provider(this);
+    this.db = new DB(this);
     this.handler = new Handler(this);
+    this.cache = new Cache(this);
 
     this.log.verbose('instantiated client');
 
@@ -46,7 +46,10 @@ module.exports = new class extends discord.Client {
     this.on('guildCreate', this.onGuildCreate.bind(this));
     this.on('guildDelete', this.onGuildDelete.bind(this));
 
-    this.log.verbose('instantiated event listeners');
+    this.on('guildMemberAdd', this.onGuildMemberAdd.bind(this));
+    this.on('guildMemberRemove', this.onGuildMemberRemove.bind(this));
+
+    this.log.verbose('initialized event listeners');
     this.login(process.env.discord);
   }
 
@@ -60,7 +63,7 @@ module.exports = new class extends discord.Client {
     });
 
     this.log.verbose('initialized database');
-    await this.db.guilds.sync();
+    await this.cache.sync();
     await this.updateStats();
     this.log.verbose('synchronized stats');
   }
@@ -99,13 +102,21 @@ module.exports = new class extends discord.Client {
     });
 
     if (channel) channel.send('Sup.  Try `@Pleb help`.');
-    this.db.guilds.insert(guild);
+    this.cache.guilds.add(guild);
   }
 
   onGuildDelete(guild) {
     const playlist = this.guilds.playlist;
     if (playlist) playlist.destroy();
-    this.db.guilds.delete(guild);
+    this.cache.guilds.remove(guild);
+  }
+
+  onGuildMemberAdd(member) {
+    this.cache.members.add(member);
+  }
+
+  onGuildMemberRemove(member) {
+    this.cache.members.remove(member);
   }
 
   async updateStats() {

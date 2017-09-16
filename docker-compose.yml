@@ -2,17 +2,13 @@ version: '3'
 services:
   bot:
     build: ./bot
-    links:
-      - rethink
     depends_on:
-      - rethink
+      - postgres
     env_file: .env
   backend:
     build: ./web/backend
-    links:
-      - rethink
     depends_on:
-      - rethink
+      - postgres
     ports:
       - 3000:8080
     env_file: .env
@@ -21,8 +17,7 @@ services:
     ports:
       - 4000:8080
     env_file: .env
-  rethink:
-    image: rethinkdb:latest
-    ports:
-      - 5000:8080
-      - 5001:28015
+  postgres:
+    image: postgres:9-alpine
+  redis:
+    image: redis:alpine

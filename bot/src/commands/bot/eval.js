@@ -5,6 +5,7 @@ module.exports = class extends Command {
     await new Validator(this).ensureIsOwner();
     await new Argument(this, 'code')
       .setPrompt('What code would you like to eval?')
+      .setResolver(c => c || null)
       .setInfinite();
   }
 
