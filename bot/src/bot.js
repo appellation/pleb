@@ -11,7 +11,6 @@ const Raven = require('raven');
 const Logger = require('./core/Logger');
 const Handler = require('./core/commands/Handler');
 const DB = require('./core/DB');
-const Cache = require('./core/Cache');
 
 module.exports = new class extends discord.Client {
   constructor() {
@@ -24,7 +23,6 @@ module.exports = new class extends discord.Client {
     this.log = new Logger(this);
     this.db = new DB(this);
     this.handler = new Handler(this);
-    this.cache = new Cache(this);
 
     this.log.verbose('instantiated client');
 
@@ -63,7 +61,6 @@ module.exports = new class extends discord.Client {
     });
 
     this.log.verbose('initialized database');
-    await this.cache.sync();
     await this.updateStats();
     this.log.verbose('synchronized stats');
   }
@@ -102,7 +99,6 @@ module.exports = new class extends discord.Client {
     });
 
     if (channel) channel.send('Sup.  Try `@Pleb help`.');
-    this.cache.guilds.add(guild);
   }
 
   onGuildDelete(guild) {
@@ -112,11 +108,11 @@ module.exports = new class extends discord.Client {
   }
 
   onGuildMemberAdd(member) {
-    this.cache.members.add(member);
+    //
   }
 
   onGuildMemberRemove(member) {
-    this.cache.members.remove(member);
+    //
   }
 
   async updateStats() {
