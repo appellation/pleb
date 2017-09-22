@@ -47,6 +47,8 @@ module.exports = new class extends discord.Client {
     this.on('guildMemberAdd', this.onGuildMemberAdd.bind(this));
     this.on('guildMemberRemove', this.onGuildMemberRemove.bind(this));
 
+    this.on('message', this.onMessage.bind(this));
+
     this.log.verbose('initialized event listeners');
     this.login(process.env.discord);
   }
@@ -113,6 +115,12 @@ module.exports = new class extends discord.Client {
 
   onGuildMemberRemove(member) {
     //
+  }
+
+  onMessage(message) {
+    this.db.models.message.create({
+      id: message.id,
+    });
   }
 
   async updateStats() {
