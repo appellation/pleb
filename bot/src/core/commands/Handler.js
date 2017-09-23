@@ -25,6 +25,7 @@ module.exports = class extends (handles.Client) {
           return m.trim();
         }
       },
+      autoListen: false,
     });
 
     this.client = client;

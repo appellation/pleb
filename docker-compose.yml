@@ -5,19 +5,7 @@ services:
     depends_on:
       - postgres
     env_file: .env
-  backend:
-    build: ./web/backend
-    depends_on:
-      - postgres
-    ports:
-      - 3000:8080
-    env_file: .env
-  frontend:
-    build: ./web/frontend
-    ports:
-      - 4000:8080
-    env_file: .env
   postgres:
     image: postgres:9-alpine
-  redis:
-    image: redis:alpine
+    volumes:
+      - /var/lib/postgresql/data

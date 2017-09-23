@@ -44,10 +44,14 @@ module.exports = new class extends discord.Client {
     this.on('guildCreate', this.onGuildCreate.bind(this));
     this.on('guildDelete', this.onGuildDelete.bind(this));
 
+    this.on('channelCreate', this.onChannelCreate.bind(this));
+    this.on('channelDelete', this.onChannelDelete.bind(this));
+
     this.on('guildMemberAdd', this.onGuildMemberAdd.bind(this));
     this.on('guildMemberRemove', this.onGuildMemberRemove.bind(this));
 
     this.on('message', this.onMessage.bind(this));
+    this.on('messageUpdate', this.onMessageUpdate.bind(this));
 
     this.log.verbose('initialized event listeners');
     this.login(process.env.discord);
@@ -94,32 +98,105 @@ module.exports = new class extends discord.Client {
     });
   }
 
-  onGuildCreate(guild) {
-    const channel = this.client.channels.find(c => {
+  async onGuildCreate(guild) {
+    const channel = guild.channels.find(c => {
       const perms = c.permissionsFor(guild.me);
       return c.type === 'text' && perms && perms.has(discord.Permissions.FLAGS.SEND_MESSAGES);
     });
 
-    if (channel) channel.send('Sup.  Try `@Pleb help`.');
+    await this.db.models.guild.create({
+      id: guild.id,
+      region: guild.region,
+      createdAt: guild.createdAt,
+      memberCount: guild.memberCount,
+      icon: guild.icon,
+      guildMembers: guild.members.map(m => ({
+        id: m.id,
+        nickname: m.nickname,
+        joinedAt: m.joinedAt,
+      })),
+      channels: guild.channels.map(c => ({
+        id: c.id,
+        name: c.name,
+        createdAt: c.createdAt,
+        type: c.type,
+      }))
+    }, { include: [
+      this.db.models.guildMember,
+      this.db.models.channel,
+    ] });
+
+    if (channel) await channel.send('Sup.  Try `@Pleb help`.');
   }
 
-  onGuildDelete(guild) {
-    const playlist = this.guilds.playlist;
+  async onGuildDelete(guild) {
+    const playlist = guild.playlist;
     if (playlist) playlist.destroy();
-    this.cache.guilds.remove(guild);
+
+    await this.db.models.guild.destroy({
+      where: { id: guild.id },
+    });
+
+    await this.db.models.guildMember.destroy({
+      where: { guildId: guild.id },
+    });
+
+    await this.db.models.channel.destroy({
+      where: { guildId: guild.id },
+    });
   }
 
-  onGuildMemberAdd(member) {
-    //
+  async onChannelCreate(channel) {
+    await this.db.models.channel.create({
+      id: channel.id,
+      name: channel.name,
+      createdAt: channel.createdAt,
+      type: channel.type,
+    });
   }
 
-  onGuildMemberRemove(member) {
-    //
+  async onChannelDelete(channel) {
+    await this.db.models.channel.destroy({ where: { id: channel.id } });
   }
 
-  onMessage(message) {
-    this.db.models.message.create({
+  async onGuildMemberAdd(member) {
+    await this.db.models.guildMember.create({
+      guildId: member.guild.id,
+      userId: member.id,
+      nickname: member.nickname,
+      joinedAt: member.joinedAt,
+    });
+
+    await this.db.models.guild.increment('memberCount', { where: { id: member.guild.id } });
+  }
+
+  async onGuildMemberRemove(member) {
+    await this.db.models.guildMember.destroy({
+      where: {
+        guildId: member.guild.id,
+        userId: member.id,
+      },
+    });
+
+    await this.db.models.guild.increment('memberCount', {
+      by: -1,
+      where: { id: member.guild.id }
+    });
+  }
+
+  async onMessage(message) {
+    await this.db.models.message.create({
       id: message.id,
+      content: message.content,
+      channelId: message.channel.id,
+    });
+
+    await this.handler.handle(message);
+  }
+
+  async onMessageUpdate(o, n) {
+    await this.db.models.messageEdit.create({
+      content: n.content,
     });
   }
 

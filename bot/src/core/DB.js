@@ -39,7 +39,6 @@ class DB extends Sequelize {
       id: DB.snowflakeType,
       region: Sequelize.STRING,
       createdAt: Sequelize.DATE,
-      joinedAt: Sequelize.DATE,
       memberCount: Sequelize.INTEGER,
       icon: Sequelize.STRING,
     }, {
@@ -84,6 +83,10 @@ class DB extends Sequelize {
       content: Sequelize.STRING(2000)
     }, { timestamps: true });
 
+    this.define('messageEdit', {
+      content: Sequelize.STRING(2000),
+    }, { timestamps: true });
+
     this.define('usage', {
       command: Sequelize.STRING,
     }, {
@@ -96,6 +99,8 @@ class DB extends Sequelize {
 
     // usage -> message
     this.models.usage.belongsTo(this.models.message);
+    // messageEdit -> message
+    this.models.messageEdit.belongsTo(this.models.message);
 
     // guild -> settings
     this.models.guild.hasMany(this.models.setting);
