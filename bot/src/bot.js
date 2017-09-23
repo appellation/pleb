@@ -99,11 +99,6 @@ module.exports = new class extends discord.Client {
   }
 
   async onGuildCreate(guild) {
-    const channel = guild.channels.find(c => {
-      const perms = c.permissionsFor(guild.me);
-      return c.type === 'text' && perms && perms.has(discord.Permissions.FLAGS.SEND_MESSAGES);
-    });
-
     await this.db.models.guild.create({
       id: guild.id,
       region: guild.region,
@@ -125,6 +120,11 @@ module.exports = new class extends discord.Client {
       this.db.models.guildMember,
       this.db.models.channel,
     ] });
+
+    const channel = guild.channels.find(c => {
+      const perms = c.permissionsFor(guild.me);
+      return c.type === 'text' && perms && perms.has(discord.Permissions.FLAGS.SEND_MESSAGES);
+    });
 
     if (channel) await channel.send('Sup.  Try `@Pleb help`.');
   }
