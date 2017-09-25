@@ -1,5 +1,7 @@
 /.idea
 node_modules
+dist
+typings
 .env
 npm-debug.log
 gauth.json
