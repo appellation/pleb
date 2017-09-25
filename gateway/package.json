@@ -4,12 +4,15 @@
   "description": "A simple gateway proxy to Redis.",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node --trace-warnings dist/index.js",
+    "dev": "gulp && env-cmd ../.env npm start"
   },
   "author": "Will Nelson <nelson.will@live.com>",
   "license": "UNLICENSED",
   "dependencies": {
     "axios": "^0.16.2",
+    "gulp-sourcemaps": "^2.6.1",
     "redis": "^2.8.0",
     "ws": "^3.2.0"
   },

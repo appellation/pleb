@@ -3,7 +3,7 @@
     "strict": true,
     "module": "commonjs",
     "moduleResolution": "node",
-    "target": "es2015",
+    "target": "es2017",
     "lib": [
       "es2017"
     ],

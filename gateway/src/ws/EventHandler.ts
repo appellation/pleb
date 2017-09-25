@@ -14,20 +14,29 @@ try {
 export default class WSEventHandler {
   public readonly connection: Connection;
   private _seq: number = -1;
+  private _session: string;
   private _heartbeatTimeout: NodeJS.Timer;
 
   constructor(connection: Connection) {
     this.connection = connection;
-    this.receive.bind(this);
+    this.receive = this.receive.bind(this);
   }
 
   public get seq() {
     return this._seq;
   }
 
+  public get session() {
+    return this._session;
+  }
+
   public receive(data: WebSocket.Data) {
     const decoded = this.decode(data);
-    if ('s' in decoded) this._seq = decoded.s;
+    if (decoded.s) this._seq = decoded.s;
+
+    console.log(`RECEIVED: ---------`);
+    console.log(decoded);
+    console.log();
 
     switch (decoded.op) {
       case op.DISPATCH:
@@ -44,8 +53,11 @@ export default class WSEventHandler {
         break;
       case op.HELLO:
         if (this._heartbeatTimeout) clearTimeout(this._heartbeatTimeout);
-        this._heartbeatTimeout = setTimeout(this.connection.heartbeat, decoded.d.heartbeat_interval);
-        this.connection.identify();
+        this._heartbeatTimeout = setTimeout(this.connection.heartbeat.bind(this.connection), decoded.d.heartbeat_interval);
+
+        if (this._session) this.connection.resume();
+        else this.connection.identify();
+
         break;
       case op.HEARTBEAT_ACK:
         // heartbeat ack
@@ -54,6 +66,10 @@ export default class WSEventHandler {
   }
 
   public send(op: number, d: Object) {
+    console.log(`SENDING: ----------`);
+    console.log(op, d);
+    console.log();
+
     return this.connection.ws.send(this.encode({ op, d }));
   }
 

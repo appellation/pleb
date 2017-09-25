@@ -18,6 +18,10 @@ export default class WSManager {
 
   spawn() {
     if (!this.gateway) throw new Error(codes.NO_GATEWAY);
-    for (let i = 0; i < this.gateway.shards; i++) this.connections.push(new Connection(this, i));
+    for (let i = 0; i < this.gateway.shards; i++) {
+      const conn = new Connection(this, i);
+      this.connections.push(conn);
+      conn.connect();
+    }
   }
 };

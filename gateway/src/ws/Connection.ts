@@ -13,7 +13,7 @@ export default class WSConnection {
   public readonly shard: number;
   public readonly events: Handler;
 
-  public encoding: 'json' | 'etf' = 'json';
+  public encoding: 'json' | 'etf' = 'etf';
   public version: number = 6;
 
   private _ws: WebSocket;
@@ -32,7 +32,7 @@ export default class WSConnection {
   public connect() {
     if (!this.manager.gateway) throw new Error(codes.NO_GATEWAY);
 
-    this._ws = new WebSocket(this.manager.gateway.url);
+    this._ws = new WebSocket(`${this.manager.gateway.url}?v=${this.version}&encoding=${this.encoding}`);
     this._ws.on('message', this.events.receive);
   }
 
@@ -59,6 +59,16 @@ export default class WSConnection {
       large_threshold: 250,
       shard: [this.shard, this.manager.gateway.shards],
       presence: {},
+    });
+  }
+
+  public resume() {
+    if (!this.events.session) throw new Error(codes.NO_SESSION);
+
+    return this.events.send(op.RESUME, {
+      token: process.env.discord,
+      seq: this.events.seq,
+      session: this.events.session,
     });
   }
 };
