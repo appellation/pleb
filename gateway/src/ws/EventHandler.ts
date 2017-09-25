@@ -52,7 +52,9 @@ export default class WSEventHandler {
         this.connection.reconnect();
         break;
       case op.INVALID_SESSION:
-        // invalid session id
+        if (decoded.d) this.connection.resume();
+        else this.connection.identify();
+
         break;
       case op.HELLO:
         if (this._heartbeater) clearInterval(this._heartbeater);
