@@ -1,5 +1,5 @@
 import request from '../util/request';
-import Connection from './Connection';
+import Connection from '../ws/Connection';
 
 import { Error, codes } from '../util/errors';
 

@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@types/node": "^8.0.30",
+    "@types/redis": "^2.6.0",
     "@types/ws": "^3.0.2",
     "del": "^3.0.0",
     "gulp": "^3.9.1",

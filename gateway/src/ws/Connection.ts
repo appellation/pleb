@@ -2,14 +2,14 @@ import WebSocket = require('ws');
 import os = require('os');
 import { Buffer } from 'buffer';
 
-import Manager from './Manager';
+import Client from '../core/Client';
 import Handler from './EventHandler';
 
 import { Error, codes } from '../util/errors';
 import { op } from '../util/constants';
 
 export default class WSConnection {
-  public readonly manager: Manager;
+  public readonly client: Client;
   public readonly shard: number;
   public readonly events: Handler;
 
@@ -18,8 +18,8 @@ export default class WSConnection {
 
   private _ws: WebSocket;
 
-  constructor(manager: Manager, shard: number = 0) {
-    this.manager = manager;
+  constructor(manager: Client, shard: number = 0) {
+    this.client = manager;
     this.shard = shard;
 
     this.events = new Handler(this);
@@ -30,9 +30,9 @@ export default class WSConnection {
   }
 
   public connect() {
-    if (!this.manager.gateway) throw new Error(codes.NO_GATEWAY);
+    if (!this.client.gateway) throw new Error(codes.NO_GATEWAY);
 
-    this._ws = new WebSocket(`${this.manager.gateway.url}?v=${this.version}&encoding=${this.encoding}`);
+    this._ws = new WebSocket(`${this.client.gateway.url}?v=${this.version}&encoding=${this.encoding}`);
     this._ws.on('message', this.events.receive);
     this._ws.on('close', this.events.close);
     this._ws.on('error', console.error);
@@ -50,7 +50,7 @@ export default class WSConnection {
   }
 
   public identify() {
-    if (!this.manager.gateway) throw new Error(codes.NO_GATEWAY);
+    if (!this.client.gateway) throw new Error(codes.NO_GATEWAY);
 
     return this.events.send(op.IDENTFY, {
       token: process.env.discord,
@@ -61,7 +61,7 @@ export default class WSConnection {
       },
       compress: false,
       large_threshold: 250,
-      shard: [this.shard, this.manager.gateway.shards],
+      shard: [this.shard, this.client.gateway.shards],
       presence: {},
     });
   }
