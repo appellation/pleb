@@ -39,10 +39,10 @@ export default class WSConnection {
   }
 
   public disconnect() {
-    this._ws.close();
+    if (this._ws.readyState !== WebSocket.CLOSED && this._ws.readyState !== WebSocket.CLOSING) this._ws.close();
     this._ws.removeListener('message', this.events.receive);
-    this._ws.removeAllListeners('error');
-    this._ws.removeAllListeners('close');
+    this._ws.removeListener('close', this.events.close);
+    this._ws.removeListener('error', console.error);
   }
 
   public heartbeat() {

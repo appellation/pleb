@@ -13,6 +13,7 @@ try {
 
 export default class WSEventHandler {
   public readonly connection: Connection;
+
   private _seq: number = -1;
   private _session: string | null = null;
   private _heartbeater: NodeJS.Timer;
@@ -53,7 +54,7 @@ export default class WSEventHandler {
         break;
       case op.INVALID_SESSION:
         if (decoded.d) this.connection.resume();
-        else this.connection.identify();
+        else this.connection.reconnect();
 
         break;
       case op.HELLO:
@@ -65,7 +66,7 @@ export default class WSEventHandler {
 
         break;
       case op.HEARTBEAT_ACK:
-        // heartbeat ack
+        // reconnect if not received before next heartbeat attempt
         break;
     }
   }
@@ -84,7 +85,7 @@ export default class WSEventHandler {
       case 4009: // session timed out (clear session and reconnect)
         this._session = null;
       case 4000: // unknown error (reconnect)
-        this.connection.connect();
+        this.connection.reconnect();
         break;
       default:
         throw new global.Error(`WebSocket closed ${code}: ${reason}`);
