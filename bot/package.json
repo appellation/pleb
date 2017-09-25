@@ -14,7 +14,7 @@
     "axios": "^0.16.2",
     "canvas": "^2.0.0-alpha.5",
     "date.js": "^0.3.1",
-    "discord-handles": "^7.3.0",
+    "discord-handles": "^7.3.1",
     "discord.js": "^11.2.0",
     "discord.js-music": "github:appellation/discord.js-music",
     "erlpack": "github:hammerandchisel/erlpack#master",

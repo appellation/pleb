@@ -99,17 +99,12 @@ module.exports = new class extends discord.Client {
   }
 
   async onGuildCreate(guild) {
-    await this.db.models.guild.create({
+    await this.db.models.guild.upsert({
       id: guild.id,
       region: guild.region,
       createdAt: guild.createdAt,
       memberCount: guild.memberCount,
       icon: guild.icon,
-      guildMembers: guild.members.map(m => ({
-        id: m.id,
-        nickname: m.nickname,
-        joinedAt: m.joinedAt,
-      })),
       channels: guild.channels.map(c => ({
         id: c.id,
         name: c.name,
@@ -117,9 +112,15 @@ module.exports = new class extends discord.Client {
         type: c.type,
       }))
     }, { include: [
-      this.db.models.guildMember,
       this.db.models.channel,
     ] });
+
+    await this.db.models.guildMember.bulkCreate(guild.members.map(m => ({
+      guildId: guild.id,
+      userId: m.id,
+      nickname: m.nickname,
+      joinedAt: m.joinedAt,
+    })));
 
     const channel = guild.channels.find(c => {
       const perms = c.permissionsFor(guild.me);
