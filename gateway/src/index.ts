@@ -1,7 +1,7 @@
-import Manager from './ws/Manager';
+import Client from './core/Client';
 
-const manager = new Manager();
+const client = new Client();
 (async () => {
-  await manager.fetchGateway();
-  manager.spawn();
+  await client.fetchGateway();
+  client.spawn();
 })();

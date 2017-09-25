@@ -5,7 +5,7 @@ import { Error, codes } from '../util/errors';
 
 export type Gateway = { url: string, shards: number } | null;
 
-export default class WSManager {
+export default class Client {
   public readonly connections: Connection[];
   public gateway: Gateway;
 
