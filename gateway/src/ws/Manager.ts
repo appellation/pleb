@@ -3,16 +3,18 @@ import Connection from './Connection';
 
 import { Error, codes } from '../util/errors';
 
+export type Gateway = { url: string, shards: number } | null;
+
 export default class WSManager {
   public readonly connections: Connection[];
-  public gateway: { url: string, shards: number } | null;
+  public gateway: Gateway;
 
   constructor() {
     this.connections = [];
     this.gateway = null;
   }
 
-  async fetchGateway() {
+  async fetchGateway(): Promise<Gateway> {
     return this.gateway = (await request.get('/gateway/bot')).data;
   }
 

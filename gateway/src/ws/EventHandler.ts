@@ -14,12 +14,14 @@ try {
 export default class WSEventHandler {
   public readonly connection: Connection;
   private _seq: number = -1;
-  private _session: string;
-  private _heartbeatTimeout: NodeJS.Timer;
+  private _session: string | null = null;
+  private _heartbeater: NodeJS.Timer;
 
   constructor(connection: Connection) {
     this.connection = connection;
+
     this.receive = this.receive.bind(this);
+    this.close = this.close.bind(this);
   }
 
   public get seq() {
@@ -41,19 +43,20 @@ export default class WSEventHandler {
     switch (decoded.op) {
       case op.DISPATCH:
         // normal gateway events
+        if (decoded.op.t === 'READY') this._session = decoded.op.d.session_id;
         break;
       case op.HEARTBEAT:
         this.connection.heartbeat();
         break;
       case op.RECONNECT:
-        // client should reconnect to the gateway
+        this.connection.reconnect();
         break;
       case op.INVALID_SESSION:
         // invalid session id
         break;
       case op.HELLO:
-        if (this._heartbeatTimeout) clearTimeout(this._heartbeatTimeout);
-        this._heartbeatTimeout = setTimeout(this.connection.heartbeat.bind(this.connection), decoded.d.heartbeat_interval);
+        if (this._heartbeater) clearInterval(this._heartbeater);
+        this._heartbeater = setInterval(() => this.connection.heartbeat(), decoded.d.heartbeat_interval);
 
         if (this._session) this.connection.resume();
         else this.connection.identify();
@@ -71,6 +74,19 @@ export default class WSEventHandler {
     console.log();
 
     return this.connection.ws.send(this.encode({ op, d }));
+  }
+
+  public close(code: number, reason: string) {
+    switch (code) {
+      case 4007: // invalid sequence (clear session and reconnect)
+      case 4009: // session timed out (clear session and reconnect)
+        this._session = null;
+      case 4000: // unknown error (reconnect)
+        this.connection.connect();
+        break;
+      default:
+        throw new global.Error(`WebSocket closed ${code}: ${reason}`);
+    }
   }
 
   public decode(data: WebSocket.Data) {

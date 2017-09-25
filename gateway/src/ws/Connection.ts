@@ -34,11 +34,15 @@ export default class WSConnection {
 
     this._ws = new WebSocket(`${this.manager.gateway.url}?v=${this.version}&encoding=${this.encoding}`);
     this._ws.on('message', this.events.receive);
+    this._ws.on('close', this.events.close);
+    this._ws.on('error', console.error);
   }
 
   public disconnect() {
     this._ws.close();
     this._ws.removeListener('message', this.events.receive);
+    this._ws.removeAllListeners('error');
+    this._ws.removeAllListeners('close');
   }
 
   public heartbeat() {
@@ -60,6 +64,11 @@ export default class WSConnection {
       shard: [this.shard, this.manager.gateway.shards],
       presence: {},
     });
+  }
+
+  public reconnect() {
+    this.disconnect();
+    this.connect();
   }
 
   public resume() {
