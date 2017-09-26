@@ -38,7 +38,7 @@ class DB extends Sequelize {
     }, { timestamps: true });
 
     this.define('usage', {
-      id: DB.snowflakeType,
+      id: Sequelize.snowflakeType,
       channelID: Sequelize.STRING(19),
       userID: Sequelize.STRING(19),
       command: Sequelize.STRING,
