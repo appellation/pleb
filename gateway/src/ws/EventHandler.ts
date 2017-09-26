@@ -35,7 +35,6 @@ export default class WSEventHandler {
 
   public receive(data: WebSocket.Data) {
     const decoded = this.decode(data);
-    if (decoded.s) this._seq = decoded.s;
 
     console.log(`RECEIVED: ---------`);
     console.log(decoded);
@@ -43,8 +42,9 @@ export default class WSEventHandler {
 
     switch (decoded.op) {
       case op.DISPATCH:
-        // normal gateway events
+        this._seq = decoded.s;
         if (decoded.op.t === 'READY') this._session = decoded.op.d.session_id;
+        this.connection.client.emit(decoded.t, decoded.d);
         break;
       case op.HEARTBEAT:
         this.connection.heartbeat();
@@ -55,7 +55,6 @@ export default class WSEventHandler {
       case op.INVALID_SESSION:
         if (decoded.d) this.connection.resume();
         else this.connection.reconnect();
-
         break;
       case op.HELLO:
         if (this._heartbeater) clearInterval(this._heartbeater);
@@ -116,6 +115,8 @@ export default class WSEventHandler {
       case 'etf':
         if (typeof erlpack === 'undefined') throw new Error(codes.ERLPACK_NOT_INSTALLED);
         return erlpack.pack(data);
+      default:
+        throw new Error(codes.INVALID_ENCODING);
     }
   }
 }
