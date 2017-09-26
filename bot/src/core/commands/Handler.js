@@ -25,14 +25,18 @@ module.exports = class extends (handles.Client) {
           return m.trim();
         }
       },
-      autoListen: false,
     });
 
     this.client = client;
 
     this.on('commandStarted', async command => {
       this.client.log.debug('command started: %s', command.resolvedContent);
-      await this.client.db.models.usage.create({ command: command.trigger, messageId: command.message.id });
+      await this.client.db.models.usage.create({
+        command: command.trigger,
+        id: command.message.id,
+        channelID: command.channel.id,
+        userID: command.author.id,
+      });
     });
 
     this.on('commandError', async ({ command, error }) => {
