@@ -1,15 +1,11 @@
 version: '3'
 services:
   bot:
-    build: .
-    links:
-      - redis
-      - postgres
+    build: ./bot
     depends_on:
-      - redis
       - postgres
     env_file: .env
-  redis:
-    image: redis:alpine
   postgres:
-    image: postgres:alpine
+    image: postgres:9-alpine
+    volumes:
+      - /var/lib/postgresql/data
