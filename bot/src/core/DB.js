@@ -61,7 +61,7 @@ class DB extends Sequelize {
 
   async initialize() {
     await this.authenticate();
-    await this.sync({ force: true });
+    await this.sync();
   }
 }
 
