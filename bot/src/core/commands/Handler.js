@@ -29,8 +29,6 @@ module.exports = class extends (handles.Client) {
 
     this.client = client;
 
-    this.on('commandsLoaded', console.log);
-
     this.on('commandStarted', async command => {
       this.client.log.debug('command started: %s', command.resolvedContent);
       await this.client.db.models.usage.create({
