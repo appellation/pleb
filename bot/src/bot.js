@@ -1,6 +1,5 @@
 require('./util/extensions');
-require('./util/extensions/Playlist');
-require('./util/extensions/Validator');
+require('./core/extensions');
 require('moment-duration-format');
 
 const axios = require('axios');

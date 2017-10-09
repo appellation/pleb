@@ -1,7 +1,4 @@
 const Sequelize = require('sequelize');
-const { Guild } = require('discord.js');
-
-const Settings = require('./data/Settings');
 
 class DB extends Sequelize {
   static get snowflakeType() {
@@ -47,14 +44,6 @@ class DB extends Sequelize {
       name: {
         singular: 'usage',
         plural: 'usage',
-      }
-    });
-
-    const self = this;
-    Object.defineProperty(Guild.prototype, 'settings', {
-      get() {
-        if (!this._settings) this._settings = new Settings(self, this);
-        return this._settings;
       }
     });
   }

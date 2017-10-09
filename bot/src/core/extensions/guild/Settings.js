@@ -1,4 +1,6 @@
-module.exports = class Settings {
+const { Guild } = require('discord.js');
+
+class Settings {
   constructor(db, guild) {
     this.db = db;
     this.guild = guild;
@@ -23,4 +25,11 @@ module.exports = class Settings {
       value,
     });
   }
-};
+}
+
+Object.defineProperty(Guild.prototype, 'settings', {
+  get() {
+    if (!this._settings) this._settings = new Settings(this.client.db, this);
+    return this._settings;
+  },
+});
