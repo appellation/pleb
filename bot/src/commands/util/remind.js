@@ -8,9 +8,9 @@ module.exports = class extends Command {
     const user = await new Argument(this, 'user')
       .setPrompt('Who would you like to remind?')
       .setRePrompt('Please remind a valid user (`me` or a mention).')
-      .setResolver(c => {
+      .setResolver((c, m) => {
         if (c === 'me') return this.message.author;
-        return resolvers.user(c);
+        return resolvers.user(c, m);
       });
 
     await new Argument(this, 'reminder')
