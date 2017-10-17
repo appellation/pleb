@@ -81,6 +81,7 @@ class Validate {
    * @return {boolean}
    */
   ensureJoinable() {
+    this.ensureMemberVoice();
     return this.apply(() => this.message.member.voiceChannel.joinable, ERRORS.ensureJoinable);
   }
 
