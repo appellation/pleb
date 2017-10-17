@@ -32,7 +32,7 @@ module.exports = class extends (handles.Client) {
     this.on('commandStarted', async command => {
       this.client.log.debug('command started: %s', command.resolvedContent);
       await this.client.db.models.usage.create({
-        command: command.trigger,
+        command: command.trigger.toString(),
         id: command.message.id,
         channelID: command.channel.id,
         userID: command.author.id,
