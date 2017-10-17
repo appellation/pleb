@@ -98,6 +98,7 @@ class Validate {
   }
 
   ensureCanPlay() {
+    this.ensureJoinable();
     return this.ensureSpeakable();
   }
 
