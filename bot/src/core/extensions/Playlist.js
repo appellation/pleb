@@ -41,7 +41,7 @@ Playlist.prototype.start = async function(response) {
         default: return response.error(`the playlist dun fuked up: \`${e}\``);
       }
     }
-    return response.error(e.message || e);
+    throw e;
   }
   return response.success(`now playing \`${this.current.title}\``);
 };
