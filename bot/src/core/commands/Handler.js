@@ -11,7 +11,7 @@ module.exports = class extends (handles.Client) {
       directory: path.join('.', 'src', 'commands'),
       validator: async message => {
         if (message.channel.type === 'dm') return message.content.replace(baseRegex, '');
-        if (message.member && message.member.roles.exists('name', 'no-pleb')) return;
+        if (message.member && message.member.roles.exists('name', 'no-pleb')) return null;
 
         let prefix = null;
         const settings = message.guild.settings;
@@ -24,18 +24,43 @@ module.exports = class extends (handles.Client) {
           else m = message.content.replace(baseRegex, '');
           return m.trim();
         }
+
+        return null;
       },
     });
 
     this.client = client;
 
-    this.on('commandStarted', async command => {
-      this.client.log.debug('command started: %s', command.resolvedContent);
+    this.handler.pre.push(async function() {
+      Raven.captureBreadcrumb({
+        message: `starting command: "${this.message.cleanContent}"`,
+        category: 'command',
+        data: {
+          author: this.author.id,
+          channel: this.channel.id,
+          guild: this.guild.id,
+        }
+      });
+
+      this.client.log.debug('command started: %s', this.message.resolvedContent);
+
       await this.client.db.models.usage.create({
-        command: command.trigger.toString(),
-        id: command.message.id,
-        channelID: command.channel.id,
-        userID: command.author.id,
+        command: this.trigger.toString(),
+        id: this.message.id,
+        channelID: this.channel.id,
+        userID: this.author.id,
+      });
+    });
+
+    this.handler.post.push(function() {
+      Raven.captureBreadcrumb({
+        message: `finished command: ${this.message.cleanContent}`,
+        category: 'command',
+        data: {
+          author: this.author.id,
+          channel: this.channel.id,
+          guild: this.guild.id,
+        }
       });
     });
 
@@ -77,8 +102,6 @@ module.exports = class extends (handles.Client) {
           },
           extra,
         });
-      } else {
-        // console.error(error); // eslint-disable-line no-console
       }
 
       try {

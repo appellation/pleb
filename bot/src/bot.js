@@ -27,7 +27,8 @@ module.exports = new class extends discord.Client {
 
     if (process.env.raven) {
       Raven.config(process.env.raven, {
-        captureUnhandledRejections: true
+        captureUnhandledRejections: true,
+        autoBreadcrumbs: true,
       }).install();
       this.log.verbose('loaded raven');
     } else {
