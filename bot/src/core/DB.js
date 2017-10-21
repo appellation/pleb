@@ -46,6 +46,25 @@ class DB extends Sequelize {
         plural: 'usage',
       }
     });
+
+    this.define('playlist', {
+      userID: {
+        type: Sequelize.STRING(19),
+        unique: 'nameUser',
+      },
+      name: {
+        type: Sequelize.STRING,
+        unique: 'nameUser',
+      },
+    }, { timestamps: true });
+
+    this.define('song', {
+      name: Sequelize.STRING,
+      type: Sequelize.ENUM('youtube', 'soundcloud'),
+      url: Sequelize.STRING,
+    });
+
+    this.models.playlist.hasMany(this.models.song);
   }
 
   async initialize() {
