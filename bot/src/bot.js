@@ -56,9 +56,7 @@ module.exports = new class extends discord.Client {
       color: 0x00ff93
     });
 
-    this.log.verbose('initialized database');
     await this.updateStats();
-    this.log.verbose('synchronized stats');
   }
 
   onReconnecting() {
@@ -69,8 +67,6 @@ module.exports = new class extends discord.Client {
   }
 
   onResume(replayed) {
-    for (const guild of this.guilds.values()) guild.playlist.stop('continue');
-
     this.log.hook({
       title: 'Resumed',
       description: `Replayed **${replayed}** events.`,
@@ -79,8 +75,6 @@ module.exports = new class extends discord.Client {
   }
 
   onDisconnect(close) {
-    for (const guild of this.guilds.values()) guild.playlist.stop();
-
     this.log.hook({
       title: 'Disconnected',
       description: `Code: ${close.code}`,
@@ -112,5 +106,6 @@ module.exports = new class extends discord.Client {
         headers: { Authorization: process.env.discord_pw }
       });
     }
+    this.log.verbose('synchronized stats');
   }
 };

@@ -11,6 +11,10 @@ class DB extends Sequelize {
     };
   }
 
+  /**
+   * A database instance.
+   * @param {Client} client
+   */
   constructor(client) {
     super({
       dialect: 'postgres',
@@ -68,8 +72,15 @@ class DB extends Sequelize {
   }
 
   async initialize() {
-    await this.authenticate();
+    try {
+      await this.authenticate();
+    } catch (e) {
+      setTimeout(() => this.initialize(), 10000);
+      this.client.log.warn('database initialization failed: retrying in 10 seconds');
+      return;
+    }
     await this.sync();
+    this.client.log.info('database initialized');
   }
 }
 
