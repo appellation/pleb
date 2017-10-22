@@ -40,6 +40,7 @@ class DB extends Sequelize {
 
     this.define('usage', {
       id: DB.snowflakeType,
+      guildID: Sequelize.STRING(19),
       channelID: Sequelize.STRING(19),
       userID: Sequelize.STRING(19),
       command: Sequelize.STRING,
@@ -79,7 +80,7 @@ class DB extends Sequelize {
       this.client.log.warn('database initialization failed: retrying in 10 seconds');
       return;
     }
-    await this.sync();
+    await this.sync({ alter: true });
     this.client.log.info('database initialized');
   }
 }
