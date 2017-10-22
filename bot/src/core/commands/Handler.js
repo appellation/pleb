@@ -32,17 +32,25 @@ module.exports = class extends (handles.Client) {
     this.client = client;
 
     this.handler.pre.push(async function() {
-      Raven.captureBreadcrumb({
-        message: `starting command: "${this.message.cleanContent}"`,
-        category: 'command',
-        data: {
-          author: this.author.id,
-          channel: this.channel.id,
-          guild: this.guild.id,
-        }
+      Raven.setContext({
+        user: {
+          username: this.author.tag,
+          id: this.author.id,
+        },
+        extra: {
+          command: this.trigger.toString(),
+          message: {
+            content: this.message.content,
+            createdAt: this.message.createdAt,
+          },
+          guild: {
+            id: this.guild.id,
+            name: this.guild.name,
+          },
+        },
       });
 
-      this.client.log.debug('command started: %s', this.message.resolvedContent);
+      this.client.log.verbose('command started: %s', this.trigger);
 
       await this.client.db.models.usage.create({
         command: this.trigger.toString(),
@@ -52,57 +60,8 @@ module.exports = class extends (handles.Client) {
       });
     });
 
-    this.handler.post.push(function() {
-      Raven.captureBreadcrumb({
-        message: `finished command: ${this.message.cleanContent}`,
-        category: 'command',
-        data: {
-          author: this.author.id,
-          channel: this.channel.id,
-          guild: this.guild.id,
-        }
-      });
-    });
-
     this.on('commandError', async ({ command, error }) => {
-      if (process.env.raven) {
-        const extra = {
-          message: {
-            content: command.message.content,
-            id: command.message.id,
-            type: command.message.type,
-          },
-          channel: {
-            id: command.message.channel.id,
-            type: command.message.channel.type,
-          },
-          guild: {},
-          client: {
-            shard: command.client.shard ? command.client.shard.id : null,
-            ping: command.client.ping,
-            status: command.client.status,
-          },
-        };
-
-        if (command.message.channel.type === 'text') {
-          extra.guild = {
-            id: command.guild.id,
-            name: command.guild.name,
-            owner: command.guild.ownerID,
-          };
-
-          const perms = command.message.channel.permissionsFor(command.guild.me);
-          extra.channel.permissions = perms ? perms.serialize() : null;
-        }
-
-        Raven.captureException(error, {
-          user: {
-            id: command.message.author.id,
-            username: command.message.author.tag,
-          },
-          extra,
-        });
-      }
+      Raven.captureException(error);
 
       try {
         this.client.log.error('command failed: %s', command.trigger, error);
