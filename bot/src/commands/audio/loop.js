@@ -2,7 +2,7 @@ const { Command, Validator } = require('discord-handles');
 
 module.exports = class extends Command {
   async pre() {
-    await new Validator(this).ensurePlaylist(this.client.cassette);
+    await new Validator(this).ensurePlaylist().apply(this.guild.playlist.current, 'No song available to loop');
   }
 
   exec() {
