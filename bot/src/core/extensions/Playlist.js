@@ -33,7 +33,7 @@ Playlist.prototype.start = async function(response) {
 
   if (!member.voiceChannel) return response.error('You\'ve disconnected from your voice channel.');
   try {
-    await start.call(this, response.member.voiceChannel);
+    await start.call(this, member.voiceChannel);
   } catch (e) {
     if (e instanceof Error) {
       switch (e.code) {
