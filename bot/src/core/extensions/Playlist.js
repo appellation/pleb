@@ -47,6 +47,7 @@ Playlist.prototype.start = async function(response) {
     }
     throw e;
   }
-  return response.success(`now playing \`${this.current.title}\``);
+  if (this.current) return response.success(`now playing \`${this.current.title}\``);
+  return response.error('now playi..... nvm');
 };
 
