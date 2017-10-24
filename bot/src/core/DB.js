@@ -80,7 +80,7 @@ class DB extends Sequelize {
       this.client.log.warn('database initialization failed: retrying in 10 seconds');
       return;
     }
-    await this.sync({ alter: true });
+    await this.sync();
     this.client.log.info('database initialized');
   }
 }

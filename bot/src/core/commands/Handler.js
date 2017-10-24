@@ -43,7 +43,7 @@ module.exports = class extends (handles.Client) {
             content: this.message.content,
             createdAt: this.message.createdAt,
           },
-          guild: {
+          guild: this.guild && {
             id: this.guild.id,
             name: this.guild.name,
           },
