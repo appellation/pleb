@@ -28,8 +28,12 @@ const start = Playlist.prototype.start;
 Playlist.prototype.start = async function(response) {
   if (!this.current) return response.error('There is no song currently available to play.');
 
+  const member = response.member || await response.guild.fetchMember(response.author.id);
+  if (!member) return response.error('I couldn\'t find you in this guild. Please make sure you\'re not invisible.');
+
+  if (!member.voiceChannel) return response.error('You\'ve disconnected from your voice channel.');
   try {
-    await start.call(this, response.message.member.voiceChannel);
+    await start.call(this, response.member.voiceChannel);
   } catch (e) {
     if (e instanceof Error) {
       switch (e.code) {
