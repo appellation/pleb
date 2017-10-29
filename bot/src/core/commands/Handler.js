@@ -55,7 +55,7 @@ module.exports = class extends (handles.Client) {
       await this.client.db.models.usage.create({
         command: this.trigger.toString(),
         id: this.message.id,
-        guildID: this.guild.id,
+        guildID: this.guild ? this.guild.id : null,
         channelID: this.channel.id,
         userID: this.author.id,
       });
