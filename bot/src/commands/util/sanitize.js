@@ -7,7 +7,9 @@ module.exports = class extends Command {
   }
 
   async pre() {
-    await new Validator(this).ensureClientPermissions('MANAGE_MESSAGES');
+    await new Validator(this)
+      .ensureClientPermissions('MANAGE_MESSAGES')
+      .ensureAuthorPermissions('MANAGE_MESSAGES');
 
     await new Argument(this, 'count')
       .setRePrompt('Please provide a valid number of messages to sanitize.')

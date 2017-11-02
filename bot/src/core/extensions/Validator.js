@@ -2,7 +2,8 @@ const { Validator } = require('discord-handles');
 
 const ERRORS = {
   ensureGuild: 'This command cannot be run outside of a guild.',
-  ensureClientPermissions: perm => `Cannot ${perm.split('_').join(' ').toLowerCase()}.`,
+  ensureClientPermissions: perm => `I cannot ${perm.split('_').join(' ').toLowerCase()}.`,
+  ensureMemberPermissions: perm => `You cannot ${perm.split('_').join(' ').toLowerCase()}.`,
   ensureArgs: 'No command arguments were provided.',
   ensureReplyable: 'Cannot send messages in that channel.',
   ensureMemberVoice: 'You\'re not in a voice channel.',
@@ -11,7 +12,8 @@ const ERRORS = {
   ensureCurrentVoiceChannel: 'Not currently connected to a voice channel.',
   ensurePlaylist: 'I\'m currently not playing anything.',
   ensureNSFW: 'This is not an NSFW channel.',
-  ensureIsNumber: key => `Argument ${key} must be a number.`
+  ensureIsNumber: key => `Argument ${key} must be a number.`,
+  ensureMember: 'You\'re invisible! Please go online and try again.',
 };
 
 class Validate {
@@ -27,12 +29,22 @@ class Validate {
     return this.message.channel;
   }
 
+  ensureMember() {
+    this.ensureGuild();
+    return this.apply(this.message.member, ERRORS.ensureMember);
+  }
+
   /**
    * Ensure the message is in a guild.
    * @return {*}
    */
   ensureGuild() {
     return this.apply(() => this.channel.type === 'text', ERRORS.ensureGuild);
+  }
+
+  ensureAuthorPermissions(resolvable) {
+    this.ensureMember();
+    return this.apply(() => this.message.member.permissions.has(resolvable), ERRORS.ensureMemberPermissions(resolvable));
   }
 
   /**
