@@ -1,6 +1,5 @@
 const winston = require('winston');
-const request = require('axios');
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed, WebhookClient } = require('discord.js');
 
 module.exports = class Logger extends winston.Logger {
   constructor(client) {
@@ -13,20 +12,15 @@ module.exports = class Logger extends winston.Logger {
     });
 
     this.client = client;
+    this.webhook = new WebhookClient(process.env.webhook_id, process.env.webhook_token);
   }
 
   hook(data = {}) {
-    const embed = new RichEmbed(data)
+    const embed = new MessageEmbed(data)
       .setFooter(`Shard ${this.client.shard.id}`)
       .setTimestamp();
 
-    return this._send({
-      embeds: [embed]
-    });
-  }
-
-  _send(data) {
-    if (!process.env.webhook_url) return Promise.resolve();
-    return request.post(process.env.webhook_url, data);
+    if (process.env.webhook_id && process.env.webhook_token) return this.webhook.send({ embed });
+    return Promise.resolve();
   }
 };
