@@ -15,6 +15,7 @@ module.exports = class extends Command {
       '- **queue [page]** - show song queue: next 5 or page number\n' +
       '- **playlist <query>** - search YouTube for a playlist and play it\n' +
       '- **loop** - repeat the current song\n\n' +
+      '- **donate** - if you\'re feeling generous, donate. The developer appreciates it!\n\n' +
       '- **config prefix <setting>** - set the prefix\n' +
       '- **ping [url]** - pings the bot or an optional website\n' +
       '- **imgur [title]** - used with file uploads; uploads a file to Imgur with an optional **title**\n' +
@@ -29,19 +30,19 @@ module.exports = class extends Command {
       '- **catfacts** - get a random fact about cats\n' +
       '- **insult [mention]** - insult a user (defaults to yourself)\n' +
       '- **remind (me|@user) to <action> (in|at) <time>** - set a reminder\n' +
-      '- **sanitize [num]** - delete last **num** messages from the bot (defaults to 3)\n\n' +
+      '- **sanitize [num]** - delete last **num** messages in the channel. **do not attempt to purge the entire channel; you\'ll just end up wasting time**\n\n' +
       '- **roulette** - play a game of Russian roulette\n' +
       '- **info** - get info about the bot\n' +
       '- **/ay+/i** - lmao\n' +
       '- **xD|XD** - XD\n' +
-      '- **hello|hi** - :wave:\n' +
+      '- **hello|hi** - 👋\n' +
       '- **roll|dice ([count] [size])?** - roll **count** dice with **size** sides (defaults to 2 6-sided dice)\n' +
       '- **coinflip** - flip a coin\n' +
       '- **weather (currently|minutely|hourly|daily)? <location>** - get weather (defaults to currently) for a **location**\n' +
       '- **morse <text>** - convert given text to morse code\n' +
       '- **define <word>** - get the dictionary definition for a given word\n' +
       '- **link** - get the invite link for the bot\n\n' +
-      'NSFW commands (noted by an [NSFW] tag above) can only be given in NSFW channels or by people with the `nsfw` role.  Members with the `no-pleb` role will be unable to use commands.\n\n' +
+      'NSFW commands (noted by an [NSFW] tag above) can only be given in NSFW channels.  Members with the `no-pleb` role will be unable to use commands.\n\n' +
       'For human help, check out my Discord server (<https://discord.gg/DPuaDvP>).'
       , {}, { split: true });
   }
