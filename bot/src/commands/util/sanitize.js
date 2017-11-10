@@ -18,14 +18,14 @@ module.exports = class extends Command {
   }
 
   async exec() {
-    const collection = await this.channel.fetchMessages();
-    const messages = collection.first(Math.min(this.args.count || 3, 100));
+    const count = Math.min(this.args.count || 3, 100);
+    const messages = await this.channel.messages.fetch({ limit: count });
     if (messages.length < 1) return this.response.error('Unable to find any messages to purge.');
     if (messages.length === 1) {
       await messages[0].delete();
-      return this.response.success('Purged last message.', this.author);
+      return this.response.success(`${this.author} Purged last message.`);
     }
-    const deleted = await this.channel.bulkDelete(messages);
+    const deleted = await this.channel.bulkDelete(messages, true);
     return this.response.success(`Purged last ${deleted.size} messages.`);
   }
 };
