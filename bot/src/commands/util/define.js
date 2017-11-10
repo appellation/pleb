@@ -47,6 +47,6 @@ module.exports = class extends Command {
       out += '\n';
     }
 
-    return this.response.send(out);
+    return out ? this.response.send(out) : this.response.error('no results found');
   }
 };
