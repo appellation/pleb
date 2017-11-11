@@ -19,6 +19,7 @@
     "discord.js": "github:hydrabolt/discord.js",
     "discord.js-music": "^2.0.0",
     "erlpack": "github:hammerandchisel/erlpack#master",
+    "google": "^2.1.0",
     "mathjs": "^3.16.4",
     "moment": "^2.16.0",
     "moment-duration-format": "^1.3.0",
