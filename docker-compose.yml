@@ -5,6 +5,14 @@ services:
     depends_on:
       - postgres
     env_file: .env
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+      restart_policy:
+        condition: any
+        delay: 10s
+        max_attempts: 10
   postgres:
     image: postgres:9-alpine
     volumes:
