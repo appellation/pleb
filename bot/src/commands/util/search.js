@@ -5,6 +5,7 @@ const { Command, Argument } = require('discord-handles');
 module.exports = class extends Command {
   async pre() {
     await new Argument(this, 'query')
+      .setInfinite()
       .setPrompt('What would you like to search for?')
       .setRePrompt('I can\'t search for that. Please try again.');
   }
