@@ -8,7 +8,7 @@ const Constants = require('discord.js/src/util/Constants');
 const Raven = require('raven');
 
 const Logger = require('./core/Logger');
-const Handler = require('./core/commands/Handler');
+const Handler = require('./core/Handler');
 const DB = require('./core/DB');
 
 module.exports = new class extends discord.Client {
