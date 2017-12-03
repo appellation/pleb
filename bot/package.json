@@ -36,5 +36,9 @@
     "winston": "^2.4.0",
     "xkcd": "^1.1.1"
   },
-  "false": {}
+  "optionalDependencies": {
+    "bufferutil": "^3.0.3",
+    "libsodium-wrappers": "^0.7.2",
+    "zlib-sync": "^0.1.3"
+  }
 }
