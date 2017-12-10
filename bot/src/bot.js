@@ -90,11 +90,13 @@ module.exports = new class extends discord.Client {
     });
 
     if (channel) await channel.send('Sup.  Try `@Pleb help`.');
+    this.updateStats();
   }
 
   onGuildDelete(guild) {
     const playlist = guild.playlist;
     if (playlist) playlist.destroy();
+    this.updateStats();
   }
 
   async updateStats() {
