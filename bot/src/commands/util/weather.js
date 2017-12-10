@@ -28,15 +28,15 @@ module.exports = class extends Command {
     if (location.status !== 'OK') {
       switch (location.status) {
         case 'ZERO_RESULTS':
-          return this.channel.sendMessage('No results found');
+          return this.channel.send('No results found');
         case 'REQUEST_DENIED':
-          return this.channel.sendMessage('Request denied');
+          return this.channel.send('Request denied');
         case 'INVALID_REQUEST':
-          return this.channel.sendMessage('Invalid request');
+          return this.channel.send('Invalid request');
         case 'OVER_QUERY_LIMIT':
-          return this.channel.sendMessage('Over limit');
+          return this.channel.send('Over limit');
         case 'UNKNOWN_ERROR':
-          return this.channel.sendMessage('An unkown error has occured');
+          return this.channel.send('An unkown error has occured');
       }
     }
 
