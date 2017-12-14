@@ -3,7 +3,7 @@ const { Command, Validator } = require('discord-handles');
 module.exports = class extends Command {
   async pre() {
     await new Validator(this)
-      .ensureGuild()
+      .ensureMember()
       .ensureClientPermissions('MANAGE_CHANNELS')
       .apply(!this.message.member.hasPermission('ADMINISTRATOR') && this.author.id !== this.guild.ownerID, 'aww, admin is cheating.');
   }
