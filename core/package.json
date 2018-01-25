@@ -1,0 +1,24 @@
+{
+  "name": "pleb-core",
+  "version": "0.1.0",
+  "description": "Core REST services for Pleb.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "env-cmd ../.env node --trace-warnings src/index.js"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@spectacles/spectacles.js": "^0.4.0",
+    "axios": "^0.17.1",
+    "fs-nextra": "^0.3.2",
+    "jsonwebtoken": "^8.1.0",
+    "knex": "^0.14.2",
+    "koa": "^2.4.1",
+    "koa-bodyparser": "^4.2.0",
+    "koa-router": "^7.3.0",
+    "pg": "^7.4.1",
+    "redis-p": "^0.1.8"
+  }
+}
