@@ -12,7 +12,7 @@
   "author": "Will Nelson <appellation@topkek.pw>",
   "dependencies": {
     "axios": "^0.16.2",
-    "canvas": "^2.0.0-alpha.5",
+    "canvas": "^2.0.0-alpha.9",
     "cassette": "^3.0.2",
     "date.js": "^0.3.1",
     "discord-handles": "^7.3.3",
