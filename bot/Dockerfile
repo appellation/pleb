@@ -1,7 +1,7 @@
 FROM node:8-alpine
 
 WORKDIR /usr/src/bot
-COPY package.json ./
+COPY package.json package-lock.json ./
 
 RUN apk update && apk upgrade \
     && apk add --update tar \
