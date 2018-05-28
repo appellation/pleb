@@ -5,7 +5,7 @@ module.exports = class extends Command {
     await new Validator(this)
       .ensureMember()
       .ensureClientPermissions('MANAGE_CHANNELS')
-      .apply(!this.message.member.hasPermission('ADMINISTRATOR') && this.author.id !== this.guild.ownerID, 'aww, admin is cheating.');
+      .apply(() => !this.message.member.hasPermission('ADMINISTRATOR') && this.author.id !== this.guild.ownerID, 'aww, admin is cheating.');
   }
 
   async exec() {
