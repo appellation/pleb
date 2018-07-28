@@ -10,6 +10,7 @@ const Raven = require('raven');
 const Logger = require('./core/Logger');
 const Handler = require('./core/Handler');
 const DB = require('./core/DB');
+const Lavaqueue = require('./core/Lavaqueue');
 
 module.exports = new class extends discord.Client {
   constructor() {
@@ -22,6 +23,7 @@ module.exports = new class extends discord.Client {
     this.log = new Logger(this);
     this.db = new DB(this);
     this.handler = new Handler(this);
+    this.lavaqueue = new Lavaqueue(this);
 
     this.log.verbose('instantiated client');
 

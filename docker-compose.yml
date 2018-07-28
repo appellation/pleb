@@ -4,10 +4,19 @@ services:
     build: ./bot
     depends_on:
       - postgres
+      - lavalink
+      - redis
     env_file: .env
     restart: always
     mem_limit: 8g
+  lavalink:
+    build: ./lavalink
+    env_file: .env
+  redis:
+    image: redis:alpine
   postgres:
     image: postgres:9-alpine
     volumes:
-      - /var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
+volumes:
+  postgres:

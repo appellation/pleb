@@ -1,6 +1,7 @@
-const { Argument, Command, Validator } = require('discord-handles');
+const AudioCommand = require('../../core/commands/Audio');
+const { Argument, Validator } = require('discord-handles');
 
-module.exports = class extends Command {
+module.exports = class extends AudioCommand {
   static get triggers() {
     return ['next', 'skip'];
   }
@@ -12,10 +13,7 @@ module.exports = class extends Command {
       .setResolver(c => isNaN(c) ? null : parseInt(c));
   }
 
-  async exec() {
-    const list = this.guild.playlist;
-    let next = true;
-    for (let i = 0; i < (this.args.count || 1) && next; i++) next = await list.next();
-    return list.start(this.response);
+  exec() {
+    return this.guild.playlist.next(this.args.count || 1);
   }
 };

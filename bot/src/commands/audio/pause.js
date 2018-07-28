@@ -1,11 +1,12 @@
-const { Command, Validator } = require('discord-handles');
+const AudioCommand = require('../../core/commands/Audio');
+const { Validator } = require('discord-handles');
 
-module.exports = class extends Command {
+module.exports = class extends AudioCommand {
   async pre() {
     await new Validator(this).ensurePlaylist();
   }
 
   exec() {
-    return this.guild.playlist.pause();
+    return this.guild.playlist.player.pause();
   }
 };

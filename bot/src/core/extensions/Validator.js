@@ -121,7 +121,7 @@ class Validate {
    */
   ensureCurrentVoiceChannel() {
     this.ensureGuild();
-    return this.apply(() => this.command.client.voiceConnections.has(this.guild.id), ERRORS.ensureCurrentVoiceChannel);
+    return this.apply(() => Boolean(this.guild.me.voiceChannelID), ERRORS.ensureCurrentVoiceChannel);
   }
 
   ensureIsNumber(key) {

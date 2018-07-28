@@ -1,6 +1,7 @@
-const { Argument, Validator, Command } = require('discord-handles');
+const AudioCommand = require('../../core/commands/Audio');
+const { Argument, Validator } = require('discord-handles');
 
-module.exports = class extends Command {
+module.exports = class extends AudioCommand {
   async pre() {
     await new Validator(this).ensureCanPlay();
     await new Argument(this, 'song')
@@ -10,12 +11,8 @@ module.exports = class extends Command {
   }
 
   async exec() {
-    const list = this.guild.playlist;
-
-    list.stop();
-    list.reset();
-
-    const added = await list.add(this.response, this.args.song);
-    if (added) return list.start(this.response);
+    await this.guild.playlist.clear();
+    await this.add(this.args.song);
+    return this.start();
   }
 };

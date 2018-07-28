@@ -6,6 +6,6 @@ module.exports = class extends Command {
   }
 
   exec() {
-    return this.guild.playlist.resume();
+    return this.guild.playlist.player.pause(false);
   }
 };
