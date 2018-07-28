@@ -8,7 +8,8 @@ module.exports = class extends Command {
       '- **shuffle [Play params]** - shuffles existing playlist (if exists) or shuffle plays a new playlist\n' +
       '- **add (next)? <Play params>** - adds stuff to the playlist\n' +
       '- **next [num]** - skips to next **num** songs (default 1)\n' +
-      '- **prev [num]** - returns **num** songs (default 1)\n' +
+      '- **join** / **leave** - join or leave the voice channel\n' +
+      '- **np** - show the currently playing song\n' +
       '- **pause** - pauses\n' +
       '- **resume** - resumes\n' +
       '- **stfu** - stops and disconnects\n' +

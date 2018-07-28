@@ -97,7 +97,7 @@ module.exports = new class extends discord.Client {
 
   onGuildDelete(guild) {
     const playlist = guild.playlist;
-    if (playlist) playlist.destroy();
+    if (playlist) playlist.stop();
     this.updateStats();
   }
 
