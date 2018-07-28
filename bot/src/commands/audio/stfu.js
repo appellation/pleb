@@ -20,5 +20,4 @@ module.exports = class extends AudioCommand {
 exports.triggers = [
   'stfu',
   'stop',
-  'leave'
 ];
