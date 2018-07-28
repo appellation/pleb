@@ -1,6 +1,7 @@
-const { Command, Validator } = require('discord-handles');
+const AudioCommand = require('../../core/commands/Audio');
+const { Validator } = require('discord-handles');
 
-module.exports = class extends Command {
+module.exports = class extends AudioCommand {
   static get triggers() {
     return ['stfu', 'stop', 'leave'];
   }
@@ -9,10 +10,9 @@ module.exports = class extends Command {
     await new Validator(this).ensureGuild();
   }
 
-  exec() {
-    const pl = this.guild.playlist;
-    if (pl) pl.destroy();
-    if (this.guild.voiceConnection) this.guild.voiceConnection.disconnect();
+  async exec() {
+    await this.playlist.stop();
+    await this.player.leave();
     return this.response.send('k 😢');
   }
 };

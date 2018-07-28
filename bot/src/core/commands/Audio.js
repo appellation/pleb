@@ -10,11 +10,11 @@ module.exports = class AudioCommand extends Command {
     return this.playlist.player;
   }
 
-  async add(content) {
+  async add(content, searchPlaylists = false) {
     this.response.send('adding songs to playlist...');
 
     const parsed = url.parse(content);
-    if (!['http', 'https'].includes(parsed.protocol)) content = `ytsearch:${content}`;
+    if (!['http:', 'https:'].includes(parsed.protocol)) content = `ytsearch:${content}`;
 
     const loaded = await this.client.lavaqueue.load(content);
     if (loaded.loadType === 'LOAD_FAILED') {
@@ -27,10 +27,10 @@ module.exports = class AudioCommand extends Command {
       return false;
     }
 
-    if (['TRACK_LOADED', 'SEARCH_RESULT'].includes(loaded.loadType)) {
+    if (['TRACK_LOADED', 'SEARCH_RESULT'].includes(loaded.loadType) && !searchPlaylists) {
       await this.playlist.add(loaded.tracks[0].track);
       this.response.success(`added \`${loaded.tracks[0].title}\` to playlist`);
-    } else if (loaded.loadType === 'PLAYLIST_LOADED') {
+    } else if (loaded.loadType === 'PLAYLIST_LOADED' || searchPlaylists) {
       await this.playlist.add(...loaded.tracks.map(t => t.track));
       this.response.success(`added **${loaded.tracks.length}** songs to playlist`);
     } else {
@@ -50,9 +50,12 @@ module.exports = class AudioCommand extends Command {
 
     const started = await this.playlist.start();
     const np = await this.playlist.current();
-    const trackRes = await this.client.lavaqueue.decode(np.track);
 
-    if (started && np) return this.response.success(`now playing \`${trackRes.title}\``);
-    return this.response.error('unable to start since there\'s nothing in the playlist');
+    if (started && np) {
+      const track = await this.client.lavaqueue.decode(np.track);
+      return this.response.success(`now playing \`${track.title}\``);
+    }
+
+    return this.response.error('unable to start: there\'s nothing in the playlist');
   }
 };

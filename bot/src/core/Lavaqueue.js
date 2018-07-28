@@ -33,10 +33,6 @@ module.exports = class extends Client {
     this.connection.ws.on('open', () => this.client.log.info('lavalink connection opened!'));
   }
 
-  connect() {
-    //
-  }
-
   send(guildID, packet) {
     if (this.client.guilds.has(guildID)) return this.client.ws.send(packet);
     throw new Error(`attempted to send packet for guild "${guildID}" not available on this shard (${this.client.shard.id})`);

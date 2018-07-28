@@ -16,7 +16,7 @@
     "date.js": "^0.3.1",
     "discord-handles": "^7.3.3",
     "discord.js": "github:discordjs/discord.js#75ebd5d23cf33ea5da6538a1a4865bea2c58e3d5",
-    "lavalink": "^1.1.0",
+    "lavalink": "^1.1.1",
     "lavaqueue": "^1.0.0",
     "mathjs": "^3.16.4",
     "moment": "^2.16.0",

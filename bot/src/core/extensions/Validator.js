@@ -60,7 +60,7 @@ class Validate {
 
   ensurePlaylist() {
     this.ensureGuild();
-    return this.apply(() => this.guild.playlist, ERRORS.ensurePlaylist) && this.ensureCurrentVoiceChannel();
+    return this.apply(() => this.guild.playlist, ERRORS.ensurePlaylist);
   }
 
   /**

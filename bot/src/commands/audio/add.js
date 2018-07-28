@@ -11,6 +11,6 @@ module.exports = class extends AudioCommand {
 
   async exec() {
     await this.add(this.args.song);
-    return this.start();
+    if (!await this.playlist.current()) await this.start();
   }
 };

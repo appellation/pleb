@@ -10,15 +10,8 @@ module.exports = class extends Command {
   }
 
   async exec() {
-    const list = this.guild.playlist;
-
-    list.stop();
-    list.reset();
-
-    const added = await list.add(this.response, this.args.list, {
-      searchType: 'playlist',
-    });
-
-    if (added) return list.start(this.response);
+    await this.playlist.stop();
+    await this.playlist.add(this.args.list, true);
+    return this.playlist.start(this.response);
   }
 };
