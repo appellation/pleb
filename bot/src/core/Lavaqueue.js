@@ -31,6 +31,7 @@ module.exports = class extends Client {
     });
 
     this.connection.ws.on('open', () => this.client.log.info('lavalink connection opened!'));
+    this.on('stats', s => this.stats = s);
   }
 
   send(guildID, packet) {

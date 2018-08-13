@@ -1,5 +1,5 @@
 const winston = require('winston');
-const { MessageEmbed, WebhookClient } = require('discord.js');
+const { RichEmbed, WebhookClient } = require('discord.js');
 
 module.exports = class Logger extends winston.Logger {
   constructor(client) {
@@ -16,7 +16,7 @@ module.exports = class Logger extends winston.Logger {
   }
 
   hook(data = {}) {
-    const embed = new MessageEmbed(data)
+    const embed = new RichEmbed(data)
       .setFooter(`Shard ${this.client.shard.id}`)
       .setTimestamp();
 
