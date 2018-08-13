@@ -20,7 +20,7 @@ module.exports = class Logger extends winston.Logger {
       .setFooter(`Shard ${this.client.shard.id}`)
       .setTimestamp();
 
-    if (process.env.webhook_id && process.env.webhook_token) return this.webhook.send({ embed });
+    if (process.env.webhook_id && process.env.webhook_token) return this.webhook.send({ embeds: [embed] });
     return Promise.resolve();
   }
 };
