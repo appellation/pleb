@@ -28,8 +28,9 @@ module.exports = class AudioCommand extends Command {
     }
 
     if (['TRACK_LOADED', 'SEARCH_RESULT'].includes(loaded.loadType) && !searchPlaylists) {
-      await this.playlist.add(loaded.tracks[0].track);
-      this.response.success(`added \`${loaded.tracks[0].title}\` to playlist`);
+      const first = loaded.tracks[0];
+      await this.playlist.add(first.track);
+      this.response.success(`added \`${first.info.title}\` to playlist`);
     } else if (loaded.loadType === 'PLAYLIST_LOADED' || searchPlaylists) {
       await this.playlist.add(...loaded.tracks.map(t => t.track));
       this.response.success(`added **${loaded.tracks.length}** songs to playlist`);
@@ -52,6 +53,8 @@ module.exports = class AudioCommand extends Command {
     const np = await this.playlist.current();
 
     if (started && np) {
+      if (!np.track) return this.response.success('now playing'); // just in case there's a current song but we aren't sure what it is yet
+
       const track = await this.client.lavaqueue.decode(np.track);
       return this.response.success(`now playing \`${track.title}\``);
     }
