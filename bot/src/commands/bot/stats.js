@@ -32,6 +32,6 @@ __**Shard info:**__
 __**Process info:**__
 **Memory:** ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB
 **Total memory:** ${(stats.memory / 1024 / 1024).toFixed(2)} MB
-**Uptime:** ${moment.duration(client.uptime, 'ms').format('d [days] h [hrs] mm [mins] ss [secs]')}`);
+**Uptime:** ${moment.duration(process.uptime(), 's').format('d [days] h [hrs] mm [mins] ss [secs]')}`);
   }
 };
