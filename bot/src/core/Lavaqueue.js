@@ -11,6 +11,10 @@ module.exports = class extends Client {
         ws: process.env.lavalink_ws || 'ws://lavalink:8081',
         redis: process.env.redis_host || 'redis',
       },
+      send: (guildID, packet) => {
+        if (this.client.guilds.has(guildID)) return this.client.ws.send(packet);
+        throw new Error(`attempted to send packet for guild "${guildID}" not available on this shard (${this.client.shard.id})`);
+      },
     });
 
     this.client = client;
@@ -32,10 +36,5 @@ module.exports = class extends Client {
 
     this.connection.ws.on('open', () => this.client.log.info('lavalink connection opened!'));
     this.on('stats', s => this.stats = s);
-  }
-
-  send(guildID, packet) {
-    if (this.client.guilds.has(guildID)) return this.client.ws.send(packet);
-    throw new Error(`attempted to send packet for guild "${guildID}" not available on this shard (${this.client.shard.id})`);
   }
 };
