@@ -49,6 +49,7 @@ module.exports = class AudioCommand extends Command {
     if (!this.guild.me.voiceChannelID || member.voiceChannelID !== this.guild.me.voiceChannelID)
       await this.player.join(member.voiceChannelID, { deaf: true });
 
+    this.player.setVolume(40);
     const started = await this.playlist.start();
     const np = await this.playlist.current();
 
