@@ -4,6 +4,8 @@ const { Validator } = require('discord-handles');
 
 module.exports = class extends AudioCommand {
   async pre() {
+    await new Validator(this).ensureGuild();
+
     const np = await this.guild.playlist.current();
     await new Validator(this).apply(() => Boolean(np), 'I\'m not currently playing anything');
 
