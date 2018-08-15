@@ -56,7 +56,7 @@ module.exports = class AudioCommand extends Command {
     if (started && np) {
       if (!np.track) return this.response.success('now playing'); // just in case there's a current song but we aren't sure what it is yet
 
-      const track = await this.client.lavaqueue.decode(np.track);
+      const [track] = await this.client.lavaqueue.decode([np.track]);
       return this.response.success(`now playing \`${track.title}\``);
     }
 
