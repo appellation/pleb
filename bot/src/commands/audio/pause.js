@@ -7,6 +7,6 @@ module.exports = class extends AudioCommand {
   }
 
   exec() {
-    return this.guild.playlist.player.pause();
+    return this.player.pause();
   }
 };

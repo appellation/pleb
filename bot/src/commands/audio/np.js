@@ -14,10 +14,16 @@ module.exports = class extends AudioCommand {
   }
 
   exec() {
-    const pos = Math.floor((this.pos.as('ms') / this.np.length) * 10);
+    const pos = Math.floor((this.pos.asMilliseconds() / this.np.length) * 10);
     const trackBar = `${'\u25ac'.repeat(pos)}\u2b24${'\u25ac'.repeat(9 - pos)}`;
     const length = moment.duration(this.np.length, 'ms');
 
-    return this.response.send(`\`${this.np.title}\`\n<${this.np.uri}>\n${trackBar} ${this.pos.format('h:m:ss')} / ${length.format('h:m:ss')}`);
+    const currentTime = this.pos.asMinutes() >= 1 ? this.pos.format('h:m:ss') : `0:${this.pos.format('ss')}`;
+    return this.response.send(`\`${this.np.title}\`\n<${this.np.uri}>\n${trackBar} ${currentTime} / ${length.format('h:m:ss')}`);
   }
 };
+
+exports.triggers = [
+  'np',
+  'nowplaying',
+];

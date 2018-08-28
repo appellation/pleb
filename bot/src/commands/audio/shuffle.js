@@ -14,7 +14,8 @@ module.exports = class extends AudioCommand {
 
     const tracks = await this.playlist.tracks();
     await this.playlist.stop();
-    await this.playlist.add(...tracks); // no need to use the extended add method
-    return this.start();
+
+    const [added, title] = await this.playlist.add(...tracks); // no need to use the extended add method
+    if (added) return this.start(title);
   }
 };

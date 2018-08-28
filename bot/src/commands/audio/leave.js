@@ -7,6 +7,6 @@ module.exports = class extends AudioCommand {
   }
 
   exec() {
-    return this.player.join(this.message.member.voiceChannelID);
+    return this.player.leave();
   }
 };

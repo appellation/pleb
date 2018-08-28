@@ -14,7 +14,10 @@ module.exports = class extends AudioCommand {
   async exec() {
     if (this.args.song) {
       await this.playlist.stop();
-      await this.add(this.args.song);
+      const [added, title] = await this.add(this.args.song);
+
+      if (added) return this.start(title);
+      return null;
     }
 
     return this.start();
