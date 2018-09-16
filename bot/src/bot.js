@@ -103,26 +103,30 @@ module.exports = new class extends discord.Client {
   }
 
   async updateStats() {
-    if (process.env.discord_pw) {
-      await axios.post(`https://bots.discord.pw/api/bots/${this.user.id}/stats`, {
-        shard_id: this.shard.id,
-        shard_count: this.shard.count,
-        server_count: this.guilds.size
-      }, {
-        headers: { Authorization: process.env.discord_pw }
-      });
-    }
+    try {
+      if (process.env.discord_pw) {
+        await axios.post(`https://bots.discord.pw/api/bots/${this.user.id}/stats`, {
+          shard_id: this.shard.id,
+          shard_count: this.shard.count,
+          server_count: this.guilds.size
+        }, {
+          headers: { Authorization: process.env.discord_pw }
+        });
+      }
 
-    if (process.env.discordbots_org) {
-      await axios.post(`https://discordbots.org/api/bots/${this.user.id}/stats`, {
-        server_count: this.guilds.size,
-        shard_id: this.shard.id,
-        shard_count: this.shard.count,
-      }, {
-        headers: { Authorization: process.env.discordbots_org }
-      });
-    }
+      if (process.env.discordbots_org) {
+        await axios.post(`https://discordbots.org/api/bots/${this.user.id}/stats`, {
+          server_count: this.guilds.size,
+          shard_id: this.shard.id,
+          shard_count: this.shard.count,
+        }, {
+          headers: { Authorization: process.env.discordbots_org }
+        });
+      }
 
-    this.log.verbose('synchronized stats');
+      this.log.verbose('synchronized stats');
+    } catch (e) {
+      this.log.error('error synchronizing stats', e);
+    }
   }
 };
