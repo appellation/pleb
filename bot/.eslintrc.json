@@ -19,6 +19,7 @@
         "keyword-spacing": "error",
         "linebreak-style": ["error", "unix"],
         "no-console": "warn",
+        "no-else-return": "error",
         "no-invalid-this": "warn",
         "no-multi-spaces": "error",
         "no-unused-vars": "warn",

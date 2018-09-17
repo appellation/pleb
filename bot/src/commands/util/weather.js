@@ -104,7 +104,7 @@ module.exports = class extends Command {
       ctx.fillText(Max, maxPlacements[i][0], maxPlacements[i][1]);
     }
 
-    this.response.send(undefined, undefined, { files: [{ attachment: canvas.toBuffer() }] });
+    return this.response.send(undefined, undefined, { files: [{ attachment: canvas.toBuffer() }] });
   }
 };
 
@@ -121,9 +121,9 @@ function getIcon(icon) {
     return 'night';
   } else if (icon === 'cloudy') {
     return 'cloudy';
-  } else {
-    return 'night';
   }
+
+  return 'night';
 }
 
 function convertFToC(temp) {

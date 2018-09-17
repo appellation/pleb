@@ -38,7 +38,9 @@ module.exports = class AudioCommand extends Command {
       await this.playlist.add(first.track);
       this.response.success(`added \`${first.info.title}\` to playlist`);
       return [true, first.info.title];
-    } else if (loaded.loadType === 'PLAYLIST_LOADED' || searchPlaylists) {
+    }
+
+    if (loaded.loadType === 'PLAYLIST_LOADED' || searchPlaylists) {
       await this.playlist.add(...loaded.tracks.map(t => t.track));
       this.response.success(`added **${loaded.tracks.length}** songs to playlist`);
       return [true, loaded.tracks[0].info.title];
@@ -63,7 +65,7 @@ module.exports = class AudioCommand extends Command {
     const started = await this.playlist.start();
     if (started) {
       if (title) return this.response.success(`now playing \`${title}\``);
-      else return this.response.success('now playing');
+      return this.response.success('now playing');
     }
 
     return this.response.error('unable to start: there\'s nothing in the playlist');
