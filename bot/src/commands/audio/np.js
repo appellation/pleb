@@ -6,7 +6,7 @@ module.exports = class extends AudioCommand {
   async pre() {
     await new Validator(this).ensureGuild();
 
-    const np = await this.guild.playlist.current();
+    const np = await this.playlist.current();
     await new Validator(this).apply(() => Boolean(np), 'I\'m not currently playing anything');
 
     this.pos = moment.duration(Number(np.position), 'ms');
