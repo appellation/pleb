@@ -62,10 +62,10 @@ module.exports = class AudioCommand extends Command {
     this.player.setVolume(40);
     const started = await this.playlist.start();
     if (started) {
-      if (title) this.response.success(`now playing \`${title}\``);
-      else this.response.success('now playing');
-    } else {
-      this.response.error('unable to start: there\'s nothing in the playlist');
+      if (title) return this.response.success(`now playing \`${title}\``);
+      else return this.response.success('now playing');
     }
+
+    return this.response.error('unable to start: there\'s nothing in the playlist');
   }
 };
