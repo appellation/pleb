@@ -53,7 +53,6 @@ module.exports = new class extends discord.Client {
   async onInit() {
     this.log.info('client is ready: %s#%s', this.user.username, this.user.discriminator);
     await this.db.initialize();
-    await this.lavaqueue.queues.start(g => this.guilds.has(g));
 
     this.log.hook({
       title: 'Initialized',
