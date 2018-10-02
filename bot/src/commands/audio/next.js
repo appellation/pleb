@@ -14,6 +14,7 @@ module.exports = class extends AudioCommand {
   }
 
   exec() {
+    this.playlist.loop = null;
     return this.playlist.next(this.args.count || 1);
   }
 };

@@ -1,5 +1,11 @@
-const { Client } = require('lavaqueue');
+const { Client, Queue } = require('lavaqueue');
 const Raven = require('raven');
+
+Object.defineProperty(Queue.prototype, 'isLooping', {
+  get() {
+    return this.loop != null && this.loop < 50; // eslint-disable-line eqeqeq
+  },
+});
 
 module.exports = class extends Client {
   constructor(client) {
@@ -14,6 +20,14 @@ module.exports = class extends Client {
       send: (guildID, packet) => {
         if (this.client.guilds.has(guildID)) return this.client.ws.send(packet);
         throw new Error(`attempted to send packet for guild "${guildID}" not available on this shard (${this.client.shard.id})`);
+      },
+      advanceBy: (queue) => {
+        if (queue.isLooping) {
+          queue.loop++;
+          return 0;
+        }
+
+        return 1;
       },
     });
 
