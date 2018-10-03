@@ -12,6 +12,7 @@ module.exports = class extends AudioCommand {
 
   async exec() {
     await this.playlist.stop();
+    await this.playlist.clear();
     await this.player.leave();
     await this.player.destroy();
     return this.response.send('k 😢');

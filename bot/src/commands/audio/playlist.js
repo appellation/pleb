@@ -11,7 +11,7 @@ module.exports = class extends AudioCommand {
   }
 
   async exec() {
-    await this.playlist.stop();
+    await this.playlist.clear();
 
     const [added, title] = await this.add(this.args.list, true);
     if (added) return this.start(title);
