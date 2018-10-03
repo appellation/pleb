@@ -2,10 +2,6 @@ const AudioCommand = require('../../core/commands/Audio');
 const { Validator } = require('discord-handles');
 
 module.exports = class extends AudioCommand {
-  static get triggers() {
-    return ['stfu', 'stop', 'leave'];
-  }
-
   async pre() {
     await new Validator(this).ensureGuild();
   }
