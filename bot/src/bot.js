@@ -104,10 +104,10 @@ module.exports = new class extends discord.Client {
   async updateStats() {
     try {
       if (process.env.discord_pw) {
-        await axios.post(`https://bots.discord.pw/api/bots/${this.user.id}/stats`, {
-          shard_id: this.shard.id,
-          shard_count: this.shard.count,
-          server_count: this.guilds.size
+        await axios.post(`https://discord.bots.gg/api/v1/bots/${this.user.id}/stats`, {
+          shardId: this.shard.id,
+          shardCount: this.shard.count,
+          guildCount: this.guilds.size
         }, {
           headers: { Authorization: process.env.discord_pw }
         });
