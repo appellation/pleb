@@ -1,0 +1,18 @@
+[submodule "spec"]
+	path = spec
+	url = git@gitlab.com:plebbot/spec.git
+[submodule "discord/voice"]
+	path = discord/voice
+	url = git@gitlab.com:plebbot/discord/voice.git
+[submodule "discord/gateway"]
+	path = discord/gateway
+	url = git@gitlab.com:plebbot/discord/gateway.git
+[submodule "discord/worker"]
+	path = discord/worker
+	url = git@gitlab.com:plebbot/discord/worker.git
+[submodule "api"]
+	path = api
+	url = git@gitlab.com:plebbot/api.git
+[submodule "auth"]
+	path = auth
+	url = git@gitlab.com:plebbot/auth.git

@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "api"
+		},
+		{
+			"path": "auth"
+		},
+		{
+			"path": "spec"
+		},
+		{
+			"path": "discord\\gateway"
+		},
+		{
+			"path": "discord\\voice"
+		},
+		{
+			"path": "discord\\worker"
+		}
+	],
+	"settings": {}
+}
