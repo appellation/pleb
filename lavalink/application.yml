@@ -6,10 +6,7 @@ spring:
     banner-mode: log
 lavalink:
   server:
-    password: password
-    ws:
-      port: 8081
-      host: 0.0.0.0
+    password: youshallnotpass
     source:
       youtube: true
       bandcamp: true
