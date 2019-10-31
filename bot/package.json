@@ -13,7 +13,7 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "axios": "^0.16.2",
+    "axios": "^0.18.1",
     "canvas": "^2.0.0-alpha.9",
     "date.js": "^0.3.3",
     "discord-handles": "^7.3.3",
